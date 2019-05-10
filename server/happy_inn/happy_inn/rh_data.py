@@ -15,6 +15,9 @@ sys.path.append("../")
 from rh_const import *
 
 from QueryParam import *
+from DbQuery import *
+from RhDetailQuery import *
+
 from settings import *
 
 rh_num_per_page = 2
@@ -39,11 +42,13 @@ def testdb(request):
     return JsonResponse({'rh_name': response, 'ret': 'ok'})
 
 def get_rh_detail(request):
-    response = {}
-    if "rhid" in request.GET:
-        get_data_from_rh_id(response, request.GET['rhid'])
-    else:
+    if "rhid" not in request.GET:
+        response = {}
         response[RetCode_Key] = str(ErroCode_RhIdNotInput)
+        return JsonResponse(response)
+    # get_data_from_rh_id(response, request.GET['rhid'])
+    detail_query = RhDetailQuery(request.GET['rhid'])
+    return JsonResponse(detail_query.get_data_from_rh_id())
     '''
     if "user_name" in request.session:
         response["user_name"] = request.session['user_name']
@@ -51,78 +56,6 @@ def get_rh_detail(request):
         request.session['user_name'] = "admin"
     response["session_key"] = request.session.session_key
     '''
-    return JsonResponse(response)
-
-def get_data_from_rh_id(response, rh_id):
-    response['message'] = 'you are querying rh_id: ' + rh_id
-    #db = rh.objects.filter(id='2188')
-    db = rh.objects.filter(id=rh_id)
-    if len(db) <= 0:
-        response[RetCode_Key] = str(ErroCode_RhIdNoExist)
-        return
-    response[RetCode_Key] = str(ErroCode_Ok)
-
-    # FIXME, should not query only one
-    record = db[0]
-    # FIXME, show image
-    # update_title_image(record)
-    get_rh_location_id(record)
-    response['record'] = get_all_colume_from_one_record(record)
-    '''
-    imgs = []
-    if len(record.rh_images) > 0:
-        imgs = record.rh_images.split(',')
-        if len(imgs) > 0:
-            for idx, r in enumerate(imgs):
-                imgs[idx] = imgs[idx].encode('utf-8')
-        response['message'] = response['message'] + ", images: " + str(imgs)
-    '''
-
-
-def get_all_colume_from_records(records):
-    ret_array = []
-    for record in records:
-        ret_array.append(get_all_colume_from_one_record(record))
-    return ret_array
-
-def get_all_colume_from_one_record(record):
-    ret_map = {}
-    ret_map['name'] = record.rh_name
-    ret_map['phone'] = record.rh_phone
-    ret_map['mobile'] = record.rh_mobile
-    ret_map['email'] = record.rh_email
-    ret_map['postcode'] = record.rh_postcode
-    ret_map['location_id'] = record.rh_location_id
-    ret_map['type'] = record.rh_type
-    ret_map['factory_property'] = record.rh_factory_property
-    ret_map['person_in_charge'] = record.rh_person_in_charge
-    ret_map['establishment_time'] = record.rh_establishment_time
-    ret_map['floor_surface'] = record.rh_floor_surface
-    ret_map['building_area'] = record.rh_building_area
-    ret_map['bednum'] = record.rh_bednum
-    ret_map['staff_num'] = record.rh_staff_num
-    ret_map['for_persons'] = record.rh_for_persons
-    ret_map['charges_extent'] = record.rh_charges_extent
-    ret_map['special_services'] = record.rh_special_services
-    ret_map['contact_person'] = record.rh_contact_person
-    ret_map['address'] = record.rh_address
-    ret_map['url'] = record.rh_url
-    ret_map['transportation'] = record.rh_transportation
-    ret_map['inst_intro'] = record.rh_inst_intro
-    ret_map['inst_charge'] = record.rh_inst_charge
-    ret_map['facilities'] = record.rh_facilities
-    ret_map['service_content'] = record.rh_service_content
-    ret_map['inst_notes'] = record.rh_inst_notes
-    ret_map['ylw_id'] = record.rh_ylw_id
-    ret_map['province'] = record.rh_privince
-    ret_map['city'] = record.rh_city
-    ret_map['area'] = record.rh_area
-    ret_map['title_image'] = record.rh_title_image
-    ret_map['images'] = record.rh_images
-    ret_map['charges_min'] = record.rh_charges_min
-    ret_map['charges_max'] = record.rh_charges_max
-    ret_map['bednum_int'] = record.rh_bednum_int
-    return ret_map
 
 def get_rh_list(context, query_param):
     global rh_num_per_page
@@ -175,7 +108,7 @@ def get_rh_list(context, query_param):
         # get_rh_location_id(r)
         ret_records.append(r)
 
-    context['records'] = get_all_colume_from_records(ret_records)
+    context['records'] = DbQuery.get_all_colume_from_records(ret_records)
     if page_idx < page_num:
         context['record_num'] = rh_num_per_page
     else:
