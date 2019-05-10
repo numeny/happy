@@ -51,6 +51,5 @@ class DbQuery:
     def get_all_colume_from_records(records):
         ret_array = []
         for record in records:
-            ret_array.append(get_all_colume_from_one_record(record))
+            ret_array.append(DbQuery.get_all_colume_from_one_record(record))
         return ret_array
-
