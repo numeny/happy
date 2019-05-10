@@ -1,0 +1,25 @@
+# -*- coding: utf-8 -*-
+from . import settings
+
+class Log:
+    DEBUG = settings.DEBUG
+
+    @staticmethod
+    def e(tag, message):
+        if Log.DEBUG:
+            print("[Error][%s]: %s" % (tag, message))
+
+    @staticmethod
+    def w(tag, message):
+        if Log.DEBUG:
+            print("[Warning][%s]: %s" % (tag, message))
+
+    @staticmethod
+    def d(tag, message):
+        if Log.DEBUG:
+            print("[Debug][%s]: %s" % (tag, message))
+
+    @staticmethod
+    def i(tag, message):
+        if Log.DEBUG:
+            print("[Info][%s]: %s" % (tag, message))
