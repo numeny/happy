@@ -60,24 +60,37 @@ export default class Index extends Component {
   render () {
     return (
       <View className='top-container'>
-        <View className='top-title-container'>
-          <Image className='top-title-back' />
-          <Text className='top-title-city'> city </Text>
-          <Input type='text' placeholder='look up resthome' className='top-title-input' />
-          <Text className='top-title-menu'> menu </Text>
+        <View className='top-title-top-container'>
+          <View className='top-title-container'>
+            <Image className='top-title-back' src={namedPng} />
+            <Text className='top-title-city'> city </Text>
+            <Input type='text' placeholder='' className='top-title-input' />
+            <Image className='top-title-menu' src={namedPng} />
+          </View>
+          <View className='classify-title-container'>
+            <Text className='classify-title-item'> 价格 </Text>
+            <Text className='classify-title-item'> 床位数 </Text>
+            <Text className='classify-title-item'> 类型 </Text>
+            <Text className='classify-title-item'> 性质 </Text>
+          </View>
         </View>
-        <View className='classify-title-container'>
-          <Text className='classify-title-item'> 价格 </Text>
-          <Text className='classify-title-item'> 床位数 </Text>
-          <Text className='classify-title-item'> 类型 </Text>
-          <Text className='classify-title-item'> 性质 </Text>
-        </View>
-        <View>
-        this.state.message: 
-        { this.state.message }
-        </View>
-        <Video width='150px' height='190px' src={namedVideo} />
         <View className='rh-list-container'>
+          <View className='rh-one-container' onClick={this.click_button.bind(this)}>
+            <Image src={namedPng} className='rh-one-img'/>
+            <View className='rh-one-desc-container'>
+              <Text className='rh-one-desc-head'> my red</Text>
+              <Text className='rh-one-desc'> my red</Text>
+              <Text className='rh-one-desc'> my red</Text>
+            </View>
+          </View>
+          <View className='rh-one-container' onClick={this.click_button.bind(this)}>
+            <Image src={namedPng} className='rh-one-img'/>
+            <View className='rh-one-desc-container'>
+              <Text className='rh-one-desc-head'> my red</Text>
+              <Text className='rh-one-desc'> my red</Text>
+              <Text className='rh-one-desc'> my red</Text>
+            </View>
+          </View>
           <View className='rh-one-container' onClick={this.click_button.bind(this)}>
             <Image src={namedPng} className='rh-one-img'/>
             <View className='rh-one-desc-container'>
@@ -97,6 +110,7 @@ export default class Index extends Component {
           </View>
           </Navigator>
         </View>
+        <Video width='150px' height='190px' src={namedVideo} />
         <Image src={namedPng} />
         <Button size='mini' >按钮</Button>
         <View> {Taro.getEnv()} </View>
