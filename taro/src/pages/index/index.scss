@@ -1,5 +1,5 @@
 $padding-top-title: 10px;
-$font-size-all: 40px;
+$font-size-all: 30px;
 $width-title: 50px;
 $height-title: 90px;
 $margin-rh-list-container: 180px;
@@ -31,6 +31,8 @@ $page-background-color: #FFF;
   flex-wrap: nowrap;
   width: 100%;
   height: $height-title;
+  line-height: $height-title;
+  align-items: center;
   border-bottom: $item-border-thick solid $item-border-color;
 }
 
@@ -38,8 +40,8 @@ $page-background-color: #FFF;
   flex-grow: 1;
   font-size: $font-size-all;
   width: $width-title;
-  padding-right: $padding-top-title;
   padding-left: $padding-top-title;
+  padding-right: $padding-top-title;
 }
 
 .top-title-logo {
@@ -50,15 +52,16 @@ $page-background-color: #FFF;
 .top-title-input {
   flex-grow: 1;
   font-size: $font-size-all;
-  padding-right: $padding-top-title;
   padding-left: $padding-top-title;
+  padding-right: $padding-top-title;
+  background-color: $page-background-color;
 }
 
 .top-title-back {
   width: $width-title;
   height: $width-title;
-  padding-right: $padding-top-title;
   padding-left: $padding-top-title;
+  padding-right: $padding-top-title;
 // FIXME
 src: url(data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABUAAAAiCAMAAACHtmKxAAAAQlBMVEUAAAD///////////////////////////////////////////////////////////////////////////////////8IX9KGAAAAFXRSTlMAeAcDh4HHv7qrsqSdlXIMi2VdUki1J5hKAAAAX0lEQVQoz7XSORKAIBBE0VbBBRVX7n9Vp5RomkCqoIMJXv1woGc8wBjCkUDZqdCGdzeVsn5TJWMTsf2LQwUcS6L/0Aly6jpk8FSR5zxGkpd85odY03wpNrFl3gFmK+cBj3IQx6B3ZvgAAAAASUVORK5CYII=);
 }
