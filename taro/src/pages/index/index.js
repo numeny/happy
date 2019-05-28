@@ -18,7 +18,12 @@ export default class Index extends Component {
     super(props)
     const events = new Events()
     // events.on('click_button', this.click_button.bind(this))
-    this.state = {isOn: false, message: ""}
+    this.state = {isOn: false, message: "",
+      rhList: [
+        {name: "name1", address: "address1"},
+        {name: "name2", address: "address2"},
+      ]
+    }
   }
 
   click_button (e) {
@@ -26,10 +31,14 @@ export default class Index extends Component {
 
     // url: 'http://127.0.0.1:8000/show_rh_list?page=1',
     Taro.request({
-      url: 'http://10.129.192.204/a.json',
+      url: 'http://10.129.192.204:10001/show_rh_list',
       success: (res) => {
-        Taro.showToast({title: 'success'})
-        this.setState({message: 'success'})
+        console.log(res.data.records)
+        Taro.showToast({title: res.data.records[1].name})
+        this.setState({
+            message: 'success',
+            rhList: res.data.records,
+        })
       },
       fail: (error) => {
         console.error('bdg-error')
@@ -58,6 +67,21 @@ export default class Index extends Component {
   }
 
   render () {
+    const { rhList } = this.state
+    const restHomeList = (
+          <View className='rh-list-container'>
+          {rhList.map((rh) =>
+            <View className='rh-one-container' onClick={this.click_button.bind(this)}>
+              <Image src={namedPng} className='rh-one-img'/>
+              <View className='rh-one-desc-container'>
+                <Text className='rh-one-desc-head'>{rh.name}</Text>
+                <Text className='rh-one-desc'>{rh.address}</Text>
+                <Text className='rh-one-desc'> my red</Text>
+              </View>
+            </View>
+          )}
+          </View>
+        )
     return (
       <View className='top-container'>
         <View className='top-title-top-container'>
@@ -74,15 +98,8 @@ export default class Index extends Component {
             <Text className='classify-title-item'> 性质 </Text>
           </View>
         </View>
+        {restHomeList}
         <View className='rh-list-container'>
-          <View className='rh-one-container' onClick={this.click_button.bind(this)}>
-            <Image src={namedPng} className='rh-one-img'/>
-            <View className='rh-one-desc-container'>
-              <Text className='rh-one-desc-head'> my red</Text>
-              <Text className='rh-one-desc'> my red</Text>
-              <Text className='rh-one-desc'> my red</Text>
-            </View>
-          </View>
           <View className='rh-one-container' onClick={this.click_button.bind(this)}>
             <Image src={namedPng} className='rh-one-img'/>
             <View className='rh-one-desc-container'>
@@ -110,18 +127,6 @@ export default class Index extends Component {
           </View>
           </Navigator>
         </View>
-        <Video width='150px' height='190px' src={namedVideo} />
-        <Image src={namedPng} />
-        <Button size='mini' >按钮</Button>
-        <View> {Taro.getEnv()} </View>
-        <Button size='mini' type='warn' onClick={this.click_button.bind(this)}>按钮</Button>
-        <View> {this.state.isOn ? 'On' : 'Off'} </View>
-        <View>
-        from json file, namedJson.x: {namedJson.x}
-        </View>
-        <Welcome />
-        <Clock />
-        <Toggle />
       </View>
     )
   }
