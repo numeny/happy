@@ -9,6 +9,11 @@ export default class Rhdetail extends Component {
     super(props)
   }
 
+  componentWillMount () {
+    Taro.showToast({title: String(this.$router.params.rh_id)})
+    console.log(this.$router.params) // 输出 { id: 2, type: 'test' }
+  }
+
   render () {
     return (
       <View>

@@ -1,6 +1,7 @@
 #!/usr/bin/python
 # -*- coding: UTF-8 -*-
 from Log import *
+from Utils import *
 
 class DbQuery:
 
@@ -10,6 +11,7 @@ class DbQuery:
     @staticmethod
     def get_all_colume_from_one_record(record):
         ret_map = {}
+        ret_map['id'] = Utils.get_rh_id_from_db(record.id)
         ret_map['name'] = record.rh_name
         ret_map['phone'] = record.rh_phone
         ret_map['mobile'] = record.rh_mobile

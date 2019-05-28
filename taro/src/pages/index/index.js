@@ -12,6 +12,7 @@ import namedVideo from '@res/video/1.mp4'
 
 // import get from '@common/interceptor'
 
+const SERVER_HOST = "http://10.129.192.204:10001"
 export default class Index extends Component {
 
   constructor(props) {
@@ -26,15 +27,12 @@ export default class Index extends Component {
     }
   }
 
-  click_button (e) {
-    let b = this.state.isOn
-
-    // url: 'http://127.0.0.1:8000/show_rh_list?page=1',
+  componentWillMount() {
     Taro.request({
-      url: 'http://10.129.192.204:10001/show_rh_list',
+      url: SERVER_HOST + '/show_rh_list',
       success: (res) => {
         console.log(res.data.records)
-        Taro.showToast({title: res.data.records[1].name})
+        Taro.showToast({title: res.data.records[0].name})
         this.setState({
             message: 'success',
             rhList: res.data.records,
@@ -49,21 +47,15 @@ export default class Index extends Component {
         // Taro.showToast({title: "complete"})
       },
     })//.then(res => Taro.showToast({title: "1111"}))
-    // }).then(res => this.setState({message: "hello"}))
-    // }).then(res => console.error(res.data))
-    // get('http://127.0.0.1:8000/show_rh_list?page=1')
-
-    // Taro.navigateTo({url: '/pages/rhdetail/rhdetail'})
-
-    this.setState({isOn: !b})
-    // this.setState({message: "hello"})
-    Taro.showNavigationBarLoading();
   }
 
-  onClick () {
-    Taro.showToast({title: "onClick"})
-    const events = new Events()
-    events.trigger('click_button')
+  click_button (rh_id, e) {
+    Taro.showToast({title: String(rh_id)})
+    Taro.navigateTo({
+      url: '/pages/rhdetail/rhdetail?rh_id=' + String(rh_id),
+    })
+
+    Taro.showNavigationBarLoading();
   }
 
   render () {
@@ -71,12 +63,12 @@ export default class Index extends Component {
     const restHomeList = (
           <View className='rh-list-container'>
           {rhList.map((rh) =>
-            <View className='rh-one-container' onClick={this.click_button.bind(this)}>
+            <View className='rh-one-container' onClick={this.click_button.bind(this, rh.id)}>
               <Image src={namedPng} className='rh-one-img'/>
               <View className='rh-one-desc-container'>
                 <Text className='rh-one-desc-head'>{rh.name}</Text>
                 <Text className='rh-one-desc'>{rh.address}</Text>
-                <Text className='rh-one-desc'> my red</Text>
+                <Text className='rh-one-desc'>{rh.id}</Text>
               </View>
             </View>
           )}
