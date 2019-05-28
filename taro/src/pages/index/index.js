@@ -12,7 +12,8 @@ import namedVideo from '@res/video/1.mp4'
 
 // import get from '@common/interceptor'
 
-const SERVER_HOST = "http://10.129.192.204:10001"
+import { SERVER_HOST } from '../common/const'
+
 export default class Index extends Component {
 
   constructor(props) {

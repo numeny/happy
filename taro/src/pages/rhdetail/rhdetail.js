@@ -3,20 +3,39 @@ import { View, Text, Image, Input, Video, Button, Icon, Progress, Checkbox, Swit
 
 import namedPng from '@images/index/1.jpeg'
 
+import { SERVER_HOST } from '../common/const'
+
 export default class Rhdetail extends Component {
 
   constructor(props) {
     super(props)
+    this.state = { rhId : this.$router.params.rh_id }
   }
 
-  componentWillMount () {
-    Taro.showToast({title: String(this.$router.params.rh_id)})
-    console.log(this.$router.params) // 输出 { id: 2, type: 'test' }
+  componentDidMount () {
+    Taro.showToast({title: String(this.state.rhId)})
+    Taro.request({
+      url: SERVER_HOST + '/get_rh_detail?rhid=' + String(this.state.rhId),
+      success: (res) => {
+        console.log(res.data.records)
+        Taro.showToast({title: res.data.record.name})
+      },
+      fail: (error) => {
+        console.error('bdg-error')
+        Taro.showToast({title: 'fail'})
+      },
+      complete: () => {
+        // Taro.showToast({title: "complete"})
+      },
+    })//.then(res => Taro.showToast({title: "1111"}))
   }
 
   render () {
     return (
       <View>
+        <View>
+        rh_id: {this.state.rhId}
+        </View>
         <Swiper indicatorColor='#999' indicatorActiveColor='#333'
                 circular indicatorDots autoplay>
           <SwiperItem>
