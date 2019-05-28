@@ -26,7 +26,7 @@ export default class Index extends Component {
 
     // url: 'http://127.0.0.1:8000/show_rh_list?page=1',
     Taro.request({
-      url: 'http://127.0.0.1:8000/show_rh_list?page=1',
+      url: 'http://10.129.192.204/a.json',
       success: (res) => {
         Taro.showToast({title: 'success'})
         this.setState({message: 'success'})

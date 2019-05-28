@@ -103,8 +103,4 @@ def show_rh_list(request):
     response['geolocation_city'] = request.session.get('geolocation_city', '')
     if Log.DEBUG:
         response['message'] = response['message'] + ", session_key: "+ str(request.session.session_key)
-    '''
-    print "show_rh_list-9"
-    return JsonResponse({'a': "Hello world ! "})
-    '''
     return JsonResponse(response)
