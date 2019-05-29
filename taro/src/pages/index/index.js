@@ -22,18 +22,20 @@ export default class Index extends Component {
     // events.on('click_button', this.click_button.bind(this))
     this.state = {isOn: false, message: "",
       rhList: [
-        {name: "name1", address: "address1"},
-        {name: "name2", address: "address2"},
-      ]
+        {name: "name1", address: "address1", images: "@images/index/1.jpeg"},
+        {name: "name2", address: "address2", images: "@images/index/1.jpeg"},
+      ],
+      title_image: ""
     }
   }
 
   componentWillMount() {
     Taro.request({
       url: SERVER_HOST + '/show_rh_list',
+      // url: 'http://10.129.192.204:10001' + '/show_rh_list',
       success: (res) => {
         console.log(res.data.records)
-        Taro.showToast({title: res.data.records[0].name})
+        Taro.showToast({title: res.data.records[0].title_image})
         this.setState({
             message: 'success',
             rhList: res.data.records,
@@ -65,7 +67,7 @@ export default class Index extends Component {
           <View className='rh-list-container'>
           {rhList.map((rh) =>
             <View className='rh-one-container' onClick={this.click_button.bind(this, rh.id)}>
-              <Image src={namedPng} className='rh-one-img'/>
+              <Image src={rh.title_image} className='rh-one-img'/>
               <View className='rh-one-desc-container'>
                 <Text className='rh-one-desc-head'>{rh.name}</Text>
                 <Text className='rh-one-desc'>{rh.address}</Text>
@@ -102,14 +104,14 @@ export default class Index extends Component {
             </View>
           </View>
           <View className='rh-one-container' onClick={this.click_button.bind(this)}>
-            <Image src={namedPng} className='rh-one-img'/>
+            <Image src="http://10.129.192.204/images/17169/title/1921451205.JPG" className='rh-one-img'/>
             <View className='rh-one-desc-container'>
               <Text className='rh-one-desc-head'> my red</Text>
               <Text className='rh-one-desc'> my red</Text>
               <Text className='rh-one-desc'> my red</Text>
             </View>
           </View>
-          <Navigator url='/pages/rhdetail/rhdetail' className='rh-one-container'>
+          <Navigator url='html' className='rh-one-container'>
           <View className='rh-one-container'>
             <Image src={namedPng} className='rh-one-img'/>
             <View className='rh-one-desc-container'>
