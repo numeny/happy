@@ -20,11 +20,9 @@ export default class Index extends Component {
     super(props)
     const events = new Events()
     // events.on('click_button', this.click_button.bind(this))
-    this.state = {isOn: false, message: "",
-      rhList: [
-        {name: "name1", address: "address1", images: "@images/index/1.jpeg"},
-        {name: "name2", address: "address2", images: "@images/index/1.jpeg"},
-      ],
+    this.state = {
+      message: "",
+      rhList: [],
       title_image: ""
     }
   }
@@ -32,7 +30,6 @@ export default class Index extends Component {
   componentWillMount() {
     Taro.request({
       url: SERVER_HOST + '/show_rh_list',
-      // url: 'http://10.129.192.204:10001' + '/show_rh_list',
       success: (res) => {
         console.log(res.data.records)
         Taro.showToast({title: res.data.records[0].title_image})
@@ -49,7 +46,7 @@ export default class Index extends Component {
       complete: () => {
         // Taro.showToast({title: "complete"})
       },
-    })//.then(res => Taro.showToast({title: "1111"}))
+    })
   }
 
   click_button (rh_id, e) {
@@ -71,6 +68,7 @@ export default class Index extends Component {
               <View className='rh-one-desc-container'>
                 <Text className='rh-one-desc-head'>{rh.name}</Text>
                 <Text className='rh-one-desc'>{rh.address}</Text>
+                <Text className='rh-one-desc'>{rh.bednum_int}个床位</Text>
                 <Text className='rh-one-desc'>{rh.id}</Text>
               </View>
             </View>
@@ -79,21 +77,12 @@ export default class Index extends Component {
         )
     return (
       <View className='top-container'>
-        <View className='top-title-top-container'>
-          <View className='top-title-container'>
-            <Image className='top-title-back' src={namedPng} />
-            <Text className='top-title-city'> city </Text>
-            <Input type='text' placeholder='' className='top-title-input' />
-            <Image className='top-title-menu' src={namedPng} />
-          </View>
-          <View className='classify-title-container'>
-            <Text className='classify-title-item'> 价格 </Text>
-            <Text className='classify-title-item'> 床位数 </Text>
-            <Text className='classify-title-item'> 类型 </Text>
-            <Text className='classify-title-item'> 性质 </Text>
-          </View>
-        </View>
-        {restHomeList}
+        <Video width='150px' height='190px' src={namedVideo} />
+        <View> aaaaaaaaaaaaaaaaaaaaa </View>
+        <View> aaaaaaaaaaaaaaaaaaaaa </View>
+        <View> aaaaaaaaaaaaaaaaaaaaa </View>
+        <View> aaaaaaaaaaaaaaaaaaaaa </View>
+        <View> aaaaaaaaaaaaaaaaaaaaa </View>
         <View className='rh-list-container'>
           <View className='rh-one-container' onClick={this.click_button.bind(this)}>
             <Image src={namedPng} className='rh-one-img'/>
@@ -121,6 +110,21 @@ export default class Index extends Component {
             </View>
           </View>
           </Navigator>
+        </View>
+        {restHomeList}
+        <View className='top-title-top-container'>
+          <View className='top-title-container'>
+            <Image className='top-title-back' src={namedPng} />
+            <Text className='top-title-city'> city </Text>
+            <Input type='text' placeholder='' className='top-title-input' />
+            <Image className='top-title-menu' src={namedPng} />
+          </View>
+          <View className='classify-title-container'>
+            <Text className='classify-title-item'> 价格 </Text>
+            <Text className='classify-title-item'> 床位数 </Text>
+            <Text className='classify-title-item'> 类型 </Text>
+            <Text className='classify-title-item'> 性质 </Text>
+          </View>
         </View>
       </View>
     )

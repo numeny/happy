@@ -5,11 +5,16 @@ import namedPng from '@images/index/1.jpeg'
 
 import { SERVER_HOST } from '../common/const'
 
+import namedVideo from '@res/video/1.mp4'
+
 export default class Rhdetail extends Component {
 
   constructor(props) {
     super(props)
-    this.state = { rhId : this.$router.params.rh_id }
+    this.state = {
+      rhId : this.$router.params.rh_id,
+      rhRecord : {}
+    }
   }
 
   componentDidMount () {
@@ -17,8 +22,12 @@ export default class Rhdetail extends Component {
     Taro.request({
       url: SERVER_HOST + '/get_rh_detail?rhid=' + String(this.state.rhId),
       success: (res) => {
-        console.log(res.data.records)
+        console.log(res.data.record)
         Taro.showToast({title: res.data.record.name})
+        this.setState({
+            message: 'success',
+            rhRecord: res.data.record,
+        })
       },
       fail: (error) => {
         console.error('bdg-error')
@@ -33,8 +42,122 @@ export default class Rhdetail extends Component {
   render () {
     return (
       <View>
+        <Video width='150px' height='190px' src={namedVideo} />
+        <View> aaaaaaaaaaaaaaaaaaaaa </View>
+        <View> aaaaaaaaaaaaaaaaaaaaa </View>
+        <View> aaaaaaaaaaaaaaaaaaaaa </View>
+        <View> aaaaaaaaaaaaaaaaaaaaa </View>
+        <View> aaaaaaaaaaaaaaaaaaaaa </View>
         <View>
-        rh_id: {this.state.rhId}
+        rh_id: {this.state.rhRecord.id}
+        </View>
+        <View>
+        id: {this.state.rhRecord.id}
+        </View>
+        <View>
+        name: {this.state.rhRecord.name}
+        </View>
+        <View>
+        phone: {this.state.rhRecord.phone}
+        </View>
+        <View>
+        mobile: {this.state.rhRecord.mobile}
+        </View>
+        <View>
+        email: {this.state.rhRecord.email}
+        </View>
+        <View>
+        postcode: {this.state.rhRecord.postcode}
+        </View>
+        <View>
+        location_id: {this.state.rhRecord.location_id}
+        </View>
+        <View>
+        type: {this.state.rhRecord.type}
+        </View>
+        <View>
+        factory_property: {this.state.rhRecord.factory_property}
+        </View>
+        <View>
+        person_in_charge: {this.state.rhRecord.person_in_charge}
+        </View>
+        <View>
+        establishment_time: {this.state.rhRecord.establishment_time}
+        </View>
+        <View>
+        floor_surface: {this.state.rhRecord.floor_surface}
+        </View>
+        <View>
+        building_area: {this.state.rhRecord.building_area}
+        </View>
+        <View>
+        bednum: {this.state.rhRecord.bednum}
+        </View>
+        <View>
+        staff_num: {this.state.rhRecord.staff_num}
+        </View>
+        <View>
+        for_persons: {this.state.rhRecord.for_persons}
+        </View>
+        <View>
+        charges_extent: {this.state.rhRecord.charges_extent}
+        </View>
+        <View>
+        special_services: {this.state.rhRecord.special_services}
+        </View>
+        <View>
+        contact_person: {this.state.rhRecord.contact_person}
+        </View>
+        <View>
+        address: {this.state.rhRecord.address}
+        </View>
+        <View>
+        url: {this.state.rhRecord.url}
+        </View>
+        <View>
+        transportation: {this.state.rhRecord.transportation}
+        </View>
+        <View>
+        inst_intro: {this.state.rhRecord.inst_intro}
+        </View>
+        <View>
+        inst_charge: {this.state.rhRecord.inst_charge}
+        </View>
+        <View>
+        facilities: {this.state.rhRecord.facilities}
+        </View>
+        <View>
+        service_content: {this.state.rhRecord.service_content}
+        </View>
+        <View>
+        inst_notes: {this.state.rhRecord.inst_notes}
+        </View>
+        <View>
+        ylw_id: {this.state.rhRecord.ylw_id}
+        </View>
+        <View>
+        province: {this.state.rhRecord.privince}
+        </View>
+        <View>
+        city: {this.state.rhRecord.city}
+        </View>
+        <View>
+        area: {this.state.rhRecord.area}
+        </View>
+        <View>
+        title_image: {this.state.rhRecord.title_image}
+        </View>
+        <View>
+        images: {this.state.rhRecord.images}
+        </View>
+        <View>
+        charges_min: {this.state.rhRecord.charges_min}
+        </View>
+        <View>
+        charges_max: {this.state.rhRecord.charges_max}
+        </View>
+        <View>
+        bednum_int: {this.state.rhRecord.bednum_int}
         </View>
         <Swiper indicatorColor='#999' indicatorActiveColor='#333'
                 circular indicatorDots autoplay>

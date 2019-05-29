@@ -20,7 +20,7 @@ $page-background-color: #FFF;
   flex-direction: row;
   flex-wrap: wrap;
   width: 100%;
-  position: fixed;
+  /*position: fixed;*/
   z-index: 9;
   background-color: $page-background-color;
 }
@@ -129,10 +129,10 @@ src: url(data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABUAAAAiCAMAAACHtmKxAAAAQ
 
 .rh-one-desc-head {
   width: 100%;
-  font-size: 23px bold;
+  font-size: 35px;
 }
 
 .rh-one-desc {
   width: 100%;
-  font-size: 18px;
+  font-size: 25px;
 }

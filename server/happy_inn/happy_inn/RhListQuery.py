@@ -36,14 +36,9 @@ class RhListQuery:
             record.rh_title_image = ("%s/%s/%d/%s" % (IMG_SERVER_HOST, IMGS_PATH, record.id, record.rh_title_image))
         else:
             record.rh_title_image = ("%s/%s/%s" % (IMG_SERVER_HOST, IMGS_PATH, DEFAULT_IMG))
-        print record.rh_title_image
 
-    def get_rh_list(self):
-        global RH_NUM_PER_PAGE
-        # FIXME, should not query all DB
-        # db = rh.objects.filter(Q(rh_area__endswith="门头沟区"))
+    def get_filter(self, response):
         all_filter = Q()
-        response = {}
         if len(self.query_param.province) != 0:
             all_filter = all_filter & Q(rh_privince__startswith=self.query_param.province)
             response['curr_province'] = self.query_param.province
@@ -72,6 +67,14 @@ class RhListQuery:
         if len(self.query_param.prop) != 0 and self.query_param.prop != '0':
             prop_filter = RhListQuery.get_prop_q_query(self.query_param.prop)
             all_filter = all_filter & prop_filter
+        return all_filter
+
+    def get_rh_list(self):
+        global RH_NUM_PER_PAGE
+        # FIXME, should not query all DB
+        # db = rh.objects.filter(Q(rh_area__endswith="门头沟区"))
+        response = {}
+        all_filter = self.get_filter(response)
 
         records = rh.objects.filter(all_filter).order_by('-rh_bednum_int', 'rh_name', 'rh_ylw_id')
         record_num = records.count()
@@ -90,7 +93,7 @@ class RhListQuery:
             # get_rh_location_id(r)
             ret_records.append(r)
 
-        response['records'] = DbQuery.get_all_colume_from_records(ret_records)
+        response['records'] = DbQuery.get_breif_colume_from_records(ret_records)
         if page_idx < page_num:
             response['record_num'] = RH_NUM_PER_PAGE
         else:
@@ -138,7 +141,7 @@ class RhListQuery:
 
     @staticmethod
     def get_bednum_q_query(minbednum, maxbednum):
-        return Q(rh_bednum_int__gte=minbednum) & Q(rh_bednum_int__lt=maxbednum)
+        return Q(rh_bednum_int__gte=minbednum) & Q(rh_bednum_int__lte=maxbednum)
 
     @staticmethod
     def get_type_q_query(str_type):
