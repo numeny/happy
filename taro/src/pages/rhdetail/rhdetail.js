@@ -1,6 +1,8 @@
 import Taro, { Component, Events } from '@tarojs/taro'
 import { View, Text, Image, Input, Video, Button, Icon, Progress, Checkbox, Switch, Form, Slider, Picker, PickerView, PickerViewColumn, Swiper, SwiperItem, Navigator } from '@tarojs/components'
 
+import './rhdetail.scss'
+
 import namedPng from '@images/index/1.jpeg'
 
 import { SERVER_HOST } from '../common/const'
@@ -43,120 +45,125 @@ export default class Rhdetail extends Component {
     return (
       <View>
         <Video width='150px' height='190px' src={namedVideo} />
+        <View className="show-part-text">aaaaaaaaaaaaaaaaaaaaa aaaaaaaaaaaaaaaaaaaaa aaaaaaaaaaaaaaaaaaaaa aaaaaaaaaaaaaaaaaaaaa aaaaaaaaaaaaaaaaaaaaa aaaaaaaaaaaaaaaaaaaaa aaaaaaaaaaaaaaaaaaaaa aaaaaaaaaaaaaaaaaaaaa aaaaaaaaaaaaaaaaaaaaa aaaaaaaaaaaaaaaaaaaaa aaaaaaaaaaaaaaaaaaaaa aaaaaaaaaaaaaaaaaaaaa aaaaaaaaaaaaaaaaaaaaa aaaaaaaaaaaaaaaaaaaaa aaaaaaaaaaaaaaaaaaaaa aaaaaaaaaaaaaaaaaaaaa
+        </View>
         <View> aaaaaaaaaaaaaaaaaaaaa </View>
         <View> aaaaaaaaaaaaaaaaaaaaa </View>
         <View> aaaaaaaaaaaaaaaaaaaaa </View>
         <View> aaaaaaaaaaaaaaaaaaaaa </View>
         <View> aaaaaaaaaaaaaaaaaaaaa </View>
-        <View>
+        <View> aaaaaaaaaaaaaaaaaaaaa </View>
+        <View> aaaaaaaaaaaaaaaaaaaaa </View>
+        <Text className="show-part-text">This is some long text that will not fit in the boxThis is some long text that will not fit in the boxThis is some long text that will not fit in the boxThis is some long text that will not fit in the boxThis is some long text that will not fit in the boxThis is some long text that will not fit in the box</Text>
+        <View className="show-part-text">
         rh_id: {this.state.rhRecord.id}
         </View>
-        <View>
+        <View className="show-part-text">
         id: {this.state.rhRecord.id}
         </View>
-        <View>
+        <View className="show-part-text">
         name: {this.state.rhRecord.name}
         </View>
-        <View>
+        <View className="show-part-text">
         phone: {this.state.rhRecord.phone}
         </View>
-        <View>
+        <View className="show-part-text">
         mobile: {this.state.rhRecord.mobile}
         </View>
-        <View>
+        <View className="show-part-text">
         email: {this.state.rhRecord.email}
         </View>
-        <View>
+        <View className="show-part-text">
         postcode: {this.state.rhRecord.postcode}
         </View>
-        <View>
+        <View className="show-part-text">
         location_id: {this.state.rhRecord.location_id}
         </View>
-        <View>
+        <View className="show-part-text">
         type: {this.state.rhRecord.type}
         </View>
-        <View>
+        <View className="show-part-text">
         factory_property: {this.state.rhRecord.factory_property}
         </View>
-        <View>
+        <View className="show-part-text">
         person_in_charge: {this.state.rhRecord.person_in_charge}
         </View>
-        <View>
+        <View className="show-part-text">
         establishment_time: {this.state.rhRecord.establishment_time}
         </View>
-        <View>
+        <View className="show-part-text">
         floor_surface: {this.state.rhRecord.floor_surface}
         </View>
-        <View>
+        <View className="show-part-text">
         building_area: {this.state.rhRecord.building_area}
         </View>
-        <View>
+        <View className="show-part-text">
         bednum: {this.state.rhRecord.bednum}
         </View>
-        <View>
+        <View className="show-part-text">
         staff_num: {this.state.rhRecord.staff_num}
         </View>
-        <View>
+        <View className="show-part-text">
         for_persons: {this.state.rhRecord.for_persons}
         </View>
-        <View>
+        <View className="show-part-text">
         charges_extent: {this.state.rhRecord.charges_extent}
         </View>
-        <View>
+        <View className="show-part-text">
         special_services: {this.state.rhRecord.special_services}
         </View>
-        <View>
+        <View className="show-part-text">
         contact_person: {this.state.rhRecord.contact_person}
         </View>
-        <View>
+        <View className="show-part-text">
         address: {this.state.rhRecord.address}
         </View>
-        <View>
+        <View className="show-part-text">
         url: {this.state.rhRecord.url}
         </View>
-        <View>
+        <View className="show-part-text">
         transportation: {this.state.rhRecord.transportation}
         </View>
-        <View>
+        <View className="show-part-text">
         inst_intro: {this.state.rhRecord.inst_intro}
         </View>
-        <View>
+        <View className="show-part-text">
         inst_charge: {this.state.rhRecord.inst_charge}
         </View>
-        <View>
+        <View className="show-part-text">
         facilities: {this.state.rhRecord.facilities}
         </View>
-        <View>
+        <View className="show-part-text">
         service_content: {this.state.rhRecord.service_content}
         </View>
-        <View>
+        <View className="show-part-text">
         inst_notes: {this.state.rhRecord.inst_notes}
         </View>
-        <View>
+        <View className="show-part-text">
         ylw_id: {this.state.rhRecord.ylw_id}
         </View>
-        <View>
+        <View className="show-part-text">
         province: {this.state.rhRecord.privince}
         </View>
-        <View>
+        <View className="show-part-text">
         city: {this.state.rhRecord.city}
         </View>
-        <View>
+        <View className="show-part-text">
         area: {this.state.rhRecord.area}
         </View>
-        <View>
+        <View className="show-part-text">
         title_image: {this.state.rhRecord.title_image}
         </View>
-        <View>
+        <View className="show-part-text">
         images: {this.state.rhRecord.images}
         </View>
-        <View>
+        <View className="show-part-text">
         charges_min: {this.state.rhRecord.charges_min}
         </View>
-        <View>
+        <View className="show-part-text">
         charges_max: {this.state.rhRecord.charges_max}
         </View>
-        <View>
+        <View className="show-part-text">
         bednum_int: {this.state.rhRecord.bednum_int}
         </View>
         <Swiper indicatorColor='#999' indicatorActiveColor='#333'
