@@ -1,0 +1,8 @@
+cnpm install babel-plugin-transform-decorators-legacy
+cnpm install babel-plugin-transform-class-properties
+cnpm install babel-plugin-transform-object-rest-spread
+cnpm install babel-preset-env
+cnpm install @tarojs/cli
+cnpm install @tarojs/taro
+cnpm install @tarojs/router
+cnpm install @tarojs/components
