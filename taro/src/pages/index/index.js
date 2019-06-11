@@ -77,12 +77,21 @@ export default class Index extends Component {
         )
     return (
       <View className='top-container'>
-        <Video width='150px' height='190px' src={namedVideo} />
-        <View> aaaaaaaaaaaaaaaaaaaaa </View>
-        <View> aaaaaaaaaaaaaaaaaaaaa </View>
-        <View> aaaaaaaaaaaaaaaaaaaaa </View>
-        <View> aaaaaaaaaaaaaaaaaaaaa </View>
-        <View> aaaaaaaaaaaaaaaaaaaaa </View>
+        <View className='top-title-top-container'>
+          <View className='top-title-container'>
+            <Image className='top-title-back' src={namedPng} />
+            <Text className='top-title-city'> city </Text>
+            <Input type='text' placeholder='' className='top-title-input' />
+            <Image className='top-title-menu' src={namedPng} />
+          </View>
+          <View className='classify-title-container'>
+            <Text className='classify-title-item'> 价格 </Text>
+            <Text className='classify-title-item'> 床位数 </Text>
+            <Text className='classify-title-item'> 类型 </Text>
+            <Text className='classify-title-item'> 性质 </Text>
+          </View>
+        </View>
+        {restHomeList}
         <View className='rh-list-container'>
           <View className='rh-one-container' onClick={this.click_button.bind(this)}>
             <Image src={namedPng} className='rh-one-img'/>
@@ -111,21 +120,12 @@ export default class Index extends Component {
           </View>
           </Navigator>
         </View>
-        {restHomeList}
-        <View className='top-title-top-container'>
-          <View className='top-title-container'>
-            <Image className='top-title-back' src={namedPng} />
-            <Text className='top-title-city'> city </Text>
-            <Input type='text' placeholder='' className='top-title-input' />
-            <Image className='top-title-menu' src={namedPng} />
-          </View>
-          <View className='classify-title-container'>
-            <Text className='classify-title-item'> 价格 </Text>
-            <Text className='classify-title-item'> 床位数 </Text>
-            <Text className='classify-title-item'> 类型 </Text>
-            <Text className='classify-title-item'> 性质 </Text>
-          </View>
-        </View>
+        <Video width='150px' height='190px' src={namedVideo} />
+        <View> aaaaaaaaaaaaaaaaaaaaa </View>
+        <View> aaaaaaaaaaaaaaaaaaaaa </View>
+        <View> aaaaaaaaaaaaaaaaaaaaa </View>
+        <View> aaaaaaaaaaaaaaaaaaaaa </View>
+        <View> aaaaaaaaaaaaaaaaaaaaa </View>
       </View>
     )
   }

@@ -44,16 +44,18 @@ export default class Rhdetail extends Component {
   render () {
     return (
       <View>
-        <Video width='150px' height='190px' src={namedVideo} />
-        <View className="show-part-text">aaaaaaaaaaaaaaaaaaaaa aaaaaaaaaaaaaaaaaaaaa aaaaaaaaaaaaaaaaaaaaa aaaaaaaaaaaaaaaaaaaaa aaaaaaaaaaaaaaaaaaaaa aaaaaaaaaaaaaaaaaaaaa aaaaaaaaaaaaaaaaaaaaa aaaaaaaaaaaaaaaaaaaaa aaaaaaaaaaaaaaaaaaaaa aaaaaaaaaaaaaaaaaaaaa aaaaaaaaaaaaaaaaaaaaa aaaaaaaaaaaaaaaaaaaaa aaaaaaaaaaaaaaaaaaaaa aaaaaaaaaaaaaaaaaaaaa aaaaaaaaaaaaaaaaaaaaa aaaaaaaaaaaaaaaaaaaaa
-        </View>
-        <View> aaaaaaaaaaaaaaaaaaaaa </View>
-        <View> aaaaaaaaaaaaaaaaaaaaa </View>
-        <View> aaaaaaaaaaaaaaaaaaaaa </View>
-        <View> aaaaaaaaaaaaaaaaaaaaa </View>
-        <View> aaaaaaaaaaaaaaaaaaaaa </View>
-        <View> aaaaaaaaaaaaaaaaaaaaa </View>
-        <View> aaaaaaaaaaaaaaaaaaaaa </View>
+        <Swiper indicatorColor='#999' indicatorActiveColor='#333'
+                circular indicatorDots autoplay>
+          <SwiperItem>
+            <Image src={namedPng} width="100%" />
+          </SwiperItem>
+          <SwiperItem>
+            <Image src={namedPng} width="100%" />
+          </SwiperItem>
+          <SwiperItem>
+            <Image src={namedPng} width="100%" />
+          </SwiperItem>
+        </Swiper>
         <Text className="show-part-text">This is some long text that will not fit in the boxThis is some long text that will not fit in the boxThis is some long text that will not fit in the boxThis is some long text that will not fit in the boxThis is some long text that will not fit in the boxThis is some long text that will not fit in the box</Text>
         <View className="show-part-text">
         rh_id: {this.state.rhRecord.id}
@@ -166,18 +168,6 @@ export default class Rhdetail extends Component {
         <View className="show-part-text">
         bednum_int: {this.state.rhRecord.bednum_int}
         </View>
-        <Swiper indicatorColor='#999' indicatorActiveColor='#333'
-                circular indicatorDots autoplay>
-          <SwiperItem>
-            <Image src={namedPng} width="100%" />
-          </SwiperItem>
-          <SwiperItem>
-            <Image src={namedPng} width="100%" />
-          </SwiperItem>
-          <SwiperItem>
-            <Image src={namedPng} width="100%" />
-          </SwiperItem>
-        </Swiper>
         <View className='title-container'>
           <View>
             <Text className='title-item'> title </Text>
@@ -186,6 +176,16 @@ export default class Rhdetail extends Component {
             <Text> address </Text>
           </View>
         </View>
+        <Video width='150px' height='190px' src={namedVideo} />
+        <View className="show-part-text">aaaaaaaaaaaaaaaaaaaaa aaaaaaaaaaaaaaaaaaaaa aaaaaaaaaaaaaaaaaaaaa aaaaaaaaaaaaaaaaaaaaa aaaaaaaaaaaaaaaaaaaaa aaaaaaaaaaaaaaaaaaaaa aaaaaaaaaaaaaaaaaaaaa aaaaaaaaaaaaaaaaaaaaa aaaaaaaaaaaaaaaaaaaaa aaaaaaaaaaaaaaaaaaaaa aaaaaaaaaaaaaaaaaaaaa aaaaaaaaaaaaaaaaaaaaa aaaaaaaaaaaaaaaaaaaaa aaaaaaaaaaaaaaaaaaaaa aaaaaaaaaaaaaaaaaaaaa aaaaaaaaaaaaaaaaaaaaa
+        </View>
+        <View> aaaaaaaaaaaaaaaaaaaaa </View>
+        <View> aaaaaaaaaaaaaaaaaaaaa </View>
+        <View> aaaaaaaaaaaaaaaaaaaaa </View>
+        <View> aaaaaaaaaaaaaaaaaaaaa </View>
+        <View> aaaaaaaaaaaaaaaaaaaaa </View>
+        <View> aaaaaaaaaaaaaaaaaaaaa </View>
+        <View> aaaaaaaaaaaaaaaaaaaaa </View>
       </View>
     )
   }
