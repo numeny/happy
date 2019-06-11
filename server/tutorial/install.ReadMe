@@ -1,0 +1,54 @@
+1.mysql:
+mysql -u bdg -p
+
+2.
+CREATE USER bdg IDENTIFIED BY '1';
+CREATE USER bdg@localhost IDENTIFIED BY '1';
+GRANT ALL PRIVILEGES ON *.* TO bdg;
+GRANT ALL PRIVILEGES ON *.* TO bdg@localhost;
+
+create database rh;
+
+cd ~/happy-inn/data.bak/db.use.command/ylw.and.ylxxw
+mysql -u "root" -p rh < rh.backup.sql
+
+3.
+python manage.py migrate
+python manage.py makemigrations RHModel
+python manage.py migrate RHModel
+
+
+alter table RHModel_rh convert to charset utf8;
+
+3. 插入rh表到rh_rh:
+
+alter table rh_rh convert to charset utf8;
+
+insert into rh_rh(rh_name, rh_phone, rh_mobile, rh_email, rh_postcode, rh_location_id, rh_type, rh_factory_property, rh_person_in_charge, rh_establishment_time, rh_floor_surface, rh_building_area, rh_bednum, rh_staff_num, rh_for_persons, rh_charges_extent, rh_special_services, rh_contact_person, rh_address, rh_url, rh_transportation, rh_inst_intro, rh_inst_charge, rh_facilities, rh_service_content, rh_inst_notes, rh_ylw_id) select rh_name, rh_phone, rh_mobile, rh_email, rh_postcode, rh_location_id, rh_type, rh_factory_property, rh_person_in_charge, rh_establishment_time, rh_floor_surface, rh_building_area, rh_bednum, rh_staff_num, rh_for_persons, rh_charges_extent, rh_special_services, rh_contact_person, rh_address, rh_url, rh_transportation, rh_inst_intro, rh_inst_charge, rh_facilities, rh_service_content, rh_inst_notes, rh_ylw_id from rh;
+
+alter table rh add column rh_privince TEXT;
+alter table rh add column rh_city TEXT;
+alter table rh add column rh_area TEXT;
+
+3.2
+最终django目前是使用rh_rh的数据表
+
+4. 运行django服务：
+cd happy-inn/server
+python manage.py runserver 0.0.0.0:8000
+
+5. 浏览器访问：
+10.192.100.11:8000
+
+
+
+FAQ:
+
+1. MySQL fix: Field ‘xxxx’ doesn’t have a default value
+bdg@bdg:~/downloads$ sudo vi /etc/mysql/mysql.conf.d/mysqld.cnf 
+[mysqld]
+...
+sql_mode=""
+...
+bdg@bdg:~/downloads$ sudo service mysql restart
+

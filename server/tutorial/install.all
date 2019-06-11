@@ -1,0 +1,14 @@
+sudo cp /etc/apt/sources.list /etc/apt/sources.list.old
+sudo cp sources.list /etc/apt/sources.list
+sudo apt-get update
+sudo apt-get install vim chromium-browser apache2 git exuberant-ctags cscope
+
+sudo apt-get install mysql-server mysql-client python-mysqldb
+
+pip install Django
+pip install django-cors-headers
+pip install django-json-response
+
+scrapy:
+sudo apt-get install python-dev python-pip libxml2-dev libxslt1-dev zlib1g-dev libffi-dev libssl-dev
+sudo pip install scrapy
