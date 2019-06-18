@@ -2,6 +2,7 @@ import Taro, { Component, Events, Config } from '@tarojs/taro'
 import { View, Text, Image, Input, Video, Button, Icon, Progress, Checkbox, Switch, Form, Slider, Picker, PickerView, PickerViewColumn, Swiper, SwiperItem, Navigator } from '@tarojs/components'
 import './index.scss'
 import namedPng from '@images/index/1.jpeg'
+import { SERVER_HOST } from '../common/const'
 
 export default class Index extends Component {
 
@@ -24,10 +25,31 @@ export default class Index extends Component {
         {name: "name1", address: "address1"},
         {name: "name2", address: "address2"},
       ]
+      title_image: ""
     }
   }
 
-  componentWillMount () { }
+  componentWillMount() {
+    Taro.request({
+      url: SERVER_HOST + '/show_rh_list',
+      success: (res) => {
+        console.log(res.data.records)
+        Taro.showToast({title: res.data.records[0].title_image})
+        this.setState({
+            message: 'success',
+            rhList: res.data.records,
+        })
+      },
+      fail: (error) => {
+        console.error('bdg-error')
+        this.setState({message: 'hello'})
+        Taro.showToast({title: 'fail'})
+      },
+      complete: () => {
+        // Taro.showToast({title: "complete"})
+      },
+    })
+  }
 
   componentDidMount () { }
 
@@ -48,9 +70,24 @@ export default class Index extends Component {
   }
 
   render () {
+    const { rhList } = this.state
+    const restHomeList = (
+          <View className='rh-list-container'>
+          {rhList.map((rh) =>
+            <View className='rh-one-container' onClick={this.click_button.bind(this, rh.id)}>
+              <Image src={rh.title_image} className='rh-one-img'/>
+              <View className='rh-one-desc-container'>
+                <Text className='rh-one-desc-head'>{rh.name}</Text>
+                <Text className='rh-one-desc'>{rh.address}</Text>
+                <Text className='rh-one-desc'>{rh.bednum_int}个床位</Text>
+                <Text className='rh-one-desc'>{rh.id}</Text>
+              </View>
+            </View>
+          )}
+          </View>
+        )
     return (
-      <View className='index'>
-        <Text>Hello world!</Text>
+      <View className='top-container'>
         <View className='top-title-top-container'>
           <View className='top-title-container'>
             <Image className='top-title-back' src={namedPng} />
@@ -65,6 +102,7 @@ export default class Index extends Component {
             <Text className='classify-title-item'> 性质 </Text>
           </View>
         </View>
+        {restHomeList}
         <View className='rh-list-container'>
           <View className='rh-one-container' onClick={this.click_button.bind(this)}>
             <Image src={namedPng} className='rh-one-img'/>
