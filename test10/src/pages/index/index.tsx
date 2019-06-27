@@ -58,15 +58,15 @@ export default class Index extends Component {
   componentDidShow () { }
 
   componentDidHide () { }
-  click_button (e) {
+  click_button (rh_id, e) {
     /*
+    */
     Taro.showToast({title: String(rh_id)})
     Taro.navigateTo({
       url: '/pages/rhdetail/rhdetail?rh_id=' + String(rh_id),
     })
 
     Taro.showNavigationBarLoading();
-    */
   }
 
   render () {

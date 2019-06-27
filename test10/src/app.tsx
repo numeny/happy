@@ -1,5 +1,6 @@
 import Taro, { Component, Config } from '@tarojs/taro'
 import Index from './pages/index'
+import Rhdetail from './pages/rhdetail'
 
 import './app.scss'
 
@@ -20,7 +21,8 @@ class App extends Component {
    */
   config: Config = {
     pages: [
-      'pages/index/index'
+      'pages/index/index',
+      'pages/rhdetail/rhdetail'
     ],
     window: {
       backgroundTextStyle: 'light',
