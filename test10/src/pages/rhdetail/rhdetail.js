@@ -14,7 +14,11 @@ export default class Rhdetail extends Component {
     this.state = {
       rhId : this.$router.params.rh_id,
       rhRecord : {},
-      inst_charge_handled: []
+      inst_charge_handled: [],
+      rhRecordHandled: {
+        inst_charge_handled: [],
+        inst_charge_handled_style: [],
+      },
     }
   }
 
@@ -83,12 +87,39 @@ export default class Rhdetail extends Component {
         res.data.record.inst_charge = res.data.record.inst_charge.replace(/<\/b>/g, "")
         res.data.record.inst_charge = res.data.record.inst_charge.replace(/<\/strong>/g, "")
 
-        res.data.record.inst_charge = res.data.record.inst_charge.replace(/<p style=\"text-indent:2em\">/g, "")
-        res.data.record.inst_charge = res.data.record.inst_charge.replace(/<b>/g, "")
-        res.data.record.inst_charge = res.data.record.inst_charge.replace(/<strong>/g, "")
+        // res.data.record.inst_charge = res.data.record.inst_charge.replace(/<p style=\"text-indent:2em\">/g, "")
         console.info("inst_charge-2-2: " + res.data.record.inst_charge)
         var inst_charge_handled = String(res.data.record.inst_charge).split("</p>")
         console.info("inst_charge-2-3: inst_charge_handled: " + inst_charge_handled)
+
+        var rhRecordHandled_1 = {
+          inst_charge_handled: [],
+          inst_charge_handled_style: [],
+        }
+        var rhRecordHandled_2 = {
+          inst_charge_handled: [],
+        }
+        rhRecordHandled_1.inst_charge_handled = String(res.data.record.inst_charge).split("</p>")
+        rhRecordHandled_1.inst_charge_handled.forEach(
+            function(value, index, array) {
+              var class_style = "";
+              if (value.indexOf("<p style=\"text-indent:2em\"><strong>") >= 0
+                  || value.indexOf("<p style=\"text-indent:2em\"><b>") >=0) {
+                class_style = "bold_font_two_space"
+              } else if (value.indexOf("<p style=\"text-indent:2em\">") >= 0) {
+                class_style = "two_space"
+              }
+              rhRecordHandled_1.inst_charge_handled[index] = rhRecordHandled_1.inst_charge_handled[index].replace(/<p style=\"text-indent:2em\">/g, "")
+              rhRecordHandled_1.inst_charge_handled[index] = rhRecordHandled_1.inst_charge_handled[index].replace(/<b>/g, "")
+              rhRecordHandled_1.inst_charge_handled[index] = rhRecordHandled_1.inst_charge_handled[index].replace(/<strong>/g, "")
+              rhRecordHandled_1.inst_charge_handled_style.push(class_style)
+              rhRecordHandled_2.inst_charge_handled.push([rhRecordHandled_1.inst_charge_handled[index], class_style])
+              console.info("inst_charge-2-4-0: inst_charge_handled: " + class_style)
+              console.info("inst_charge-2-4-0-1: inst_charge_handled: " + rhRecordHandled_2.inst_charge_handled[index])
+        })
+        console.info("inst_charge-2-4: inst_charge_handled: " + rhRecordHandled_1.inst_charge_handled)
+        console.info("inst_charge-2-5: inst_charge_handled: " + this.state.rhRecordHandled.inst_charge_handled)
+
         // res.data.record.inst_charge_handled = res.data.record.inst_charge.replace(/p/g, "View")
 
         // var inst_charge = res.data.record.inst_charge
@@ -117,6 +148,7 @@ export default class Rhdetail extends Component {
             message: 'success',
             rhRecord: res.data.record,
             inst_charge_handled: inst_charge_handled,
+            rhRecordHandled: rhRecordHandled_2,
         })
       },
       fail: (error) => {
@@ -132,9 +164,9 @@ export default class Rhdetail extends Component {
   render () {
     const inst_charge_handled = (
         <View>
-          { this.state.inst_charge_handled.map((par) =>
-              <View>
-                {par}
+          { this.state.rhRecordHandled.inst_charge_handled.map((par) =>
+              <View className={par[1]}>
+                {par[0]}
               </View>
             )
           }
@@ -232,7 +264,7 @@ export default class Rhdetail extends Component {
         inst_charge: {this.state.rhRecord.inst_charge}
         </View>
         <View className="show-part-text">
-        inst_charge: { inst_charge_handled }
+        inst_charge_1: { inst_charge_handled }
         </View>
         <View className="show-part-text">
         facilities: {this.state.rhRecord.facilities}
