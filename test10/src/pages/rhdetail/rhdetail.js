@@ -14,10 +14,14 @@ export default class Rhdetail extends Component {
     this.state = {
       rhId : this.$router.params.rh_id,
       rhRecord : {},
-      inst_charge_handled: [],
       rhRecordHandled: {
         inst_charge_handled: [],
-        inst_charge_handled_style: [],
+        transportation_handled: [],
+        inst_intro_handled: [],
+        special_services_handled: [],
+        facilities_handled: [],
+        service_content_handled: [],
+        inst_notes_handled: [],
       },
     }
   }
@@ -62,9 +66,56 @@ export default class Rhdetail extends Component {
   }
 
   handleAllContent = (res) => {
+    var rhRecordHandled_2 = {
+      inst_charge_handled: [],
+      transportation_handled: [],
+      inst_intro_handled: [],
+      special_services_handled: [],
+      facilities_handled: [],
+      service_content_handled: [],
+      inst_notes_handled: [],
+    }
+    this.handleContent(res.data.record.inst_charge, rhRecordHandled_2.inst_charge_handled)
+    this.handleContent(res.data.record.transportation, rhRecordHandled_2.transportation_handled)
+    this.handleContent(res.data.record.inst_intro, rhRecordHandled_2.inst_intro_handled)
+    this.handleContent(res.data.record.special_services, rhRecordHandled_2.special_services_handled)
+    this.handleContent(res.data.record.facilities, rhRecordHandled_2.facilities_handled)
+    this.handleContent(res.data.record.service_content, rhRecordHandled_2.service_content_handled)
+    this.handleContent(res.data.record.inst_notes, rhRecordHandled_2.inst_notes_handled)
+
+    return rhRecordHandled_2
+  }
+
+  handleContent = (inst_charge, inst_charge_handled) => {
+    let inst_charge_handled_tmp = []
+    inst_charge = inst_charge.replace(/<\/b>/g, "")
+    inst_charge = inst_charge.replace(/<\/strong>/g, "")
+
+    inst_charge_handled_tmp = String(inst_charge).split("</p>")
+    inst_charge_handled_tmp.forEach(
+        function(value, index, array) {
+          var class_style = "";
+          if (value.indexOf("<p style=\"text-indent:2em\"><strong>") >= 0
+              || value.indexOf("<p style=\"text-indent:2em\"><b>") >=0) {
+            class_style = "bold_font_two_space"
+          } else if (value.indexOf("<p style=\"text-indent:2em\">") >= 0) {
+            class_style = "two_space"
+          }
+          inst_charge_handled_tmp[index] = inst_charge_handled_tmp[index].replace(/<p style=\"text-indent:2em\">/g, "")
+          inst_charge_handled_tmp[index] = inst_charge_handled_tmp[index].replace(/<b>/g, "")
+          inst_charge_handled_tmp[index] = inst_charge_handled_tmp[index].replace(/<strong>/g, "")
+          inst_charge_handled.push([inst_charge_handled_tmp[index], class_style])
+          console.info("inst_charge-2-4-0: inst_charge_handled: " + class_style)
+          console.info("inst_charge-2-4-0-1: inst_charge_handled: " + inst_charge_handled[index])
+    })
+    console.info("inst_charge-2-4: inst_charge_handled: " + inst_charge_handled_tmp)
+    console.info("inst_charge-2-5: inst_charge_handled: " + this.state.rhRecordHandled.inst_charge_handled)
+
+    /*
     console.error("inst_charge-1-1: " + res.data.record.inst_charge)
     this.handleContent(res.data.record.inst_charge)
     console.error("inst_charge-1-2: " + res.data.record.inst_charge)
+    */
   }
 
   componentDidMount () {
@@ -74,7 +125,6 @@ export default class Rhdetail extends Component {
       success: (res) => {
         console.log(res.data.record)
         Taro.showToast({title: res.data.record.name})
-        // this.handleAllContent(res)
 
         console.info("inst_charge-2-1: " + res.data.record.inst_charge)
         /*
@@ -84,41 +134,15 @@ export default class Rhdetail extends Component {
            inst = inst.replace("<\/p>", "")
            inst = inst.replace("strong", "")
          */
+        /*
         res.data.record.inst_charge = res.data.record.inst_charge.replace(/<\/b>/g, "")
         res.data.record.inst_charge = res.data.record.inst_charge.replace(/<\/strong>/g, "")
+        */
 
         // res.data.record.inst_charge = res.data.record.inst_charge.replace(/<p style=\"text-indent:2em\">/g, "")
         console.info("inst_charge-2-2: " + res.data.record.inst_charge)
-        var inst_charge_handled = String(res.data.record.inst_charge).split("</p>")
-        console.info("inst_charge-2-3: inst_charge_handled: " + inst_charge_handled)
 
-        var rhRecordHandled_1 = {
-          inst_charge_handled: [],
-          inst_charge_handled_style: [],
-        }
-        var rhRecordHandled_2 = {
-          inst_charge_handled: [],
-        }
-        rhRecordHandled_1.inst_charge_handled = String(res.data.record.inst_charge).split("</p>")
-        rhRecordHandled_1.inst_charge_handled.forEach(
-            function(value, index, array) {
-              var class_style = "";
-              if (value.indexOf("<p style=\"text-indent:2em\"><strong>") >= 0
-                  || value.indexOf("<p style=\"text-indent:2em\"><b>") >=0) {
-                class_style = "bold_font_two_space"
-              } else if (value.indexOf("<p style=\"text-indent:2em\">") >= 0) {
-                class_style = "two_space"
-              }
-              rhRecordHandled_1.inst_charge_handled[index] = rhRecordHandled_1.inst_charge_handled[index].replace(/<p style=\"text-indent:2em\">/g, "")
-              rhRecordHandled_1.inst_charge_handled[index] = rhRecordHandled_1.inst_charge_handled[index].replace(/<b>/g, "")
-              rhRecordHandled_1.inst_charge_handled[index] = rhRecordHandled_1.inst_charge_handled[index].replace(/<strong>/g, "")
-              rhRecordHandled_1.inst_charge_handled_style.push(class_style)
-              rhRecordHandled_2.inst_charge_handled.push([rhRecordHandled_1.inst_charge_handled[index], class_style])
-              console.info("inst_charge-2-4-0: inst_charge_handled: " + class_style)
-              console.info("inst_charge-2-4-0-1: inst_charge_handled: " + rhRecordHandled_2.inst_charge_handled[index])
-        })
-        console.info("inst_charge-2-4: inst_charge_handled: " + rhRecordHandled_1.inst_charge_handled)
-        console.info("inst_charge-2-5: inst_charge_handled: " + this.state.rhRecordHandled.inst_charge_handled)
+        var rhRecordHandled_2 = this.handleAllContent(res)
 
         // res.data.record.inst_charge_handled = res.data.record.inst_charge.replace(/p/g, "View")
 
@@ -147,7 +171,6 @@ export default class Rhdetail extends Component {
         this.setState({
             message: 'success',
             rhRecord: res.data.record,
-            inst_charge_handled: inst_charge_handled,
             rhRecordHandled: rhRecordHandled_2,
         })
       },
@@ -162,6 +185,26 @@ export default class Rhdetail extends Component {
   }
 
   render () {
+    const transportation_handled = (
+        <View>
+          { this.state.rhRecordHandled.transportation_handled.map((par) =>
+              <View className={par[1]}>
+                {par[0]}
+              </View>
+            )
+          }
+        </View>
+        )
+    const inst_intro_handled = (
+        <View>
+          { this.state.rhRecordHandled.inst_intro_handled.map((par) =>
+              <View className={par[1]}>
+                {par[0]}
+              </View>
+            )
+          }
+        </View>
+        )
     const inst_charge_handled = (
         <View>
           { this.state.rhRecordHandled.inst_charge_handled.map((par) =>
@@ -172,6 +215,47 @@ export default class Rhdetail extends Component {
           }
         </View>
         )
+    const special_services_handled = (
+        <View>
+          { this.state.rhRecordHandled.special_services_handled.map((par) =>
+              <View className={par[1]}>
+                {par[0]}
+              </View>
+            )
+          }
+        </View>
+        )
+    const facilities_handled = (
+        <View>
+          { this.state.rhRecordHandled.facilities_handled.map((par) =>
+              <View className={par[1]}>
+                {par[0]}
+              </View>
+            )
+          }
+        </View>
+        )
+    const service_content_handled = (
+        <View>
+          { this.state.rhRecordHandled.service_content_handled.map((par) =>
+              <View className={par[1]}>
+                {par[0]}
+              </View>
+            )
+          }
+        </View>
+        )
+    const inst_notes_handled = (
+        <View>
+          { this.state.rhRecordHandled.inst_notes_handled.map((par) =>
+              <View className={par[1]}>
+                {par[0]}
+              </View>
+            )
+          }
+        </View>
+        )
+
     return (
       <View>
         <Video width='150px' height='190px' src={namedVideo} />
@@ -246,6 +330,9 @@ export default class Rhdetail extends Component {
         special_services: {this.state.rhRecord.special_services}
         </View>
         <View className="show-part-text">
+        special_services_1: {special_services_handled}
+        </View>
+        <View className="show-part-text">
         contact_person: {this.state.rhRecord.contact_person}
         </View>
         <View className="show-part-text">
@@ -258,7 +345,13 @@ export default class Rhdetail extends Component {
         transportation: {this.state.rhRecord.transportation}
         </View>
         <View className="show-part-text">
+        transportation_1: {transportation_handled}
+        </View>
+        <View className="show-part-text">
         inst_intro: {this.state.rhRecord.inst_intro}
+        </View>
+        <View className="show-part-text">
+        inst_intro_1: {inst_intro_handled}
         </View>
         <View className="show-part-text">
         inst_charge: {this.state.rhRecord.inst_charge}
@@ -270,10 +363,19 @@ export default class Rhdetail extends Component {
         facilities: {this.state.rhRecord.facilities}
         </View>
         <View className="show-part-text">
+        facilities_1: {facilities_handled}
+        </View>
+        <View className="show-part-text">
         service_content: {this.state.rhRecord.service_content}
         </View>
         <View className="show-part-text">
+        service_content_1: {service_content_handled}
+        </View>
+        <View className="show-part-text">
         inst_notes: {this.state.rhRecord.inst_notes}
+        </View>
+        <View className="show-part-text">
+        inst_notes_1: {inst_notes_handled}
         </View>
         <View className="show-part-text">
         ylw_id: {this.state.rhRecord.ylw_id}
