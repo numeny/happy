@@ -13,7 +13,8 @@ export default class Rhdetail extends Component {
     super(props)
     this.state = {
       rhId : this.$router.params.rh_id,
-      rhRecord : {}
+      rhRecord : {},
+      inst_charge_handled: []
     }
   }
 
@@ -79,8 +80,16 @@ export default class Rhdetail extends Component {
            inst = inst.replace("<\/p>", "")
            inst = inst.replace("strong", "")
          */
-        res.data.record.inst_charge = res.data.record.inst_charge.replace(/p/g, "View")
+        res.data.record.inst_charge = res.data.record.inst_charge.replace(/<\/b>/g, "")
+        res.data.record.inst_charge = res.data.record.inst_charge.replace(/<\/strong>/g, "")
+
+        res.data.record.inst_charge = res.data.record.inst_charge.replace(/<p style=\"text-indent:2em\">/g, "")
+        res.data.record.inst_charge = res.data.record.inst_charge.replace(/<b>/g, "")
+        res.data.record.inst_charge = res.data.record.inst_charge.replace(/<strong>/g, "")
         console.info("inst_charge-2-2: " + res.data.record.inst_charge)
+        var inst_charge_handled = String(res.data.record.inst_charge).split("</p>")
+        console.info("inst_charge-2-3: inst_charge_handled: " + inst_charge_handled)
+        // res.data.record.inst_charge_handled = res.data.record.inst_charge.replace(/p/g, "View")
 
         // var inst_charge = res.data.record.inst_charge
         // var inst_charge_1 = new String("div-1")
@@ -107,6 +116,7 @@ export default class Rhdetail extends Component {
         this.setState({
             message: 'success',
             rhRecord: res.data.record,
+            inst_charge_handled: inst_charge_handled,
         })
       },
       fail: (error) => {
@@ -120,6 +130,16 @@ export default class Rhdetail extends Component {
   }
 
   render () {
+    const inst_charge_handled = (
+        <View>
+          { this.state.inst_charge_handled.map((par) =>
+              <View>
+                {par}
+              </View>
+            )
+          }
+        </View>
+        )
     return (
       <View>
         <Video width='150px' height='190px' src={namedVideo} />
@@ -210,6 +230,9 @@ export default class Rhdetail extends Component {
         </View>
         <View className="show-part-text">
         inst_charge: {this.state.rhRecord.inst_charge}
+        </View>
+        <View className="show-part-text">
+        inst_charge: { inst_charge_handled }
         </View>
         <View className="show-part-text">
         facilities: {this.state.rhRecord.facilities}
