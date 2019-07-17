@@ -1,3 +1,3 @@
 import Taro from '@tarojs/taro';
 
-export const SERVER_HOST = "http://192.168.101.129:10001"
+export const SERVER_HOST = "http://10.129.192.204:8001"

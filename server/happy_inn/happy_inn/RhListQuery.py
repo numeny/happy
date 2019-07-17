@@ -67,6 +67,10 @@ class RhListQuery:
         if len(self.query_param.prop) != 0 and self.query_param.prop != '0':
             prop_filter = RhListQuery.get_prop_q_query(self.query_param.prop)
             all_filter = all_filter & prop_filter
+
+        # only display ylxxw's records
+        all_filter = all_filter & RhListQuery.get_only_ylxxw_records_query()
+
         return all_filter
 
     def get_rh_list(self):
@@ -174,3 +178,8 @@ class RhListQuery:
             # FIXME
             prop_filter = None
         return prop_filter
+
+    # only display ylxxw's records
+    @staticmethod
+    def get_only_ylxxw_records_query():
+        return Q(rh_ylw_id__startswith="ff")

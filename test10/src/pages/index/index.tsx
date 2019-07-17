@@ -2,6 +2,7 @@ import Taro, { Component, Events, Config } from '@tarojs/taro'
 import { View, Text, Image, Input, Video, Button, Icon, Progress, Checkbox, Switch, Form, Slider, Picker, PickerView, PickerViewColumn, Swiper, SwiperItem, Navigator } from '@tarojs/components'
 import './index.scss'
 import namedPng from '@images/index/1.jpeg'
+import namedVideo from '@res/video/1.mp4'
 import { SERVER_HOST } from '../common/const'
 
 export default class Index extends Component {
@@ -88,6 +89,7 @@ export default class Index extends Component {
         )
     return (
       <View className='top-container'>
+        <Video width='150px' height='190px' src={namedVideo} />
         <View className='top-title-top-container'>
           <View className='top-title-container'>
             <Image className='top-title-back' src={namedPng} />

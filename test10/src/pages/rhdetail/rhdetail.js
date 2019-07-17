@@ -4,7 +4,7 @@ import { View, Text, Image, Input, Video, Button, Icon, Progress, Checkbox, Swit
 import './rhdetail.scss'
 
 import namedPng from '@images/index/1.jpeg'
-
+import namedVideo from '@res/video/1.mp4'
 import { SERVER_HOST } from '../common/const'
 
 export default class Rhdetail extends Component {
@@ -38,11 +38,22 @@ export default class Rhdetail extends Component {
         inst_notes: {this.state.rhRecord.inst_notes}
         </View>
         */
-    console.error("inst_charge-2-1: " + inst)
+    var mm = "m<p>n</p>";
+    console.info("inst_charge-2-0-1: mm: " + mm)
+    // mm = mm.replace("<p>", "")
+    mm = mm.replace(/p/g, "")
+    console.info("inst_charge-2-0-2: mm: " + mm)
+
+    console.info("inst_charge-2-1: " + inst)
+    /*
     inst = inst.replace("<div>", "")
     inst = inst.replace("<div class=\"cont\">", "")
     inst = inst.replace("</div>", "")
-    console.error("inst_charge-2-2: " + inst)
+    inst = inst.replace("<\/p>", "")
+    inst = inst.replace("strong", "")
+    */
+    inst = inst.replace(/p/g, "View")
+    console.info("inst_charge-2-2: " + inst)
   }
 
   handleAllContent = (res) => {
@@ -58,7 +69,19 @@ export default class Rhdetail extends Component {
       success: (res) => {
         console.log(res.data.record)
         Taro.showToast({title: res.data.record.name})
-        this.handleAllContent(res)
+        // this.handleAllContent(res)
+
+        console.info("inst_charge-2-1: " + res.data.record.inst_charge)
+        /*
+           inst = inst.replace("<div>", "")
+           inst = inst.replace("<div class=\"cont\">", "")
+           inst = inst.replace("</div>", "")
+           inst = inst.replace("<\/p>", "")
+           inst = inst.replace("strong", "")
+         */
+        res.data.record.inst_charge = res.data.record.inst_charge.replace(/p/g, "View")
+        console.info("inst_charge-2-2: " + res.data.record.inst_charge)
+
         // var inst_charge = res.data.record.inst_charge
         // var inst_charge_1 = new String("div-1")
         // console.error("inst_charge-1-1: " + res.data.record.inst_charge)
@@ -99,6 +122,7 @@ export default class Rhdetail extends Component {
   render () {
     return (
       <View>
+        <Video width='150px' height='190px' src={namedVideo} />
         <Swiper indicatorColor='#999' indicatorActiveColor='#333'
                 circular indicatorDots autoplay>
           <SwiperItem>
