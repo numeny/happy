@@ -2,8 +2,11 @@
 # -*- coding: UTF-8 -*-
 from Log import *
 from Utils import *
+from DbUtils import *
 
 class DbQuery:
+
+    LOGTAT = "DbQuery"
 
     def __init__(self):
         pass
@@ -42,7 +45,7 @@ class DbQuery:
         ret_map['province'] = record.rh_privince
         ret_map['city'] = record.rh_city
         ret_map['area'] = record.rh_area
-        ret_map['title_image'] = record.rh_title_image
+        ret_map['title_image'] = DbUtils.get_title_image(record)
         ret_map['images'] = record.rh_images
         ret_map['charges_min'] = record.rh_charges_min
         ret_map['charges_max'] = record.rh_charges_max
@@ -64,7 +67,7 @@ class DbQuery:
         ret_map['bednum'] = record.rh_bednum
         ret_map['charges_extent'] = record.rh_charges_extent
         ret_map['address'] = record.rh_address
-        ret_map['title_image'] = record.rh_title_image
+        ret_map['title_image'] = DbUtils.get_title_image(record)
         ret_map['bednum_int'] = record.rh_bednum_int
         return ret_map
 

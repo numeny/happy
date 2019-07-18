@@ -88,16 +88,9 @@ class RhListQuery:
 
         page_idx = self.query_param.page
 
-        ret_records = []
         result_record = records[((page_idx - 1) * RH_NUM_PER_PAGE) : (page_idx * RH_NUM_PER_PAGE)]
 
-        for idx, r in enumerate(result_record):
-            # FIXME, image
-            self.update_title_image(r)
-            # get_rh_location_id(r)
-            ret_records.append(r)
-
-        response['records'] = DbQuery.get_breif_colume_from_records(ret_records)
+        response['records'] = DbQuery.get_breif_colume_from_records(result_record)
         if page_idx < page_num:
             response['record_num'] = RH_NUM_PER_PAGE
         else:
@@ -136,7 +129,7 @@ class RhListQuery:
             response['message'] = response['message'] + ", maxbed: "+ str(self.query_param.maxbed)
             response['message'] = response['message'] + ", str_type: " + str(self.query_param.str_type)
             response['message'] = response['message'] + ", prop: "+ str(self.query_param.prop)
-            Log.e("", response['message'])
+            Log.e(RhListQuery.LOGTAT, response['message'])
         return response
 
     @staticmethod

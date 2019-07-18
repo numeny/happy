@@ -259,17 +259,17 @@ export default class Rhdetail extends Component {
     return (
       <View>
         <Video width='150px' height='190px' src={namedVideo} />
-        <Image src="http://10.129.192.204/images/13408/title/1542416562.JPG" width="100%" />
+        <Image src={namedPng} width="100%" />
         <Swiper indicatorColor='#999' indicatorActiveColor='#333'
                 circular indicatorDots autoplay>
           <SwiperItem>
-            <Image src={namedPng} width="100%" />
+            <Image src={this.state.rhRecord.title_image} width="100%" />
           </SwiperItem>
           <SwiperItem>
-            <Image src={namedPng} width="100%" />
+            <Image src={this.state.rhRecord.title_image} width="100%" />
           </SwiperItem>
           <SwiperItem>
-            <Image src={namedPng} width="100%" />
+            <Image src={this.state.rhRecord.title_image} width="100%" />
           </SwiperItem>
         </Swiper>
         <Text className="show-part-text">This is some long text that will not fit in the boxThis is some long text that will not fit in the boxThis is some long text that will not fit in the boxThis is some long text that will not fit in the boxThis is some long text that will not fit in the boxThis is some long text that will not fit in the box</Text>
