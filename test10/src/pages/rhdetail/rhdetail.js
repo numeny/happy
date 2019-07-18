@@ -76,7 +76,9 @@ export default class Rhdetail extends Component {
       inst_notes_handled: [],
     }
     this.handleContent(res.data.record.inst_charge, rhRecordHandled_2.inst_charge_handled)
+    console.info("inst_charge-3----1: transportation, old: " + res.data.record.transportation)
     this.handleContent(res.data.record.transportation, rhRecordHandled_2.transportation_handled)
+    console.info("inst_charge-3----2: transportation, new: " + rhRecordHandled_2.transportation_handled)
     this.handleContent(res.data.record.inst_intro, rhRecordHandled_2.inst_intro_handled)
     this.handleContent(res.data.record.special_services, rhRecordHandled_2.special_services_handled)
     this.handleContent(res.data.record.facilities, rhRecordHandled_2.facilities_handled)
@@ -90,6 +92,8 @@ export default class Rhdetail extends Component {
     let inst_charge_handled_tmp = []
     inst_charge = inst_charge.replace(/<\/b>/g, "")
     inst_charge = inst_charge.replace(/<\/strong>/g, "")
+    // FIXME, delete image first
+    inst_charge = inst_charge.replace(/<img.*>/g, "")
 
     inst_charge_handled_tmp = String(inst_charge).split("</p>")
     inst_charge_handled_tmp.forEach(
@@ -100,22 +104,18 @@ export default class Rhdetail extends Component {
             class_style = "bold_font_two_space"
           } else if (value.indexOf("<p style=\"text-indent:2em\">") >= 0) {
             class_style = "two_space"
+          } else if (value.indexOf("<p align=\"center\">") >= 0) {
+            class_style = "text_center"
           }
           inst_charge_handled_tmp[index] = inst_charge_handled_tmp[index].replace(/<p style=\"text-indent:2em\">/g, "")
+          inst_charge_handled_tmp[index] = inst_charge_handled_tmp[index].replace(/<p>/g, "")
           inst_charge_handled_tmp[index] = inst_charge_handled_tmp[index].replace(/<b>/g, "")
           inst_charge_handled_tmp[index] = inst_charge_handled_tmp[index].replace(/<strong>/g, "")
+          inst_charge_handled_tmp[index] = inst_charge_handled_tmp[index].replace(/<p align=\"center\">/g, "")
           inst_charge_handled.push([inst_charge_handled_tmp[index], class_style])
-          console.info("inst_charge-2-4-0: inst_charge_handled: " + class_style)
-          console.info("inst_charge-2-4-0-1: inst_charge_handled: " + inst_charge_handled[index])
+          // console.info("inst_charge-2-4-0: inst_charge_handled: " + class_style)
+          // console.info("inst_charge-2-4-0-1: inst_charge_handled: " + inst_charge_handled[index])
     })
-    console.info("inst_charge-2-4: inst_charge_handled: " + inst_charge_handled_tmp)
-    console.info("inst_charge-2-5: inst_charge_handled: " + this.state.rhRecordHandled.inst_charge_handled)
-
-    /*
-    console.error("inst_charge-1-1: " + res.data.record.inst_charge)
-    this.handleContent(res.data.record.inst_charge)
-    console.error("inst_charge-1-2: " + res.data.record.inst_charge)
-    */
   }
 
   componentDidMount () {
@@ -259,6 +259,7 @@ export default class Rhdetail extends Component {
     return (
       <View>
         <Video width='150px' height='190px' src={namedVideo} />
+        <Image src="http://10.129.192.204/images/13408/title/1542416562.JPG" width="100%" />
         <Swiper indicatorColor='#999' indicatorActiveColor='#333'
                 circular indicatorDots autoplay>
           <SwiperItem>
@@ -327,9 +328,6 @@ export default class Rhdetail extends Component {
         charges_extent: {this.state.rhRecord.charges_extent}
         </View>
         <View className="show-part-text">
-        special_services: {this.state.rhRecord.special_services}
-        </View>
-        <View className="show-part-text">
         special_services_1: {special_services_handled}
         </View>
         <View className="show-part-text">
@@ -342,37 +340,19 @@ export default class Rhdetail extends Component {
         url: {this.state.rhRecord.url}
         </View>
         <View className="show-part-text">
-        transportation: {this.state.rhRecord.transportation}
-        </View>
-        <View className="show-part-text">
         transportation_1: {transportation_handled}
-        </View>
-        <View className="show-part-text">
-        inst_intro: {this.state.rhRecord.inst_intro}
         </View>
         <View className="show-part-text">
         inst_intro_1: {inst_intro_handled}
         </View>
         <View className="show-part-text">
-        inst_charge: {this.state.rhRecord.inst_charge}
-        </View>
-        <View className="show-part-text">
         inst_charge_1: { inst_charge_handled }
-        </View>
-        <View className="show-part-text">
-        facilities: {this.state.rhRecord.facilities}
         </View>
         <View className="show-part-text">
         facilities_1: {facilities_handled}
         </View>
         <View className="show-part-text">
-        service_content: {this.state.rhRecord.service_content}
-        </View>
-        <View className="show-part-text">
         service_content_1: {service_content_handled}
-        </View>
-        <View className="show-part-text">
-        inst_notes: {this.state.rhRecord.inst_notes}
         </View>
         <View className="show-part-text">
         inst_notes_1: {inst_notes_handled}
