@@ -6,6 +6,8 @@ import './rhdetail.scss'
 import namedVideo from '@res/video/1.mp4'
 import { SERVER_HOST } from '../common/const'
 import { DEFAULT_IMG } from '../common/const'
+import { IMGS_ROOT_PATH } from '../common/const'
+import { NUM_TRANSFORM_RH_ID } from '../common/const'
 
 export default class Rhdetail extends Component {
 
@@ -22,6 +24,7 @@ export default class Rhdetail extends Component {
         facilities_handled: [],
         service_content_handled: [],
         inst_notes_handled: [],
+        images_handled: [],
       },
     }
   }
@@ -35,6 +38,7 @@ export default class Rhdetail extends Component {
       facilities_handled: [],
       service_content_handled: [],
       inst_notes_handled: [],
+      images_handled: [],
     }
     this.handleContent(res.data.record.inst_charge, rhRecordHandled_2.inst_charge_handled)
     this.handleContent(res.data.record.transportation, rhRecordHandled_2.transportation_handled)
@@ -44,17 +48,37 @@ export default class Rhdetail extends Component {
     this.handleContent(res.data.record.service_content, rhRecordHandled_2.service_content_handled)
     this.handleContent(res.data.record.inst_notes, rhRecordHandled_2.inst_notes_handled)
 
+    this.handleImages(res.data.record.images, rhRecordHandled_2.images_handled)
+
+    // handle title image
+    res.data.record.title_image = res.data.record.title_image != "" ? res.data.record.title_image : DEFAULT_IMG;
+
     return rhRecordHandled_2
   }
 
-  handleContent = (inst_charge, inst_charge_handled) => {
-    let inst_charge_handled_tmp = []
-    inst_charge = inst_charge.replace(/<\/b>/g, "")
-    inst_charge = inst_charge.replace(/<\/strong>/g, "")
-    // FIXME, delete image first
-    inst_charge = inst_charge.replace(/<img.*>/g, "")
+  handleImages = (images, images_handled) => {
+    let images_handled_tmp = String(images).split(",")
 
-    inst_charge_handled_tmp = String(inst_charge).split("</p>")
+    try {
+      const rhId = parseInt(this.state.rhId) - NUM_TRANSFORM_RH_ID
+      images_handled_tmp.forEach(
+          function(value, index, array) {
+          if (value != "") {
+              images_handled.push(IMGS_ROOT_PATH + "/" + rhId + "/" + value)
+          }
+      })
+    } catch(err) {
+    }
+  }
+
+  handleContent = (content, content_handled) => {
+    let inst_charge_handled_tmp = []
+    content = content.replace(/<\/b>/g, "")
+    content = content.replace(/<\/strong>/g, "")
+    // FIXME, delete image first
+    content = content.replace(/<img.*>/g, "")
+
+    inst_charge_handled_tmp = String(content).split("</p>")
     inst_charge_handled_tmp.forEach(
         function(value, index, array) {
           var class_style = "";
@@ -71,9 +95,9 @@ export default class Rhdetail extends Component {
           inst_charge_handled_tmp[index] = inst_charge_handled_tmp[index].replace(/<b>/g, "")
           inst_charge_handled_tmp[index] = inst_charge_handled_tmp[index].replace(/<strong>/g, "")
           inst_charge_handled_tmp[index] = inst_charge_handled_tmp[index].replace(/<p align=\"center\">/g, "")
-          inst_charge_handled.push([inst_charge_handled_tmp[index], class_style])
-          // console.info("inst_charge-2-4-0: inst_charge_handled: " + class_style)
-          // console.info("inst_charge-2-4-0-1: inst_charge_handled: " + inst_charge_handled[index])
+          content_handled.push([inst_charge_handled_tmp[index], class_style])
+          // console.info("content-2-4-0: content_handled: " + class_style)
+          // console.info("content-2-4-0-1: content_handled: " + content_handled[index])
     })
   }
 
@@ -85,13 +109,12 @@ export default class Rhdetail extends Component {
         console.log(res.data.record)
         Taro.showToast({title: res.data.record.name})
 
-        var rhRecordHandled_2 = this.handleAllContent(res)
-        res.data.record.title_image = res.data.record.title_image != "" ? res.data.record.title_image : DEFAULT_IMG;
+        var rhRecordHandled = this.handleAllContent(res)
 
         this.setState({
             message: 'success',
             rhRecord: res.data.record,
-            rhRecordHandled: rhRecordHandled_2,
+            rhRecordHandled: rhRecordHandled,
         })
       },
       fail: (error) => {
@@ -170,6 +193,17 @@ export default class Rhdetail extends Component {
           { this.state.rhRecordHandled.inst_notes_handled.map((par) =>
               <View className={par[1]}>
                 {par[0]}
+              </View>
+            )
+          }
+        </View>
+        )
+
+    const images_handled = (
+        <View>
+          { this.state.rhRecordHandled.images_handled.map((image) =>
+              <View>
+                <Image src={image} width="100%" />
               </View>
             )
           }
@@ -304,23 +338,9 @@ export default class Rhdetail extends Component {
         <View className="show-part-text">
         bednum_int: {this.state.rhRecord.bednum_int}
         </View>
-        <View className='title-container'>
-          <View>
-            <Text className='title-item'> title </Text>
-          </View>
-          <View>
-            <Text> address </Text>
-          </View>
+        <View className="show-part-text">
+        images_handled: {images_handled}
         </View>
-        <View className="show-part-text">aaaaaaaaaaaaaaaaaaaaa aaaaaaaaaaaaaaaaaaaaa aaaaaaaaaaaaaaaaaaaaa aaaaaaaaaaaaaaaaaaaaa aaaaaaaaaaaaaaaaaaaaa aaaaaaaaaaaaaaaaaaaaa aaaaaaaaaaaaaaaaaaaaa aaaaaaaaaaaaaaaaaaaaa aaaaaaaaaaaaaaaaaaaaa aaaaaaaaaaaaaaaaaaaaa aaaaaaaaaaaaaaaaaaaaa aaaaaaaaaaaaaaaaaaaaa aaaaaaaaaaaaaaaaaaaaa aaaaaaaaaaaaaaaaaaaaa aaaaaaaaaaaaaaaaaaaaa aaaaaaaaaaaaaaaaaaaaa
-        </View>
-        <View> aaaaaaaaaaaaaaaaaaaaa </View>
-        <View> aaaaaaaaaaaaaaaaaaaaa </View>
-        <View> aaaaaaaaaaaaaaaaaaaaa </View>
-        <View> aaaaaaaaaaaaaaaaaaaaa </View>
-        <View> aaaaaaaaaaaaaaaaaaaaa </View>
-        <View> aaaaaaaaaaaaaaaaaaaaa </View>
-        <View> aaaaaaaaaaaaaaaaaaaaa </View>
       </View>
     )
   }
