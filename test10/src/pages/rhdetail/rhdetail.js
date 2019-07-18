@@ -3,9 +3,9 @@ import { View, Text, Image, Input, Video, Button, Icon, Progress, Checkbox, Swit
 
 import './rhdetail.scss'
 
-import namedPng from '@images/index/1.jpeg'
 import namedVideo from '@res/video/1.mp4'
 import { SERVER_HOST } from '../common/const'
+import { DEFAULT_IMG } from '../common/const'
 
 export default class Rhdetail extends Component {
 
@@ -26,45 +26,6 @@ export default class Rhdetail extends Component {
     }
   }
 
-  handleContent = (inst) => {
-    /*
-        <View className="show-part-text">
-        transportation: {this.state.rhRecord.transportation}
-        </View>
-        <View className="show-part-text">
-        inst_intro: {this.state.rhRecord.inst_intro}
-        </View>
-        <View className="show-part-text">
-        inst_charge: {this.state.rhRecord.inst_charge}
-        </View>
-        <View className="show-part-text">
-        facilities: {this.state.rhRecord.facilities}
-        </View>
-        <View className="show-part-text">
-        service_content: {this.state.rhRecord.service_content}
-        </View>
-        <View className="show-part-text">
-        inst_notes: {this.state.rhRecord.inst_notes}
-        </View>
-        */
-    var mm = "m<p>n</p>";
-    console.info("inst_charge-2-0-1: mm: " + mm)
-    // mm = mm.replace("<p>", "")
-    mm = mm.replace(/p/g, "")
-    console.info("inst_charge-2-0-2: mm: " + mm)
-
-    console.info("inst_charge-2-1: " + inst)
-    /*
-    inst = inst.replace("<div>", "")
-    inst = inst.replace("<div class=\"cont\">", "")
-    inst = inst.replace("</div>", "")
-    inst = inst.replace("<\/p>", "")
-    inst = inst.replace("strong", "")
-    */
-    inst = inst.replace(/p/g, "View")
-    console.info("inst_charge-2-2: " + inst)
-  }
-
   handleAllContent = (res) => {
     var rhRecordHandled_2 = {
       inst_charge_handled: [],
@@ -76,9 +37,7 @@ export default class Rhdetail extends Component {
       inst_notes_handled: [],
     }
     this.handleContent(res.data.record.inst_charge, rhRecordHandled_2.inst_charge_handled)
-    console.info("inst_charge-3----1: transportation, old: " + res.data.record.transportation)
     this.handleContent(res.data.record.transportation, rhRecordHandled_2.transportation_handled)
-    console.info("inst_charge-3----2: transportation, new: " + rhRecordHandled_2.transportation_handled)
     this.handleContent(res.data.record.inst_intro, rhRecordHandled_2.inst_intro_handled)
     this.handleContent(res.data.record.special_services, rhRecordHandled_2.special_services_handled)
     this.handleContent(res.data.record.facilities, rhRecordHandled_2.facilities_handled)
@@ -126,47 +85,8 @@ export default class Rhdetail extends Component {
         console.log(res.data.record)
         Taro.showToast({title: res.data.record.name})
 
-        console.info("inst_charge-2-1: " + res.data.record.inst_charge)
-        /*
-           inst = inst.replace("<div>", "")
-           inst = inst.replace("<div class=\"cont\">", "")
-           inst = inst.replace("</div>", "")
-           inst = inst.replace("<\/p>", "")
-           inst = inst.replace("strong", "")
-         */
-        /*
-        res.data.record.inst_charge = res.data.record.inst_charge.replace(/<\/b>/g, "")
-        res.data.record.inst_charge = res.data.record.inst_charge.replace(/<\/strong>/g, "")
-        */
-
-        // res.data.record.inst_charge = res.data.record.inst_charge.replace(/<p style=\"text-indent:2em\">/g, "")
-        console.info("inst_charge-2-2: " + res.data.record.inst_charge)
-
         var rhRecordHandled_2 = this.handleAllContent(res)
-
-        // res.data.record.inst_charge_handled = res.data.record.inst_charge.replace(/p/g, "View")
-
-        // var inst_charge = res.data.record.inst_charge
-        // var inst_charge_1 = new String("div-1")
-        // console.error("inst_charge-1-1: " + res.data.record.inst_charge)
-        // console.error("inst_charge-1-2: " + inst_charge)
-        // console.error("inst_charge-1-3: " + inst_charge_1)
-        // res.data.record.inst_charge = res.data.record.inst_charge.replace("<div>", "")
-        // res.data.record.inst_charge = res.data.record.inst_charge.replace("<div class=\"cont\">", "")
-        // res.data.record.inst_charge = res.data.record.inst_charge.replace("</div>", "")
-        // inst_charge.replace("div", "")
-        // inst_charge.replace("div", "")
-        // inst_charge_1.replace("div", "")
-        // console.error("inst_charge-2-1: " + res.data.record.inst_charge)
-        // console.error("inst_charge-2-2: " + inst_charge)
-        // console.error("inst_charge-2-3: " + inst_charge_1)
-
-        // var inst_charge_2 = new String("div-1")
-        // var str="Visit Microsoft!Visit Microsoft!"; 
-        // var n=str.replace("Microsoft","Runoob");
-        // var n1=inst_charge_2.replace("div","");
-        // console.error("inst_charge-2-4: " + n)
-        // console.error("inst_charge-2-5: " + n1)
+        res.data.record.title_image = res.data.record.title_image != "" ? res.data.record.title_image : DEFAULT_IMG;
 
         this.setState({
             message: 'success',
@@ -259,7 +179,7 @@ export default class Rhdetail extends Component {
     return (
       <View>
         <Video width='150px' height='190px' src={namedVideo} />
-        <Image src={namedPng} width="100%" />
+        <Image src={DEFAULT_IMG} width="100%" />
         <Swiper indicatorColor='#999' indicatorActiveColor='#333'
                 circular indicatorDots autoplay>
           <SwiperItem>

@@ -3,7 +3,10 @@ import { View, Text, Image, Input, Video, Button, Icon, Progress, Checkbox, Swit
 import './index.scss'
 import namedPng from '@images/index/1.jpeg'
 import namedVideo from '@res/video/1.mp4'
+
 import { SERVER_HOST } from '../common/const'
+import { DEFAULT_IMG } from '../common/const'
+import { ICON_IMG } from '../common/const'
 
 export default class Index extends Component {
 
@@ -76,7 +79,7 @@ export default class Index extends Component {
           <View className='rh-list-container'>
           {rhList.map((rh) =>
             <View className='rh-one-container' onClick={this.click_button.bind(this, rh.id)}>
-              <Image src={rh.title_image} className='rh-one-img'/>
+              <Image src={rh.title_image != "" ? rh.title_image : DEFAULT_IMG} className='rh-one-img'/>
               <View className='rh-one-desc-container'>
                 <Text className='rh-one-desc-head'>{rh.name}</Text>
                 <Text className='rh-one-desc'>{rh.address}</Text>
