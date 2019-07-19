@@ -1,21 +1,99 @@
+.top-view {
+  width: 100%;
+}
+
+.show-part-text {
+  width: 100%;
+  white-space: wrap;
+}
+
 .show-part-text-1 {
   text-overflow:ellipsis;
   display: -webkit-box;
   -webkit-box-orient: vertical;
   -webkit-line-clamp: 3;
   overflow: hidden;
-  border:1px solid #000000;
+  width: 100%;
+}
+
+.show-part-text-4 {
+  width: 100%;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.show-part-text-2 {
+  position: relative; 
+  line-height: 20px; 
+  max-height: 40px;
+  overflow: hidden;
+}
+
+
+.show-part-text-5 {
+  display: -webkit-box;
+  font-size:28rpx;
+  color:#000000;
+  line-height: 40rpx;
+  word-break: break-all;
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp:3;
+  overflow: hidden;
+  text-overflow:ellipsis;
+}
+
+.show-part-text-3 {
+  width:100px;
+  height:50px;
+  background:#ebebeb;
+  text-align:center;
+  font-family:"Microsoft YaHei";
+  line-height:50px;
+  color:#333;
+  font-size:18px;
+  position:relative;
+  top:-1px;
+  filter:alpha(opacity=50);
+  opacity: 0.7;
+  overflow:hidden;
+  text-overflow:ellipsis; 
 }
 
 .bold_font_two_space {
   text-indent: 2em;
   font-weight: bold;
+  width: 100%;
+
+
+  text-overflow:ellipsis;
+  display: -webkit-box;
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: 3;
+  overflow: hidden;
+  width: 100%;
 }
 
 .two_space {
   text-indent: 2em;
+  width: 100%;
+
+
+  text-overflow:ellipsis;
+  display: -webkit-box;
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: 3;
+  overflow: scroll;
+  width: 100%;
 }
 
 .text_center {
   text-align: center;
+  width: 100%;
+
+
+  text-overflow:ellipsis;
+  display: -webkit-box;
+  -webkit-line-clamp: 3;
+  width: 100%;
 }

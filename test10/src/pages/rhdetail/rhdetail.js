@@ -211,7 +211,7 @@ export default class Rhdetail extends Component {
         )
 
     return (
-      <View>
+      <View className="top-view">
         <Video width='150px' height='190px' src={namedVideo} />
         <Image src={DEFAULT_IMG} width="100%" />
         <Swiper indicatorColor='#999' indicatorActiveColor='#333'
@@ -226,121 +226,152 @@ export default class Rhdetail extends Component {
             <Image src={this.state.rhRecord.title_image} width="100%" />
           </SwiperItem>
         </Swiper>
-        <Text className="show-part-text">This is some long text that will not fit in the boxThis is some long text that will not fit in the boxThis is some long text that will not fit in the boxThis is some long text that will not fit in the boxThis is some long text that will not fit in the boxThis is some long text that will not fit in the box</Text>
+        <Text className="show-part-text-1">This is some long text that will not fit in the boxThis is some long text that will not fit in the boxThis is some long text that will not fit in the boxThis is some long text that will not fit in the boxThis is some long text that will not fit in the boxThis is some long text that will not fit in the box</Text>
         <View className="show-part-text">
-        rh_id: {this.state.rhRecord.id}
+          rh_id: {this.state.rhRecord.id}
         </View>
         <View className="show-part-text">
-        id: {this.state.rhRecord.id}
+          id: {this.state.rhRecord.id}
         </View>
         <View className="show-part-text">
-        name: {this.state.rhRecord.name}
+          name: {this.state.rhRecord.name}
         </View>
+        {this.state.rhRecord.phone != "" &&
         <View className="show-part-text">
-        phone: {this.state.rhRecord.phone}
-        </View>
+          phone: {this.state.rhRecord.phone}
+        </View>}
+        {this.state.rhRecord.mobile != "" &&
         <View className="show-part-text">
-        mobile: {this.state.rhRecord.mobile}
-        </View>
+          mobile: {this.state.rhRecord.mobile}
+        </View>}
+        {this.state.rhRecord.email != "" &&
         <View className="show-part-text">
-        email: {this.state.rhRecord.email}
-        </View>
+          email: {this.state.rhRecord.email}
+        </View>}
+        {this.state.rhRecord.postcode != "" &&
         <View className="show-part-text">
-        postcode: {this.state.rhRecord.postcode}
-        </View>
+          postcode: {this.state.rhRecord.postcode}
+        </View>}
+        {this.state.rhRecord.location_id != "" &&
         <View className="show-part-text">
-        location_id: {this.state.rhRecord.location_id}
-        </View>
+          location_id: {this.state.rhRecord.location_id}
+        </View>}
+        {this.state.rhRecord.type != "" &&
         <View className="show-part-text">
-        type: {this.state.rhRecord.type}
-        </View>
+          type: {this.state.rhRecord.type}
+        </View>}
+        {this.state.rhRecord.factory_property != "" &&
         <View className="show-part-text">
-        factory_property: {this.state.rhRecord.factory_property}
-        </View>
+          factory_property: {this.state.rhRecord.factory_property}
+        </View>}
+        {this.state.rhRecord.person_in_charge != "" &&
         <View className="show-part-text">
-        person_in_charge: {this.state.rhRecord.person_in_charge}
-        </View>
+          person_in_charge: {this.state.rhRecord.person_in_charge}
+        </View>}
+        {this.state.rhRecord.establishment_time != "" &&
         <View className="show-part-text">
-        establishment_time: {this.state.rhRecord.establishment_time}
-        </View>
+          establishment_time: {this.state.rhRecord.establishment_time}
+        </View>}
+        {this.state.rhRecord.floor_surface != "" &&
         <View className="show-part-text">
-        floor_surface: {this.state.rhRecord.floor_surface}
-        </View>
+          floor_surface: {this.state.rhRecord.floor_surface}
+        </View>}
+        {this.state.rhRecord.building_area != "" &&
         <View className="show-part-text">
-        building_area: {this.state.rhRecord.building_area}
-        </View>
+          building_area: {this.state.rhRecord.building_area}
+        </View>}
+        {this.state.rhRecord.bednum != "" &&
         <View className="show-part-text">
-        bednum: {this.state.rhRecord.bednum}
-        </View>
+          bednum: {this.state.rhRecord.bednum}
+        </View>}
+        {this.state.rhRecord.staff_num != "" &&
         <View className="show-part-text">
-        staff_num: {this.state.rhRecord.staff_num}
-        </View>
+          staff_num: {this.state.rhRecord.staff_num}
+        </View>}
+        {this.state.rhRecord.for_persons != "" &&
         <View className="show-part-text">
-        for_persons: {this.state.rhRecord.for_persons}
-        </View>
+          for_persons: {this.state.rhRecord.for_persons}
+        </View>}
+        {this.state.rhRecord.charges_extent != "" &&
         <View className="show-part-text">
-        charges_extent: {this.state.rhRecord.charges_extent}
-        </View>
+          charges_extent: {this.state.rhRecord.charges_extent}
+        </View>}
+        {special_services_handled != "" &&
         <View className="show-part-text">
-        special_services_1: {special_services_handled}
-        </View>
+          special_services_1: {special_services_handled}
+        </View>}
+        {this.state.rhRecord.contact_person != "" &&
         <View className="show-part-text">
-        contact_person: {this.state.rhRecord.contact_person}
-        </View>
+          contact_person: {this.state.rhRecord.contact_person}
+        </View>}
+        {this.state.rhRecord.address != "" &&
         <View className="show-part-text">
-        address: {this.state.rhRecord.address}
-        </View>
+          address: {this.state.rhRecord.address}
+        </View>}
+        {this.state.rhRecord.url != "" &&
         <View className="show-part-text">
-        url: {this.state.rhRecord.url}
-        </View>
+          url: {this.state.rhRecord.url}
+        </View>}
+        {transportation_handled != "" &&
         <View className="show-part-text">
-        transportation_1: {transportation_handled}
-        </View>
+          transportation_1: {transportation_handled}
+        </View>}
+        {inst_intro_handled != "" &&
         <View className="show-part-text">
-        inst_intro_1: {inst_intro_handled}
-        </View>
+          inst_intro_1: {inst_intro_handled}
+        </View>}
+        {inst_charge_handled != "" &&
         <View className="show-part-text">
-        inst_charge_1: { inst_charge_handled }
-        </View>
+          inst_charge_1: { inst_charge_handled }
+        </View>}
+        {facilities_handled != "" &&
         <View className="show-part-text">
-        facilities_1: {facilities_handled}
-        </View>
+          facilities_1: {facilities_handled}
+        </View>}
+        {service_content_handled != "" &&
         <View className="show-part-text">
-        service_content_1: {service_content_handled}
-        </View>
+          service_content_1: {service_content_handled}
+        </View>}
+        {inst_notes_handled != "" &&
         <View className="show-part-text">
-        inst_notes_1: {inst_notes_handled}
-        </View>
+          inst_notes_1: {inst_notes_handled}
+        </View>}
+        {this.state.rhRecord.ylw_id != "" &&
         <View className="show-part-text">
-        ylw_id: {this.state.rhRecord.ylw_id}
-        </View>
+          ylw_id: {this.state.rhRecord.ylw_id}
+        </View>}
+        {this.state.rhRecord.privince != "" &&
         <View className="show-part-text">
-        province: {this.state.rhRecord.privince}
-        </View>
+          province: {this.state.rhRecord.privince}
+        </View>}
+        {this.state.rhRecord.city != "" &&
         <View className="show-part-text">
-        city: {this.state.rhRecord.city}
-        </View>
+          city: {this.state.rhRecord.city}
+        </View>}
+        {this.state.rhRecord.area != "" &&
         <View className="show-part-text">
-        area: {this.state.rhRecord.area}
-        </View>
+          area: {this.state.rhRecord.area}
+        </View>}
+        {this.state.rhRecord.images != "" &&
         <View className="show-part-text">
-        title_image: {this.state.rhRecord.title_image}
-        </View>
+          images: {this.state.rhRecord.images}
+        </View>}
+        {this.state.rhRecord.charges_min != "" &&
         <View className="show-part-text">
-        images: {this.state.rhRecord.images}
-        </View>
+          charges_min: {this.state.rhRecord.charges_min}
+        </View>}
+        {this.state.rhRecord.charges_max != "" &&
         <View className="show-part-text">
-        charges_min: {this.state.rhRecord.charges_min}
-        </View>
+          charges_max: {this.state.rhRecord.charges_max}
+        </View>}
+        {this.state.rhRecord.bednum_int != "" &&
         <View className="show-part-text">
-        charges_max: {this.state.rhRecord.charges_max}
-        </View>
+          bednum_int: {this.state.rhRecord.bednum_int}
+        </View>}
+        {images_handled != "" &&
         <View className="show-part-text">
-        bednum_int: {this.state.rhRecord.bednum_int}
-        </View>
-        <View className="show-part-text">
-        images_handled: {images_handled}
-        </View>
+          images_handled: {images_handled}
+        </View>}
       </View>
     )
   }
