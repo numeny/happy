@@ -48,6 +48,8 @@ export default class Rhdetail extends Component {
     this.handleContent(res.data.record.service_content, rhRecordHandled_2.service_content_handled)
     this.handleContent(res.data.record.inst_notes, rhRecordHandled_2.inst_notes_handled)
 
+
+
     this.handleImages(res.data.record.images, rhRecordHandled_2.images_handled)
 
     // handle title image
@@ -79,6 +81,9 @@ export default class Rhdetail extends Component {
     content = content.replace(/<img.*>/g, "")
 
     inst_charge_handled_tmp = String(content).split("</p>")
+    if (inst_charge_handled_tmp.length == 1 && inst_charge_handled_tmp[0] == "") {
+      inst_charge_handled_tmp.pop()
+    }
     inst_charge_handled_tmp.forEach(
         function(value, index, array) {
           var class_style = "";
@@ -296,7 +301,7 @@ export default class Rhdetail extends Component {
         <View className="show-part-text">
           charges_extent: {this.state.rhRecord.charges_extent}
         </View>}
-        {special_services_handled != "" &&
+        {this.state.rhRecordHandled.special_services_handled.length > 0 &&
         <View className="show-part-text">
           special_services_1: {special_services_handled}
         </View>}
@@ -312,27 +317,27 @@ export default class Rhdetail extends Component {
         <View className="show-part-text">
           url: {this.state.rhRecord.url}
         </View>}
-        {transportation_handled != "" &&
+        {this.state.rhRecordHandled.transportation_handled.length > 0 &&
         <View className="show-part-text">
           transportation_1: {transportation_handled}
         </View>}
-        {inst_intro_handled != "" &&
+        {this.state.rhRecordHandled.inst_intro_handled.length > 0 &&
         <View className="show-part-text">
           inst_intro_1: {inst_intro_handled}
         </View>}
-        {inst_charge_handled != "" &&
+        {this.state.rhRecordHandled.inst_charge_handled.length > 0 &&
         <View className="show-part-text">
           inst_charge_1: { inst_charge_handled }
         </View>}
-        {facilities_handled != "" &&
+        {this.state.rhRecordHandled.facilities_handled.length > 0 &&
         <View className="show-part-text">
           facilities_1: {facilities_handled}
         </View>}
-        {service_content_handled != "" &&
+        {this.state.rhRecordHandled.service_content_handled.length > 0 &&
         <View className="show-part-text">
           service_content_1: {service_content_handled}
         </View>}
-        {inst_notes_handled != "" &&
+        {this.state.rhRecordHandled.inst_notes_handled.length > 0 &&
         <View className="show-part-text">
           inst_notes_1: {inst_notes_handled}
         </View>}
