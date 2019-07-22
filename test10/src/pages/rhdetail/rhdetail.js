@@ -48,13 +48,12 @@ export default class Rhdetail extends Component {
     this.handleContent(res.data.record.service_content, rhRecordHandled_2.service_content_handled)
     this.handleContent(res.data.record.inst_notes, rhRecordHandled_2.inst_notes_handled)
 
-
-
     this.handleImages(res.data.record.images, rhRecordHandled_2.images_handled)
 
     // handle title image
     res.data.record.title_image = res.data.record.title_image != "" ? res.data.record.title_image : DEFAULT_IMG;
 
+    console.log("bdg-handleImages, title_image: " + res.data.record.title_image);
     return rhRecordHandled_2
   }
 
@@ -71,20 +70,22 @@ export default class Rhdetail extends Component {
       })
     } catch(err) {
     }
+    console.log("bdg-handleImages, images_handled: "
+        + images_handled + ", len: " + images_handled.length);
   }
 
   handleContent = (content, content_handled) => {
-    let inst_charge_handled_tmp = []
+    let content_handled_tmp = []
     content = content.replace(/<\/b>/g, "")
     content = content.replace(/<\/strong>/g, "")
     // FIXME, delete image first
     content = content.replace(/<img.*>/g, "")
 
-    inst_charge_handled_tmp = String(content).split("</p>")
-    if (inst_charge_handled_tmp.length == 1 && inst_charge_handled_tmp[0] == "") {
-      inst_charge_handled_tmp.pop()
+    content_handled_tmp = String(content).split("</p>")
+    if (content_handled_tmp.length == 1 && content_handled_tmp[0] == "") {
+      content_handled_tmp.pop()
     }
-    inst_charge_handled_tmp.forEach(
+    content_handled_tmp.forEach(
         function(value, index, array) {
           var class_style = "";
           if (value.indexOf("<p style=\"text-indent:2em\"><strong>") >= 0
@@ -95,12 +96,12 @@ export default class Rhdetail extends Component {
           } else if (value.indexOf("<p align=\"center\">") >= 0) {
             class_style = "text_center"
           }
-          inst_charge_handled_tmp[index] = inst_charge_handled_tmp[index].replace(/<p style=\"text-indent:2em\">/g, "")
-          inst_charge_handled_tmp[index] = inst_charge_handled_tmp[index].replace(/<p>/g, "")
-          inst_charge_handled_tmp[index] = inst_charge_handled_tmp[index].replace(/<b>/g, "")
-          inst_charge_handled_tmp[index] = inst_charge_handled_tmp[index].replace(/<strong>/g, "")
-          inst_charge_handled_tmp[index] = inst_charge_handled_tmp[index].replace(/<p align=\"center\">/g, "")
-          content_handled.push([inst_charge_handled_tmp[index], class_style])
+          content_handled_tmp[index] = content_handled_tmp[index].replace(/<p style=\"text-indent:2em\">/g, "")
+          content_handled_tmp[index] = content_handled_tmp[index].replace(/<p>/g, "")
+          content_handled_tmp[index] = content_handled_tmp[index].replace(/<b>/g, "")
+          content_handled_tmp[index] = content_handled_tmp[index].replace(/<strong>/g, "")
+          content_handled_tmp[index] = content_handled_tmp[index].replace(/<p align=\"center\">/g, "")
+          content_handled.push([content_handled_tmp[index], class_style])
           // console.info("content-2-4-0: content_handled: " + class_style)
           // console.info("content-2-4-0-1: content_handled: " + content_handled[index])
     })
@@ -215,107 +216,130 @@ export default class Rhdetail extends Component {
         </View>
         )
 
+    const images_swiper = (
+        <Swiper indicatorColor='#999' indicatorActiveColor='#333'
+                circular indicatorDots autoplay className="swiper-view">
+          <SwiperItem className="swiper-view-item">
+            <Image src={this.state.rhRecord.title_image} className="swiper-view-img" />
+          </SwiperItem>
+          { this.state.rhRecordHandled.images_handled.map((image) =>
+              <SwiperItem className="swiper-view-item">
+                <Image src={image}  className="swiper-view-item" />
+              </SwiperItem>
+            )
+          }
+        </Swiper>
+        )
     return (
       <View className="top-view">
         <Video width='150px' height='190px' src={namedVideo} />
         <Image src={DEFAULT_IMG} width="100%" />
-        <Swiper indicatorColor='#999' indicatorActiveColor='#333'
-                circular indicatorDots autoplay>
-          <SwiperItem>
-            <Image src={this.state.rhRecord.title_image} width="100%" />
-          </SwiperItem>
-          <SwiperItem>
-            <Image src={this.state.rhRecord.title_image} width="100%" />
-          </SwiperItem>
-          <SwiperItem>
-            <Image src={this.state.rhRecord.title_image} width="100%" />
-          </SwiperItem>
-        </Swiper>
+        {images_swiper}
         <Text className="show-part-text-1">This is some long text that will not fit in the boxThis is some long text that will not fit in the boxThis is some long text that will not fit in the boxThis is some long text that will not fit in the boxThis is some long text that will not fit in the boxThis is some long text that will not fit in the box</Text>
         <View className="show-part-text">
           rh_id: {this.state.rhRecord.id}
         </View>
-        <View className="show-part-text">
-          id: {this.state.rhRecord.id}
+
+        <View className="rh-name">
+        {this.state.rhRecord.name}
         </View>
-        <View className="show-part-text">
-          name: {this.state.rhRecord.name}
+        {this.state.rhRecord.address != "" &&
+        <View className="rh-address">
+        地址：{this.state.rhRecord.address}
+        </View>}
+        <View className="important-container">
+          <View className="important-item">
+            {this.state.rhRecord.charges_extent != "" ?
+              <View>{this.state.rhRecord.charges_extent}</View> : <View> -- </View>
+            }
+            <View>价格</View>
+          </View>
+          <View className="important-item">
+            {this.state.rhRecord.bednum != "" ?
+              <View>{this.state.rhRecord.bednum}张</View> : <View> -- </View>
+            }
+            <View>床位数</View>
+          </View>
+          <View className="important-item">
+            {this.state.rhRecord.factory_property != "" ?
+              <View> {this.state.rhRecord.factory_property}</View> : <View> -- </View>
+            }
+            <View>性质</View>
+          </View>
         </View>
-        {this.state.rhRecord.phone != "" &&
-        <View className="show-part-text">
-          phone: {this.state.rhRecord.phone}
-        </View>}
-        {this.state.rhRecord.mobile != "" &&
-        <View className="show-part-text">
-          mobile: {this.state.rhRecord.mobile}
-        </View>}
-        {this.state.rhRecord.email != "" &&
-        <View className="show-part-text">
-          email: {this.state.rhRecord.email}
-        </View>}
-        {this.state.rhRecord.postcode != "" &&
-        <View className="show-part-text">
-          postcode: {this.state.rhRecord.postcode}
-        </View>}
-        {this.state.rhRecord.location_id != "" &&
-        <View className="show-part-text">
-          location_id: {this.state.rhRecord.location_id}
-        </View>}
-        {this.state.rhRecord.type != "" &&
-        <View className="show-part-text">
-          type: {this.state.rhRecord.type}
-        </View>}
-        {this.state.rhRecord.factory_property != "" &&
-        <View className="show-part-text">
-          factory_property: {this.state.rhRecord.factory_property}
-        </View>}
-        {this.state.rhRecord.person_in_charge != "" &&
-        <View className="show-part-text">
-          person_in_charge: {this.state.rhRecord.person_in_charge}
-        </View>}
-        {this.state.rhRecord.establishment_time != "" &&
-        <View className="show-part-text">
-          establishment_time: {this.state.rhRecord.establishment_time}
-        </View>}
-        {this.state.rhRecord.floor_surface != "" &&
-        <View className="show-part-text">
-          floor_surface: {this.state.rhRecord.floor_surface}
-        </View>}
-        {this.state.rhRecord.building_area != "" &&
-        <View className="show-part-text">
-          building_area: {this.state.rhRecord.building_area}
-        </View>}
-        {this.state.rhRecord.bednum != "" &&
-        <View className="show-part-text">
-          bednum: {this.state.rhRecord.bednum}
-        </View>}
-        {this.state.rhRecord.staff_num != "" &&
-        <View className="show-part-text">
-          staff_num: {this.state.rhRecord.staff_num}
-        </View>}
-        {this.state.rhRecord.for_persons != "" &&
-        <View className="show-part-text">
-          for_persons: {this.state.rhRecord.for_persons}
-        </View>}
-        {this.state.rhRecord.charges_extent != "" &&
-        <View className="show-part-text">
-          charges_extent: {this.state.rhRecord.charges_extent}
-        </View>}
+        <View className="brief-info">
+          <View className="brief-info-title">
+            基本信息
+          </View>
+          <View className="brief-info-content">
+            <View className="show-part-text">
+              id: {this.state.rhRecord.id}
+            </View>
+            {this.state.rhRecord.phone != "" &&
+            <View className="show-part-text">
+              phone: {this.state.rhRecord.phone}
+            </View>}
+            {this.state.rhRecord.mobile != "" &&
+            <View className="show-part-text">
+              mobile: {this.state.rhRecord.mobile}
+            </View>}
+            {this.state.rhRecord.email != "" &&
+            <View className="show-part-text">
+              email: {this.state.rhRecord.email}
+            </View>}
+            {this.state.rhRecord.postcode != "" &&
+            <View className="show-part-text">
+              postcode: {this.state.rhRecord.postcode}
+            </View>}
+            {this.state.rhRecord.location_id != "" &&
+            <View className="show-part-text">
+              location_id: {this.state.rhRecord.location_id}
+            </View>}
+            {this.state.rhRecord.type != "" &&
+            <View className="show-part-text">
+              type: {this.state.rhRecord.type}
+            </View>}
+            {this.state.rhRecord.person_in_charge != "" &&
+            <View className="show-part-text">
+              person_in_charge: {this.state.rhRecord.person_in_charge}
+            </View>}
+            {this.state.rhRecord.establishment_time != "" &&
+            <View className="show-part-text">
+              establishment_time: {this.state.rhRecord.establishment_time}
+            </View>}
+            {this.state.rhRecord.floor_surface != "" &&
+            <View className="show-part-text">
+              floor_surface: {this.state.rhRecord.floor_surface}
+            </View>}
+            {this.state.rhRecord.building_area != "" &&
+            <View className="show-part-text">
+              building_area: {this.state.rhRecord.building_area}
+            </View>}
+            {this.state.rhRecord.staff_num != "" &&
+            <View className="show-part-text">
+              staff_num: {this.state.rhRecord.staff_num}
+            </View>}
+            {this.state.rhRecord.for_persons != "" &&
+            <View className="show-part-text">
+              for_persons: {this.state.rhRecord.for_persons}
+            </View>}
+            {this.state.rhRecord.charges_extent != "" &&
+            <View className="show-part-text">
+              charges_extent: {this.state.rhRecord.charges_extent}
+            </View>}
+            {this.state.rhRecord.contact_person != "" &&
+            <View className="show-part-text">
+              contact_person: {this.state.rhRecord.contact_person}
+            </View>}
+            {this.state.rhRecord.url != "" &&
+            <View className="show-part-text">
+              url: {this.state.rhRecord.url}
+            </View>}
+          </View>
+        </View>
         {this.state.rhRecordHandled.special_services_handled.length > 0 &&
         <View className="show-part-text">
           special_services_1: {special_services_handled}
-        </View>}
-        {this.state.rhRecord.contact_person != "" &&
-        <View className="show-part-text">
-          contact_person: {this.state.rhRecord.contact_person}
-        </View>}
-        {this.state.rhRecord.address != "" &&
-        <View className="show-part-text">
-          address: {this.state.rhRecord.address}
-        </View>}
-        {this.state.rhRecord.url != "" &&
-        <View className="show-part-text">
-          url: {this.state.rhRecord.url}
         </View>}
         {this.state.rhRecordHandled.transportation_handled.length > 0 &&
         <View className="show-part-text">
@@ -356,10 +380,6 @@ export default class Rhdetail extends Component {
         {this.state.rhRecord.area != "" &&
         <View className="show-part-text">
           area: {this.state.rhRecord.area}
-        </View>}
-        {this.state.rhRecord.images != "" &&
-        <View className="show-part-text">
-          images: {this.state.rhRecord.images}
         </View>}
         {this.state.rhRecord.charges_min != "" &&
         <View className="show-part-text">
