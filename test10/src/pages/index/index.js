@@ -23,13 +23,21 @@ export default class Index extends Component {
   constructor(props) {
     super(props)
     const events = new Events()
-    // events.on('click_button', this.click_button.bind(this))
     this.state = {isOn: false, message: "",
       rhList: [
         {name: "name1", address: "address1"},
         {name: "name2", address: "address2"},
-      ]
-      title_image: ""
+      ],
+      title_image: "",
+
+      selectorPrice: ['不限', '0-1000', '1000-2000', '2000-3000', '3000-4000'],
+      selectorPriceChecked: '不限',
+      selectorBednum: ['不限', '0-50', '50-100', '100-200', '200-300', '300-500', '500-1000', '1000以上'],
+      selectorBednumChecked: '不限',
+      selectorType: ['不限', '老年公寓', '养老照料中心', '护理院', '其他'],
+      selectorTypeChecked: '不限',
+      selectorProp: ['不限', '民营机构', '国营机构', '公建民营', '民办公助', '其他'],
+      selectorPropChecked: '不限',
     }
   }
 
@@ -62,9 +70,32 @@ export default class Index extends Component {
   componentDidShow () { }
 
   componentDidHide () { }
+
+  onChangePrice = e => {
+    this.setState({
+      selectorPriceChecked: this.state.selectorPrice[e.detail.value]
+    })
+  }
+
+  onChangeBednum = e => {
+    this.setState({
+      selectorBednumChecked: this.state.selectorBednum[e.detail.value]
+    })
+  }
+
+  onChangeType = e => {
+    this.setState({
+      selectorTypeChecked: this.state.selectorType[e.detail.value]
+    })
+  }
+
+  onChangeProp = e => {
+    this.setState({
+      selectorPropChecked: this.state.selectorProp[e.detail.value]
+    })
+  }
+
   click_button (rh_id, e) {
-    /*
-    */
     Taro.showToast({title: String(rh_id)})
     Taro.navigateTo({
       url: '/pages/rhdetail/rhdetail?rh_id=' + String(rh_id),
@@ -84,7 +115,6 @@ export default class Index extends Component {
                 <Text className='rh-one-desc-head'>{rh.name}</Text>
                 <Text className='rh-one-desc'>{rh.address}</Text>
                 <Text className='rh-one-desc'>{rh.bednum_int}个床位</Text>
-                <Text className='rh-one-desc'>{rh.id}</Text>
               </View>
             </View>
           )}
@@ -93,6 +123,8 @@ export default class Index extends Component {
     return (
       <View className='top-container'>
         <Video width='150px' height='190px' src={namedVideo} />
+        <View className='location-select-container'>
+        </View>
         <View className='top-title-top-container'>
           <View className='top-title-container'>
             <Image className='top-title-back' src={namedPng} />
@@ -101,10 +133,22 @@ export default class Index extends Component {
             <Image className='top-title-menu' src={namedPng} />
           </View>
           <View className='classify-title-container'>
-            <Text className='classify-title-item'> 价格 </Text>
-            <Text className='classify-title-item'> 床位数 </Text>
-            <Text className='classify-title-item'> 类型 </Text>
-            <Text className='classify-title-item'> 性质 </Text>
+              <Picker className='classify-title-item' mode='selector' range={this.state.selectorPrice} onChange={this.onChangePrice}>
+                {this.state.selectorPriceChecked == "不限"?<View className='classify-title-item'>价格</View>:
+                <View className='classify-title-item'>{this.state.selectorPriceChecked}元</View>}
+              </Picker>
+              <Picker className='classify-title-item' mode='selector' range={this.state.selectorBednum} onChange={this.onChangeBednum}>
+                {this.state.selectorBednumChecked == "不限"?<View className='classify-title-item'>床位数</View>:
+                <View className='classify-title-item'>{this.state.selectorBednumChecked}</View>}
+              </Picker>
+              <Picker className='classify-title-item' mode='selector' range={this.state.selectorType} onChange={this.onChangeType}>
+                {this.state.selectorTypeChecked == "不限"?<View className='classify-title-item'>类型</View>:
+                <View className='classify-title-item'>{this.state.selectorTypeChecked}</View>}
+              </Picker>
+              <Picker className='classify-title-item' mode='selector' range={this.state.selectorProp} onChange={this.onChangeProp}>
+                {this.state.selectorPropChecked == "不限"?<View className='classify-title-item'>性质</View>:
+                <View className='classify-title-item'>{this.state.selectorPropChecked}</View>}
+              </Picker>
           </View>
         </View>
         {restHomeList}
