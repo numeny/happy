@@ -243,10 +243,6 @@ export default class Rhdetail extends Component {
         <View className="rh-name">
         {this.state.rhRecord.name}
         </View>
-        {this.state.rhRecord.address != "" &&
-        <View className="rh-address">
-        地址：{this.state.rhRecord.address}
-        </View>}
         <View className="important-container">
           <View className="important-item">
             {this.state.rhRecord.charges_extent != "" ?
@@ -268,102 +264,131 @@ export default class Rhdetail extends Component {
           </View>
         </View>
         <View className="brief-info">
-          <View className="brief-info-title">
-            基本信息
+          <View className="content-title">
+            基本信息：
           </View>
           <View className="brief-info-content">
             <View className="show-part-text">
               id: {this.state.rhRecord.id}
             </View>
-            {this.state.rhRecord.phone != "" &&
-            <View className="show-part-text">
-              phone: {this.state.rhRecord.phone}
-            </View>}
-            {this.state.rhRecord.mobile != "" &&
-            <View className="show-part-text">
-              mobile: {this.state.rhRecord.mobile}
-            </View>}
-            {this.state.rhRecord.email != "" &&
-            <View className="show-part-text">
-              email: {this.state.rhRecord.email}
-            </View>}
-            {this.state.rhRecord.postcode != "" &&
-            <View className="show-part-text">
-              postcode: {this.state.rhRecord.postcode}
-            </View>}
             {this.state.rhRecord.location_id != "" &&
             <View className="show-part-text">
-              location_id: {this.state.rhRecord.location_id}
+              位置： {this.state.rhRecord.location_id}
+            </View>}
+            {this.state.rhRecord.phone != "" &&
+            <View className="show-part-text">
+              电话： {this.state.rhRecord.phone}
             </View>}
             {this.state.rhRecord.type != "" &&
             <View className="show-part-text">
-              type: {this.state.rhRecord.type}
-            </View>}
-            {this.state.rhRecord.person_in_charge != "" &&
-            <View className="show-part-text">
-              person_in_charge: {this.state.rhRecord.person_in_charge}
-            </View>}
-            {this.state.rhRecord.establishment_time != "" &&
-            <View className="show-part-text">
-              establishment_time: {this.state.rhRecord.establishment_time}
-            </View>}
-            {this.state.rhRecord.floor_surface != "" &&
-            <View className="show-part-text">
-              floor_surface: {this.state.rhRecord.floor_surface}
-            </View>}
-            {this.state.rhRecord.building_area != "" &&
-            <View className="show-part-text">
-              building_area: {this.state.rhRecord.building_area}
-            </View>}
-            {this.state.rhRecord.staff_num != "" &&
-            <View className="show-part-text">
-              staff_num: {this.state.rhRecord.staff_num}
-            </View>}
-            {this.state.rhRecord.for_persons != "" &&
-            <View className="show-part-text">
-              for_persons: {this.state.rhRecord.for_persons}
+              类型： {this.state.rhRecord.type}
             </View>}
             {this.state.rhRecord.charges_extent != "" &&
             <View className="show-part-text">
-              charges_extent: {this.state.rhRecord.charges_extent}
+              收费范围： {this.state.rhRecord.charges_extent}
+            </View>}
+            {this.state.rhRecord.establishment_time != "" &&
+            <View className="show-part-text">
+              建成时间： {this.state.rhRecord.establishment_time}
+            </View>}
+            {this.state.rhRecord.floor_surface != "" &&
+            <View className="show-part-text">
+              占地面积： {this.state.rhRecord.floor_surface}
+            </View>}
+            {this.state.rhRecord.building_area != "" &&
+            <View className="show-part-text">
+              建筑面积： {this.state.rhRecord.building_area}
+            </View>}
+            {this.state.rhRecord.staff_num != "" &&
+            <View className="show-part-text">
+              员工数： {this.state.rhRecord.staff_num}
+            </View>}
+            {this.state.rhRecord.bednum_int != "" &&
+            <View className="show-part-text">
+              床位数： {this.state.rhRecord.bednum_int}
+            </View>}
+            {this.state.rhRecord.for_persons != "" &&
+            <View className="show-part-text">
+              服务人群： {this.state.rhRecord.for_persons}
             </View>}
             {this.state.rhRecord.contact_person != "" &&
             <View className="show-part-text">
-              contact_person: {this.state.rhRecord.contact_person}
+              联系人： {this.state.rhRecord.contact_person}
+            </View>}
+            {this.state.rhRecord.mobile != "" &&
+            <View className="show-part-text">
+              手机： {this.state.rhRecord.mobile}
+            </View>}
+            {this.state.rhRecord.email != "" &&
+            <View className="show-part-text">
+              E-Mail： {this.state.rhRecord.email}
+            </View>}
+            {this.state.rhRecord.person_in_charge != "" &&
+            <View className="show-part-text">
+              负责人： {this.state.rhRecord.person_in_charge}
+            </View>}
+            {this.state.rhRecord.address != "" &&
+            <View className="rh-address">
+              地址：{this.state.rhRecord.address}
+            </View>}
+            {this.state.rhRecord.postcode != "" &&
+            <View className="show-part-text">
+              邮编： {this.state.rhRecord.postcode}
             </View>}
             {this.state.rhRecord.url != "" &&
             <View className="show-part-text">
-              url: {this.state.rhRecord.url}
+              网址： {this.state.rhRecord.url}
             </View>}
           </View>
         </View>
         {this.state.rhRecordHandled.special_services_handled.length > 0 &&
         <View className="show-part-text">
-          special_services_1: {special_services_handled}
+          <View className="content-title">
+            特殊服务：
+          </View>
+          {special_services_handled}
         </View>}
         {this.state.rhRecordHandled.transportation_handled.length > 0 &&
         <View className="show-part-text">
-          transportation_1: {transportation_handled}
+          <View className="content-title">
+            交通：
+          </View>
+          {transportation_handled}
         </View>}
         {this.state.rhRecordHandled.inst_intro_handled.length > 0 &&
         <View className="show-part-text">
-          inst_intro_1: {inst_intro_handled}
+          <View className="content-title">
+            机构介绍：
+          </View>
+          {inst_intro_handled}
         </View>}
         {this.state.rhRecordHandled.inst_charge_handled.length > 0 &&
         <View className="show-part-text">
-          inst_charge_1: { inst_charge_handled }
+          <View className="content-title">
+            收费详情：
+          </View>
+          { inst_charge_handled }
         </View>}
         {this.state.rhRecordHandled.facilities_handled.length > 0 &&
         <View className="show-part-text">
-          facilities_1: {facilities_handled}
+          <View className="content-title">
+            环境设施：
+          </View>
+          {facilities_handled}
         </View>}
         {this.state.rhRecordHandled.service_content_handled.length > 0 &&
         <View className="show-part-text">
-          service_content_1: {service_content_handled}
+          <View className="content-title">
+            服务内容：
+          </View>
+          {service_content_handled}
         </View>}
         {this.state.rhRecordHandled.inst_notes_handled.length > 0 &&
         <View className="show-part-text">
-          inst_notes_1: {inst_notes_handled}
+          <View className="content-title">
+            入住须知：
+          </View>
+          {inst_notes_handled}
         </View>}
         {this.state.rhRecord.ylw_id != "" &&
         <View className="show-part-text">
@@ -388,10 +413,6 @@ export default class Rhdetail extends Component {
         {this.state.rhRecord.charges_max != "" &&
         <View className="show-part-text">
           charges_max: {this.state.rhRecord.charges_max}
-        </View>}
-        {this.state.rhRecord.bednum_int != "" &&
-        <View className="show-part-text">
-          bednum_int: {this.state.rhRecord.bednum_int}
         </View>}
         {images_handled != "" &&
         <View className="show-part-text">

@@ -1,8 +1,9 @@
 $item-border-thin: 2px;
+$content-title-font-size: 30px;
 
 .top-view {
-  width: 100%;
-  padding: 20px;
+  margin-left: 10px;
+  margin-right: 10px;
   font-size: 24px;
 }
 
@@ -78,6 +79,7 @@ $item-border-thin: 2px;
 .rh-name {
   text-align: center;
   font-size: 30px;
+  font-weight: bold;
 }
 
 .rh-address {
@@ -91,8 +93,18 @@ $item-border-thin: 2px;
 }
 
 .brief-info {
-  border-bottom: 1px solid #DDD;
   border-top: 1px solid #DDD;
+}
+
+.content-title {
+  font-size: $content-title-font-size;
+  font-weight: bold;
+  border-bottom: 1px solid #DDD;
+  padding-top: 10px;
+}
+
+.brief-info-content {
+  margin-left: 30px;
 }
 
 .important-item {
