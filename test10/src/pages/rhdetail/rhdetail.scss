@@ -1,5 +1,6 @@
 $item-border-thin: 2px;
 $content-title-font-size: 30px;
+$divider-color: #DDD;
 
 .top-view {
   margin-left: 10px;
@@ -59,23 +60,6 @@ $content-title-font-size: 30px;
   text-overflow:ellipsis;
 }
 
-.show-part-text-3 {
-  width:100px;
-  height:50px;
-  background:#ebebeb;
-  text-align:center;
-  font-family:"Microsoft YaHei";
-  line-height:50px;
-  color:#333;
-  font-size:18px;
-  position:relative;
-  top:-1px;
-  filter:alpha(opacity=50);
-  opacity: 0.7;
-  overflow:hidden;
-  text-overflow:ellipsis;
-}
-
 .rh-name {
   text-align: center;
   font-size: 30px;
@@ -86,12 +70,6 @@ $content-title-font-size: 30px;
   font-size: 20px;
 }
 
-.important-container {
-  display: flex;
-  flex-direction: colume;
-  border: 1px solid #DDD;
-}
-
 .brief-info {
   border-top: 1px solid #DDD;
 }
@@ -99,7 +77,7 @@ $content-title-font-size: 30px;
 .content-title {
   font-size: $content-title-font-size;
   font-weight: bold;
-  border-bottom: 1px solid #DDD;
+  border-bottom: 1px solid $divider-color;
   padding-top: 10px;
 }
 
@@ -107,10 +85,30 @@ $content-title-font-size: 30px;
   margin-left: 30px;
 }
 
+.important-container {
+  display: flex;
+  flex-direction: colume;
+  border: 1px solid #DDD;
+}
+
 .important-item {
   text-align: center;
-  border: 1px solid #F00;
+  border: 1px solid $divider-color;
   flex-grow: 1;
+}
+
+.important-item-1 {
+  text-align: center;
+  border-top: 1px solid $divider-color;
+  border-bottom: 1px solid $divider-color;
+  flex-grow: 1;
+}
+
+.important-item-content {
+  font-size: 30px;
+}
+
+.important-item-label {
 }
 
 .bold_font_two_space {

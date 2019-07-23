@@ -246,26 +246,26 @@ export default class Rhdetail extends Component {
         <View className="important-container">
           <View className="important-item">
             {this.state.rhRecord.charges_extent != "" ?
-              <View>{this.state.rhRecord.charges_extent}</View> : <View> -- </View>
+              <View className="important-item-content">{this.state.rhRecord.charges_extent}</View> : <View> -- </View>
             }
-            <View>价格</View>
+            <View className="important-item-label">价格</View>
           </View>
-          <View className="important-item">
+          <View className="important-item-1">
             {this.state.rhRecord.bednum != "" ?
-              <View>{this.state.rhRecord.bednum}张</View> : <View> -- </View>
+              <View className="important-item-content">{this.state.rhRecord.bednum}张</View> : <View> -- </View>
             }
-            <View>床位数</View>
+            <View className="important-item-label">床位数</View>
           </View>
           <View className="important-item">
             {this.state.rhRecord.factory_property != "" ?
-              <View> {this.state.rhRecord.factory_property}</View> : <View> -- </View>
+              <View className="important-item-content"> {this.state.rhRecord.factory_property}</View> : <View> -- </View>
             }
-            <View>性质</View>
+            <View className="important-item-label">性质</View>
           </View>
         </View>
         <View className="brief-info">
           <View className="content-title">
-            基本信息：
+            基本信息
           </View>
           <View className="brief-info-content">
             <View className="show-part-text">
@@ -344,42 +344,35 @@ export default class Rhdetail extends Component {
         {this.state.rhRecordHandled.special_services_handled.length > 0 &&
         <View className="show-part-text">
           <View className="content-title">
-            特殊服务：
+            特殊服务
           </View>
           {special_services_handled}
-        </View>}
-        {this.state.rhRecordHandled.transportation_handled.length > 0 &&
-        <View className="show-part-text">
-          <View className="content-title">
-            交通：
-          </View>
-          {transportation_handled}
         </View>}
         {this.state.rhRecordHandled.inst_intro_handled.length > 0 &&
         <View className="show-part-text">
           <View className="content-title">
-            机构介绍：
+            机构介绍
           </View>
           {inst_intro_handled}
         </View>}
         {this.state.rhRecordHandled.inst_charge_handled.length > 0 &&
         <View className="show-part-text">
           <View className="content-title">
-            收费详情：
+            收费详情
           </View>
           { inst_charge_handled }
         </View>}
         {this.state.rhRecordHandled.facilities_handled.length > 0 &&
         <View className="show-part-text">
           <View className="content-title">
-            环境设施：
+            环境设施
           </View>
           {facilities_handled}
         </View>}
         {this.state.rhRecordHandled.service_content_handled.length > 0 &&
         <View className="show-part-text">
           <View className="content-title">
-            服务内容：
+            服务内容
           </View>
           {service_content_handled}
         </View>}
@@ -389,6 +382,13 @@ export default class Rhdetail extends Component {
             入住须知：
           </View>
           {inst_notes_handled}
+        </View>}
+        {this.state.rhRecordHandled.transportation_handled.length > 0 &&
+        <View className="show-part-text">
+          <View className="content-title">
+            交通信息
+          </View>
+          {transportation_handled}
         </View>}
         {this.state.rhRecord.ylw_id != "" &&
         <View className="show-part-text">
