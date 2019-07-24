@@ -102,5 +102,5 @@ def show_rh_list(request):
     response['geolocation_province'] = request.session.get('geolocation_province', '')
     response['geolocation_city'] = request.session.get('geolocation_city', '')
     if Log.DEBUG:
-        response['message'] = response['message'] + ", session_key: "+ str(request.session.session_key)
+        response['message'] = "session_key: "+ str(request.session.session_key)
     return JsonResponse(response)

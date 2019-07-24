@@ -11,16 +11,16 @@ class QueryParam:
     DEFAULT_PAGE = 1
 
     def __init__(self):
-       self.province = ""
-       self.city = ""
-       self.area = ""
-       self.minprice = QueryParam.MIN_PRICE
-       self.maxprice = QueryParam.MAX_PRICE
-       self.minbed = QueryParam.MIN_BED_NUM
-       self.maxbed = QueryParam.MAX_BED_NUM
-       self.str_type = ""
-       self.prop = ""
-       self.page = QueryParam.DEFAULT_PAGE
+        self.province = ""
+        self.city = ""
+        self.area = ""
+        self.minprice = QueryParam.MIN_PRICE
+        self.maxprice = QueryParam.MAX_PRICE
+        self.minbed = QueryParam.MIN_BED_NUM
+        self.maxbed = QueryParam.MAX_BED_NUM
+        self.str_type = ""
+        self.prop = ""
+        self.page = QueryParam.DEFAULT_PAGE
 
     '''
     def __init__(self, province, city, area,
@@ -39,19 +39,19 @@ class QueryParam:
     '''
 
     def hasBedNumQuery(self):
-       return self.minbed != QueryParam.MIN_BED_NUM | self.maxbed != QueryParam.MAX_BED_NUM
+        return (self.minbed != QueryParam.MIN_BED_NUM) | (self.maxbed != QueryParam.MAX_BED_NUM)
 
     def hasPriceQuery(self):
-       return self.minprice != QueryParam.MIN_PRICE | self.maxprice != QueryParam.MAX_PRICE
+        return (self.minprice != QueryParam.MIN_PRICE) | (self.maxprice != QueryParam.MAX_PRICE)
 
     def prt(self):
-      Log.d(QueryParam.LOGTAT, " QueryParam.province : " + self.province)
-      Log.d(QueryParam.LOGTAT, " city : " + self.city)
-      Log.d(QueryParam.LOGTAT, " area : " + self.area)
-      Log.d(QueryParam.LOGTAT, " minprice : " + str(self.minprice))
-      Log.d(QueryParam.LOGTAT, " maxprice : " + str(self.maxprice))
-      Log.d(QueryParam.LOGTAT, " minbed : " + str(self.minbed))
-      Log.d(QueryParam.LOGTAT, " maxbed : " + str(self.maxbed))
-      Log.d(QueryParam.LOGTAT, " strtype : " + self.str_type)
-      Log.d(QueryParam.LOGTAT, " prop : " + self.prop)
-      Log.d(QueryParam.LOGTAT, " page : " + str(self.page))
+        Log.d(QueryParam.LOGTAT, " QueryParam.province : " + self.province)
+        Log.d(QueryParam.LOGTAT, " city : " + self.city)
+        Log.d(QueryParam.LOGTAT, " area : " + self.area)
+        Log.d(QueryParam.LOGTAT, " minprice : " + str(self.minprice))
+        Log.d(QueryParam.LOGTAT, " maxprice : " + str(self.maxprice))
+        Log.d(QueryParam.LOGTAT, " minbed : " + str(self.minbed))
+        Log.d(QueryParam.LOGTAT, " maxbed : " + str(self.maxbed))
+        Log.d(QueryParam.LOGTAT, " strtype : " + self.str_type)
+        Log.d(QueryParam.LOGTAT, " prop : " + self.prop)
+        Log.d(QueryParam.LOGTAT, " page : " + str(self.page))

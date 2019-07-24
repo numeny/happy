@@ -98,38 +98,20 @@ class RhListQuery:
         response['page_num'] = page_num
         response['curr_page'] = str(page_idx)
 
-        if self.query_param.hasPriceQuery():
-            response['curr_minprice'] = str(self.query_param.minprice)
-            response['curr_maxprice'] = str(self.query_param.maxprice)
-
-        if self.query_param.hasBedNumQuery():
-            response['curr_minbed'] = str(self.query_param.minbed)
-            response['curr_maxbed'] = str(self.query_param.maxbed)
-
-        if len(self.query_param.str_type) == 0:
-            response['curr_type'] = '0'
-        else:
-            response['curr_type'] = self.query_param.str_type
-
-        if len(self.query_param.prop) == 0:
-            response['curr_prop'] = '0'
-        else:
-            response['curr_prop'] = self.query_param.prop
-
         if Log.DEBUG:
-            response['message'] = "province: " + self.query_param.province
-            response['message'] = response['message'] + ", city: " + self.query_param.city
-            response['message'] = response['message'] + ", area: "+ self.query_param.area
-            response['message'] = response['message'] + ", page_idx: "+ str(page_idx)
-            response['message'] = response['message'] + ", page_num: "+ str(page_num)
-            response['message'] = response['message'] + ", records_num: "+ str(record_num)
-            response['message'] = response['message'] + ", minprice: "+ str(self.query_param.minprice)
-            response['message'] = response['message'] + ", maxprice: "+ str(self.query_param.maxprice)
-            response['message'] = response['message'] + ", minbed: "+ str(self.query_param.minbed)
-            response['message'] = response['message'] + ", maxbed: "+ str(self.query_param.maxbed)
-            response['message'] = response['message'] + ", str_type: " + str(self.query_param.str_type)
-            response['message'] = response['message'] + ", prop: "+ str(self.query_param.prop)
-            Log.e(RhListQuery.LOGTAT, response['message'])
+            message = "province: " + self.query_param.province
+            message = message + ", city: " + self.query_param.city
+            message = message + ", area: "+ self.query_param.area
+            message = message + ", page_idx: "+ str(page_idx)
+            message = message + ", page_num: "+ str(page_num)
+            message = message + ", records_num: "+ str(record_num)
+            message = message + ", minprice: "+ str(self.query_param.minprice)
+            message = message + ", maxprice: "+ str(self.query_param.maxprice)
+            message = message + ", minbed: "+ str(self.query_param.minbed)
+            message = message + ", maxbed: "+ str(self.query_param.maxbed)
+            message = message + ", str_type: " + str(self.query_param.str_type)
+            message = message + ", prop: "+ str(self.query_param.prop)
+            Log.e(RhListQuery.LOGTAT, message)
         return response
 
     @staticmethod

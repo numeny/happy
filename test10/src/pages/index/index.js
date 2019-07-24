@@ -20,33 +20,113 @@ export default class Index extends Component {
   config: Config = {
     navigationBarTitleText: '首页'
   }
+
   constructor(props) {
     super(props)
     const events = new Events()
-    this.state = {isOn: false, message: "",
-      rhList: [
-        {name: "name1", address: "address1"},
-        {name: "name2", address: "address2"},
-      ],
+    this.state = {
+      message: "",
+      rhList: [],
       title_image: "",
 
-      selectorPrice: ['不限', '0-1000', '1000-2000', '2000-3000', '3000-4000'],
+      selectorPrice: ['不限', '0-1000', '1000-2000', '2000-3000', '3000-5000', '5000-7000', '7000-10000', '10000-'],
       selectorPriceChecked: '不限',
-      selectorBednum: ['不限', '0-50', '50-100', '100-200', '200-300', '300-500', '500-1000', '1000以上'],
+      selectorPriceCheckedIdx: 0,
+
+      selectorBednum: ['不限', '0-50', '50-100', '100-200', '200-300', '300-500', '500-1000', '1000-'],
       selectorBednumChecked: '不限',
+      selectorBednumCheckedIdx: 0,
+
       selectorType: ['不限', '老年公寓', '养老照料中心', '护理院', '其他'],
       selectorTypeChecked: '不限',
+      selectorTypeCheckedIdx: 0,
+
       selectorProp: ['不限', '民营机构', '国营机构', '公建民营', '民办公助', '其他'],
       selectorPropChecked: '不限',
+      selectorPropCheckedIdx: 0,
     }
   }
 
   componentWillMount() {
+    this.requestData(this.state.selectorPriceCheckedIdx, this.state.selectorBednumCheckedIdx,
+        this.state.selectorTypeCheckedIdx, this.state.selectorPropCheckedIdx)
+  }
+
+  requestPriceData = (selectorPriceCheckedIdx) => {
+    this.requestData(selectorPriceCheckedIdx, this.state.selectorBednumCheckedIdx,
+        this.state.selectorTypeCheckedIdx, this.state.selectorPropCheckedIdx)
+  }
+
+  requestBednumData = (selectorBednumCheckedIdx) => {
+    this.requestData(this.state.selectorPriceCheckedIdx, selectorBednumCheckedIdx,
+        this.state.selectorTypeCheckedIdx, this.state.selectorPropCheckedIdx)
+  }
+
+  requestTypeData = (selectorTypeCheckedIdx) => {
+    this.requestData(this.state.selectorPriceCheckedIdx, this.state.selectorBednumCheckedIdx,
+        selectorTypeCheckedIdx, this.state.selectorPropCheckedIdx)
+  }
+
+  requestPropData = (selectorPropCheckedIdx) => {
+    this.requestData(this.state.selectorPriceCheckedIdx, this.state.selectorBednumCheckedIdx,
+        this.state.selectorTypeCheckedIdx, selectorPropCheckedIdx)
+  }
+
+  requestData = (selectorPriceCheckedIdx, selectorBednumCheckedIdx, selectorTypeCheckedIdx, selectorPropCheckedIdx) => {
+    let addedUrl = ''
+    if (selectorPriceCheckedIdx != 0) {
+      let selectorPriceChecked = this.state.selectorPrice[selectorPriceCheckedIdx]
+      let price = String(selectorPriceChecked).split("-")
+      try {
+        if (price[0].length > 0) {
+          let minPrice = parseInt(price[0])
+          addedUrl = addedUrl + (addedUrl != '' ? '&&' : '?') + 'min_price=' + minPrice
+        }
+      } catch(err) {
+        console.error('[Warning] calc min price error!')
+      }
+      try {
+        if (price[1].length > 0) {
+          let maxPrice = parseInt(price[1])
+          addedUrl = addedUrl + (addedUrl != '' ? '&' : '?') + 'max_price=' + maxPrice
+        }
+      } catch(err) {
+        console.error('[Warning] calc max price error!')
+      }
+    }
+    if (selectorBednumCheckedIdx != 0) {
+      let selectorBednumChecked = this.state.selectorBednum[selectorBednumCheckedIdx]
+      let bednum = String(selectorBednumChecked).split("-")
+      try {
+        if (bednum[0].length > 0) {
+          let minBednum = parseInt(bednum[0])
+          addedUrl = addedUrl + (addedUrl != '' ? '&' : '?') + 'min_bed=' + minBednum
+        }
+      } catch(err) {
+        console.error('[Warning] calc min bed num error!')
+      }
+      try {
+        if (bednum[1].length > 0) {
+          let maxBednum = parseInt(bednum[1])
+          addedUrl = addedUrl + (addedUrl != '' ? '&' : '?') + 'max_bed=' + maxBednum
+        }
+      } catch(err) {
+        console.error('[Warning] calc max bed num error!')
+      }
+    }
+    if (selectorTypeCheckedIdx != 0) {
+      addedUrl = addedUrl + (addedUrl != '' ? '&' : '?') + 'type=' + selectorTypeCheckedIdx
+    }
+    if (selectorPropCheckedIdx != 0) {
+      addedUrl = addedUrl + (addedUrl != '' ? '&' : '?') + 'prop=' + selectorPropCheckedIdx
+    }
+
+    console.error('request url: ' + SERVER_HOST + '/show_rh_list' + addedUrl)
     Taro.request({
-      url: SERVER_HOST + '/show_rh_list',
+      url: SERVER_HOST + '/show_rh_list' + addedUrl,
       success: (res) => {
         console.log(res.data.records)
-        Taro.showToast({title: res.data.records[0].title_image})
+        // Taro.showToast({title: res.data.records[0].title_image})
         this.setState({
             message: 'success',
             rhList: res.data.records,
@@ -72,26 +152,34 @@ export default class Index extends Component {
   componentDidHide () { }
 
   onChangePrice = e => {
+    this.requestPriceData(e.detail.value)
     this.setState({
-      selectorPriceChecked: this.state.selectorPrice[e.detail.value]
+      selectorPriceChecked: this.state.selectorPrice[e.detail.value],
+      selectorPriceCheckedIdx: e.detail.value,
     })
   }
 
   onChangeBednum = e => {
+    this.requestBednumData(e.detail.value)
     this.setState({
-      selectorBednumChecked: this.state.selectorBednum[e.detail.value]
+      selectorBednumChecked: this.state.selectorBednum[e.detail.value],
+      selectorBednumCheckedIdx: e.detail.value,
     })
   }
 
   onChangeType = e => {
+    this.requestTypeData(e.detail.value)
     this.setState({
-      selectorTypeChecked: this.state.selectorType[e.detail.value]
+      selectorTypeChecked: this.state.selectorType[e.detail.value],
+      selectorTypeCheckedIdx: e.detail.value,
     })
   }
 
   onChangeProp = e => {
+    this.requestPropData(e.detail.value)
     this.setState({
-      selectorPropChecked: this.state.selectorProp[e.detail.value]
+      selectorPropChecked: this.state.selectorProp[e.detail.value],
+      selectorPropCheckedIdx: e.detail.value,
     })
   }
 

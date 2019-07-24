@@ -283,6 +283,10 @@ export default class Rhdetail extends Component {
             <View className="show-part-text">
               类型： {this.state.rhRecord.type}
             </View>}
+            {this.state.rhRecord.factory_property != "" &&
+            <View className="show-part-text">
+              性质： {this.state.rhRecord.factory_property}
+            </View>}
             {this.state.rhRecord.charges_extent != "" &&
             <View className="show-part-text">
               收费范围： {this.state.rhRecord.charges_extent}
