@@ -16,6 +16,7 @@ from rh_const import *
 from QueryParam import *
 from RhDetailQuery import *
 from RhListQuery import *
+from AreaQuery import *
 
 from settings import *
 
@@ -104,3 +105,18 @@ def show_rh_list(request):
     if Log.DEBUG:
         response['message'] = "session_key: "+ str(request.session.session_key)
     return JsonResponse(response)
+
+def areaList(request):
+    prov = ""
+    city = ""
+    if 'prov' in request.GET:
+        prov = request.GET['prov']
+
+    if 'city' in request.GET:
+        city = request.GET['city']
+
+    area_list = AreaQuery.getAreaList(prov, city)
+    if area_list is None:
+        area_list = []
+
+    return JsonResponse(area_list)

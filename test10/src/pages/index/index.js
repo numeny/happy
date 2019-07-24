@@ -29,6 +29,13 @@ export default class Index extends Component {
       rhList: [],
       title_image: "",
 
+      currProvince : "北京市",
+      currCity : "北京市",
+
+      selectorArea: [],
+      selectorAreaChecked: '不限',
+      selectorAreaCheckedIdx: 0,
+
       selectorPrice: ['不限', '0-1000', '1000-2000', '2000-3000', '3000-5000', '5000-7000', '7000-10000', '10000-'],
       selectorPriceChecked: '不限',
       selectorPriceCheckedIdx: 0,
@@ -49,30 +56,35 @@ export default class Index extends Component {
 
   componentWillMount() {
     this.requestData(this.state.selectorPriceCheckedIdx, this.state.selectorBednumCheckedIdx,
-        this.state.selectorTypeCheckedIdx, this.state.selectorPropCheckedIdx)
+        this.state.selectorTypeCheckedIdx, this.state.selectorPropCheckedIdx, this.state.selectorAreaCheckedIdx)
+  }
+
+  requestAreaRhData = (selectorAreaCheckedIdx) => {
+    this.requestData(this.state.selectorPriceCheckedIdx, this.state.selectorBednumCheckedIdx,
+        this.state.selectorTypeCheckedIdx, this.state.selectorPropCheckedIdx, selectorAreaCheckedIdx)
   }
 
   requestPriceData = (selectorPriceCheckedIdx) => {
     this.requestData(selectorPriceCheckedIdx, this.state.selectorBednumCheckedIdx,
-        this.state.selectorTypeCheckedIdx, this.state.selectorPropCheckedIdx)
+        this.state.selectorTypeCheckedIdx, this.state.selectorPropCheckedIdx, this.state.selectorAreaCheckedIdx)
   }
 
   requestBednumData = (selectorBednumCheckedIdx) => {
     this.requestData(this.state.selectorPriceCheckedIdx, selectorBednumCheckedIdx,
-        this.state.selectorTypeCheckedIdx, this.state.selectorPropCheckedIdx)
+        this.state.selectorTypeCheckedIdx, this.state.selectorPropCheckedIdx, this.state.selectorAreaCheckedIdx)
   }
 
   requestTypeData = (selectorTypeCheckedIdx) => {
     this.requestData(this.state.selectorPriceCheckedIdx, this.state.selectorBednumCheckedIdx,
-        selectorTypeCheckedIdx, this.state.selectorPropCheckedIdx)
+        selectorTypeCheckedIdx, this.state.selectorPropCheckedIdx, this.state.selectorAreaCheckedIdx)
   }
 
   requestPropData = (selectorPropCheckedIdx) => {
     this.requestData(this.state.selectorPriceCheckedIdx, this.state.selectorBednumCheckedIdx,
-        this.state.selectorTypeCheckedIdx, selectorPropCheckedIdx)
+        this.state.selectorTypeCheckedIdx, selectorPropCheckedIdx, this.state.selectorAreaCheckedIdx)
   }
 
-  requestData = (selectorPriceCheckedIdx, selectorBednumCheckedIdx, selectorTypeCheckedIdx, selectorPropCheckedIdx) => {
+  requestData = (selectorPriceCheckedIdx, selectorBednumCheckedIdx, selectorTypeCheckedIdx, selectorPropCheckedIdx, selectorAreaCheckedIdx) => {
     let addedUrl = ''
     if (selectorPriceCheckedIdx != 0) {
       let selectorPriceChecked = this.state.selectorPrice[selectorPriceCheckedIdx]
@@ -121,6 +133,18 @@ export default class Index extends Component {
       addedUrl = addedUrl + (addedUrl != '' ? '&' : '?') + 'prop=' + selectorPropCheckedIdx
     }
 
+    if (this.state.currProvince.length != 0) {
+      addedUrl = addedUrl + (addedUrl != '' ? '&' : '?') + 'prov=' + this.state.currProvince
+    }
+
+    if (this.state.currCity.length != 0) {
+      addedUrl = addedUrl + (addedUrl != '' ? '&' : '?') + 'city=' + this.state.currCity
+    }
+
+    if (selectorAreaCheckedIdx != 0) {
+      addedUrl = addedUrl + (addedUrl != '' ? '&' : '?') + 'area=' + this.state.selectorArea[selectorAreaCheckedIdx]
+    }
+
     console.error('request url: ' + SERVER_HOST + '/show_rh_list' + addedUrl)
     Taro.request({
       url: SERVER_HOST + '/show_rh_list' + addedUrl,
@@ -143,13 +167,54 @@ export default class Index extends Component {
     })
   }
 
-  componentDidMount () { }
+  requestAreaData = () => {
+    let url = SERVER_HOST + '/arealist' + "?prov=" + this.state.currProvince + "&city=" + this.state.currCity
+    console.error('requestAreaData: url: ' + url)
+    Taro.request({
+      url: url,
+      success: (res) => {
+        console.log(res.data)
+        // Taro.showToast({title: res.data.records[0].title_image})
+        // let selectorArea = (new Array(res.data)).unshift('不限')
+        let selectorArea = ['不限']
+        for (var i in res.data) {
+            selectorArea.push(res.data[i])
+        }
+        this.setState({
+            message: 'success',
+            selectorArea: selectorArea,
+        })
+      },
+      fail: (error) => {
+      /*
+        console.error('bdg-error')
+        this.setState({message: 'hello'})
+        Taro.showToast({title: 'fail'})
+        */
+      },
+      complete: () => {
+        // Taro.showToast({title: "complete"})
+      },
+    })
+  }
+
+  componentDidMount () {
+    this.requestAreaData()
+  }
 
   componentWillUnmount () { }
 
   componentDidShow () { }
 
   componentDidHide () { }
+
+  onChangeArea = e => {
+    this.requestAreaRhData(e.detail.value)
+    this.setState({
+      selectorAreaChecked: this.state.selectorArea[e.detail.value],
+      selectorAreaCheckedIdx: e.detail.value,
+    })
+  }
 
   onChangePrice = e => {
     this.requestPriceData(e.detail.value)
@@ -221,6 +286,10 @@ export default class Index extends Component {
             <Image className='top-title-menu' src={namedPng} />
           </View>
           <View className='classify-title-container'>
+              <Picker className='classify-title-item' mode='selector' range={this.state.selectorArea} onChange={this.onChangeArea}>
+                {this.state.selectorAreaChecked == "不限"?<View className='classify-title-item'>区域</View>:
+                <View className='classify-title-item'>{this.state.selectorAreaChecked}</View>}
+              </Picker>
               <Picker className='classify-title-item' mode='selector' range={this.state.selectorPrice} onChange={this.onChangePrice}>
                 {this.state.selectorPriceChecked == "不限"?<View className='classify-title-item'>价格</View>:
                 <View className='classify-title-item'>{this.state.selectorPriceChecked}元</View>}
