@@ -1,11 +1,11 @@
 $item-border-thin: 2px;
-$content-title-font-size: 30px;
+$content-title-font-size: 40px;
 $divider-color: #DDD;
 
 .top-view {
   margin-left: 10px;
   margin-right: 10px;
-  font-size: 24px;
+  font-size: 34px;
 }
 
 .swiper-view {
@@ -17,12 +17,17 @@ $divider-color: #DDD;
 .swiper-view-item {
   width: 100%;
   text-align : center;
-  background-color: 0;
 }
 
 .show-part-text {
   width: 100%;
   white-space: wrap;
+}
+
+.images-handled {
+  width: 100%;
+  white-space: wrap;
+  text-align: center;
 }
 
 .show-part-text-1 {
@@ -50,7 +55,7 @@ $divider-color: #DDD;
 
 .show-part-text-5 {
   display: -webkit-box;
-  font-size:28rpx;
+  font-size: 28rpx;
   color:#000000;
   line-height: 40rpx;
   word-break: break-all;
@@ -62,12 +67,8 @@ $divider-color: #DDD;
 
 .rh-name {
   text-align: center;
-  font-size: 30px;
+  font-size: 40px;
   font-weight: bold;
-}
-
-.rh-address {
-  font-size: 20px;
 }
 
 .brief-info {
@@ -77,7 +78,7 @@ $divider-color: #DDD;
 .content-title {
   font-size: $content-title-font-size;
   font-weight: bold;
-  border-bottom: 1px solid $divider-color;
+  border-bottom: 5px solid $divider-color;
   padding-top: 10px;
 }
 
@@ -105,10 +106,11 @@ $divider-color: #DDD;
 }
 
 .important-item-content {
-  font-size: 30px;
+  font-size: 38px;
 }
 
 .important-item-label {
+  font-size: 30px;
 }
 
 .bold_font_two_space {

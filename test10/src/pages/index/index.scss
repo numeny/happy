@@ -101,6 +101,14 @@ src: url(data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABUAAAAiCAMAAACHtmKxAAAAQ
   margin-top: $margin-rh-list-container;
 }
 
+.rh-list-error-message {
+  width: 100%;
+  font-size: 12px bold;
+  text-align: center;
+  padding-right: 50px;
+  padding-left: 50px;
+}
+
 .rh-one-container {
   display: flex;
   flex-direction: colume;

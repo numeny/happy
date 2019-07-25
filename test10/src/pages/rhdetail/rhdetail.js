@@ -51,9 +51,7 @@ export default class Rhdetail extends Component {
     this.handleImages(res.data.record.images, rhRecordHandled_2.images_handled)
 
     // handle title image
-    res.data.record.title_image = res.data.record.title_image != "" ? res.data.record.title_image : DEFAULT_IMG;
-
-    console.log("bdg-handleImages, title_image: " + res.data.record.title_image);
+    res.data.record.title_image = res.data.record.title_image.length > 0 ? res.data.record.title_image : DEFAULT_IMG
     return rhRecordHandled_2
   }
 
@@ -70,8 +68,6 @@ export default class Rhdetail extends Component {
       })
     } catch(err) {
     }
-    console.log("bdg-handleImages, images_handled: "
-        + images_handled + ", len: " + images_handled.length);
   }
 
   handleContent = (content, content_handled) => {
@@ -218,13 +214,13 @@ export default class Rhdetail extends Component {
 
     const images_swiper = (
         <Swiper indicatorColor='#999' indicatorActiveColor='#333'
-                circular indicatorDots autoplay className="swiper-view">
+                indicatorDots autoplay className="swiper-view">
           <SwiperItem className="swiper-view-item">
-            <Image src={this.state.rhRecord.title_image} className="swiper-view-img" />
+            <Image src={this.state.rhRecord.title_image} />
           </SwiperItem>
           { this.state.rhRecordHandled.images_handled.map((image) =>
               <SwiperItem className="swiper-view-item">
-                <Image src={image}  className="swiper-view-item" />
+                <Image src={image} />
               </SwiperItem>
             )
           }
@@ -232,7 +228,7 @@ export default class Rhdetail extends Component {
         )
     return (
       <View className="top-view">
-        <Video width='150px' height='190px' src={namedVideo} />
+        <Video width='250px' height='250px' src={namedVideo} />
         <Image src={DEFAULT_IMG} width="100%" />
         {images_swiper}
         <Text className="show-part-text-1">This is some long text that will not fit in the boxThis is some long text that will not fit in the boxThis is some long text that will not fit in the boxThis is some long text that will not fit in the boxThis is some long text that will not fit in the boxThis is some long text that will not fit in the box</Text>
@@ -268,6 +264,10 @@ export default class Rhdetail extends Component {
             基本信息
           </View>
           <View className="brief-info-content">
+            {this.state.rhRecord.ylw_id != "" &&
+            <View className="show-part-text">
+              ylw_id: {this.state.rhRecord.ylw_id}
+            </View>}
             <View className="show-part-text">
               id: {this.state.rhRecord.id}
             </View>
@@ -394,34 +394,12 @@ export default class Rhdetail extends Component {
           </View>
           {transportation_handled}
         </View>}
-        {this.state.rhRecord.ylw_id != "" &&
-        <View className="show-part-text">
-          ylw_id: {this.state.rhRecord.ylw_id}
-        </View>}
-        {this.state.rhRecord.privince != "" &&
-        <View className="show-part-text">
-          province: {this.state.rhRecord.privince}
-        </View>}
-        {this.state.rhRecord.city != "" &&
-        <View className="show-part-text">
-          city: {this.state.rhRecord.city}
-        </View>}
-        {this.state.rhRecord.area != "" &&
-        <View className="show-part-text">
-          area: {this.state.rhRecord.area}
-        </View>}
-        {this.state.rhRecord.charges_min != "" &&
-        <View className="show-part-text">
-          charges_min: {this.state.rhRecord.charges_min}
-        </View>}
-        {this.state.rhRecord.charges_max != "" &&
-        <View className="show-part-text">
-          charges_max: {this.state.rhRecord.charges_max}
-        </View>}
-        {images_handled != "" &&
-        <View className="show-part-text">
-          images_handled: {images_handled}
-        </View>}
+        {this.state.rhRecordHandled.images_handled.length > 0 &&
+        <View>
+          <View className="content-title"> 图片信息 </View>
+          <View className="images-handled">
+            {images_handled}
+        </View></View>}
       </View>
     )
   }

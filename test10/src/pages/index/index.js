@@ -259,9 +259,12 @@ export default class Index extends Component {
 
   render () {
     const { rhList } = this.state
+
+    // display rest home list or error message
     const restHomeList = (
           <View className='rh-list-container'>
-          {rhList.map((rh) =>
+          { rhList.length == 0 ? (<View><View className='rh-list-error-message'>暂无数据，</View><View className='rh-list-error-message'>请换条件重新查询。</View></View>) :
+          rhList.map((rh) =>
             <View className='rh-one-container' onClick={this.click_button.bind(this, rh.id)}>
               <Image src={rh.title_image != "" ? rh.title_image : DEFAULT_IMG} className='rh-one-img'/>
               <View className='rh-one-desc-container'>
@@ -309,24 +312,6 @@ export default class Index extends Component {
           </View>
         </View>
         {restHomeList}
-        <View className='rh-list-container'>
-          <View className='rh-one-container' onClick={this.click_button.bind(this)}>
-            <Image src={namedPng} className='rh-one-img'/>
-            <View className='rh-one-desc-container'>
-              <Text className='rh-one-desc-head'> my red</Text>
-              <Text className='rh-one-desc'> my red</Text>
-              <Text className='rh-one-desc'> my red</Text>
-            </View>
-          </View>
-          <View className='rh-one-container' onClick={this.click_button.bind(this)}>
-            <Image src={namedPng} className='rh-one-img'/>
-            <View className='rh-one-desc-container'>
-              <Text className='rh-one-desc-head'> my red</Text>
-              <Text className='rh-one-desc'> my red</Text>
-              <Text className='rh-one-desc'> my red</Text>
-            </View>
-          </View>
-        </View>
       </View>
     )
   }
