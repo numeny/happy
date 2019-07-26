@@ -78,6 +78,7 @@ const config = {
   h5: {
     publicPath: '/',
     staticDirectory: 'static',
+    // FIXME, baidaogui, // esnextModules: ['taro-ui'],
     module: {
       postcss: {
         autoprefixer: {

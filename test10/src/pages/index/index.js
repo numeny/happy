@@ -286,10 +286,18 @@ export default class Index extends Component {
     })
   }
 
-  click_button (rh_id, e) {
+  showRhDetail (rh_id, e) {
     Taro.showToast({title: String(rh_id)})
     Taro.navigateTo({
       url: '/pages/rhdetail/rhdetail?rh_id=' + String(rh_id),
+    })
+
+    Taro.showNavigationBarLoading();
+  }
+
+  selectCitylist (e) {
+    Taro.navigateTo({
+      url: '/pages/citylist/citylist',
     })
 
     Taro.showNavigationBarLoading();
@@ -302,7 +310,7 @@ export default class Index extends Component {
     const restHomeList = (
           <View className='rh-list-container'>
           {rhList.map((rh) =>
-            <View className='rh-one-container' onClick={this.click_button.bind(this, rh.id)}>
+            <View className='rh-one-container' onClick={this.showRhDetail.bind(this, rh.id)}>
               <Image src={rh.title_image != "" ? rh.title_image : DEFAULT_IMG} className='rh-one-img'/>
               <View className='rh-one-desc-container'>
                 <Text className='rh-one-desc-head'>{rh.name}</Text>
@@ -329,7 +337,7 @@ export default class Index extends Component {
         <View className='top-title-top-container'>
           <View className='top-title-container'>
             <Image className='top-title-back' src={namedPng} />
-            <Text className='top-title-city'> city </Text>
+            <Text className='top-title-city' onClick={this.selectCitylist.bind(this)}>{this.state.currCity}</Text>
             <Input type='text' placeholder='' className='top-title-input' />
             <Image className='top-title-menu' src={namedPng} />
           </View>
