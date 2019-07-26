@@ -97,7 +97,9 @@ export default class Rhdetail extends Component {
           content_handled_tmp[index] = content_handled_tmp[index].replace(/<b>/g, "")
           content_handled_tmp[index] = content_handled_tmp[index].replace(/<strong>/g, "")
           content_handled_tmp[index] = content_handled_tmp[index].replace(/<p align=\"center\">/g, "")
-          content_handled.push([content_handled_tmp[index], class_style])
+          if (content_handled_tmp[index].length > 0) { // content is null
+            content_handled.push([content_handled_tmp[index], class_style])
+          }
           // console.info("content-2-4-0: content_handled: " + class_style)
           // console.info("content-2-4-0-1: content_handled: " + content_handled[index])
     })

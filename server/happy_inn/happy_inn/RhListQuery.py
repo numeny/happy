@@ -95,15 +95,15 @@ class RhListQuery:
             response['record_num'] = RH_NUM_PER_PAGE
         else:
             response['record_num'] = (record_num - RH_NUM_PER_PAGE * (page_idx - 1))
-        response['page_num'] = page_num
-        response['curr_page'] = str(page_idx)
+        response['pageNum'] = page_num
+        response['currPage'] = page_idx
 
         if Log.DEBUG:
             message = "province: " + self.query_param.province
             message = message + ", city: " + self.query_param.city
             message = message + ", area: "+ self.query_param.area
-            message = message + ", page_idx: "+ str(page_idx)
-            message = message + ", page_num: "+ str(page_num)
+            message = message + ", currPage: "+ str(page_idx)
+            message = message + ", pageNum: "+ str(page_num)
             message = message + ", records_num: "+ str(record_num)
             message = message + ", minprice: "+ str(self.query_param.minprice)
             message = message + ", maxprice: "+ str(self.query_param.maxprice)

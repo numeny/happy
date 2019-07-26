@@ -24,13 +24,17 @@ export default class Index extends Component {
   constructor(props) {
     super(props)
     const events = new Events()
+    const DEFAULT_CURR_PAGE = 1
     this.state = {
       message: "",
       rhList: [],
       title_image: "",
 
-      currProvince : "北京市",
-      currCity : "北京市",
+      currProvince: "北京市",
+      currCity: "北京市",
+
+      currPage: this.DEFAULT_CURR_PAGE,
+      isOnEnd: false,
 
       selectorArea: [],
       selectorAreaChecked: '不限',
@@ -56,35 +60,43 @@ export default class Index extends Component {
 
   componentWillMount() {
     this.requestData(this.state.selectorPriceCheckedIdx, this.state.selectorBednumCheckedIdx,
-        this.state.selectorTypeCheckedIdx, this.state.selectorPropCheckedIdx, this.state.selectorAreaCheckedIdx)
+        this.state.selectorTypeCheckedIdx, this.state.selectorPropCheckedIdx,
+        this.state.selectorAreaCheckedIdx, this.DEFAULT_CURR_PAGE) // 1st page
   }
 
   requestAreaRhData = (selectorAreaCheckedIdx) => {
     this.requestData(this.state.selectorPriceCheckedIdx, this.state.selectorBednumCheckedIdx,
-        this.state.selectorTypeCheckedIdx, this.state.selectorPropCheckedIdx, selectorAreaCheckedIdx)
+        this.state.selectorTypeCheckedIdx, this.state.selectorPropCheckedIdx,
+        selectorAreaCheckedIdx, this.DEFAULT_CURR_PAGE)
   }
 
   requestPriceData = (selectorPriceCheckedIdx) => {
     this.requestData(selectorPriceCheckedIdx, this.state.selectorBednumCheckedIdx,
-        this.state.selectorTypeCheckedIdx, this.state.selectorPropCheckedIdx, this.state.selectorAreaCheckedIdx)
+        this.state.selectorTypeCheckedIdx, this.state.selectorPropCheckedIdx,
+        this.state.selectorAreaCheckedIdx, this.DEFAULT_CURR_PAGE)
   }
 
   requestBednumData = (selectorBednumCheckedIdx) => {
     this.requestData(this.state.selectorPriceCheckedIdx, selectorBednumCheckedIdx,
-        this.state.selectorTypeCheckedIdx, this.state.selectorPropCheckedIdx, this.state.selectorAreaCheckedIdx)
+        this.state.selectorTypeCheckedIdx, this.state.selectorPropCheckedIdx,
+        this.state.selectorAreaCheckedIdx, this.DEFAULT_CURR_PAGE)
   }
 
   requestTypeData = (selectorTypeCheckedIdx) => {
     this.requestData(this.state.selectorPriceCheckedIdx, this.state.selectorBednumCheckedIdx,
-        selectorTypeCheckedIdx, this.state.selectorPropCheckedIdx, this.state.selectorAreaCheckedIdx)
+        selectorTypeCheckedIdx, this.state.selectorPropCheckedIdx,
+        this.state.selectorAreaCheckedIdx, this.DEFAULT_CURR_PAGE)
   }
 
   requestPropData = (selectorPropCheckedIdx) => {
     this.requestData(this.state.selectorPriceCheckedIdx, this.state.selectorBednumCheckedIdx,
-        this.state.selectorTypeCheckedIdx, selectorPropCheckedIdx, this.state.selectorAreaCheckedIdx)
+        this.state.selectorTypeCheckedIdx, selectorPropCheckedIdx,
+        this.state.selectorAreaCheckedIdx, this.DEFAULT_CURR_PAGE)
   }
 
-  requestData = (selectorPriceCheckedIdx, selectorBednumCheckedIdx, selectorTypeCheckedIdx, selectorPropCheckedIdx, selectorAreaCheckedIdx) => {
+  addedUrl = (selectorPriceCheckedIdx, selectorBednumCheckedIdx,
+      selectorTypeCheckedIdx, selectorPropCheckedIdx,
+      selectorAreaCheckedIdx, requestPage) => {
     let addedUrl = ''
     if (selectorPriceCheckedIdx != 0) {
       let selectorPriceChecked = this.state.selectorPrice[selectorPriceCheckedIdx]
@@ -144,16 +156,42 @@ export default class Index extends Component {
     if (selectorAreaCheckedIdx != 0) {
       addedUrl = addedUrl + (addedUrl != '' ? '&' : '?') + 'area=' + this.state.selectorArea[selectorAreaCheckedIdx]
     }
+    if (requestPage != this.DEFAULT_CURR_PAGE) { // 1st page
+      addedUrl = addedUrl + (addedUrl != '' ? '&' : '?') + 'page=' + requestPage
+    }
 
+    return addedUrl
+  }
+
+  loadMoreData(e) {
+    this.requestData(this.state.selectorPriceCheckedIdx, this.state.selectorBednumCheckedIdx,
+        this.state.selectorTypeCheckedIdx, this.state.selectorPropCheckedIdx,
+        this.state.selectorAreaCheckedIdx, this.state.currPage + 1) // 1st page
+  }
+
+  requestData = (selectorPriceCheckedIdx, selectorBednumCheckedIdx,
+      selectorTypeCheckedIdx, selectorPropCheckedIdx,
+      selectorAreaCheckedIdx, requestPage) => {
+    let addedUrl = this.addedUrl(selectorPriceCheckedIdx,
+        selectorBednumCheckedIdx, selectorTypeCheckedIdx,
+        selectorPropCheckedIdx, selectorAreaCheckedIdx, requestPage)
     console.error('request url: ' + SERVER_HOST + '/show_rh_list' + addedUrl)
     Taro.request({
       url: SERVER_HOST + '/show_rh_list' + addedUrl,
       success: (res) => {
         console.log(res.data.records)
+        let rhList = []
+        if (requestPage == this.DEFAULT_CURR_PAGE) {
+          rhList = res.data.records
+        } else {
+          rhList = this.state.rhList.concat(res.data.records)
+        }
         // Taro.showToast({title: res.data.records[0].title_image})
         this.setState({
             message: 'success',
-            rhList: res.data.records,
+            rhList: rhList,
+            currPage: res.data.currPage,
+            isOnEnd: (res.data.currPage >= res.data.pageNum)
         })
       },
       fail: (error) => {
@@ -263,8 +301,7 @@ export default class Index extends Component {
     // display rest home list or error message
     const restHomeList = (
           <View className='rh-list-container'>
-          { rhList.length == 0 ? (<View><View className='rh-list-error-message'>暂无数据，</View><View className='rh-list-error-message'>请换条件重新查询。</View></View>) :
-          rhList.map((rh) =>
+          {rhList.map((rh) =>
             <View className='rh-one-container' onClick={this.click_button.bind(this, rh.id)}>
               <Image src={rh.title_image != "" ? rh.title_image : DEFAULT_IMG} className='rh-one-img'/>
               <View className='rh-one-desc-container'>
@@ -276,11 +313,19 @@ export default class Index extends Component {
           )}
           </View>
         )
+
+    const hasMoreData = (
+        <View>
+        { rhList.length == 0 ? (<View className='loading-more'><View>暂无数据，</View><View>请换条件重新查询。</View></View>) : (this.state.isOnEnd ? (<Text className='loading-more'>已经到底了</Text>) : (<Text className='loading-more' onClick={this.loadMoreData.bind(this)}> 点击查看更多 </Text>)) }
+        </View>
+        )
+
     return (
       <View className='top-container'>
         <Video width='150px' height='190px' src={namedVideo} />
         <View className='location-select-container'>
         </View>
+        <Image src={namedPng} />
         <View className='top-title-top-container'>
           <View className='top-title-container'>
             <Image className='top-title-back' src={namedPng} />
@@ -312,6 +357,10 @@ export default class Index extends Component {
           </View>
         </View>
         {restHomeList}
+        {hasMoreData}
+        <View>
+          mmmm
+        </View>
       </View>
     )
   }

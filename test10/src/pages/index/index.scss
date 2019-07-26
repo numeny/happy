@@ -2,16 +2,12 @@ $padding-top-title: 10px;
 $font-size-all: 30px;
 $width-title: 50px;
 $height-title: 90px;
-$margin-rh-list-container: 180px;
 $item-border-thin: 2px;
 $item-border-thick: 6px;
 $item-border-color: #DDD;
 $page-background-color: #FFF;
 
 .top-container {
-  display: flex;
-  flex-direction: row;
-  flex-wrap: wrap;
   background-color: $page-background-color;
 }
 
@@ -98,7 +94,6 @@ src: url(data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABUAAAAiCAMAAACHtmKxAAAAQ
   display: flex;
   flex-direction: row;
   flex-wrap: wrap;
-  margin-top: $margin-rh-list-container;
 }
 
 .rh-list-error-message {
@@ -118,6 +113,14 @@ src: url(data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABUAAAAiCAMAAACHtmKxAAAAQ
   padding: 18px 0px;
   margin: 0px 18px;
   border-bottom: 2px solid $item-border-color;
+}
+
+.loading-more {
+  display: flex;
+  height: 160px;
+  justify-content: center;
+  align-items: center;
+  border-bottom: 5px solid $item-border-color;
 }
 
 .rh-one-img {
