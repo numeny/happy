@@ -1,6 +1,6 @@
-$city-item-left-right-padding: 40px; 
 $city-item-top-bottom-padding: 20px;
 $city-item-background-color: #FFF;
+$city-item-margin: 10px;
 
 .top-view {
   font-size: 34px;
@@ -16,7 +16,11 @@ $city-item-background-color: #FFF;
 }
 
 .back-icon {
-  padding-left: 30px;
+  padding: 0px 30px;
+}
+
+.hot-city-container, .curr-city-container {
+  margin-top: 40px;
 }
 
 .title-select-city {
@@ -32,6 +36,8 @@ $city-item-background-color: #FFF;
 .curr-city {
   background-color: $city-item-background-color;
   padding: $city-item-top-bottom-padding 0px;
+  text-align: center;
+  margin: $city-item-margin;
 }
 
 .hot-city-row-container {
@@ -41,12 +47,42 @@ $city-item-background-color: #FFF;
 
 .hot-city-item {
   background-color: $city-item-background-color;
-  padding: $city-item-top-bottom-padding $city-item-left-right-padding;
+  padding: $city-item-top-bottom-padding 40px;
+  flex: 1;
+  justify-content: center;
+  text-align: center;
+  margin: $city-item-margin;
+  overflow: hidden;
+  white-space: nowrap;
+}
+
+.selected-area {
+  font-size: 40px;
+  margin: 20px 0px;
+  text-decoration:underline
+}
+
+.selected-item {
+  background-color: #00F;
+  font-color: #00F;
+}
+
+.button-container {
+  width: 100%;
+  display: flex;
+  flex-direction: colume;
+}
+
+.button {
   flex-grow: 1;
   justify-content: center;
   text-align: center;
-  margin: 10px 10px;
+  margin: 10px;
+  font-size: 34px;
 }
+
+
+
 
 $item-border-thin: 2px;
 $content-title-font-size: 40px;
