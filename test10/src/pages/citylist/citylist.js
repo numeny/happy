@@ -22,13 +22,30 @@ export default class Citylist extends Component {
       currProv : '北京市',
       currCity : '北京市',
       selectedProv : '北京市',
-      selectedCity : '',
+      selectedCity : '北京市',
       currCityItems : [],
     }
   }
 
-  componentDidMount () {
-    this.requestCityData(this.state.currProv)
+  componentWillMount() {
+    let currProv = this.state.currProv
+    let currCity = this.state.currCity
+    console.error("componentWillMount-2, this.$router.params: " + this.$router.params);
+    if (this.$router.params.prov != null
+        && this.$router.params.prov.length > 0
+        && this.$router.params.city != null
+        && this.$router.params.city.length > 0) {
+      console.error("componentWillMount-3, this.$router.params: " + this.$router.params);
+      currProv = this.$router.params.prov
+      currCity = this.$router.params.city
+      this.setState({
+        currProv: this.$router.params.prov,
+        currCity: this.$router.params.city,
+        selectedProv : this.$router.params.prov,
+        selectedCity : this.$router.params.city,
+      })
+    }
+    this.requestCityData(currProv)
   }
 
   requestCityData = (prov) => {
@@ -69,6 +86,17 @@ export default class Citylist extends Component {
     })
   }
 
+  requestRhList = (prov, city) => {
+    let addedUrl = (prov.length > 0) ? ('?prov=' + prov) : ''
+    if(city.length > 0) {
+      addedUrl = addedUrl + (addedUrl.length > 0 ? '&' : '?') + 'city=' + city
+    }
+
+    Taro.navigateTo({
+      url: '/pages/index/index' + addedUrl,
+    })
+  }
+
   showAreaList (prov, e) {
     this.showAreaListImpl(prov)
   }
@@ -83,9 +111,10 @@ export default class Citylist extends Component {
 
   onButtonClicked (idx, e) {
     if (idx == 1) {
-      showAreaListImpl('');
+      this.showAreaListImpl('')
     } else if (idx == 2) {
     } else if (idx == 3) {
+      this.requestRhList(this.state.selectedProv, this.state.selectedCity)
     }
   }
 

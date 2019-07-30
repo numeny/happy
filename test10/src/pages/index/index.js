@@ -30,7 +30,7 @@ export default class Index extends Component {
       rhList: [],
       title_image: "",
 
-      currProvince: "北京市",
+      currProv: "北京市",
       currCity: "北京市",
 
       currPage: this.DEFAULT_CURR_PAGE,
@@ -59,43 +59,65 @@ export default class Index extends Component {
   }
 
   componentWillMount() {
+    let currProv = this.state.currProv
+    let currCity = this.state.currCity
+    console.error("componentWillMount, this.$router.params: " + this.$router.params);
+    if (this.$router.params.prov != null
+        && this.$router.params.prov.length > 0
+        && this.$router.params.city != null
+        && this.$router.params.city.length > 0) {
+      console.error("componentWillMount-2, this.$router.params: " + this.$router.params);
+      currProv = this.$router.params.prov
+      currCity = this.$router.params.city
+      this.setState({
+        currProv: this.$router.params.prov,
+        currCity: this.$router.params.city
+      })
+    }
     this.requestData(this.state.selectorPriceCheckedIdx, this.state.selectorBednumCheckedIdx,
         this.state.selectorTypeCheckedIdx, this.state.selectorPropCheckedIdx,
+        currProv, currCity,
         this.state.selectorAreaCheckedIdx, this.DEFAULT_CURR_PAGE) // 1st page
   }
 
   requestAreaRhData = (selectorAreaCheckedIdx) => {
     this.requestData(this.state.selectorPriceCheckedIdx, this.state.selectorBednumCheckedIdx,
         this.state.selectorTypeCheckedIdx, this.state.selectorPropCheckedIdx,
+        this.state.currProv, this.state.currCity,
         selectorAreaCheckedIdx, this.DEFAULT_CURR_PAGE)
   }
 
   requestPriceData = (selectorPriceCheckedIdx) => {
     this.requestData(selectorPriceCheckedIdx, this.state.selectorBednumCheckedIdx,
         this.state.selectorTypeCheckedIdx, this.state.selectorPropCheckedIdx,
+        this.state.currProv, this.state.currCity,
         this.state.selectorAreaCheckedIdx, this.DEFAULT_CURR_PAGE)
   }
 
   requestBednumData = (selectorBednumCheckedIdx) => {
     this.requestData(this.state.selectorPriceCheckedIdx, selectorBednumCheckedIdx,
         this.state.selectorTypeCheckedIdx, this.state.selectorPropCheckedIdx,
+        this.state.currProv, this.state.currCity,
         this.state.selectorAreaCheckedIdx, this.DEFAULT_CURR_PAGE)
   }
 
   requestTypeData = (selectorTypeCheckedIdx) => {
     this.requestData(this.state.selectorPriceCheckedIdx, this.state.selectorBednumCheckedIdx,
         selectorTypeCheckedIdx, this.state.selectorPropCheckedIdx,
+        this.state.currProv, this.state.currCity,
         this.state.selectorAreaCheckedIdx, this.DEFAULT_CURR_PAGE)
   }
 
   requestPropData = (selectorPropCheckedIdx) => {
     this.requestData(this.state.selectorPriceCheckedIdx, this.state.selectorBednumCheckedIdx,
         this.state.selectorTypeCheckedIdx, selectorPropCheckedIdx,
+        this.state.currProv, this.state.currCity,
         this.state.selectorAreaCheckedIdx, this.DEFAULT_CURR_PAGE)
   }
 
   addedUrl = (selectorPriceCheckedIdx, selectorBednumCheckedIdx,
       selectorTypeCheckedIdx, selectorPropCheckedIdx,
+      currProv, currCity,
       selectorAreaCheckedIdx, requestPage) => {
     let addedUrl = ''
     if (selectorPriceCheckedIdx != 0) {
@@ -104,7 +126,7 @@ export default class Index extends Component {
       try {
         if (price[0].length > 0) {
           let minPrice = parseInt(price[0])
-          addedUrl = addedUrl + (addedUrl != '' ? '&&' : '?') + 'min_price=' + minPrice
+          addedUrl = addedUrl + (addedUrl.length > 0 ? '&' : '?') + 'min_price=' + minPrice
         }
       } catch(err) {
         console.error('[Warning] calc min price error!')
@@ -112,7 +134,7 @@ export default class Index extends Component {
       try {
         if (price[1].length > 0) {
           let maxPrice = parseInt(price[1])
-          addedUrl = addedUrl + (addedUrl != '' ? '&' : '?') + 'max_price=' + maxPrice
+          addedUrl = addedUrl + (addedUrl.length > 0 ? '&' : '?') + 'max_price=' + maxPrice
         }
       } catch(err) {
         console.error('[Warning] calc max price error!')
@@ -124,7 +146,7 @@ export default class Index extends Component {
       try {
         if (bednum[0].length > 0) {
           let minBednum = parseInt(bednum[0])
-          addedUrl = addedUrl + (addedUrl != '' ? '&' : '?') + 'min_bed=' + minBednum
+          addedUrl = addedUrl + (addedUrl.length > 0 ? '&' : '?') + 'min_bed=' + minBednum
         }
       } catch(err) {
         console.error('[Warning] calc min bed num error!')
@@ -132,32 +154,32 @@ export default class Index extends Component {
       try {
         if (bednum[1].length > 0) {
           let maxBednum = parseInt(bednum[1])
-          addedUrl = addedUrl + (addedUrl != '' ? '&' : '?') + 'max_bed=' + maxBednum
+          addedUrl = addedUrl + (addedUrl.length > 0 ? '&' : '?') + 'max_bed=' + maxBednum
         }
       } catch(err) {
         console.error('[Warning] calc max bed num error!')
       }
     }
     if (selectorTypeCheckedIdx != 0) {
-      addedUrl = addedUrl + (addedUrl != '' ? '&' : '?') + 'type=' + selectorTypeCheckedIdx
+      addedUrl = addedUrl + (addedUrl.length > 0 ? '&' : '?') + 'type=' + selectorTypeCheckedIdx
     }
     if (selectorPropCheckedIdx != 0) {
-      addedUrl = addedUrl + (addedUrl != '' ? '&' : '?') + 'prop=' + selectorPropCheckedIdx
+      addedUrl = addedUrl + (addedUrl.length > 0 ? '&' : '?') + 'prop=' + selectorPropCheckedIdx
     }
 
-    if (this.state.currProvince.length != 0) {
-      addedUrl = addedUrl + (addedUrl != '' ? '&' : '?') + 'prov=' + this.state.currProvince
+    if (currProv.length != 0) {
+      addedUrl = addedUrl + (addedUrl.length > 0 ? '&' : '?') + 'prov=' + currProv
     }
 
-    if (this.state.currCity.length != 0) {
-      addedUrl = addedUrl + (addedUrl != '' ? '&' : '?') + 'city=' + this.state.currCity
+    if (currCity.length != 0) {
+      addedUrl = addedUrl + (addedUrl.length > 0 ? '&' : '?') + 'city=' + currCity
     }
 
     if (selectorAreaCheckedIdx != 0) {
-      addedUrl = addedUrl + (addedUrl != '' ? '&' : '?') + 'area=' + this.state.selectorArea[selectorAreaCheckedIdx]
+      addedUrl = addedUrl + (addedUrl.length > 0 ? '&' : '?') + 'area=' + this.state.selectorArea[selectorAreaCheckedIdx]
     }
     if (requestPage != this.DEFAULT_CURR_PAGE) { // 1st page
-      addedUrl = addedUrl + (addedUrl != '' ? '&' : '?') + 'page=' + requestPage
+      addedUrl = addedUrl + (addedUrl.length > 0 ? '&' : '?') + 'page=' + requestPage
     }
 
     return addedUrl
@@ -166,15 +188,18 @@ export default class Index extends Component {
   loadMoreData(e) {
     this.requestData(this.state.selectorPriceCheckedIdx, this.state.selectorBednumCheckedIdx,
         this.state.selectorTypeCheckedIdx, this.state.selectorPropCheckedIdx,
+        this.state.currProv, this.state.currCity,
         this.state.selectorAreaCheckedIdx, this.state.currPage + 1) // 1st page
   }
 
   requestData = (selectorPriceCheckedIdx, selectorBednumCheckedIdx,
       selectorTypeCheckedIdx, selectorPropCheckedIdx,
+      currProv, currCity,
       selectorAreaCheckedIdx, requestPage) => {
     let addedUrl = this.addedUrl(selectorPriceCheckedIdx,
         selectorBednumCheckedIdx, selectorTypeCheckedIdx,
-        selectorPropCheckedIdx, selectorAreaCheckedIdx, requestPage)
+        selectorPropCheckedIdx, currProv, currCity,
+        selectorAreaCheckedIdx, requestPage)
     console.error('request url: ' + SERVER_HOST + '/show_rh_list' + addedUrl)
     Taro.request({
       url: SERVER_HOST + '/show_rh_list' + addedUrl,
@@ -206,7 +231,7 @@ export default class Index extends Component {
   }
 
   requestAreaData = () => {
-    let url = SERVER_HOST + '/arealist' + "?prov=" + this.state.currProvince + "&city=" + this.state.currCity
+    let url = SERVER_HOST + '/arealist' + "?prov=" + this.state.currProv + "&city=" + this.state.currCity
     console.error('requestAreaData: url: ' + url)
     Taro.request({
       url: url,
@@ -292,15 +317,15 @@ export default class Index extends Component {
       url: '/pages/rhdetail/rhdetail?rh_id=' + String(rh_id),
     })
 
-    Taro.showNavigationBarLoading();
+    // Taro.showNavigationBarLoading();
   }
 
   selectCitylist (e) {
     Taro.navigateTo({
-      url: '/pages/citylist/citylist',
+      url: '/pages/citylist/citylist?prov=' + this.state.currProv + '&city=' + this.state.currCity,
     })
 
-    Taro.showNavigationBarLoading();
+    // Taro.showNavigationBarLoading();
   }
 
   render () {
