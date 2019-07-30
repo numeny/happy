@@ -24,18 +24,17 @@ export default class Citylist extends Component {
       selectedProv : '北京市',
       selectedCity : '北京市',
       currCityItems : [],
+      isDisplayingCity : false,
     }
   }
 
   componentWillMount() {
     let currProv = this.state.currProv
     let currCity = this.state.currCity
-    console.error("componentWillMount-2, this.$router.params: " + this.$router.params);
     if (this.$router.params.prov != null
         && this.$router.params.prov.length > 0
         && this.$router.params.city != null
         && this.$router.params.city.length > 0) {
-      console.error("componentWillMount-3, this.$router.params: " + this.$router.params);
       currProv = this.$router.params.prov
       currCity = this.$router.params.city
       this.setState({
@@ -49,12 +48,11 @@ export default class Citylist extends Component {
   }
 
   requestCityData = (prov) => {
+    console.error('requestCityData, prov: ' + prov)
     let url = SERVER_HOST + '/arealist' + ((prov.length > 0) ? ("?prov=" + prov) : "")
     Taro.request({
       url: url,
       success: (res) => {
-        console.error("currCityItems: " + res.data)
-
         let currCityItems = []
         let newElem = []
         for (let i = 0; i < res.data.length; i++) {
@@ -69,19 +67,14 @@ export default class Citylist extends Component {
 
         this.setState({
             currCityItems: currCityItems,
+            isDisplayingCity: (prov.length > 0),
         })
       },
       fail: (error) => {
         console.error("fail")
-      /*
-        console.error('bdg-error')
-        this.setState({message: 'hello'})
-        Taro.showToast({title: 'fail'})
-        */
       },
       complete: () => {
         console.error("complete")
-        // Taro.showToast({title: "complete"})
       },
     })
   }
@@ -111,19 +104,31 @@ export default class Citylist extends Component {
 
   onButtonClicked (idx, e) {
     if (idx == 1) {
+      // 重置
       this.showAreaListImpl('')
     } else if (idx == 2) {
+      // 取消
+      Taro.navigateBack()
     } else if (idx == 3) {
-      this.requestRhList(this.state.selectedProv, this.state.selectedCity)
+      // 确定
+      if (this.state.selectedProv.length == 0) {
+        // FIXME
+        Taro.showToast({title: '请选省份!'})
+      } else if (this.state.selectedCity.length == 0) {
+        // FIXME
+        Taro.showToast({title: '请选城市!'})
+      } else {
+        this.requestRhList(this.state.selectedProv, this.state.selectedCity)
+      }
     }
   }
 
+  goBack (e) {
+    Taro.navigateBack()
+  }
+
   selectArea (area, e) {
-    console.error("selectArea, this.state.selectedProv: area: " + area
-        + ", this.state.selectedProv: " + this.state.selectedProv
-        + ", this.state.selectedProv: " + this.state.selectedProv
-        )
-    if (this.state.selectedProv.length > 0) {
+    if (this.state.isDisplayingCity) {
       // province has been selected
       // this.requestCityData(area)
       this.setState({
@@ -139,6 +144,14 @@ export default class Citylist extends Component {
     }
   }
 
+  selectHotCity (prov, city, e) {
+    this.setState({
+        selectedProv: prov,
+        selectedCity: city
+    })
+    this.requestCityData(prov)
+  }
+
   render () {
     let cityItems = (<View>
         {this.state.currCityItems.map((citys) =>
@@ -150,12 +163,26 @@ export default class Citylist extends Component {
         )}
         </View>)
 
+      let hotCityList = [[['北京市','北京市'], ['上海市', '上海市'], ['广东省', '深圳市']],
+        [['广东省', '广州市'], ['重庆市', '重庆市'], ['天津市', '天津市']],
+        [['江苏省', '苏州市'], ['四川省', '成都市'], ['湖北省', '武汉市']],
+        [['浙江省', '杭州市'], ['江苏省', '南京市'], ['山东省', '青岛市']]]
+      let hotCityItems = (<View>
+          {hotCityList.map((citys) =>
+              <View className='hot-city-row-container'>
+              <Text className='hot-city-item' onClick={this.selectHotCity.bind(this, citys[0][0], citys[0][1])}>{citys[0][1]}</Text>
+              <Text className='hot-city-item' onClick={this.selectHotCity.bind(this, citys[1][0], citys[1][1])}>{citys[1][1]}</Text>
+              <Text className='hot-city-item' onClick={this.selectHotCity.bind(this, citys[2][0], citys[2][1])}>{citys[2][1]}</Text>
+              </View>
+          )}
+          </View>)
+
     return (
       <View className="top-view">
         <Video width='150px' height='190px' src={namedVideo} />
         <Image src={namedPng} />
         <View className='title'>
-          <View className='at-icon at-icon-chevron-left back-icon'></View>
+          <View onClick={this.goBack.bind(this)} className='at-icon at-icon-chevron-left back-icon'></View>
           <View className='title-select-city'>选择城市</View>
         </View>
         <View className='city-container'>
@@ -165,21 +192,7 @@ export default class Citylist extends Component {
           </View>
           <View className='hot-city-container'>
             热点城市
-            <View className='hot-city-row-container'>
-              <Text className='hot-city-item'>北京市</Text>
-              <Text className='hot-city-item'>上海市</Text>
-              <Text className='hot-city-item'>深圳市</Text>
-            </View>
-            <View className='hot-city-row-container'>
-              <Text className='hot-city-item'>广州市</Text>
-              <Text className='hot-city-item'>天津市</Text>
-              <Text className='hot-city-item'>杭州市</Text>
-            </View>
-            <View className='hot-city-row-container'>
-              <Text className='hot-city-item'>广州市</Text>
-              <Text className='hot-city-item'>天津市</Text>
-              <Text className='hot-city-item'>杭州市</Text>
-            </View>
+            {hotCityItems}
           </View>
           <View className='hot-city-container'>
             <View>选择城市</View>
