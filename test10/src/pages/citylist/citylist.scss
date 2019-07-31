@@ -13,6 +13,9 @@ $city-item-margin: 10px;
   flex-direction: colume;
   align-items: center;
   justify-content: center;
+  background-color: $city-item-background-color;
+  padding: 25px 0px;
+  /*position: fixed;*/
 }
 
 .back-icon {
@@ -29,8 +32,8 @@ $city-item-margin: 10px;
 }
 
 .city-container {
-  margin-left: 20px;
-  margin-right: 20px;
+  padding-top: 100px;
+  margin: 0px 20px;
 }
 
 .curr-city {

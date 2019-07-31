@@ -9,6 +9,8 @@ import { DEFAULT_IMG } from '../common/const'
 import { IMGS_ROOT_PATH } from '../common/const'
 import { NUM_TRANSFORM_RH_ID } from '../common/const'
 
+import PageFooter from '../common/pagefooter'
+
 export default class Rhdetail extends Component {
 
   constructor(props) {
@@ -402,6 +404,7 @@ export default class Rhdetail extends Component {
           <View className="images-handled">
             {images_handled}
         </View></View>}
+        <PageFooter />
       </View>
     )
   }

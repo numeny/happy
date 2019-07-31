@@ -37,6 +37,8 @@ $page-background-color: #FFF;
   width: $width-title;
   padding-left: $padding-top-title;
   padding-right: $padding-top-title;
+  overflow: hidden;
+  white-space: nowrap;
 }
 
 .top-title-logo {
@@ -84,6 +86,8 @@ src: url(data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABUAAAAiCAMAAACHtmKxAAAAQ
   height: 100%;
   line-height: $height-title;
   border-right: $item-border-thin solid $item-border-color;
+  overflow: hidden;
+  white-space: nowrap;
 }
 
 .rh-list-container {
@@ -109,7 +113,6 @@ src: url(data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABUAAAAiCAMAAACHtmKxAAAAQ
   height: 160px;
   justify-content: center;
   align-items: center;
-  border-bottom: 5px solid $item-border-color;
 }
 
 .rh-one-img {

@@ -8,7 +8,7 @@ import "../../../node_modules/taro-ui/dist/style/components/button.scss";
 import { SERVER_HOST } from '../common/const'
 
 import './citylist.scss'
-
+import PageFooter from '../common/pagefooter'
 
 import namedVideo from '@res/video/1.mp4'
 import namedPng from '@images/index/1.jpeg'
@@ -219,6 +219,7 @@ export default class Citylist extends Component {
           </View>
           {cityItems}
         </View>
+        <PageFooter />
       </View>
     )
   }

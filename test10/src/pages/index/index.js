@@ -8,6 +8,9 @@ import { SERVER_HOST } from '../common/const'
 import { DEFAULT_IMG } from '../common/const'
 import { ICON_IMG } from '../common/const'
 
+import PageFooter from '../common/pagefooter'
+
+
 export default class Index extends Component {
 
   /**
@@ -397,7 +400,7 @@ export default class Index extends Component {
               </Picker>
               <Picker className='classify-title-item' mode='selector' range={this.state.selectorType} onChange={this.onChangeType}>
                 {this.state.selectorTypeChecked == "不限"?<View className='classify-title-item'>类型</View>:
-                <View className='classify-title-item'>{this.state.selectorTypeChecked}</View>}
+                  <View className='classify-title-item'>{this.state.selectorTypeChecked}</View>}
               </Picker>
               <Picker className='classify-title-item' mode='selector' range={this.state.selectorProp} onChange={this.onChangeProp}>
                 {this.state.selectorPropChecked == "不限"?<View className='classify-title-item'>性质</View>:
@@ -407,9 +410,7 @@ export default class Index extends Component {
         </View>
         {restHomeList}
         {hasMoreData}
-        <View>
-          mmmm
-        </View>
+        <PageFooter />
       </View>
     )
   }
