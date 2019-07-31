@@ -79,25 +79,32 @@ export default class Rhdetail extends Component {
     // FIXME, delete image first
     content = content.replace(/<img.*>/g, "")
 
-    content_handled_tmp = String(content).split("</p>")
+    content_handled_tmp = String(content).split(/< *\/p *>|<br *>|< *\/div *>/)
     if (content_handled_tmp.length == 1 && content_handled_tmp[0] == "") {
       content_handled_tmp.pop()
     }
     content_handled_tmp.forEach(
         function(value, index, array) {
           var class_style = "";
+          var text_intent_2_regex = /< *p|span *style *= *\" *text-indent *: *2em;* *\" *>/
           if (value.indexOf("<p style=\"text-indent:2em\"><strong>") >= 0
               || value.indexOf("<p style=\"text-indent:2em\"><b>") >=0) {
             class_style = "bold_font_two_space"
-          } else if (value.indexOf("<p style=\"text-indent:2em\">") >= 0) {
+          } else if (text_intent_2_regex.test(value)
+              /*value.indexOf("<p style=\"text-indent:2em\">") >= 0 || value.indexOf("<p style=\"text-indent:2em;\">") >= 0
+                || value.indexOf("<p style=\"text-indent: 2em;\">") >= 0*/) {
             class_style = "two_space"
           } else if (value.indexOf("<p align=\"center\">") >= 0) {
             class_style = "text_center"
           }
-          content_handled_tmp[index] = content_handled_tmp[index].replace(/<p style=\"text-indent:2em\">/g, "")
+          content_handled_tmp[index] = content_handled_tmp[index].replace(/< *p *style *= *\" *text-indent *: *2em;* *\" *>/g, "") // text_intent_2_regex
+          // text_intent_2_regex
+          content_handled_tmp[index] = content_handled_tmp[index].replace(/< *span *style *= *\" *text-indent *: *2em;* *\" *>/g, "") // yh id = 10016431
           content_handled_tmp[index] = content_handled_tmp[index].replace(/<p>/g, "")
           content_handled_tmp[index] = content_handled_tmp[index].replace(/<b>/g, "")
+          content_handled_tmp[index] = content_handled_tmp[index].replace(/<div>/g, "")
           content_handled_tmp[index] = content_handled_tmp[index].replace(/<strong>/g, "")
+          content_handled_tmp[index] = content_handled_tmp[index].replace(/<\/span>/g, "") // yl id=10016431 inst_charge_handled
           content_handled_tmp[index] = content_handled_tmp[index].replace(/<p align=\"center\">/g, "")
           if (content_handled_tmp[index].length > 0) { // content is null
             content_handled.push([content_handled_tmp[index], class_style])
