@@ -1,5 +1,4 @@
 $padding-top-title: 10px;
-$font-size-all: 30px;
 $width-title: 50px;
 $height-title: 90px;
 $item-border-thin: 2px;
@@ -9,6 +8,7 @@ $page-background-color: #FFF;
 
 .top-container {
   background-color: $page-background-color;
+  font-size: 35px;
 }
 
 .top-title-top-container {
@@ -33,21 +33,19 @@ $page-background-color: #FFF;
 }
 
 .top-title-city {
-  flex-grow: 1;
-  font-size: $font-size-all;
+  flex: 1;
   width: $width-title;
   padding-left: $padding-top-title;
   padding-right: $padding-top-title;
 }
 
 .top-title-logo {
-  flex-grow: 1;
+  flex: 1;
   width: $width-title;
 }
 
 .top-title-input {
-  flex-grow: 1;
-  font-size: $font-size-all;
+  flex: 1;
   padding-left: $padding-top-title;
   padding-right: $padding-top-title;
   background-color: $page-background-color;
@@ -63,7 +61,7 @@ src: url(data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABUAAAAiCAMAAACHtmKxAAAAQ
 }
 
 .top-title-menu {
-  flex-grow: 3;
+  flex: 3;
   width: $width-title;
   height: $width-title;
   padding-right: $padding-top-title;
@@ -81,9 +79,8 @@ src: url(data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABUAAAAiCAMAAACHtmKxAAAAQ
 }
 
 .classify-title-item {
-  flex-grow: 1;
+  flex: 1;
   text-align: center;
-  font-size: $font-size-all;
   height: 100%;
   line-height: $height-title;
   border-right: $item-border-thin solid $item-border-color;
@@ -94,14 +91,6 @@ src: url(data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABUAAAAiCAMAAACHtmKxAAAAQ
   display: flex;
   flex-direction: row;
   flex-wrap: wrap;
-}
-
-.rh-list-error-message {
-  width: 100%;
-  font-size: 12px bold;
-  text-align: center;
-  padding-right: 50px;
-  padding-left: 50px;
 }
 
 .rh-one-container {
@@ -140,10 +129,10 @@ src: url(data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABUAAAAiCAMAAACHtmKxAAAAQ
 
 .rh-one-desc-head {
   width: 100%;
-  font-size: 23px bold;
+  font-size: 38px;
 }
 
 .rh-one-desc {
   width: 100%;
-  font-size: 18px;
+  font-size: 25px;
 }

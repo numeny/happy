@@ -15,6 +15,10 @@ import namedPng from '@images/index/1.jpeg'
 
 export default class Citylist extends Component {
 
+  config: Config = {
+    navigationBarTitleText: '选择城市',
+  }
+
   constructor(props) {
     super(props)
     this.state = {
