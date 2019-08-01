@@ -60,20 +60,22 @@ class DbQuery:
         return ret_array
 
     @staticmethod
-    def get_breif_colume_from_one_record(record):
+    def get_brief_colume_from_one_record(record):
         ret_map = {}
         ret_map['id'] = Utils.get_rh_id_from_db(record.id)
         ret_map['name'] = record.rh_name
         ret_map['bednum'] = record.rh_bednum
-        ret_map['charges_extent'] = record.rh_charges_extent
+        ret_map['charges_min'] = record.rh_charges_min
+        ret_map['charges_max'] = record.rh_charges_max
+        ret_map['factory_property'] = record.rh_factory_property
         ret_map['address'] = record.rh_address
         ret_map['title_image'] = DbUtils.get_title_image(record)
         ret_map['bednum_int'] = record.rh_bednum_int
         return ret_map
 
     @staticmethod
-    def get_breif_colume_from_records(records):
+    def get_brief_colume_from_records(records):
         ret_array = []
         for record in records:
-            ret_array.append(DbQuery.get_breif_colume_from_one_record(record))
+            ret_array.append(DbQuery.get_brief_colume_from_one_record(record))
         return ret_array

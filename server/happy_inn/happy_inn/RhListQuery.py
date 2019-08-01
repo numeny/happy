@@ -90,7 +90,7 @@ class RhListQuery:
 
         result_record = records[((page_idx - 1) * RH_NUM_PER_PAGE) : (page_idx * RH_NUM_PER_PAGE)]
 
-        response['records'] = DbQuery.get_breif_colume_from_records(result_record)
+        response['records'] = DbQuery.get_brief_colume_from_records(result_record)
         if page_idx < page_num:
             response['record_num'] = RH_NUM_PER_PAGE
         else:

@@ -357,9 +357,12 @@ export default class Index extends Component {
             <View className='rh-one-container' onClick={this.showRhDetail.bind(this, rh.id)}>
               <Image src={rh.title_image != "" ? rh.title_image : DEFAULT_IMG} className='rh-one-img'/>
               <View className='rh-one-desc-container'>
-                <Text className='rh-one-desc-head'>{rh.name}</Text>
-                <Text className='rh-one-desc'>{rh.address}</Text>
-                <Text className='rh-one-desc'>{rh.bednum_int}个床位</Text>
+                <View className='rh-one-desc-name'>{rh.name}</View>
+                <View className='rh-one-desc-address'>{rh.address}</View>
+                <View className='rh-one-desc-bednum-container'>
+                  <View className='rh-one-desc-bednum'>{rh.bednum_int}个床位</View>
+                  <View className='rh-one-desc-property'><Text>{rh.factory_property}</Text></View>
+                </View>
               </View>
             </View>
           )}

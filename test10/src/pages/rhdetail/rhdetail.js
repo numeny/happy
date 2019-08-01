@@ -261,7 +261,7 @@ export default class Rhdetail extends Component {
         </Swiper>
         )
     return (
-      <View className="top-view">
+      <View className="rhdetail-top-view">
         <Video width='250px' height='250px' src={namedVideo} />
         <Image src={DEFAULT_IMG} width="100%" />
         {images_swiper}
