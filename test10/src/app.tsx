@@ -21,8 +21,9 @@ class App extends Component {
   config: Config = {
     pages: [
       'pages/index/index',
-      'pages/rhdetail/rhdetail'
-      'pages/citylist/citylist'
+      'pages/rhdetail/rhdetail',
+      'pages/citylist/citylist',
+      'pages/common/mywebview',
     ],
     window: {
       backgroundTextStyle: 'light',

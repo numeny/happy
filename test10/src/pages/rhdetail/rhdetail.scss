@@ -75,6 +75,10 @@ $divider-color: #DDD;
   border-top: 1px solid #DDD;
 }
 
+.info-underline {
+  text-decoration: underline;
+}
+
 .content-title {
   font-size: $content-title-font-size;
   font-weight: bold;

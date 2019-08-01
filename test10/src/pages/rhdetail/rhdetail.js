@@ -44,7 +44,9 @@ export default class Rhdetail extends Component {
     }
     this.handleContent(res.data.record.inst_charge, rhRecordHandled_2.inst_charge_handled)
     this.handleContent(res.data.record.transportation, rhRecordHandled_2.transportation_handled)
+    // console.error("1111111- inst_intro_handled: " + res.data.record.inst_intro);
     this.handleContent(res.data.record.inst_intro, rhRecordHandled_2.inst_intro_handled)
+    // console.error("2222222- inst_intro_handled: " + rhRecordHandled_2.inst_intro_handled);
     this.handleContent(res.data.record.special_services, rhRecordHandled_2.special_services_handled)
     this.handleContent(res.data.record.facilities, rhRecordHandled_2.facilities_handled)
     this.handleContent(res.data.record.service_content, rhRecordHandled_2.service_content_handled)
@@ -79,7 +81,9 @@ export default class Rhdetail extends Component {
     // FIXME, delete image first
     content = content.replace(/<img.*>/g, "")
 
-    content_handled_tmp = String(content).split(/< *\/p *>|<br *>|< *\/div *>/)
+    // content_handled_tmp = String(content).split(/< *\/p *>|<br *>|< *\/div *>/)
+    // </tr> -- yh id = 10016299
+    content_handled_tmp = String(content).split(/< *\/p *>|<br *>|< *\/div *>|< *\/tr *>/)
     if (content_handled_tmp.length == 1 && content_handled_tmp[0] == "") {
       content_handled_tmp.pop()
     }
@@ -100,7 +104,11 @@ export default class Rhdetail extends Component {
           content_handled_tmp[index] = content_handled_tmp[index].replace(/< *p *style *= *\" *text-indent *: *2em;* *\" *>/g, "") // text_intent_2_regex
           // text_intent_2_regex
           content_handled_tmp[index] = content_handled_tmp[index].replace(/< *span *style *= *\" *text-indent *: *2em;* *\" *>/g, "") // yh id = 10016431
-          content_handled_tmp[index] = content_handled_tmp[index].replace(/<p>/g, "")
+
+          // yh id = 10015395, <p class="p0" ...>
+          content_handled_tmp[index] = content_handled_tmp[index].replace(/< *p.*>/g, "")
+          // FIXME
+          // content_handled_tmp[index] = content_handled_tmp[index].replace(/<.*>/g, "")
           content_handled_tmp[index] = content_handled_tmp[index].replace(/<b>/g, "")
           content_handled_tmp[index] = content_handled_tmp[index].replace(/<div>/g, "")
           content_handled_tmp[index] = content_handled_tmp[index].replace(/<strong>/g, "")
@@ -138,6 +146,21 @@ export default class Rhdetail extends Component {
         // Taro.showToast({title: "complete"})
       },
     })//.then(res => Taro.showToast({title: "1111"}))
+  }
+
+  makePhoneCall (phoneNum, e) {
+    let phone = String(phoneNum).split("/")
+    if (phone.length > 0) {
+      Taro.makePhoneCall({
+          phoneNumber: phone[0],
+      })
+    }
+  }
+
+  openWebsite (url, e) {
+    Taro.navigateTo({
+      url: '/pages/common/mywebview?url=' + url,
+    })
   }
 
   render () {
@@ -287,8 +310,8 @@ export default class Rhdetail extends Component {
               位置： {this.state.rhRecord.location_id}
             </View>}
             {this.state.rhRecord.phone != "" &&
-            <View className="show-part-text">
-              电话： {this.state.rhRecord.phone}
+            <View className="show-part-text" onClick={this.makePhoneCall.bind(this, this.state.rhRecord.phone)}>
+              电话： <Text className="info-underline">{this.state.rhRecord.phone}</Text>
             </View>}
             {this.state.rhRecord.type != "" &&
             <View className="show-part-text">
@@ -331,8 +354,8 @@ export default class Rhdetail extends Component {
               联系人： {this.state.rhRecord.contact_person}
             </View>}
             {this.state.rhRecord.mobile != "" &&
-            <View className="show-part-text">
-              手机： {this.state.rhRecord.mobile}
+            <View className="show-part-text" onClick={this.makePhoneCall.bind(this, this.state.rhRecord.mobile)}>
+              手机： <Text className="info-underline">{this.state.rhRecord.mobile}</Text>
             </View>}
             {this.state.rhRecord.email != "" &&
             <View className="show-part-text">
@@ -351,8 +374,8 @@ export default class Rhdetail extends Component {
               邮编： {this.state.rhRecord.postcode}
             </View>}
             {this.state.rhRecord.url != "" &&
-            <View className="show-part-text">
-              网址： {this.state.rhRecord.url}
+            <View className="show-part-text" onClick={this.openWebsite.bind(this, this.state.rhRecord.url)}>
+              网址： <Text className="info-underline">{this.state.rhRecord.url}</Text>
             </View>}
           </View>
         </View>

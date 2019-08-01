@@ -10,7 +10,6 @@ import { ICON_IMG } from '../common/const'
 
 import PageFooter from '../common/pagefooter'
 
-
 export default class Index extends Component {
 
   /**
