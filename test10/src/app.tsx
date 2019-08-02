@@ -23,6 +23,7 @@ class App extends Component {
       'pages/index/index',
       'pages/rhdetail/rhdetail',
       'pages/citylist/citylist',
+      'pages/rhsearch/rhsearch',
       'pages/common/mywebview',
     ],
     window: {

@@ -1,0 +1,85 @@
+$city-item-top-bottom-padding: 20px;
+$city-item-background-color: #FFF;
+$city-item-margin: 10px;
+
+.top-view {
+  font-size: 34px;
+  background-color: #EEE;
+}
+
+.title {
+  width: 100%;
+  display: flex;
+  flex-direction: colume;
+  align-items: center;
+  justify-content: center;
+  background-color: $city-item-background-color;
+  padding: 25px 0px;
+  /*position: fixed;*/
+}
+
+.back-icon {
+  padding: 0px 30px;
+}
+
+.hot-city-container, .curr-city-container {
+  margin-top: 40px;
+}
+
+.title-select-city {
+  width: 100%;
+  text-align: center;
+}
+
+.city-container {
+  padding-top: 100px;
+  margin: 0px 20px;
+}
+
+.curr-city {
+  background-color: $city-item-background-color;
+  padding: $city-item-top-bottom-padding 0px;
+  text-align: center;
+  margin: $city-item-margin;
+}
+
+.hot-city-row-container {
+  display: flex;
+  flex-direction: colume;
+}
+
+.hot-city-item {
+  background-color: $city-item-background-color;
+  padding: $city-item-top-bottom-padding 40px;
+  flex: 1;
+  justify-content: center;
+  text-align: center;
+  margin: $city-item-margin;
+  overflow: hidden;
+  white-space: nowrap;
+}
+
+.selected-area {
+  font-size: 40px;
+  margin: 20px 0px;
+  text-decoration: underline;
+}
+
+.selected-item {
+  background-color: #00F;
+  font-color: #00F;
+}
+
+.button-container {
+  width: 100%;
+  display: flex;
+  flex-direction: colume;
+}
+
+.button {
+  flex-grow: 1;
+  justify-content: center;
+  text-align: center;
+  margin: 10px;
+  font-size: 34px;
+}

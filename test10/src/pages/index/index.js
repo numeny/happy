@@ -347,6 +347,14 @@ export default class Index extends Component {
     // Taro.showNavigationBarLoading();
   }
 
+  searchRh (e) {
+    Taro.navigateTo({
+      url: '/pages/rhsearch/rhsearch',
+    })
+
+    // Taro.showNavigationBarLoading();
+  }
+
   render () {
     const { rhList } = this.state
 
@@ -384,7 +392,7 @@ export default class Index extends Component {
           <View className='top-title-container'>
             <Image className='top-title-back' src={namedPng} />
             <Text className='top-title-city' onClick={this.selectCitylist.bind(this)}>{this.state.currCity}</Text>
-            <Input type='text' placeholder='' className='top-title-input' />
+            <Input type='text' placeholder='请输入查询关键词' onClick={this.searchRh.bind(this)} className='top-title-input' />
             <Image className='top-title-menu' src={namedPng} />
           </View>
           <View className='classify-title-container'>
