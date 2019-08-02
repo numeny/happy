@@ -15,7 +15,7 @@ export default class Rhlist extends Component {
     const DEFAULT_CURR_PAGE = 1
     this.state = {
       // input
-      searchCondition: this.props.searchCondition,
+      searchCondition: (this.props.searchCondition != null) ? this.props.searchCondition : '',
 
       // internal state
       rhList: [],
@@ -78,9 +78,12 @@ export default class Rhlist extends Component {
     if (this.state.searchCondition == nextProps.searchCondition) {
       return
     }
-    this.requestData(nextProps.searchCondition, this.DEFAULT_CURR_PAGE) // 1st page
+    let searchCondition = (nextProps.searchCondition != null) ? nextProps.searchCondition : ''
+    this.requestData(
+        searchCondition,
+        this.DEFAULT_CURR_PAGE) // 1st page
     this.setState({
-        searchCondition: nextProps.searchCondition,
+        searchCondition: searchCondition,
     })
   }
 

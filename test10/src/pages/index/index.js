@@ -9,6 +9,7 @@ import { DEFAULT_IMG } from '../common/const'
 import { ICON_IMG } from '../common/const'
 
 import PageFooter from '../common/pagefooter'
+import Rhlist from '../common/rhlist'
 
 export default class Index extends Component {
 
@@ -25,18 +26,12 @@ export default class Index extends Component {
 
   constructor(props) {
     super(props)
-    const events = new Events()
-    const DEFAULT_CURR_PAGE = 1
+
     this.state = {
-      message: "",
-      rhList: [],
-      title_image: "",
+      searchCondition: '',
 
       currProv: "北京市",
       currCity: "北京市",
-
-      currPage: this.DEFAULT_CURR_PAGE,
-      isOnEnd: false,
 
       selectorArea: [],
       selectorAreaChecked: '不限',
@@ -80,64 +75,62 @@ export default class Index extends Component {
 
     let currProv = this.state.currProv
     let currCity = this.state.currCity
-    console.error("componentWillMount, this.$router.params: " + this.$router.params);
     if (this.$router.params.prov != null
         && this.$router.params.prov.length > 0
         && this.$router.params.city != null
         && this.$router.params.city.length > 0) {
-      console.error("componentWillMount-2, this.$router.params: " + this.$router.params);
       currProv = this.$router.params.prov
       currCity = this.$router.params.city
       this.setState({
-        currProv: this.$router.params.prov,
-        currCity: this.$router.params.city
+        currProv: currProv,
+        currCity: currCity,
       })
     }
     this.requestData(this.state.selectorPriceCheckedIdx, this.state.selectorBednumCheckedIdx,
         this.state.selectorTypeCheckedIdx, this.state.selectorPropCheckedIdx,
         currProv, currCity,
-        this.state.selectorAreaCheckedIdx, this.DEFAULT_CURR_PAGE) // 1st page
+        this.state.selectorAreaCheckedIdx) // 1st page
   }
 
   requestAreaRhData = (selectorAreaCheckedIdx) => {
     this.requestData(this.state.selectorPriceCheckedIdx, this.state.selectorBednumCheckedIdx,
         this.state.selectorTypeCheckedIdx, this.state.selectorPropCheckedIdx,
         this.state.currProv, this.state.currCity,
-        selectorAreaCheckedIdx, this.DEFAULT_CURR_PAGE)
+        selectorAreaCheckedIdx)
   }
 
   requestPriceData = (selectorPriceCheckedIdx) => {
     this.requestData(selectorPriceCheckedIdx, this.state.selectorBednumCheckedIdx,
         this.state.selectorTypeCheckedIdx, this.state.selectorPropCheckedIdx,
         this.state.currProv, this.state.currCity,
-        this.state.selectorAreaCheckedIdx, this.DEFAULT_CURR_PAGE)
+        this.state.selectorAreaCheckedIdx)
   }
 
   requestBednumData = (selectorBednumCheckedIdx) => {
     this.requestData(this.state.selectorPriceCheckedIdx, selectorBednumCheckedIdx,
         this.state.selectorTypeCheckedIdx, this.state.selectorPropCheckedIdx,
         this.state.currProv, this.state.currCity,
-        this.state.selectorAreaCheckedIdx, this.DEFAULT_CURR_PAGE)
+        this.state.selectorAreaCheckedIdx)
   }
 
   requestTypeData = (selectorTypeCheckedIdx) => {
     this.requestData(this.state.selectorPriceCheckedIdx, this.state.selectorBednumCheckedIdx,
         selectorTypeCheckedIdx, this.state.selectorPropCheckedIdx,
         this.state.currProv, this.state.currCity,
-        this.state.selectorAreaCheckedIdx, this.DEFAULT_CURR_PAGE)
+        this.state.selectorAreaCheckedIdx)
   }
 
   requestPropData = (selectorPropCheckedIdx) => {
     this.requestData(this.state.selectorPriceCheckedIdx, this.state.selectorBednumCheckedIdx,
         this.state.selectorTypeCheckedIdx, selectorPropCheckedIdx,
         this.state.currProv, this.state.currCity,
-        this.state.selectorAreaCheckedIdx, this.DEFAULT_CURR_PAGE)
+        this.state.selectorAreaCheckedIdx)
   }
 
   addedUrl = (selectorPriceCheckedIdx, selectorBednumCheckedIdx,
       selectorTypeCheckedIdx, selectorPropCheckedIdx,
       currProv, currCity,
-      selectorAreaCheckedIdx, requestPage) => {
+      selectorAreaCheckedIdx) => {
     let addedUrl = ''
     if (selectorPriceCheckedIdx != 0) {
       let selectorPriceChecked = this.state.selectorPrice[selectorPriceCheckedIdx]
@@ -145,7 +138,7 @@ export default class Index extends Component {
       try {
         if (price[0].length > 0) {
           let minPrice = parseInt(price[0])
-          addedUrl = addedUrl + (addedUrl.length > 0 ? '&' : '?') + 'min_price=' + minPrice
+          addedUrl = addedUrl + (addedUrl.length > 0 ? '&' : '') + 'min_price=' + minPrice
         }
       } catch(err) {
         console.error('[Warning] calc min price error!')
@@ -153,7 +146,7 @@ export default class Index extends Component {
       try {
         if (price[1].length > 0) {
           let maxPrice = parseInt(price[1])
-          addedUrl = addedUrl + (addedUrl.length > 0 ? '&' : '?') + 'max_price=' + maxPrice
+          addedUrl = addedUrl + (addedUrl.length > 0 ? '&' : '') + 'max_price=' + maxPrice
         }
       } catch(err) {
         console.error('[Warning] calc max price error!')
@@ -165,7 +158,7 @@ export default class Index extends Component {
       try {
         if (bednum[0].length > 0) {
           let minBednum = parseInt(bednum[0])
-          addedUrl = addedUrl + (addedUrl.length > 0 ? '&' : '?') + 'min_bed=' + minBednum
+          addedUrl = addedUrl + (addedUrl.length > 0 ? '&' : '') + 'min_bed=' + minBednum
         }
       } catch(err) {
         console.error('[Warning] calc min bed num error!')
@@ -173,106 +166,64 @@ export default class Index extends Component {
       try {
         if (bednum[1].length > 0) {
           let maxBednum = parseInt(bednum[1])
-          addedUrl = addedUrl + (addedUrl.length > 0 ? '&' : '?') + 'max_bed=' + maxBednum
+          addedUrl = addedUrl + (addedUrl.length > 0 ? '&' : '') + 'max_bed=' + maxBednum
         }
       } catch(err) {
         console.error('[Warning] calc max bed num error!')
       }
     }
     if (selectorTypeCheckedIdx != 0) {
-      addedUrl = addedUrl + (addedUrl.length > 0 ? '&' : '?') + 'type=' + selectorTypeCheckedIdx
+      addedUrl = addedUrl + (addedUrl.length > 0 ? '&' : '') + 'type=' + selectorTypeCheckedIdx
     }
     if (selectorPropCheckedIdx != 0) {
-      addedUrl = addedUrl + (addedUrl.length > 0 ? '&' : '?') + 'prop=' + selectorPropCheckedIdx
+      addedUrl = addedUrl + (addedUrl.length > 0 ? '&' : '') + 'prop=' + selectorPropCheckedIdx
     }
 
     if (currProv.length != 0) {
-      addedUrl = addedUrl + (addedUrl.length > 0 ? '&' : '?') + 'prov=' + currProv
+      addedUrl = addedUrl + (addedUrl.length > 0 ? '&' : '') + 'prov=' + currProv
     }
 
     if (currCity.length != 0) {
-      addedUrl = addedUrl + (addedUrl.length > 0 ? '&' : '?') + 'city=' + currCity
+      addedUrl = addedUrl + (addedUrl.length > 0 ? '&' : '') + 'city=' + currCity
     }
 
     if (selectorAreaCheckedIdx != 0) {
-      addedUrl = addedUrl + (addedUrl.length > 0 ? '&' : '?') + 'area=' + this.state.selectorArea[selectorAreaCheckedIdx]
+      addedUrl = addedUrl + (addedUrl.length > 0 ? '&' : '') + 'area=' + this.state.selectorArea[selectorAreaCheckedIdx]
     }
-    if (requestPage != this.DEFAULT_CURR_PAGE) { // 1st page
-      addedUrl = addedUrl + (addedUrl.length > 0 ? '&' : '?') + 'page=' + requestPage
-    }
-
     return addedUrl
-  }
-
-  loadMoreData(e) {
-    this.requestData(this.state.selectorPriceCheckedIdx, this.state.selectorBednumCheckedIdx,
-        this.state.selectorTypeCheckedIdx, this.state.selectorPropCheckedIdx,
-        this.state.currProv, this.state.currCity,
-        this.state.selectorAreaCheckedIdx, this.state.currPage + 1) // 1st page
   }
 
   requestData = (selectorPriceCheckedIdx, selectorBednumCheckedIdx,
       selectorTypeCheckedIdx, selectorPropCheckedIdx,
       currProv, currCity,
-      selectorAreaCheckedIdx, requestPage) => {
+      selectorAreaCheckedIdx) => {
     let addedUrl = this.addedUrl(selectorPriceCheckedIdx,
         selectorBednumCheckedIdx, selectorTypeCheckedIdx,
         selectorPropCheckedIdx, currProv, currCity,
-        selectorAreaCheckedIdx, requestPage)
+        selectorAreaCheckedIdx)
     console.error('request url: ' + SERVER_HOST + '/show_rh_list' + addedUrl)
-    Taro.request({
-      url: SERVER_HOST + '/show_rh_list' + addedUrl,
-      success: (res) => {
-        console.log(res.data.records)
-        let rhList = []
-        if (requestPage == this.DEFAULT_CURR_PAGE) {
-          rhList = res.data.records
-        } else {
-          rhList = this.state.rhList.concat(res.data.records)
-        }
-        // Taro.showToast({title: res.data.records[0].title_image})
-        this.setState({
-            message: 'success',
-            rhList: rhList,
-            currPage: res.data.currPage,
-            isOnEnd: (res.data.currPage >= res.data.pageNum)
-        })
-      },
-      fail: (error) => {
-        console.error('bdg-error')
-        this.setState({message: 'hello'})
-        Taro.showToast({title: 'fail'})
-      },
-      complete: () => {
-        // Taro.showToast({title: "complete"})
-      },
+    this.setState({
+      searchCondition: addedUrl,
     })
   }
 
   requestAreaData = () => {
     let url = SERVER_HOST + '/arealist' + "?prov=" + this.state.currProv + "&city=" + this.state.currCity
-    console.error('requestAreaData: url: ' + url)
     Taro.request({
       url: url,
       success: (res) => {
         console.log(res.data)
-        // Taro.showToast({title: res.data.records[0].title_image})
-        // let selectorArea = (new Array(res.data)).unshift('不限')
         let selectorArea = ['不限']
         for (var i in res.data) {
             selectorArea.push(res.data[i])
         }
         this.setState({
-            message: 'success',
             selectorArea: selectorArea,
         })
       },
       fail: (error) => {
-      /*
-        console.error('bdg-error')
-        this.setState({message: 'hello'})
+        console.error('fail')
         Taro.showToast({title: 'fail'})
-        */
       },
       complete: () => {
         // Taro.showToast({title: "complete"})
@@ -330,58 +281,19 @@ export default class Index extends Component {
     })
   }
 
-  showRhDetail (rh_id, e) {
-    Taro.showToast({title: String(rh_id)})
-    Taro.navigateTo({
-      url: '/pages/rhdetail/rhdetail?rh_id=' + String(rh_id),
-    })
-
-    // Taro.showNavigationBarLoading();
-  }
-
   selectCitylist (e) {
     Taro.navigateTo({
       url: '/pages/citylist/citylist?prov=' + this.state.currProv + '&city=' + this.state.currCity,
     })
-
-    // Taro.showNavigationBarLoading();
   }
 
   searchRh (e) {
     Taro.navigateTo({
       url: '/pages/rhsearch/rhsearch',
     })
-
-    // Taro.showNavigationBarLoading();
   }
 
   render () {
-    const { rhList } = this.state
-
-    // display rest home list or error message
-    const restHomeList = (
-          <View className='rh-list-container'>
-          {rhList.map((rh) =>
-            <View className='rh-one-container' onClick={this.showRhDetail.bind(this, rh.id)}>
-              <Image src={rh.title_image != "" ? rh.title_image : DEFAULT_IMG} className='rh-one-img'/>
-              <View className='rh-one-desc-container'>
-                <View className='rh-one-desc-name'>{rh.name}</View>
-                <View className='rh-one-desc-address'>{rh.address}</View>
-                <View className='rh-one-desc-bednum-container'>
-                  <View className='rh-one-desc-bednum'>{rh.bednum_int}个床位</View>
-                  <View className='rh-one-desc-property'><Text>{rh.factory_property}</Text></View>
-                </View>
-              </View>
-            </View>
-          )}
-          </View>)
-
-    const hasMoreData = (
-        <View>
-        { rhList.length == 0 ? (<View className='loading-more'><View>暂无数据，</View><View>请换条件重新查询。</View></View>) : (this.state.isOnEnd ? (<Text className='loading-more'>已经到底了</Text>) : (<Text className='loading-more' onClick={this.loadMoreData.bind(this)}> 点击查看更多 </Text>)) }
-        </View>
-        )
-
     return (
       <View className='top-container'>
         <Video width='150px' height='190px' src={namedVideo} />
@@ -418,8 +330,7 @@ export default class Index extends Component {
               </Picker>
           </View>
         </View>
-        {restHomeList}
-        {hasMoreData}
+        <Rhlist searchCondition={this.state.searchCondition} />
         <PageFooter />
       </View>
     )
