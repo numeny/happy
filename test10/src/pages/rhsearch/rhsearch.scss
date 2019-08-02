@@ -8,7 +8,7 @@ $city-item-margin: 10px;
 }
 
 // title
-.title {
+.rh-search-title-container {
   width: 100%;
   display: flex;
   flex-direction: colume;
@@ -19,26 +19,37 @@ $city-item-margin: 10px;
   /*position: fixed;*/
 }
 
-.back-icon {
+.rh-search-back-icon {
   padding: 0px 30px;
+}
+
+.rh-search-title-text {
+  width: 100%;
+  text-align: center;
 }
 
 // search box
 .search-box-container {
-  display: flex;
-  flex-direction: colume;
-  align-items: center;
-  justify-content: center;
   margin: 10px 0px;
   padding: 20px;
   background-color: #FFF;
 }
 
+.search-box-container-2 {
+  display: flex;
+  flex-direction: colume;
+  align-items: center;
+  justify-content: center;
+  border: 3px solid #8AC007;
+  border-radius: 20px;
+}
+
 .rh-search-search-box {
-  border: 2px solid #DDD;
-  padding: 15px;
+  padding-left: 20px;
 }
 
 .rh-search-search-icon {
   padding: 20px;
+  background-color: #EEE;
+  border-radius: 0px 20px 20px 0px;
 }

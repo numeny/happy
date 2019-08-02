@@ -55,13 +55,15 @@ export default class RhSearch extends Component {
       <View className="rhsearch-top-view">
         <Video width='150px' height='190px' src={namedVideo} />
         <Image src={namedPng} />
-        <View className='title'>
-          <View onClick={this.goBack.bind(this)} className='at-icon at-icon-chevron-left back-icon'></View>
-          <View className='title-select-city'>选择城市</View>
+        <View className='rh-search-title-container'>
+          <View onClick={this.goBack.bind(this)} className='at-icon at-icon-chevron-left rh-search-back-icon'></View>
+          <View className='rh-search-title-text'>搜索养老院</View>
         </View>
         <View className='search-box-container'>
-          <Input type='text' placeholder='请输入查询关键词' onInput={this.onInputChanged.bind(this)} onConfirm={this.startSearch.bind(this)} className='rh-search-search-box' />
-          <View onClick={this.startSearch.bind(this)} className='at-icon at-icon-search rh-search-search-icon'></View>
+          <View className='search-box-container-2'>
+            <Input type='text' placeholder='找养老院' onInput={this.onInputChanged.bind(this)} onConfirm={this.startSearch.bind(this)} className='rh-search-search-box' />
+            <View onClick={this.startSearch.bind(this)} className='at-icon at-icon-search rh-search-search-icon'></View>
+          </View>
         </View>
         {this.state.startedSearch ?
           <Rhlist searchCondition={this.state.searchCondition} /> : <View>input key</View>

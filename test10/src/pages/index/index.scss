@@ -47,11 +47,24 @@ $page-background-color: #FFF;
   width: $width-title;
 }
 
-.top-title-input {
+.rh-classify-search-box-container {
+  display: flex;
+  flex-direction: colume;
+  align-items: center;
+  justify-content: center;
   flex: 1;
-  padding-left: $padding-top-title;
-  padding-right: $padding-top-title;
-  background-color: #0FF;
+  border: 3px solid #8AC007;
+  border-radius: 20px;
+}
+
+.rh-classify-search-box {
+  padding-left: 20px;
+}
+
+.rh-classify-search-icon {
+  padding: 20px;
+  background-color: #EEE;
+  border-radius: 0px 20px 20px 0px;
 }
 
 .top-title-back {
@@ -89,4 +102,5 @@ src: url(data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABUAAAAiCAMAAACHtmKxAAAAQ
   border-right: $item-border-thin solid $item-border-color;
   overflow: hidden;
   white-space: nowrap;
+  border-radius: 20px 20px 0px 20px;
 }

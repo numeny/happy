@@ -1,5 +1,8 @@
 import Taro, { Component, Events, Config } from '@tarojs/taro'
 import { View, Text, Image, Input, Video, Button, Icon, Progress, Checkbox, Switch, Form, Slider, Picker, PickerView, PickerViewColumn, Swiper, SwiperItem, Navigator } from '@tarojs/components'
+
+import "../../../node_modules/taro-ui/dist/style/components/icon.scss";
+
 import './index.scss'
 import namedPng from '@images/index/1.jpeg'
 import namedVideo from '@res/video/1.mp4'
@@ -304,8 +307,10 @@ export default class Index extends Component {
           <View className='top-title-container'>
             <Image className='top-title-back' src={namedPng} />
             <Text className='top-title-city' onClick={this.selectCitylist.bind(this)}>{this.state.currCity}</Text>
-            <Input type='text' placeholder='请输入查询关键词' onClick={this.searchRh.bind(this)} className='top-title-input' />
-            <Image className='top-title-menu' src={namedPng} />
+            <View className='rh-classify-search-box-container' onClick={this.searchRh.bind(this)}>
+              <Input type='text' placeholder='找养老院' className='rh-classify-search-box' />
+              <View className='at-icon at-icon-search rh-classify-search-icon'></View>
+            </View>
           </View>
           <View className='classify-title-container'>
               <Picker className='classify-title-item' mode='selector' range={this.state.selectorArea} onChange={this.onChangeArea}>
