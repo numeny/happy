@@ -266,9 +266,6 @@ export default class Rhdetail extends Component {
         <Image src={DEFAULT_IMG} width="100%" />
         {images_swiper}
         <Text className="show-part-text-1">This is some long text that will not fit in the boxThis is some long text that will not fit in the boxThis is some long text that will not fit in the boxThis is some long text that will not fit in the boxThis is some long text that will not fit in the boxThis is some long text that will not fit in the box</Text>
-        <View className="show-part-text">
-          rh_id: {this.state.rhRecord.id}
-        </View>
 
         <View className="rh-name">
         {this.state.rhRecord.name}
@@ -380,49 +377,49 @@ export default class Rhdetail extends Component {
           </View>
         </View>
         {this.state.rhRecordHandled.special_services_handled.length > 0 &&
-        <View className="show-part-text">
+        <View className="intro-text-container">
           <View className="content-title">
             特殊服务
           </View>
           {special_services_handled}
         </View>}
         {this.state.rhRecordHandled.inst_intro_handled.length > 0 &&
-        <View className="show-part-text">
+        <View className="intro-text-container">
           <View className="content-title">
             机构介绍
           </View>
           {inst_intro_handled}
         </View>}
         {this.state.rhRecordHandled.inst_charge_handled.length > 0 &&
-        <View className="show-part-text">
+        <View className="intro-text-container">
           <View className="content-title">
             收费详情
           </View>
           { inst_charge_handled }
         </View>}
         {this.state.rhRecordHandled.facilities_handled.length > 0 &&
-        <View className="show-part-text">
+        <View className="intro-text-container">
           <View className="content-title">
             环境设施
           </View>
           {facilities_handled}
         </View>}
         {this.state.rhRecordHandled.service_content_handled.length > 0 &&
-        <View className="show-part-text">
+        <View className="intro-text-container">
           <View className="content-title">
             服务内容
           </View>
           {service_content_handled}
         </View>}
         {this.state.rhRecordHandled.inst_notes_handled.length > 0 &&
-        <View className="show-part-text">
+        <View className="intro-text-container">
           <View className="content-title">
             入住须知：
           </View>
           {inst_notes_handled}
         </View>}
         {this.state.rhRecordHandled.transportation_handled.length > 0 &&
-        <View className="show-part-text">
+        <View className="intro-text-container">
           <View className="content-title">
             交通信息
           </View>

@@ -1,6 +1,6 @@
 $item-border-thin: 2px;
 $content-title-font-size: 40px;
-$divider-color: #DDD;
+$divider-color: #3CA467;
 
 .rhdetail-top-view {
   margin-left: 10px;
@@ -79,6 +79,11 @@ $divider-color: #DDD;
   text-decoration: underline;
 }
 
+.intro-text-container {
+  // FIXME, not OK
+  margin: 30px, 30px;
+}
+
 .content-title {
   font-size: $content-title-font-size;
   font-weight: bold;
@@ -99,14 +104,14 @@ $divider-color: #DDD;
 .important-item {
   text-align: center;
   border: 1px solid $divider-color;
-  flex-grow: 1;
+  flex: 1;
 }
 
 .important-item-1 {
   text-align: center;
   border-top: 1px solid $divider-color;
   border-bottom: 1px solid $divider-color;
-  flex-grow: 1;
+  flex: 1;
 }
 
 .important-item-content {
