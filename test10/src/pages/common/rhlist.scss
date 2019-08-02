@@ -1,94 +1,9 @@
-$padding-top-title: 10px;
-$width-title: 50px;
-$height-title: 90px;
-$item-border-thin: 2px;
-$item-border-thick: 6px;
 $item-border-color: #DDD;
 $page-background-color: #FFF;
 
 .rhlist-top-container {
   background-color: $page-background-color;
   font-size: 35px;
-}
-
-.top-title-top-container {
-  display: flex;
-  flex-direction: row;
-  flex-wrap: wrap;
-  width: 100%;
-  /*position: fixed;*/
-  z-index: 9;
-  background-color: $page-background-color;
-}
-
-.top-title-container {
-  display: flex;
-  flex-direction: colume;
-  flex-wrap: nowrap;
-  width: 100%;
-  height: $height-title;
-  line-height: $height-title;
-  align-items: center;
-  border-bottom: $item-border-thick solid $item-border-color;
-}
-
-.top-title-city {
-  flex: 1;
-  width: $width-title;
-  padding-left: $padding-top-title;
-  padding-right: $padding-top-title;
-  overflow: hidden;
-  white-space: nowrap;
-  text-overflow: ellipsis;
-}
-
-.top-title-logo {
-  flex: 1;
-  width: $width-title;
-}
-
-.top-title-input {
-  flex: 1;
-  padding-left: $padding-top-title;
-  padding-right: $padding-top-title;
-  background-color: #0FF;
-}
-
-.top-title-back {
-  width: $width-title;
-  height: $width-title;
-  padding-left: $padding-top-title;
-  padding-right: $padding-top-title;
-// FIXME
-src: url(data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABUAAAAiCAMAAACHtmKxAAAAQlBMVEUAAAD///////////////////////////////////////////////////////////////////////////////////8IX9KGAAAAFXRSTlMAeAcDh4HHv7qrsqSdlXIMi2VdUki1J5hKAAAAX0lEQVQoz7XSORKAIBBE0VbBBRVX7n9Vp5RomkCqoIMJXv1woGc8wBjCkUDZqdCGdzeVsn5TJWMTsf2LQwUcS6L/0Aly6jpk8FSR5zxGkpd85odY03wpNrFl3gFmK+cBj3IQx6B3ZvgAAAAASUVORK5CYII=);
-}
-
-.top-title-menu {
-  flex: 3;
-  width: $width-title;
-  height: $width-title;
-  padding-right: $padding-top-title;
-  padding-left: $padding-top-title;
-}
-
-.classify-title-container {
-  display: flex;
-  flex-direction: colume;
-  flex-wrap: nowrap;
-  justify-content: space-around;
-  width: 100%;
-  height: $height-title;
-  border-bottom: $item-border-thick solid $item-border-color;
-}
-
-.classify-title-item {
-  flex: 1;
-  text-align: center;
-  height: 100%;
-  line-height: $height-title;
-  border-right: $item-border-thin solid $item-border-color;
-  overflow: hidden;
-  white-space: nowrap;
 }
 
 .rh-list-container {
@@ -109,7 +24,7 @@ src: url(data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABUAAAAiCAMAAACHtmKxAAAAQ
   border-bottom: 2px solid $item-border-color;
 }
 
-.loading-more {
+.rh-list-loading-more {
   display: flex;
   height: 160px;
   justify-content: center;

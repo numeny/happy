@@ -95,6 +95,8 @@ def show_rh_list(request):
             query_param.page = int(request.GET['page'])
         except ValueError:
             pass
+    if "searchKey" in request.GET:
+        query_param.searchKey = request.GET['searchKey']
     # FIXME
     rh_list_query = RhListQuery(query_param)
     response = rh_list_query.get_rh_list()

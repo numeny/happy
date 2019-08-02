@@ -21,6 +21,7 @@ class QueryParam:
         self.str_type = ""
         self.prop = ""
         self.page = QueryParam.DEFAULT_PAGE
+        self.searchKey = ""
 
     '''
     def __init__(self, province, city, area,
@@ -55,3 +56,5 @@ class QueryParam:
         Log.d(QueryParam.LOGTAT, " strtype : " + self.str_type)
         Log.d(QueryParam.LOGTAT, " prop : " + self.prop)
         Log.d(QueryParam.LOGTAT, " page : " + str(self.page))
+        Log.d(QueryParam.LOGTAT, " searchKey : " + str(self.searchKey))
+

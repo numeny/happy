@@ -30,7 +30,7 @@ export default class Rhlist extends Component {
   }
 
   addedUrl = (searchCondition, requestPage) => {
-    let addedUrl = searchCondition
+    let addedUrl = (searchCondition.length > 0 ? ('?' + searchCondition) : '')
     if (requestPage != this.DEFAULT_CURR_PAGE) { // 1st page
       addedUrl = addedUrl + (addedUrl.length > 0 ? '&' : '?') + 'page=' + requestPage
     }
@@ -74,6 +74,16 @@ export default class Rhlist extends Component {
   componentDidMount () {
   }
 
+  componentWillReceiveProps(nextProps) {
+    if (this.state.searchCondition == nextProps.searchCondition) {
+      return
+    }
+    this.requestData(nextProps.searchCondition, this.DEFAULT_CURR_PAGE) // 1st page
+    this.setState({
+        searchCondition: nextProps.searchCondition,
+    })
+  }
+
   componentWillUnmount () { }
 
   componentDidShow () { }
@@ -112,7 +122,7 @@ export default class Rhlist extends Component {
 
     const hasMoreData = (
         <View>
-        { rhList.length == 0 ? (<View className='loading-more'><View>暂无数据，</View><View>请换条件重新查询。</View></View>) : (this.state.isOnEnd ? (<Text className='loading-more'>已经到底了</Text>) : (<Text className='loading-more' onClick={this.loadMoreData.bind(this)}> 点击查看更多 </Text>)) }
+        { rhList.length == 0 ? (<View className='rh-list-loading-more'><View>暂无数据，</View><View>请换条件重新查询。</View></View>) : (this.state.isOnEnd ? (<Text className='rh-list-loading-more'>已经到底了</Text>) : (<Text className='rh-list-loading-more' onClick={this.loadMoreData.bind(this)}> 点击查看更多 </Text>)) }
         </View>
         )
 

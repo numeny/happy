@@ -68,6 +68,10 @@ class RhListQuery:
             prop_filter = RhListQuery.get_prop_q_query(self.query_param.prop)
             all_filter = all_filter & prop_filter
 
+        if len(self.query_param.searchKey) != 0:
+            search_key_filter = RhListQuery.get_search_key_q_query(self.query_param.searchKey)
+            all_filter = all_filter & search_key_filter
+
         # only display ylxxw's records
         all_filter = all_filter & RhListQuery.get_only_ylxxw_records_query()
 
@@ -152,6 +156,13 @@ class RhListQuery:
         else:
             # FIXME
             prop_filter = None
+        return prop_filter
+
+    @staticmethod
+    def get_search_key_q_query(searchKey):
+        Log.e(RhListQuery.LOGTAT, 'get_search_key_q_query')
+        Log.e(RhListQuery.LOGTAT, searchKey)
+        prop_filter = Q(rh_name__contains=searchKey)
         return prop_filter
 
     # only display ylxxw's records
