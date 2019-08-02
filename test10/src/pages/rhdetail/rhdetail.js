@@ -261,12 +261,9 @@ export default class Rhdetail extends Component {
         </Swiper>
         )
     return (
-      <View className="rhdetail-top-view">
-        <Video width='250px' height='250px' src={namedVideo} />
-        <Image src={DEFAULT_IMG} width="100%" />
+      <View>
+      <View className="rhdetail-top-view-1">
         {images_swiper}
-        <Text className="show-part-text-1">This is some long text that will not fit in the boxThis is some long text that will not fit in the boxThis is some long text that will not fit in the boxThis is some long text that will not fit in the boxThis is some long text that will not fit in the boxThis is some long text that will not fit in the box</Text>
-
         <View className="rh-name">
         {this.state.rhRecord.name}
         </View>
@@ -377,61 +374,47 @@ export default class Rhdetail extends Component {
           </View>
         </View>
         {this.state.rhRecordHandled.special_services_handled.length > 0 &&
-        <View className="intro-text-container">
-          <View className="content-title">
-            特殊服务
-          </View>
-          {special_services_handled}
+        <View>
+          <View className="content-title">特殊服务</View>
+          <View className="content-info">{special_services_handled}</View>
         </View>}
         {this.state.rhRecordHandled.inst_intro_handled.length > 0 &&
-        <View className="intro-text-container">
-          <View className="content-title">
-            机构介绍
-          </View>
-          {inst_intro_handled}
+        <View>
+          <View className="content-title">机构介绍</View>
+          <View className="content-info">{inst_intro_handled}</View>
         </View>}
         {this.state.rhRecordHandled.inst_charge_handled.length > 0 &&
-        <View className="intro-text-container">
-          <View className="content-title">
-            收费详情
-          </View>
-          { inst_charge_handled }
+        <View>
+          <View className="content-title">收费详情</View>
+          <View className="content-info">{inst_charge_handled}</View>
         </View>}
         {this.state.rhRecordHandled.facilities_handled.length > 0 &&
-        <View className="intro-text-container">
-          <View className="content-title">
-            环境设施
-          </View>
-          {facilities_handled}
+        <View>
+          <View className="content-title">环境设施</View>
+          <View className="content-info">{facilities_handled}</View>
         </View>}
         {this.state.rhRecordHandled.service_content_handled.length > 0 &&
-        <View className="intro-text-container">
-          <View className="content-title">
-            服务内容
-          </View>
-          {service_content_handled}
+        <View>
+          <View className="content-title">服务内容</View>
+          <View className="content-info">{service_content_handled}</View>
         </View>}
         {this.state.rhRecordHandled.inst_notes_handled.length > 0 &&
-        <View className="intro-text-container">
-          <View className="content-title">
-            入住须知：
-          </View>
-          {inst_notes_handled}
+        <View>
+          <View className="content-title">入住须知</View>
+          <View className="content-info">{inst_notes_handled}</View>
         </View>}
         {this.state.rhRecordHandled.transportation_handled.length > 0 &&
-        <View className="intro-text-container">
-          <View className="content-title">
-            交通信息
-          </View>
-          {transportation_handled}
+        <View>
+          <View className="content-title">交通信息</View>
+          <View className="content-info">{transportation_handled}</View>
         </View>}
         {this.state.rhRecordHandled.images_handled.length > 0 &&
         <View>
-          <View className="content-title"> 图片信息 </View>
-          <View className="images-handled">
-            {images_handled}
-        </View></View>}
-        <PageFooter />
+          <View className="content-title">图片信息</View>
+          <View className="images-handled">{images_handled}</View>
+        </View>}
+      </View>
+      <PageFooter />
       </View>
     )
   }
