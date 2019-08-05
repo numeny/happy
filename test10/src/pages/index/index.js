@@ -300,13 +300,16 @@ export default class Index extends Component {
     return (
       <View className='top-container'>
         <Video width='150px' height='190px' src={namedVideo} />
-        <View className='location-select-container'>
-        </View>
         <Image src={namedPng} />
         <View className='top-title-top-container'>
           <View className='top-title-container'>
             <Image className='top-title-back' src={namedPng} />
+
+            <View>
             <Text className='top-title-city' onClick={this.selectCitylist.bind(this)}>{this.state.currCity}</Text>
+            <View onClick={this.selectCitylist.bind(this)} className='at-icon at-icon-chevron-down'></View>
+            </View>
+
             <View className='rh-classify-search-box-container' onClick={this.searchRh.bind(this)}>
               <Input type='text' placeholder='找养老院' className='rh-classify-search-box' />
               <View className='at-icon at-icon-search rh-classify-search-icon'></View>

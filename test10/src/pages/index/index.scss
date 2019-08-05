@@ -36,7 +36,6 @@ $page-background-color: #FFF;
   flex: 1;
   width: $width-title;
   padding-left: $padding-top-title;
-  padding-right: $padding-top-title;
   overflow: hidden;
   white-space: nowrap;
   text-overflow: ellipsis;
@@ -55,6 +54,7 @@ $page-background-color: #FFF;
   flex: 1;
   border: 3px solid #8AC007;
   border-radius: 20px;
+  margin-left: 80px;
 }
 
 .rh-classify-search-box {

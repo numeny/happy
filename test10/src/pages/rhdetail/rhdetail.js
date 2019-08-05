@@ -4,6 +4,7 @@ import { View, Text, Image, Input, Video, Button, Icon, Progress, Checkbox, Swit
 import './rhdetail.scss'
 
 import namedVideo from '@res/video/1.mp4'
+import namedPng from '@images/index/1.jpeg'
 import { SERVER_HOST } from '../common/const'
 import { DEFAULT_IMG } from '../common/const'
 import { IMGS_ROOT_PATH } from '../common/const'
@@ -263,6 +264,8 @@ export default class Rhdetail extends Component {
     return (
       <View>
       <View className="rhdetail-top-view-1">
+        <Video width='150px' height='190px' src={namedVideo} />
+        <Image src={namedPng} />
         {images_swiper}
         <View className="rh-name">
         {this.state.rhRecord.name}
