@@ -101,6 +101,7 @@ class RhListQuery:
             response['record_num'] = (record_num - RH_NUM_PER_PAGE * (page_idx - 1))
         response['pageNum'] = page_num
         response['currPage'] = page_idx
+        response['totalNum'] = record_num
 
         if Log.DEBUG:
             message = "province: " + self.query_param.province

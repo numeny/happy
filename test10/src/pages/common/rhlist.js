@@ -16,6 +16,10 @@ export default class Rhlist extends Component {
     this.state = {
       // input
       searchCondition: (this.props.searchCondition != null) ? this.props.searchCondition : '',
+      currSearchRhNum: 0,
+
+      currCity: (this.props.currCity != null) ? this.props.currCity : '',
+      currCityRhNum: 0,
 
       // internal state
       rhList: [],
@@ -45,6 +49,16 @@ export default class Rhlist extends Component {
   requestData = (searchCondition, requestPage) => {
     let addedUrl = this.addedUrl(searchCondition, requestPage)
     console.error('request url: ' + SERVER_HOST + '/show_rh_list' + addedUrl)
+    // calc the total num of current city's rh
+    let isOnlySearchCity = true
+    let searchConditionTmp = searchCondition
+    let conditionArray = String(searchConditionTmp).split("&")
+    for(var j = 0; j < conditionArray.length; j++) {
+      if (conditionArray[j].trim().indexOf("prov=") == -1
+            && conditionArray[j].trim().indexOf("city=") == -1)
+        isOnlySearchCity = false
+    }
+
     Taro.request({
       url: SERVER_HOST + '/show_rh_list' + addedUrl,
       success: (res) => {
@@ -58,8 +72,10 @@ export default class Rhlist extends Component {
         // Taro.showToast({title: res.data.records[0].title_image})
         this.setState({
             rhList: rhList,
+            currSearchRhNum: res.data.totalNum,
             currPage: res.data.currPage,
-            isOnEnd: (res.data.currPage >= res.data.pageNum)
+            isOnEnd: (res.data.currPage >= res.data.pageNum),
+            currCityRhNum: isOnlySearchCity ? res.data.totalNum : this.state.currCityRhNum,
         })
       },
       fail: (error) => {
@@ -78,12 +94,15 @@ export default class Rhlist extends Component {
     if (this.state.searchCondition == nextProps.searchCondition) {
       return
     }
+
     let searchCondition = (nextProps.searchCondition != null) ? nextProps.searchCondition : ''
+    let currCity = (nextProps.currCity != null) ? nextProps.currCity : ''
     this.requestData(
         searchCondition,
         this.DEFAULT_CURR_PAGE) // 1st page
     this.setState({
         searchCondition: searchCondition,
+        currCity: currCity,
     })
   }
 
@@ -130,9 +149,20 @@ export default class Rhlist extends Component {
         )
 
     return (
+      <View>
+      {this.state.currCity.length != 0 &&
+      <View>
+        {this.state.currCity} : {this.state.currCityRhNum}
+      </View>
+      }
+      <View>
+        当前查询共计<Text>{this.state.currSearchRhNum}</Text>家
+      </View>
+
       <View className='rhlist-top-container'>
         {restHomeList}
         {hasMoreData}
+      </View>
       </View>
     )
   }

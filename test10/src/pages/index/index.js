@@ -338,7 +338,7 @@ export default class Index extends Component {
               </Picker>
           </View>
         </View>
-        <Rhlist searchCondition={this.state.searchCondition} />
+        <Rhlist searchCondition={this.state.searchCondition} currCity={this.state.currCity} />
         <PageFooter />
       </View>
     )
