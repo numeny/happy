@@ -284,19 +284,19 @@ export default class Index extends Component {
     })
   }
 
-  selectCitylist (e) {
+  selectCitylist = (e) => {
     Taro.navigateTo({
       url: '/pages/citylist/citylist?prov=' + this.state.currProv + '&city=' + this.state.currCity,
     })
   }
 
-  searchRh (e) {
+  searchRh = (e) => {
     Taro.navigateTo({
       url: '/pages/rhsearch/rhsearch',
     })
   }
 
-  scrollToTop (e) {
+  scrollToTop = (e) => {
     Taro.pageScrollTo({
       scrollTop: 0,
       duration: 300,
@@ -311,11 +311,11 @@ export default class Index extends Component {
         <View className='top-title-top-container'>
           <View className='top-title-container'>
             <View>
-            <Text className='top-title-city' onClick={this.selectCitylist.bind(this)}>{this.state.currCity}</Text>
-            <View onClick={this.selectCitylist.bind(this)} className='at-icon at-icon-chevron-down'></View>
+            <Text className='top-title-city' onClick={this.selectCitylist}>{this.state.currCity}</Text>
+            <View onClick={this.selectCitylist} className='at-icon at-icon-chevron-down'></View>
             </View>
 
-            <View className='rh-classify-search-box-container' onClick={this.searchRh.bind(this)}>
+            <View className='rh-classify-search-box-container' onClick={this.searchRh}>
               <Input type='text' placeholder='找养老院' className='rh-classify-search-box' />
               <View className='at-icon at-icon-search rh-classify-search-icon'></View>
             </View>
@@ -344,7 +344,7 @@ export default class Index extends Component {
           </View>
         </View>
         <Rhlist searchCondition={this.state.searchCondition} currCity={this.state.currCity} />
-        <View onClick={this.scrollToTop.bind(this)} className='fixed-to-top'>
+        <View onClick={this.scrollToTop} className='fixed-to-top'>
             <View className='at-icon at-icon-chevron-up'>
             </View>
         </View>

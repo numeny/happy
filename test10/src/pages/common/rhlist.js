@@ -42,7 +42,7 @@ export default class Rhlist extends Component {
     return addedUrl
   }
 
-  loadMoreData(e) {
+  loadMoreData = (e) => {
     this.requestData(this.state.searchCondition, this.state.currPage + 1) // 1st page
   }
 
@@ -144,7 +144,7 @@ export default class Rhlist extends Component {
 
     const hasMoreData = (
         <View>
-        { rhList.length == 0 ? (<View className='rh-list-loading-more'><View>暂无数据，</View><View>请换条件重新查询。</View></View>) : (this.state.isOnEnd ? (<Text className='rh-list-loading-more'>已经到底了</Text>) : (<Text className='rh-list-loading-more' onClick={this.loadMoreData.bind(this)}> 点击查看更多 </Text>)) }
+        { rhList.length == 0 ? (<View className='rh-list-loading-more'><View>暂无数据，</View><View>请换条件重新查询。</View></View>) : (this.state.isOnEnd ? (<Text className='rh-list-loading-more'>已经到底了</Text>) : (<Text className='rh-list-loading-more' onClick={this.loadMoreData}> 点击查看更多 </Text>)) }
         </View>
         )
 

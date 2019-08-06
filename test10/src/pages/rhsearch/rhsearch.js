@@ -30,11 +30,11 @@ export default class RhSearch extends Component {
   componentWillMount() {
   }
 
-  goBack (e) {
+  goBack = (e) => {
     Taro.navigateBack()
   }
 
-  startSearch (e) {
+  startSearch = (e) => {
     let searchCondition =
       (this.state.inputValue.length != 0) ? ('searchKey=' + this.state.inputValue) : ''
       // startedSearch: false,
@@ -44,7 +44,7 @@ export default class RhSearch extends Component {
     })
   }
 
-  onInputChanged (e)  {
+  onInputChanged = (e) =>  {
     this.setState({
       inputValue: e.target.value,
     })
@@ -56,13 +56,13 @@ export default class RhSearch extends Component {
         <Video width='150px' height='190px' src={namedVideo} />
         <Image src={namedPng} />
         <View className='rh-search-title-container'>
-          <View onClick={this.goBack.bind(this)} className='at-icon at-icon-chevron-left rh-search-back-icon'></View>
+          <View onClick={this.goBack} className='at-icon at-icon-chevron-left rh-search-back-icon'></View>
           <View className='rh-search-title-text'>搜索养老院</View>
         </View>
         <View className='search-box-container'>
           <View className='search-box-container-2'>
-            <Input type='text' placeholder='找养老院' onInput={this.onInputChanged.bind(this)} onConfirm={this.startSearch.bind(this)} className='rh-search-search-box' />
-            <View onClick={this.startSearch.bind(this)} className='at-icon at-icon-search rh-search-search-icon'></View>
+            <Input type='text' placeholder='找养老院' onInput={this.onInputChanged} onConfirm={this.startSearch} className='rh-search-search-box' />
+            <View onClick={this.startSearch} className='at-icon at-icon-search rh-search-search-icon'></View>
           </View>
         </View>
         {this.state.startedSearch ?

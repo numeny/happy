@@ -128,7 +128,7 @@ export default class Citylist extends Component {
     }
   }
 
-  goBack (e) {
+  goBack = e => {
     Taro.navigateBack()
   }
 
@@ -189,7 +189,7 @@ export default class Citylist extends Component {
         <Video width='150px' height='190px' src={namedVideo} />
         <Image src={namedPng} />
         <View className='title'>
-          <View onClick={this.goBack.bind(this)} className='at-icon at-icon-chevron-left back-icon'></View>
+          <View onClick={this.goBack} className='at-icon at-icon-chevron-left back-icon'></View>
           <View className='title-select-city'>选择城市</View>
         </View>
         <View className='city-container'>
