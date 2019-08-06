@@ -122,6 +122,7 @@ export default class Citylist extends Component {
         // FIXME
         Taro.showToast({title: '请选城市!'})
       } else {
+        Taro.showToast({title: '当前选择' + this.state.selectedCity + '!'})
         this.requestRhList(this.state.selectedProv, this.state.selectedCity)
       }
     }
@@ -138,6 +139,7 @@ export default class Citylist extends Component {
       this.setState({
           selectedCity: area,
       })
+      Taro.showToast({title: '当前选择' + area + '!'})
     } else {
       // province has not been selected
       this.requestCityData(area)
@@ -153,6 +155,7 @@ export default class Citylist extends Component {
         selectedProv: prov,
         selectedCity: city
     })
+    Taro.showToast({title: '当前选择' + city + '!'})
     this.requestCityData(prov)
   }
 
@@ -199,7 +202,7 @@ export default class Citylist extends Component {
             {hotCityItems}
           </View>
           <View className='hot-city-container'>
-            <View>选择城市</View>
+            <View>当前选择城市</View>
             <Text className='selected-area' onClick={this.showAreaList.bind(this, '')}>全国</Text>
             {this.state.selectedProv.length > 0 &&
             <Text>

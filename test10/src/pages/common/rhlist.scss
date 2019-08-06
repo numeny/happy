@@ -70,6 +70,33 @@ $page-background-color: #FFF;
   font-size: 26px;
 }
 
+.rhlist-total-rh-count-title {
+  width: 100%;
+  text-align : center;
+  font-size: 40px;
+}
+
+.rhlist-total-rh-count-content {
+  width: 100%;
+  text-align : center;
+  font-size: 28px;
+  border-bottom: 2px solid $item-border-color;
+}
+
+.rhlist-total-rh-count-container {
+  width: 100%;
+  text-align : center;
+  background-color: 0;
+  border-bottom: 2px solid $item-border-color;
+}
+
+.rhlist-curr-rh-count-container {
+  width: 100%;
+  text-align : center;
+  background-color: 0;
+  border-bottom: 2px solid $item-border-color;
+}
+
 .rh-one-desc-property {
   width: 100%;
   font-size: 26px;

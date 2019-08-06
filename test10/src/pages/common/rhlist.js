@@ -150,14 +150,17 @@ export default class Rhlist extends Component {
 
     return (
       <View>
-      {this.state.currCity.length != 0 &&
-      <View>
-        {this.state.currCity} : {this.state.currCityRhNum}
-      </View>
-      }
-      <View>
+      {this.state.currCity.length != 0 ?
+      <View className='rhlist-total-rh-count-container'>
+        <View className='rhlist-total-rh-count-title'>
+          {this.state.currCity}养老院
+        </View>
+        <View className='rhlist-total-rh-count-content'>
+          共计{this.state.currCityRhNum}家
+        </View>
+        </View>: <View className='rhlist-curr-rh-count-container'>
         当前查询共计<Text>{this.state.currSearchRhNum}</Text>家
-      </View>
+      </View>}
 
       <View className='rhlist-top-container'>
         {restHomeList}

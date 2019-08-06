@@ -24,7 +24,7 @@ export default class Index extends Component {
    * 提示和声明 navigationBarTextStyle: 'black' | 'white' 类型冲突, 需要显示声明类型
    */
   config: Config = {
-    navigationBarTitleText: '首页',
+    navigationBarTitleText: '全国最全的养老院查询',
   }
 
   constructor(props) {
@@ -296,6 +296,13 @@ export default class Index extends Component {
     })
   }
 
+  scrollToTop (e) {
+    Taro.pageScrollTo({
+      scrollTop: 0,
+      duration: 300,
+    })
+  }
+
   render () {
     return (
       <View className='top-container'>
@@ -303,8 +310,6 @@ export default class Index extends Component {
         <Image src={namedPng} />
         <View className='top-title-top-container'>
           <View className='top-title-container'>
-            <Image className='top-title-back' src={namedPng} />
-
             <View>
             <Text className='top-title-city' onClick={this.selectCitylist.bind(this)}>{this.state.currCity}</Text>
             <View onClick={this.selectCitylist.bind(this)} className='at-icon at-icon-chevron-down'></View>
@@ -339,6 +344,10 @@ export default class Index extends Component {
           </View>
         </View>
         <Rhlist searchCondition={this.state.searchCondition} currCity={this.state.currCity} />
+        <View onClick={this.scrollToTop.bind(this)} className='fixed-to-top'>
+            <View className='at-icon at-icon-chevron-up'>
+            </View>
+        </View>
         <PageFooter />
       </View>
     )

@@ -66,8 +66,13 @@ export default class RhSearch extends Component {
           </View>
         </View>
         {this.state.startedSearch ?
-          <Rhlist searchCondition={this.state.searchCondition} /> : <View>input key</View>
-        }
+          <Rhlist searchCondition={this.state.searchCondition} /> : <View>input key</View>}
+        <View>
+          热门搜索
+        <View>
+          热门搜索
+        </View>
+        </View>
         <PageFooter />
       </View>
     )

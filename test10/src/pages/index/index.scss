@@ -67,15 +67,6 @@ $page-background-color: #FFF;
   border-radius: 0px 20px 20px 0px;
 }
 
-.top-title-back {
-  width: $width-title;
-  height: $width-title;
-  padding-left: $padding-top-title;
-  padding-right: $padding-top-title;
-// FIXME
-src: url(data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABUAAAAiCAMAAACHtmKxAAAAQlBMVEUAAAD///////////////////////////////////////////////////////////////////////////////////8IX9KGAAAAFXRSTlMAeAcDh4HHv7qrsqSdlXIMi2VdUki1J5hKAAAAX0lEQVQoz7XSORKAIBBE0VbBBRVX7n9Vp5RomkCqoIMJXv1woGc8wBjCkUDZqdCGdzeVsn5TJWMTsf2LQwUcS6L/0Aly6jpk8FSR5zxGkpd85odY03wpNrFl3gFmK+cBj3IQx6B3ZvgAAAAASUVORK5CYII=);
-}
-
 .top-title-menu {
   flex: 3;
   width: $width-title;
@@ -102,5 +93,17 @@ src: url(data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABUAAAAiCAMAAACHtmKxAAAAQ
   border-right: $item-border-thin solid $item-border-color;
   overflow: hidden;
   white-space: nowrap;
-  border-radius: 20px 20px 0px 20px;
+}
+
+.fixed-to-top {
+  width: 100px;
+  height: 100px;
+  position: fixed;
+  bottom: 50px;
+  right: 25px;
+  background: rgba(0, 0, 0, 0.3);
+  border-radius: 20px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
 }
