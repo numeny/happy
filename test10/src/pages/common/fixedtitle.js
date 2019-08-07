@@ -4,6 +4,7 @@ import { View, Text, Image, Input, Video, Button, Icon, Progress, Checkbox, Swit
 import "../../../node_modules/taro-ui/dist/style/components/icon.scss";
 
 import './fixedtitle.scss'
+import { HOME_URL } from '../common/const'
 
 export default class FixedTitle extends Component {
 
@@ -16,6 +17,13 @@ export default class FixedTitle extends Component {
 
   goBack = e => {
     Taro.navigateBack()
+  }
+
+  goHome = e => {
+    // first item is '首页'
+    Taro.navigateTo({
+      url: HOME_URL,
+    })
   }
 
   componentWillReceiveProps(nextProps) {
@@ -32,6 +40,7 @@ export default class FixedTitle extends Component {
       <View className='ft-title'>
         <View onClick={this.goBack} className='at-icon at-icon-chevron-left ft-back-icon'></View>
         <View className='ft-text'>{this.state.title}</View>
+        <View onClick={this.goHome} className='at-icon at-icon-home ft-home-icon'></View>
       </View>
     )
   }

@@ -3,6 +3,7 @@ import { View, Text } from '@tarojs/components'
 
 import './pagefooter.scss'
 import { PAGE_FOOTER_MENU } from '../common/const'
+import { HOME_URL } from '../common/const'
 
 export default class PageFooter extends Component {
 
@@ -17,7 +18,7 @@ export default class PageFooter extends Component {
     if (idx == 0) {
       // first item is '首页'
       Taro.navigateTo({
-        url: '/pages/index/index',
+        url: HOME_URL,
       })
     } else {
       Taro.navigateTo({

@@ -15,7 +15,16 @@ $ft-item-height: 80px;
 
 .ft-back-icon {
   /*position: fixed;*/
+  top: 0px;
+  left: 0px;
   padding: $ft-item-padding;
+}
+
+.ft-home-icon {
+  /*position: fixed;*/
+  padding: $ft-item-padding;
+  top: 0px;
+  right: 0px;
 }
 
 .ft-text {
