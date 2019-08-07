@@ -1,0 +1,24 @@
+$ft-item-padding: 20px;
+$ft-bg-color: #FFF;
+$ft-font-size: 34px;
+$ft-item-height: 80px;
+
+.ft-title {
+  width: 100%;
+  /*position: fixed;*/
+  top: 0px;
+  left: 0px;
+  font-size: $ft-font-size;
+  padding: $ft-item-padding 0px;
+  background-color: $ft-bg-color;
+}
+
+.ft-back-icon {
+  /*position: fixed;*/
+  padding: $ft-item-padding;
+}
+
+.ft-text {
+  width: 100%;
+  text-align: center;
+}

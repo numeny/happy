@@ -1,41 +1,23 @@
 $city-item-top-bottom-padding: 20px;
 $city-item-background-color: #FFF;
 $city-item-margin: 10px;
+$page-bg-color: #EEE;
 
-.rhsearch-top-view {
+// rh search
+.rs-top-view {
   font-size: 34px;
-  background-color: #EEE;
-}
-
-// title
-.rh-search-title-container {
-  width: 100%;
-  display: flex;
-  flex-direction: colume;
-  align-items: center;
-  justify-content: center;
-  background-color: $city-item-background-color;
-  padding: 25px 0px;
-  /*position: fixed;*/
-}
-
-.rh-search-back-icon {
-  padding: 0px 30px;
-}
-
-.rh-search-title-text {
-  width: 100%;
-  text-align: center;
+  background-color: $page-bg-color;
 }
 
 // search box
-.search-box-container {
-  margin: 10px 0px;
-  padding: 20px;
-  background-color: #FFF;
+.sb-container {
+  margin-top: 100px;
+  padding: 30px;
+  background-color: $city-item-background-color;
+  border-top: 10px solid $page-bg-color;
 }
 
-.search-box-container-2 {
+.sb-container-2 {
   display: flex;
   flex-direction: colume;
   align-items: center;
@@ -44,12 +26,12 @@ $city-item-margin: 10px;
   border-radius: 20px;
 }
 
-.rh-search-search-box {
+.sb-search-box {
   padding-left: 20px;
 }
 
-.rh-search-search-icon {
+.rs-search-icon {
   padding: 20px;
-  background-color: #EEE;
+  background-color: $page-bg-color;
   border-radius: 0px 20px 20px 0px;
 }

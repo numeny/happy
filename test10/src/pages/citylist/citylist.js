@@ -8,6 +8,7 @@ import "../../../node_modules/taro-ui/dist/style/components/button.scss";
 import { SERVER_HOST } from '../common/const'
 
 import './citylist.scss'
+import FixedTitle from '../common/fixedtitle'
 import PageFooter from '../common/pagefooter'
 
 import namedVideo from '@res/video/1.mp4'
@@ -128,10 +129,6 @@ export default class Citylist extends Component {
     }
   }
 
-  goBack = e => {
-    Taro.navigateBack()
-  }
-
   selectArea (area, e) {
     if (this.state.isDisplayingCity) {
       // province has been selected
@@ -188,10 +185,7 @@ export default class Citylist extends Component {
       <View className="top-view">
         <Video width='150px' height='190px' src={namedVideo} />
         <Image src={namedPng} />
-        <View className='title'>
-          <View onClick={this.goBack} className='at-icon at-icon-chevron-left back-icon'></View>
-          <View className='title-select-city'>选择城市</View>
-        </View>
+        <FixedTitle title="选择城市" />
         <View className='city-container'>
           <View className='curr-city-container'>
             当前城市

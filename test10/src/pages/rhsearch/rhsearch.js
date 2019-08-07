@@ -5,8 +5,11 @@ import { AtButton } from 'taro-ui'
 import "../../../node_modules/taro-ui/dist/style/components/icon.scss";
 
 import './rhsearch.scss'
+
+import FixedTitle from '../common/fixedtitle'
 import PageFooter from '../common/pagefooter'
 import Rhlist from '../common/rhlist'
+
 
 import namedVideo from '@res/video/1.mp4'
 import namedPng from '@images/index/1.jpeg'
@@ -52,17 +55,14 @@ export default class RhSearch extends Component {
 
   render () {
     return (
-      <View className="rhsearch-top-view">
+      <View className="rs-top-view">
         <Video width='150px' height='190px' src={namedVideo} />
         <Image src={namedPng} />
-        <View className='rh-search-title-container'>
-          <View onClick={this.goBack} className='at-icon at-icon-chevron-left rh-search-back-icon'></View>
-          <View className='rh-search-title-text'>搜索养老院</View>
-        </View>
-        <View className='search-box-container'>
-          <View className='search-box-container-2'>
-            <Input type='text' placeholder='找养老院' onInput={this.onInputChanged} onConfirm={this.startSearch} className='rh-search-search-box' />
-            <View onClick={this.startSearch} className='at-icon at-icon-search rh-search-search-icon'></View>
+        <FixedTitle title='搜索养老院'/>
+        <View className='sb-container'>
+          <View className='sb-container-2'>
+            <Input type='text' placeholder='找养老院' onInput={this.onInputChanged} onConfirm={this.startSearch} className='sb-search-box' />
+            <View onClick={this.startSearch} className='at-icon at-icon-search rs-search-icon'></View>
           </View>
         </View>
         {this.state.startedSearch ?
