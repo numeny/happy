@@ -1,5 +1,5 @@
 import Taro, { Component, Events, Config } from '@tarojs/taro'
-import { View, Text, Image, Input, Video, Button, Icon, Progress, Checkbox, Switch, Form, Slider, Picker, PickerView, PickerViewColumn, Swiper, SwiperItem, Navigator } from '@tarojs/components'
+import { View, Text, Image, Input, Video, Button, Icon, Progress, Checkbox, Switch, Form, Slider, Picker, PickerView, PickerViewColumn, Swiper, SwiperItem, Navigator, ScrollView } from '@tarojs/components'
 
 import "../../../node_modules/taro-ui/dist/style/components/icon.scss";
 
@@ -55,6 +55,10 @@ export default class Index extends Component {
       selectorProp: ['不限', '民营机构', '国营机构', '公建民营', '民办公助', '其他'],
       selectorPropChecked: '不限',
       selectorPropCheckedIdx: 0,
+
+      windowHeight: Taro.getSystemInfoSync().windowHeight,
+      showIconOfToTop: false,
+      scrollTop: 0,
     }
   }
 
@@ -301,13 +305,33 @@ export default class Index extends Component {
       scrollTop: 0,
       duration: 300,
     })
+
+    this.setState({
+      scrollTop: 0,
+    })
+    console.log('scrollToTop-2')
+  }
+
+  onScroll = e => {
+    this.setState({
+      showIconOfToTop: e.detail.scrollTop > this.state.windowHeight * 3 / 2,
+      scrollTop: e.detail.scrollTop, // remain this scrollTop
+    })
   }
 
   render () {
+    const scrollStyle = {
+      height: this.state.windowHeight
+    }
     return (
-      <View className='top-container'>
+      <ScrollView
+        className='scrollview scrollStyle top-container'
+        scrollY
+        scrollTop={this.state.scrollTop}
+        style={scrollStyle}
+        onScroll={this.onScroll.bind(this)}>
         <Video width='150px' height='190px' src={namedVideo} />
-        <Image src={namedPng} />
+        <Image src={namedPng} width='150px' height='300px' />
         <View className='top-title-top-container'>
           <View className='top-title-container'>
             <View>
@@ -344,12 +368,13 @@ export default class Index extends Component {
           </View>
         </View>
         <Rhlist searchCondition={this.state.searchCondition} currCity={this.state.currCity} />
+        {this.state.showIconOfToTop &&
         <View onClick={this.scrollToTop} className='fixed-to-top'>
             <View className='at-icon at-icon-chevron-up'>
             </View>
-        </View>
+        </View>}
         <PageFooter />
-      </View>
+      </ScrollView>
     )
   }
 }
