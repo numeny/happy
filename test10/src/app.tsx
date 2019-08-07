@@ -25,6 +25,8 @@ class App extends Component {
       'pages/citylist/citylist',
       'pages/rhsearch/rhsearch',
       'pages/common/mywebview',
+      'pages/common/pagefooter',
+      'pages/aboutus/aboutus',
     ],
     window: {
       backgroundTextStyle: 'light',
