@@ -123,7 +123,6 @@ export default class Citylist extends Component {
         // FIXME
         Taro.showToast({title: '请选城市!'})
       } else {
-        Taro.showToast({title: '当前选择' + this.state.selectedCity + '!'})
         this.requestRhList(this.state.selectedProv, this.state.selectedCity)
       }
     }
@@ -136,7 +135,6 @@ export default class Citylist extends Component {
       this.setState({
           selectedCity: area,
       })
-      Taro.showToast({title: '当前选择' + area + '!'})
     } else {
       // province has not been selected
       this.requestCityData(area)
@@ -152,17 +150,20 @@ export default class Citylist extends Component {
         selectedProv: prov,
         selectedCity: city
     })
-    Taro.showToast({title: '当前选择' + city + '!'})
     this.requestCityData(prov)
   }
 
   render () {
+    const selectedStyle = {
+      'color': '#8AC007',
+    }
+
     let cityItems = (<View>
         {this.state.currCityItems.map((citys) =>
             <View className='hot-city-row-container'>
-              <Text className='hot-city-item' onClick={this.selectArea.bind(this, citys[0])}>{citys[0]}</Text>
-              <Text className='hot-city-item' onClick={this.selectArea.bind(this, citys[1])}>{citys[1]}</Text>
-              <Text className='hot-city-item' onClick={this.selectArea.bind(this, citys[2])}>{citys[2]}</Text>
+              <Text className='hot-city-item' style={citys[0] == this.state.selectedCity ? selectedStyle : ''} onClick={this.selectArea.bind(this, citys[0])}>{citys[0]}</Text>
+              <Text className='hot-city-item' style={citys[1] == this.state.selectedCity ? selectedStyle : ''} onClick={this.selectArea.bind(this, citys[1])}>{citys[1]}</Text>
+              <Text className='hot-city-item' style={citys[2] == this.state.selectedCity ? selectedStyle : ''} onClick={this.selectArea.bind(this, citys[2])}>{citys[2]}</Text>
             </View>
         )}
         </View>)
@@ -174,9 +175,9 @@ export default class Citylist extends Component {
       let hotCityItems = (<View>
           {hotCityList.map((citys) =>
               <View className='hot-city-row-container'>
-              <Text className='hot-city-item' onClick={this.selectHotCity.bind(this, citys[0][0], citys[0][1])}>{citys[0][1]}</Text>
-              <Text className='hot-city-item' onClick={this.selectHotCity.bind(this, citys[1][0], citys[1][1])}>{citys[1][1]}</Text>
-              <Text className='hot-city-item' onClick={this.selectHotCity.bind(this, citys[2][0], citys[2][1])}>{citys[2][1]}</Text>
+              <Text className='hot-city-item' style={citys[0][1] == this.state.selectedCity ? selectedStyle : ''} onClick={this.selectHotCity.bind(this, citys[0][0], citys[0][1])}>{citys[0][1]}</Text>
+              <Text className='hot-city-item' style={citys[1][1] == this.state.selectedCity ? selectedStyle : ''} onClick={this.selectHotCity.bind(this, citys[1][0], citys[1][1])}>{citys[1][1]}</Text>
+              <Text className='hot-city-item' style={citys[2][1] == this.state.selectedCity ? selectedStyle : ''} onClick={this.selectHotCity.bind(this, citys[2][0], citys[2][1])}>{citys[2][1]}</Text>
               </View>
           )}
           </View>)
