@@ -18,6 +18,15 @@ export default class FixedTitle extends Component {
     Taro.navigateBack()
   }
 
+  componentWillReceiveProps(nextProps) {
+    if (nextProps.title == this.state.title) {
+      return
+    }
+    this.setState({
+        title: nextProps.title,
+    })
+  }
+
   render () {
     return (
       <View className='ft-title'>

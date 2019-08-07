@@ -1,24 +1,41 @@
 import Taro, { Component } from '@tarojs/taro'
 import { View, Text } from '@tarojs/components'
+
 import './pagefooter.scss'
+import { PAGE_FOOTER_MENU } from '../common/const'
 
 export default class PageFooter extends Component {
 
+  constructor(props) {
+    super(props)
+    this.state = {
+      showAboutMenu: (this.props.showAboutMenu != null && this.props.showAboutMenu == 'false' ? false : true) ,
+    }
+  }
+
   onNavigateToAboutUs (idx, e) {
-    Taro.navigateTo({
-      url: '/pages/aboutus/aboutus?idx=' + idx,
-    })
+    if (idx == 0) {
+      // first item is '首页'
+      Taro.navigateTo({
+        url: '/pages/index/index',
+      })
+    } else {
+      Taro.navigateTo({
+        url: '/pages/aboutus/aboutus?idx=' + idx,
+      })
+    }
   }
 
   render () {
+    const menuViews = (<View className='about-us-container'>
+        {PAGE_FOOTER_MENU.map((value, index) =>
+          <Text className='about-us' onClick={this.onNavigateToAboutUs.bind(this, index)}>{value}</Text>
+        )}
+        </View>)
+
     return (
       <View className='pagefooter-top-view'>
-        <View className='about-us-container'>
-          <Text className='about-us' onClick={this.onNavigateToAboutUs.bind(this, 0)}>关于我们</Text>
-          <Text className='about-us' onClick={this.onNavigateToAboutUs.bind(this, 1)}>联系我们</Text>
-          <Text className='about-us' onClick={this.onNavigateToAboutUs.bind(this, 2)}>网站声明</Text>
-          <Text className='about-us' onClick={this.onNavigateToAboutUs.bind(this, 3)}>机构入驻</Text>
-        </View>
+        {this.state.showAboutMenu && menuViews}
         <View className='copyright-container'>
           Copyright@老玩童 All Rights Reserved
         </View>

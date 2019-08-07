@@ -6,6 +6,7 @@ import "../../../node_modules/taro-ui/dist/style/components/icon.scss";
 import "../../../node_modules/taro-ui/dist/style/components/button.scss";
 
 import { SERVER_HOST } from '../common/const'
+import { ABOUT_US_MENU } from '../common/const'
 
 import './aboutus.scss'
 import FixedTitle from '../common/fixedtitle'
@@ -24,7 +25,6 @@ export default class AboutUs extends Component {
     super(props)
     this.state = {
       currItem: this.$router.params.idx,
-      titleArray: ['关于我们', '联系我们', '网站声明', '机构入驻'],
     }
   }
 
@@ -48,20 +48,19 @@ export default class AboutUs extends Component {
     }
 
     let titleViews = (<View className='au-title-container'>
-        {this.state.titleArray.map((title, index) =>
-            <View className='au-title-item' style={this.state.titleArray[this.state.currItem] == title ? selectStyle : ''} onClick={this.onSelectItem.bind(this, index)}>{title}</View>
+        {ABOUT_US_MENU.map((title, index) =>
+          <View className='au-title-item' style={ABOUT_US_MENU[this.state.currItem] == title ? selectStyle : ''} onClick={this.onSelectItem.bind(this, index)}>{title}</View>
         )}
         </View>)
     return (
       <View className="au-top-view">
         <Video width='150px' height='190px' src={namedVideo} />
         <Image src={namedPng} />
-        <FixedTitle title={this.state.titleArray[this.state.currItem]}/>
-        <View>
+        <FixedTitle title={ABOUT_US_MENU[this.state.currItem]}/>
         {titleViews}
-        </View>
         <View>
         </View>
+        <PageFooter showAboutMenu='false' />
       </View>
     )
   }

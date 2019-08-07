@@ -13,7 +13,11 @@ $city-item-margin: 10px;
   flex-direction: colume;
   justify-content: space-around;
   text-align: center;
+  margin-top: 100px;
 }
 
 .au-title-item {
+  flex: 1;
+  background-color: #FFF;
+  border: 3px solid #EEE;
 }
