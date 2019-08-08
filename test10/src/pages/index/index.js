@@ -56,6 +56,7 @@ export default class Index extends Component {
       selectorPropChecked: '不限',
       selectorPropCheckedIdx: 0,
 
+      // about to-top button
       windowHeight: Taro.getSystemInfoSync().windowHeight,
       showIconOfToTop: false,
       scrollTop: 0,
@@ -301,11 +302,6 @@ export default class Index extends Component {
   }
 
   scrollToTop = (e) => {
-    Taro.pageScrollTo({
-      scrollTop: 0,
-      duration: 300,
-    })
-
     this.setState({
       scrollTop: 0,
     })
@@ -314,18 +310,18 @@ export default class Index extends Component {
 
   onScroll = e => {
     this.setState({
-      showIconOfToTop: e.detail.scrollTop > this.state.windowHeight * 3 / 2,
+      showIconOfToTop: e.detail.scrollTop > this.state.windowHeight * 2,
       scrollTop: e.detail.scrollTop, // remain this scrollTop
     })
   }
 
   render () {
     const scrollStyle = {
-      height: this.state.windowHeight
+      height: this.state.windowHeight,
     }
     return (
       <ScrollView
-        className='scrollview scrollStyle top-container'
+        className='top-container'
         scrollY
         scrollTop={this.state.scrollTop}
         style={scrollStyle}

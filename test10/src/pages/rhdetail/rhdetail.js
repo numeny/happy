@@ -1,5 +1,5 @@
 import Taro, { Component, Events } from '@tarojs/taro'
-import { View, Text, Image, Input, Video, Button, Icon, Progress, Checkbox, Switch, Form, Slider, Picker, PickerView, PickerViewColumn, Swiper, SwiperItem, Navigator } from '@tarojs/components'
+import { View, Text, Image, Input, Video, Button, Icon, Progress, Checkbox, Switch, Form, Slider, Picker, PickerView, PickerViewColumn, Swiper, SwiperItem, Navigator, ScrollView } from '@tarojs/components'
 
 import './rhdetail.scss'
 
@@ -30,6 +30,11 @@ export default class Rhdetail extends Component {
         inst_notes_handled: [],
         images_handled: [],
       },
+
+      // about to-top button
+      windowHeight: Taro.getSystemInfoSync().windowHeight,
+      showIconOfToTop: false,
+      scrollTop: 0,
     }
   }
 
@@ -165,6 +170,20 @@ export default class Rhdetail extends Component {
     })
   }
 
+  scrollToTop = (e) => {
+    this.setState({
+      scrollTop: 0,
+    })
+    console.log('scrollToTop-2')
+  }
+
+  onScroll = e => {
+    this.setState({
+      showIconOfToTop: e.detail.scrollTop > this.state.windowHeight * 2,
+      scrollTop: e.detail.scrollTop, // remain this scrollTop
+    })
+  }
+
   render () {
     const transportation_handled = (
         <View>
@@ -262,8 +281,15 @@ export default class Rhdetail extends Component {
           }
         </Swiper>
         )
+
+    const scrollStyle = {
+      height: this.state.windowHeight,
+    }
+
     return (
-      <View>
+      <ScrollView scrollY scrollTop={this.state.scrollTop} style={scrollStyle} onScroll={this.onScroll.bind(this)}>
+      <Video width='150px' height='190px' src={namedVideo} />
+      <Image src={namedPng} />
       <FixedTitle title="养老院详情" />
       <View className="rhdetail-top-view-1">
         {images_swiper}
@@ -418,7 +444,12 @@ export default class Rhdetail extends Component {
         </View>}
       </View>
       <PageFooter />
-      </View>
+      {this.state.showIconOfToTop &&
+      <View onClick={this.scrollToTop} className='fixed-to-top'>
+          <View className='at-icon at-icon-chevron-up'>
+          </View>
+      </View>}
+      </ScrollView>
     )
   }
 }

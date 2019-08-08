@@ -138,3 +138,16 @@ $divider-color: #3CA467;
   text-align: center;
   width: 100%;
 }
+
+.fixed-to-top {
+  width: 100px;
+  height: 100px;
+  position: fixed;
+  bottom: 100px;
+  right: 25px;
+  background: rgba(0, 0, 0, 0.3);
+  border-radius: 20px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
