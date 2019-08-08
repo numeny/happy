@@ -62,12 +62,26 @@ $page-background-color: #FFF;
   width: 100%;
   display: flex;
   flex-direction: colume;
+  justify-content: center;
+  align-items: center;
   flex-wrap: nowrap;
 }
 
 .rh-one-desc-bednum {
-  width: 100%;
   font-size: 26px;
+  flex: 1;
+}
+
+.rh-one-desc-favorite {
+  flex: 1;
+  text-align: center;
+}
+
+.rh-one-desc-property {
+  flex: 1;
+  font-size: 26px;
+  text-align: center;
+  margin-right: 30px;
 }
 
 .rhlist-total-rh-count-title {
@@ -95,11 +109,4 @@ $page-background-color: #FFF;
   text-align : center;
   background-color: 0;
   border-bottom: 2px solid $item-border-color;
-}
-
-.rh-one-desc-property {
-  width: 100%;
-  font-size: 26px;
-  text-align: right;
-  margin-right: 30px;
 }

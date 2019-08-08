@@ -1,5 +1,7 @@
 import Taro, { Component, Events, Config } from '@tarojs/taro'
 import { View, Text, Image, Input, Video, Button, Icon, Progress, Checkbox, Switch, Form, Slider, Picker, PickerView, PickerViewColumn, Swiper, SwiperItem, Navigator } from '@tarojs/components'
+import { AtIcon } from 'taro-ui'
+
 import './rhlist.scss'
 import namedPng from '@images/index/1.jpeg'
 import namedVideo from '@res/video/1.mp4'
@@ -40,6 +42,12 @@ export default class Rhlist extends Component {
     }
 
     return addedUrl
+  }
+
+  onFavorite = (e) => {
+  }
+
+  onUnfavorite = (e) => {
   }
 
   loadMoreData = (e) => {
@@ -136,6 +144,7 @@ export default class Rhlist extends Component {
                 <View className='rh-one-desc-bednum-container'>
                   <View className='rh-one-desc-bednum'>{rh.bednum_int}个床位</View>
                   <View className='rh-one-desc-property'><Text>{rh.factory_property}</Text></View>
+                  {rh.favorite ? <AtIcon className='rh-one-desc-favorite' value='heart-1' size='15' onClick={this.onUnfavorite} /> : <AtIcon className='rh-one-desc-favorite' value='heart' size='15' onClick={this.onFavorite} />}
                 </View>
               </View>
             </View>
