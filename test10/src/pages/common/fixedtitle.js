@@ -1,6 +1,8 @@
 import Taro, { Component, Events } from '@tarojs/taro'
 import { View, Text, Image, Input, Video, Button, Icon, Progress, Checkbox, Switch, Form, Slider, Picker, PickerView, PickerViewColumn, Swiper, SwiperItem, Navigator } from '@tarojs/components'
 
+import { AtIcon } from 'taro-ui'
+
 import "../../../node_modules/taro-ui/dist/style/components/icon.scss";
 
 import './fixedtitle.scss'
@@ -38,9 +40,9 @@ export default class FixedTitle extends Component {
   render () {
     return (
       <View className='ft-title'>
-        <View onClick={this.goBack} className='at-icon at-icon-chevron-left ft-back-icon'></View>
+        <AtIcon value='chevron-left' size='20' onClick={this.goBack} className='ft-back-icon'></AtIcon>
         <View className='ft-text'>{this.state.title}</View>
-        <View onClick={this.goHome} className='at-icon at-icon-home ft-home-icon'></View>
+        <AtIcon value='home' size='20' onClick={this.goHome} className='ft-home-icon'></AtIcon>
       </View>
     )
   }

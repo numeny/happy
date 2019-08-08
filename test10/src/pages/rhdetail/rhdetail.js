@@ -10,6 +10,7 @@ import { DEFAULT_IMG } from '../common/const'
 import { IMGS_ROOT_PATH } from '../common/const'
 import { NUM_TRANSFORM_RH_ID } from '../common/const'
 
+import FixedTitle from '../common/fixedtitle'
 import PageFooter from '../common/pagefooter'
 
 export default class Rhdetail extends Component {
@@ -263,9 +264,8 @@ export default class Rhdetail extends Component {
         )
     return (
       <View>
+      <FixedTitle title="养老院详情" />
       <View className="rhdetail-top-view-1">
-        <Video width='150px' height='190px' src={namedVideo} />
-        <Image src={namedPng} />
         {images_swiper}
         <View className="rh-name">
         {this.state.rhRecord.name}

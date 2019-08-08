@@ -1,4 +1,5 @@
 $ft-item-padding: 20px;
+$ft-icon-padding: 27px;
 $ft-bg-color: #FFF;
 $ft-font-size: 34px;
 $ft-item-height: 80px;
@@ -11,18 +12,20 @@ $ft-item-height: 80px;
   font-size: $ft-font-size;
   padding: $ft-item-padding 0px;
   background-color: $ft-bg-color;
+  border-bottom: 5px solid #EEE;
+  z-index: 99;
 }
 
 .ft-back-icon {
   /*position: fixed;*/
   top: 0px;
   left: 0px;
-  padding: $ft-item-padding;
+  padding: $ft-icon-padding;
 }
 
 .ft-home-icon {
   /*position: fixed;*/
-  padding: $ft-item-padding;
+  padding: $ft-icon-padding;
   top: 0px;
   right: 0px;
 }
