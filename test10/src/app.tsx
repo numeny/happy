@@ -27,6 +27,8 @@ class App extends Component {
       'pages/common/mywebview',
       'pages/common/pagefooter',
       'pages/aboutus/aboutus',
+      'pages/login/login',
+      'pages/login/register',
     ],
     window: {
       backgroundTextStyle: 'light',

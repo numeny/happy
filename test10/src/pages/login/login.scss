@@ -1,0 +1,47 @@
+.login-top-view {
+  font-size: 25px;
+  background-color: #EEE;
+}
+
+.login-top-view-1 {
+  margin: 30px;
+}
+
+.login-input-container {
+  background-color: #FFF;
+  border-radius: 15px;
+  padding: 5px 20px;
+}
+
+.login-input-username {
+  border-bottom: 3px solid #EEE;
+}
+
+.login-input-submit {
+  background-color: #FFF;
+  border-radius: 15px;
+  margin: 30px 0px 8px 0px;
+  padding: 5px 20px;
+  text-align: center;
+}
+
+.login-register-container {
+  display: flex;
+  flex-direction: colume;
+  flex-wrap: nowrap;
+  margin: 0px 25px;
+}
+
+.login-input-change-password {
+  text-align: left;
+  flex: 1;
+  font-size: 15px;
+  color: #00F;
+}
+
+.login-input-register {
+  text-align: right;
+  flex: 1;
+  font-size: 15px;
+  color: #00F;
+}

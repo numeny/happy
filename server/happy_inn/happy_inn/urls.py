@@ -14,6 +14,7 @@ from django.conf.urls import url
 from django.contrib import admin
 
 from . import rh_data
+from . import user_manager
 
 urlpatterns = [
     url(r'^admin/', admin.site.urls),
@@ -22,4 +23,6 @@ urlpatterns = [
     url(r'^get_rh_detail', rh_data.get_rh_detail),
     url(r'^show_rh_list', rh_data.show_rh_list),
     url(r'^arealist', rh_data.areaList),
+    url(r'^login', user_manager.login),
+    url(r'^registerUser', user_manager.registerUser),
 ]

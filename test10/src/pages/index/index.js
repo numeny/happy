@@ -1,6 +1,8 @@
 import Taro, { Component, Events, Config } from '@tarojs/taro'
 import { View, Text, Image, Input, Video, Button, Icon, Progress, Checkbox, Switch, Form, Slider, Picker, PickerView, PickerViewColumn, Swiper, SwiperItem, Navigator, ScrollView } from '@tarojs/components'
 
+import { AtIcon } from 'taro-ui'
+
 import "../../../node_modules/taro-ui/dist/style/components/icon.scss";
 
 import './index.scss'
@@ -315,6 +317,12 @@ export default class Index extends Component {
     })
   }
 
+  login = (e) => {
+    Taro.navigateTo({
+      url: '/pages/login/login',
+    })
+  }
+
   render () {
     const scrollStyle = {
       height: this.state.windowHeight,
@@ -331,14 +339,15 @@ export default class Index extends Component {
         <View className='top-title-top-container'>
           <View className='top-title-container'>
             <View>
-            <Text className='top-title-city' onClick={this.selectCitylist}>{this.state.currCity}</Text>
-            <View onClick={this.selectCitylist} className='at-icon at-icon-chevron-down'></View>
+              <Text className='top-title-city' onClick={this.selectCitylist}>{this.state.currCity}</Text>
+              <View onClick={this.selectCitylist} className='at-icon at-icon-chevron-down'></View>
             </View>
 
             <View className='rh-classify-search-box-container' onClick={this.searchRh}>
               <Input type='text' placeholder='找养老院' className='rh-classify-search-box' />
               <View className='at-icon at-icon-search rh-classify-search-icon'></View>
             </View>
+            <AtIcon value='user' size='28' onClick={this.login} className='login-icon' />
           </View>
           <View className='classify-title-container'>
               <Picker className='classify-title-item' mode='selector' range={this.state.selectorArea} onChange={this.onChangeArea}>
