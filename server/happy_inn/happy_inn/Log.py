@@ -1,8 +1,16 @@
 # -*- coding: utf-8 -*-
-from . import settings
+import os
+import sys
+
+sys.path.append("./")
+sys.path.append("../")
+
+# FIXME
+#from . import settings
 
 class Log:
-    DEBUG = settings.DEBUG
+    # DEBUG = settings.DEBUG
+    DEBUG = True
 
     @staticmethod
     def e(tag, message):

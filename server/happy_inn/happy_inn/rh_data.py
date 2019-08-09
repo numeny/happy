@@ -1,5 +1,6 @@
 # -*- coding: utf-8 -*-
 import json
+import os
 import sys
 
 from django.http import HttpResponse
@@ -9,6 +10,14 @@ from rh.models import rh
 
 sys.path.append("./")
 sys.path.append("../")
+
+# for mac os, FIXME
+sys.path.append(os.getcwd()+"/happy_inn/happy_inn/")
+sys.path.append(os.getcwd()+"/happy_inn/")
+sys.path.append("./happy_inn/happy_inn/")
+sys.path.append("./happy_inn/")
+sys.path.append("../happy_inn/")
+sys.path.append("../happy_inn/happy_inn/")
 
 # ErroCode_* .etc
 from rh_const import *
