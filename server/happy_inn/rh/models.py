@@ -1,6 +1,7 @@
 # -*- coding: utf-8 -*-
 from __future__ import unicode_literals
 
+from django.contrib.auth.models import AbstractUser
 from django.db import models
 
 # Create your models here.
@@ -49,3 +50,13 @@ class city(models.Model):
     privince = models.TextField()
     city = models.TextField()
     area = models.TextField()
+
+'''
+class User(AbstractUser):
+        rh_id = models.IntegerField(primary_key=True)
+        rh_password = models.TextField()
+        nickname = models.CharField(max_length=50, blank=True)
+
+        class Meta(AbstractUser.Meta):
+            pass
+'''

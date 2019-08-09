@@ -59,6 +59,12 @@ CORS_ALLOW_CREDENTIALS = True
 
 ROOT_URLCONF = 'happy_inn.urls'
 
+# START add
+# AUTH_USER_MODEL = 'django.contrib.auth.models.User'
+LANGUAGE_CODE = 'zh-hans'
+TIME_ZONE = 'Asia/Shanghai'
+# END add
+
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',

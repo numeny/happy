@@ -52,3 +52,11 @@ sql_mode=""
 ...
 bdg@bdg:~/downloads$ sudo service mysql restart
 
+
+1. 
+场景：当在models.py里增加 class User(AbstractUser)后执行
+命令：python manage.py migrate
+错误：ValueError: The field admin.LogEntry.user was declared with a lazy reference to 'rh.user', but app 'rh' doesn't provide model 'user'.
+解决方案：1) 删除rm happy_inn/rh/migrations/ -rf
+2) python manage.py makemigrations rh(应用名)
+3) python manage.py migrate

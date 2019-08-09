@@ -6,6 +6,7 @@ import "../../../node_modules/taro-ui/dist/style/components/icon.scss";
 import "../../../node_modules/taro-ui/dist/style/components/button.scss";
 
 import { SERVER_HOST } from '../common/const'
+import { CommonFunc } from '../common/errorcode'
 
 import './login.scss'
 import FixedTitle from '../common/fixedtitle'
@@ -61,8 +62,10 @@ export default class Login extends Component {
     Taro.request({
       url: SERVER_HOST + '/login?username=' + this.state.username + "&password=" + this.state.password,
       success: (res) => {
+        console.log("res.data:")
         console.log(res.data)
-        Taro.showToast({title: res.data})
+        Taro.showToast({title: String(res.data.return)})
+        Taro.showToast({title: CommonFunc.getErrorString(res.data.return)})
 
         this.setState({
         })

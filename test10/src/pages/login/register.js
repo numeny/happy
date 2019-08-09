@@ -6,6 +6,7 @@ import "../../../node_modules/taro-ui/dist/style/components/icon.scss";
 import "../../../node_modules/taro-ui/dist/style/components/button.scss";
 
 import { SERVER_HOST } from '../common/const'
+import { CommonFunc } from '../common/errorcode'
 
 import './register.scss'
 import FixedTitle from '../common/fixedtitle'
@@ -52,8 +53,12 @@ export default class Login extends Component {
   }
 
   checkPassword = (password, password2) =>  {
-    if (password.length == 0 || password2.length == 0) {
+    if (password.length == 0) {
       Taro.showToast({title: '请输入密码！'})
+      return false
+    }
+    if (password2.length == 0) {
+      Taro.showToast({title: '请再次输入密码！'})
       return false
     }
     if (password != password2) {
@@ -76,7 +81,8 @@ export default class Login extends Component {
       url: SERVER_HOST + '/registerUser?username=' + this.state.username + "&password=" + this.state.password,
       success: (res) => {
         console.log(res.data)
-        Taro.showToast({title: res.data})
+        Taro.showToast({title: String(res.data.return)})
+        Taro.showToast({title: CommonFunc.getErrorString(res.data.return)})
 
         this.setState({
         })
