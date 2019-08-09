@@ -24,8 +24,6 @@ class App extends Component {
       'pages/rhdetail/rhdetail',
       'pages/citylist/citylist',
       'pages/rhsearch/rhsearch',
-      'pages/common/mywebview',
-      'pages/common/pagefooter',
       'pages/aboutus/aboutus',
       'pages/login/login',
       'pages/login/register',

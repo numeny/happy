@@ -13,7 +13,7 @@ export default class FixedTitle extends Component {
   constructor(props) {
     super(props)
     this.state = {
-      title: this.props.title,
+      stateTitle: this.props.title,
     }
   }
 
@@ -33,7 +33,7 @@ export default class FixedTitle extends Component {
       return
     }
     this.setState({
-        title: nextProps.title,
+        stateTitle: nextProps.title,
     })
   }
 
@@ -41,7 +41,7 @@ export default class FixedTitle extends Component {
     return (
       <View className='ft-title'>
         <AtIcon value='chevron-left' size='20' onClick={this.goBack} className='ft-back-icon'></AtIcon>
-        <View className='ft-text'>{this.state.title}</View>
+        <View className='ft-text'>{this.state.stateTitle}</View>
         <AtIcon value='home' size='20' onClick={this.goHome} className='ft-home-icon'></AtIcon>
       </View>
     )

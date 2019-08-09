@@ -2,15 +2,14 @@ import Taro, { Component } from '@tarojs/taro'
 import { View, Text } from '@tarojs/components'
 
 import './pagefooter.scss'
-import { PAGE_FOOTER_MENU } from '../common/const'
-import { HOME_URL } from '../common/const'
+import { PAGE_FOOTER_MENU, HOME_URL } from '../common/const'
 
 export default class PageFooter extends Component {
 
   constructor(props) {
     super(props)
     this.state = {
-      showAboutMenu: (this.props.showAboutMenu != null && this.props.showAboutMenu == 'false' ? false : true) ,
+      stateShowAboutMenu: (this.props.showAboutMenu != null && this.props.showAboutMenu == 'false' ? false : true) ,
     }
   }
 
@@ -36,7 +35,7 @@ export default class PageFooter extends Component {
 
     return (
       <View className='pagefooter-top-view'>
-        {this.state.showAboutMenu && menuViews}
+        {this.state.stateShowAboutMenu && menuViews}
         <View className='copyright-container'>
           Copyright@老玩童 All Rights Reserved
         </View>

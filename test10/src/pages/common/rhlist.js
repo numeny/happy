@@ -6,9 +6,7 @@ import './rhlist.scss'
 import namedPng from '@images/index/1.jpeg'
 import namedVideo from '@res/video/1.mp4'
 
-import { SERVER_HOST } from '../common/const'
-import { DEFAULT_IMG } from '../common/const'
-import { ICON_IMG } from '../common/const'
+import { SERVER_HOST, DEFAULT_IMG, ICON_IMG } from '../common/const'
 
 export default class Rhlist extends Component {
 
@@ -17,10 +15,10 @@ export default class Rhlist extends Component {
     const DEFAULT_CURR_PAGE = 1
     this.state = {
       // input
-      searchCondition: (this.props.searchCondition != null) ? this.props.searchCondition : '',
+      stateSearchCondition: (this.props.searchCondition != null) ? this.props.searchCondition : '',
       currSearchRhNum: 0,
 
-      currCity: (this.props.currCity != null) ? this.props.currCity : '',
+      stateCurrCity: (this.props.currCity != null) ? this.props.currCity : '',
       currCityRhNum: 0,
 
       // internal state
@@ -31,8 +29,8 @@ export default class Rhlist extends Component {
   }
 
   componentWillMount() {
-    console.error("bdg-searchCondition: " + this.state.searchCondition)
-    this.requestData(this.state.searchCondition, this.DEFAULT_CURR_PAGE) // 1st page
+    console.error("bdg-searchCondition: " + this.state.stateSearchCondition)
+    this.requestData(this.state.stateSearchCondition, this.DEFAULT_CURR_PAGE) // 1st page
   }
 
   addedUrl = (searchCondition, requestPage) => {
@@ -51,7 +49,7 @@ export default class Rhlist extends Component {
   }
 
   loadMoreData = (e) => {
-    this.requestData(this.state.searchCondition, this.state.currPage + 1) // 1st page
+    this.requestData(this.state.stateSearchCondition, this.state.currPage + 1) // 1st page
   }
 
   requestData = (searchCondition, requestPage) => {
@@ -99,7 +97,7 @@ export default class Rhlist extends Component {
   }
 
   componentWillReceiveProps(nextProps) {
-    if (this.state.searchCondition == nextProps.searchCondition) {
+    if (this.state.stateSearchCondition == nextProps.searchCondition) {
       return
     }
 
@@ -109,8 +107,8 @@ export default class Rhlist extends Component {
         searchCondition,
         this.DEFAULT_CURR_PAGE) // 1st page
     this.setState({
-        searchCondition: searchCondition,
-        currCity: currCity,
+        stateSearchCondition: searchCondition,
+        stateCurrCity: currCity,
     })
   }
 
@@ -159,10 +157,10 @@ export default class Rhlist extends Component {
 
     return (
       <View>
-      {this.state.currCity.length != 0 ?
+      {this.state.stateCurrCity.length != 0 ?
       <View className='rhlist-total-rh-count-container'>
         <View className='rhlist-total-rh-count-title'>
-          {this.state.currCity}养老院
+          {this.state.stateCurrCity}养老院
         </View>
         <View className='rhlist-total-rh-count-content'>
           共计{this.state.currCityRhNum}家
