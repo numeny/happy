@@ -142,9 +142,9 @@ export default class Rhlist extends Component {
                 <View className='rh-one-desc-name'>{rh.name}</View>
                 <View className='rh-one-desc-address'>{rh.address}</View>
                 <View className='rh-one-desc-bednum-container'>
+                  {rh.favorite ? <AtIcon className='rh-one-desc-favorite' value='heart-1' size='15' onClick={this.onUnfavorite} /> : <AtIcon className='rh-one-desc-favorite' value='heart' size='15' onClick={this.onFavorite} />}
                   <View className='rh-one-desc-bednum'>{rh.bednum_int}个床位</View>
                   <View className='rh-one-desc-property'><Text>{rh.factory_property}</Text></View>
-                  {rh.favorite ? <AtIcon className='rh-one-desc-favorite' value='heart-1' size='15' onClick={this.onUnfavorite} /> : <AtIcon className='rh-one-desc-favorite' value='heart' size='15' onClick={this.onFavorite} />}
                 </View>
               </View>
             </View>
