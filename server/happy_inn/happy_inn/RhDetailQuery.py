@@ -33,7 +33,7 @@ class RhDetailQuery:
         if len(db) <= 0:
             response[RetCode_Key] = str(ErroCode_RhIdNoExist)
             return response
-        response[RetCode_Key] = str(ErroCode_Ok)
+        response[RetCode_Key] = str(ErrorCode_OK)
 
         # FIXME, should not query only one
         record = db[0]
