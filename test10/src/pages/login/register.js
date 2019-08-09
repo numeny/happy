@@ -15,7 +15,7 @@ import PageFooter from '../common/pagefooter'
 import namedVideo from '@res/video/1.mp4'
 import namedPng from '@images/index/1.jpeg'
 
-export default class Login extends Component {
+export default class Register extends Component {
 
   config: Config = {
     navigationBarTitleText: '注册新用户',
@@ -81,8 +81,8 @@ export default class Login extends Component {
       url: SERVER_HOST + '/registerUser?username=' + this.state.username + "&password=" + this.state.password,
       success: (res) => {
         console.log(res.data)
-        Taro.showToast({title: String(res.data.return)})
-        Taro.showToast({title: CommonFunc.getErrorString(res.data.return)})
+        Taro.showToast({title: String(res.data.ret)})
+        Taro.showToast({title: CommonFunc.getErrorString(res.data.ret)})
 
         this.setState({
         })
@@ -94,12 +94,6 @@ export default class Login extends Component {
       complete: () => {
         // Taro.showToast({title: "complete"})
       },
-    })
-  }
-
-  onRegister = (e) =>  {
-    Taro.navigateTo({
-      url: '/pages/login/register',
     })
   }
 
@@ -119,6 +113,9 @@ export default class Login extends Component {
           <Input type='password' placeholder='再次输入密码' onInput={this.onInputPasswordChange2} />
         </View>
         <View onClick={this.onSubmit} className='reg-input-submit'>注 册</View>
+        <View className='reg-register-container'>
+          <Text onClick={this.onChangePassword} className='reg-input-change-password'>忘记密码</Text>
+        </View>
       </View>
       <PageFooter />
       </View>

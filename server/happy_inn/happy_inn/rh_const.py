@@ -1,18 +1,23 @@
 # -*- coding: utf-8 -*-
-RetCode_Key = 'return'
+
+# error code
+RetCode_Key = 'ret'
 ErrorCode_OK = 0
 ErrorCode_UnknownError = -9999
 
 ErrorCode_RhIdNotInput = -1
 ErrorCode_RhIdNoExist = -2
 
-
+# error code for login/register
 ErrorCode_LoginUserName = -1000
 ErrorCode_LoginPassword = -1001
 ErrorCode_UserNotExisted = -1002
 ErrorCode_UserExisted = -1003
 ErrorCode_PasswordWrong = -1004
 ErrorCode_FailToRegisterUser = -1005
+# error code for add/delete user's favorite resthome
+ErrorCode_ErrorUsername = -1100
+ErrorCode_ErrorRhid = -1101
 
 
 RH_NUM_PER_PAGE = 20

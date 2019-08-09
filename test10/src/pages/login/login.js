@@ -64,8 +64,8 @@ export default class Login extends Component {
       success: (res) => {
         console.log("res.data:")
         console.log(res.data)
-        Taro.showToast({title: String(res.data.return)})
-        Taro.showToast({title: CommonFunc.getErrorString(res.data.return)})
+        Taro.showToast({title: String(res.data.ret)})
+        Taro.showToast({title: CommonFunc.getErrorString(res.data.ret)})
 
         this.setState({
         })

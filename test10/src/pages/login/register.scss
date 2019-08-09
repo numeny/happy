@@ -24,3 +24,18 @@
   padding: 5px 20px;
   text-align: center;
 }
+
+.reg-register-container {
+  display: flex;
+  flex-direction: colume;
+  flex-wrap: nowrap;
+  margin: 0px 25px;
+}
+
+.reg-input-change-password {
+  text-align: left;
+  flex: 1;
+  font-size: 15px;
+  color: #00F;
+}
+
