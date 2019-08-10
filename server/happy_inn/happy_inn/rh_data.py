@@ -130,4 +130,10 @@ def areaList(request):
     if area_list is None:
         area_list = []
 
-    return JsonResponse(area_list)
+    # for python3.0
+    area_list_1 = []
+    for elem in area_list:
+        area_list_1.append(elem)
+
+    return JsonResponse(area_list_1)
+    # return JsonResponse(area_list)

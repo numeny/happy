@@ -7,6 +7,7 @@ from rh.models import city
 sys.path.append("./")
 sys.path.append("../")
 
+#from . import Log
 from Log import *
 # ErroCode_* .etc
 
@@ -26,12 +27,12 @@ class AreaQuery:
                 print("city's field is null. [%s] [%s] [%s]"\
                     % (r['privince'].encode('utf-8'), r['city'].encode('utf-8'), r['area'].encode('utf-8')))
                 continue;
-            if not g_area_map.has_key(r['privince']):
+            if 'privince' not in g_area_map:
                 privince_map = {}
                 g_area_map.setdefault(r['privince'], privince_map)
             privince_map = g_area_map.get(r['privince'])
 
-            if not privince_map.has_key(r['city']):
+            if 'city' not in privince_map:
                 city_list = []
                 privince_map.setdefault(r['city'], city_list)
             city_list = privince_map.get(r['city'])
@@ -46,7 +47,8 @@ class AreaQuery:
         if privince is None or len(privince) == 0:
             return g_area_map.keys()
 
-        if not g_area_map.has_key(privince):
+
+        if privince not in g_area_map:
             #print("Error: area map has no privince[%s]" % privince)
             return []
 
@@ -54,7 +56,8 @@ class AreaQuery:
         if city is None or len(city) == 0:
             return privince_map.keys()
 
-        if not privince_map.has_key(city):
+        if city not in privince_map:
             #print("Error: area map has no privince[%s] city[%s] " % (privince, city))
             return []
+
         return privince_map.get(city)

@@ -1,9 +1,9 @@
 #!/usr/bin/python
 # -*- coding: UTF-8 -*-
 from Log import *
+from rh_const import *
 
-IMG_SERVER_HOST = "http://10.129.192.204"
-IMGS_ROOT_PATH = IMG_SERVER_HOST + "/images"
+IMGS_ROOT_PATH = IMG_SERVER_HOST + '/' + IMGS_PATH
 
 class DbUtils:
     LOGTAT = "DbUtils"

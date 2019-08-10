@@ -17,6 +17,6 @@ ErrorCode_FailToRegisterUser = -1005
 
 RH_NUM_PER_PAGE = 20
 
-IMG_SERVER_HOST="http://10.129.192.204"
+IMG_SERVER_HOST="http://127.0.0.1"
 IMGS_PATH="images"
 DEFAULT_IMG = "default.jpg"
