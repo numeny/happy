@@ -210,9 +210,9 @@ export default class Citylist extends Component {
             </Text>
              }
             <View className="button-container">
-            <AtButton onClick={this.onButtonClicked.bind(this, 1)} className="button" size='small' type='secondary'>重置</AtButton>
-            <AtButton onClick={this.onButtonClicked.bind(this, 2)} className="button" size='small' type='secondary'>取消</AtButton>
-            <AtButton onClick={this.onButtonClicked.bind(this, 3)} className="button" size='small' type='primary'>确定</AtButton>
+              <View onClick={this.onButtonClicked.bind(this, 1)} className="button reset-button"><Text>重 置</Text></View>
+              <View onClick={this.onButtonClicked.bind(this, 2)} className="button cancel-button"><Text>取 消</Text></View>
+              <View onClick={this.onButtonClicked.bind(this, 3)} className="button confirm-button"><Text>确 定</Text></View>
             </View>
           </View>
           {cityItems}
