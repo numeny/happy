@@ -66,9 +66,6 @@ export default class Login extends Component {
         console.log(res.data)
         Taro.showToast({title: String(res.data.ret)})
         Taro.showToast({title: CommonFunc.getErrorString(res.data.ret)})
-
-        this.setState({
-        })
       },
       fail: (error) => {
         console.error('bdg-error')
@@ -77,6 +74,7 @@ export default class Login extends Component {
       complete: () => {
         // Taro.showToast({title: "complete"})
       },
+      credentials: 'include',
     })
   }
 

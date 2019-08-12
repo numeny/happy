@@ -32,9 +32,6 @@ default_img = "/static/images/default.jpg"
 LOGTAG = "RhData"
 
 def login(request):
-    '''
-    return JsonResponse("hello")
-    '''
     response = {}
     if "username" not in request.GET or request.GET["username"] == '':
         response[RetCode_Key] = ErrorCode_LoginUserName
@@ -66,6 +63,9 @@ def login(request):
         return JsonResponse(response)
 
     response[RetCode_Key] = ErrorCode_OK
+
+    request.session['user_id'] = user.id
+
     return JsonResponse(response)
 
 def registerUser(request):
