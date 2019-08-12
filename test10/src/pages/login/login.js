@@ -97,8 +97,14 @@ export default class Login extends Component {
       <FixedTitle title="用户登录" />
       <View className="login-top-view-1">
         <View className='login-input-container'>
-          <Input type='text' placeholder='请输入手机号码' className='login-input-username' onInput={this.onInputUserNameChange} />
-          <Input type='password' placeholder='输入密码' onInput={this.onInputPasswordChange} />
+          <View className='login-input-container-1'>
+            <View className='user-icon'/>
+            <Input type='text' placeholder='请输入手机号码' className='login-input-username' onInput={this.onInputUserNameChange} />
+          </View>
+          <View className='login-input-container-1'>
+            <View className='passwd-icon'/>
+            <Input type='password' placeholder='请输入密码' onInput={this.onInputPasswordChange} />
+          </View>
         </View>
         <View onClick={this.onSubmit} className='login-input-submit'>登 录</View>
         <View className='login-register-container'>
