@@ -32,7 +32,8 @@ const config = {
     '@res': path.resolve(__dirname, '..', 'res'),
     '@src': path.resolve(__dirname, '..'),
     '@common': path.resolve(__dirname, '../pages/common'),
-    '@images': path.resolve(__dirname, '..', 'res/images')
+    '@images': path.resolve(__dirname, '..', 'res/images'),
+    '@util': path.resolve(__dirname, '..', 'src/util'),
   },
   copy: {
     options: {

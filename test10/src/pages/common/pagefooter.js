@@ -2,7 +2,7 @@ import Taro, { Component } from '@tarojs/taro'
 import { View, Text } from '@tarojs/components'
 
 import './pagefooter.scss'
-import { PAGE_FOOTER_MENU, HOME_URL } from '../common/const'
+import { PAGE_FOOTER_MENU, HOME_URL } from '@util/const'
 
 export default class PageFooter extends Component {
 

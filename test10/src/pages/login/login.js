@@ -5,7 +5,7 @@ import { AtButton } from 'taro-ui'
 import "../../../node_modules/taro-ui/dist/style/components/icon.scss";
 import "../../../node_modules/taro-ui/dist/style/components/button.scss";
 
-import { SERVER_HOST } from '../common/const'
+import { SERVER_HOST } from '@util/const'
 import { CommonFunc } from '../common/errorcode'
 
 import './login.scss'
@@ -66,6 +66,8 @@ export default class Login extends Component {
         console.log(res.data)
         Taro.showToast({title: String(res.data.ret)})
         Taro.showToast({title: CommonFunc.getErrorString(res.data.ret)})
+
+        Taro.navigateBack();
       },
       fail: (error) => {
         console.error('bdg-error')

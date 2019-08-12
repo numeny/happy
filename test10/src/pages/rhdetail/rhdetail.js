@@ -5,7 +5,7 @@ import './rhdetail.scss'
 
 import namedVideo from '@res/video/1.mp4'
 import namedPng from '@images/index/1.jpeg'
-import { SERVER_HOST, DEFAULT_IMG, IMGS_ROOT_PATH, NUM_TRANSFORM_RH_ID } from '../common/const'
+import { SERVER_HOST, DEFAULT_IMG, IMGS_ROOT_PATH, NUM_TRANSFORM_RH_ID } from '@util/const'
 
 import FixedTitle from '../common/fixedtitle'
 import PageFooter from '../common/pagefooter'

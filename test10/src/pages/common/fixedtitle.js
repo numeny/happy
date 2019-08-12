@@ -6,7 +6,7 @@ import { AtIcon } from 'taro-ui'
 import "../../../node_modules/taro-ui/dist/style/components/icon.scss";
 
 import './fixedtitle.scss'
-import { HOME_URL } from '../common/const'
+import { HOME_URL } from '@util/const'
 
 export default class FixedTitle extends Component {
 

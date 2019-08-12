@@ -9,7 +9,7 @@ import './index.scss'
 import namedPng from '@images/index/1.jpeg'
 import namedVideo from '@res/video/1.mp4'
 
-import { SERVER_HOST, DEFAULT_IMG, ICON_IMG } from '../common/const'
+import { SERVER_HOST, DEFAULT_IMG, ICON_IMG } from '@util/const'
 
 import PageFooter from '../common/pagefooter'
 import Rhlist from '../common/rhlist'

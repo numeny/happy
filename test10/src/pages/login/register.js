@@ -5,7 +5,7 @@ import { AtButton } from 'taro-ui'
 import "../../../node_modules/taro-ui/dist/style/components/icon.scss";
 import "../../../node_modules/taro-ui/dist/style/components/button.scss";
 
-import { SERVER_HOST } from '../common/const'
+import { SERVER_HOST } from '@util/const'
 import { CommonFunc } from '../common/errorcode'
 
 import './register.scss'
