@@ -6,7 +6,7 @@ import "../../../node_modules/taro-ui/dist/style/components/icon.scss";
 import "../../../node_modules/taro-ui/dist/style/components/button.scss";
 
 import { SERVER_HOST } from '@util/const'
-import { CommonFunc } from '../common/errorcode'
+import { CommonFunc } from '@util/common_func'
 
 import './register.scss'
 import FixedTitle from '../common/fixedtitle'
