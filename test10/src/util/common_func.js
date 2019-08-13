@@ -70,6 +70,14 @@ export const CommonFunc = {
   },
 
   logout: function() {
+    Taro.request({
+        url: SERVER_HOST + '/logout',
+        credentials: 'include', // request with cookies etc.
+    }).then({
+    }).catch(error => {
+      console.error('cant logout on server!')
+    })
+
     const promise = new Promise(function(resolve, reject) {
       Taro.removeStorage({ key: STORAGE_KEY_LOGIN })
         .then(res => {

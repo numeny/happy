@@ -2,14 +2,9 @@
 import json
 import sys
 
-from django.http import HttpResponse
 from django.contrib.auth import authenticate
 from json_response import JsonResponse
  
-from rh.models import rh
-
-
-
 from django.contrib.auth.models import User
 #from rh.models import User
 from django.core.exceptions import ObjectDoesNotExist
@@ -20,16 +15,10 @@ sys.path.append("../")
 
 # ErroCode_* .etc
 from rh_const import *
-
-from QueryParam import *
-from RhDetailQuery import *
-from RhListQuery import *
-from AreaQuery import *
-
 from settings import *
+from Log import *
 
-default_img = "/static/images/default.jpg"
-LOGTAG = "RhData"
+LOGTAG = 'user_manager'
 
 def login(request):
     response = {}
@@ -43,8 +32,8 @@ def login(request):
     username = request.GET["username"]
     password = request.GET["password"]
 
-    print(username)
-    print(password)
+    Log.d(LOGTAG, 'username: ' + username)
+    Log.d(LOGTAG, 'password: ' + username)
 
     try:
         user = User.objects.get(username=username)
@@ -71,7 +60,9 @@ def login(request):
     return JsonResponse(response)
 
 def logout(request):
-    pass
+    Log.d('logout')
+    request.session.clear()
+    return JsonResponse({RetCode_Key, ErrorCode_OK})
 
 def registerUser(request):
     '''
@@ -88,8 +79,8 @@ def registerUser(request):
     username = request.GET["username"]
     password = request.GET["password"]
 
-    print(username)
-    print(password)
+    Log.d('username: ' + username)
+    Log.d('password: ' + username)
 
     try:
         user = User.objects.get(username=username)
