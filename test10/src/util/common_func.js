@@ -1,5 +1,7 @@
 import Taro from '@tarojs/taro';
 
+import { SERVER_HOST, STORAGE_KEY_LOGIN, STORAGE_VALUE_LOGIN_SUCCESS, STORAGE_KEY_USER_NAME, STORAGE_KEY_USER_ID } from './const'
+
 const ErrorCode_OK = 0
 const ErrorCode_UnknownError = -9999
 const ErrorCode_RhIdNotInput = -1
@@ -38,5 +40,96 @@ export const CommonFunc = {
 
   isLoginSuccess: function(error_id) {
     return ErrorCode_OK == error_id
+  },
+
+  isLogined: function() {
+    const promise = new Promise(function(resolve, reject) {
+      Taro.getStorage({ key: STORAGE_KEY_LOGIN })
+        .then((res) => {
+            Taro.getStorage({ key: STORAGE_KEY_USER_NAME })
+              .then(res3 => {
+                console.log("isLogined, getStorage(STORAGE_KEY_USER_NAME): " + res3.data)
+                if (resolve != null) {
+                  resolve({username: res3.data})
+                }
+              })
+        // }).then(res1 => {
+        // console.log('isLogined, success, res1: ' + res1)
+        }).catch(error => {
+            console.log(error)
+            if (reject != null) {
+              reject(new Error('not login'))
+            }
+        })
+    })
+    return promise
+  },
+
+  logout: function() {
+    const promise = new Promise(function(resolve, reject) {
+      Taro.removeStorage({ key: STORAGE_KEY_LOGIN })
+        .then(res => {
+          console.log('logout-STORAGE_KEY_LOGIN, success')
+          return Taro.removeStorage({ key: STORAGE_KEY_USER_NAME })
+        }).then(
+          res => {
+            console.log('logout-STORAGE_KEY_USER_NAME, success, res: ' + res)
+            resolve()
+          },
+          error => {
+            console.log('logout-STORAGE_KEY_USER_NAME, error: ' + error)
+            reject()
+        })
+    })
+    return promise
+  },
+
+  login: function(username, password) {
+    let logined_userid = 0
+    const promise = new Promise(function(resolve, reject) {
+      Taro.request({
+        url: SERVER_HOST + '/login?username=' + username + "&password=" + password,
+        credentials: 'include', // request with cookies etc.
+      }).then(
+        res => {
+          // FIXME, delete it
+          // if (DEBUG)
+          Taro.showToast({title: CommonFunc.getErrorString(res.data.ret)})
+          if (!CommonFunc.isLoginSuccess(res.data.ret)) {
+            Taro.showToast({title: CommonFunc.getErrorString(res.data.ret)})
+            return
+          }
+          logined_userid = res.data.userid
+          console.log('login, will setStorage(STORAGE_KEY_LOGIN), username: ' + username + ', userid: ' + logined_userid)
+          // login success
+          return Taro.setStorage({
+              key: STORAGE_KEY_LOGIN,
+              data: STORAGE_VALUE_LOGIN_SUCCESS,
+          })
+      }).then(res => {
+        console.log('login, will setStorage(STORAGE_KEY_USER_NAME), res: ' + res + ', username: ' + username)
+        return Taro.setStorage({
+            key: STORAGE_KEY_USER_NAME,
+            data: username,
+            // data: '',
+        })
+      }).then(res => {
+        console.log('login, will setStorage(STORAGE_KEY_USER_ID), res: ' + res + ', userid: ' + logined_userid)
+        return Taro.setStorage({
+            key: STORAGE_KEY_USER_ID,
+            data: logined_userid,
+        })
+      }).then(
+        res => {
+          console.log('login, success, will navigateBack')
+          resolve(res)
+          Taro.navigateBack();
+      }).catch(error => {
+          reject(error)
+          console.log('login, error: ' + error)
+      })
+    })
+
+    return promise
   },
 }

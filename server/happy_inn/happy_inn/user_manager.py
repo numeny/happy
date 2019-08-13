@@ -64,10 +64,14 @@ def login(request):
 
     response[RetCode_Key] = ErrorCode_OK
     response[RetUserName_Key] = username
+    response[RetUserId_Key] = user.id
 
     request.session['user_id'] = user.id
 
     return JsonResponse(response)
+
+def logout(request):
+    pass
 
 def registerUser(request):
     '''

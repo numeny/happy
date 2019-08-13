@@ -26,7 +26,29 @@ export default class Login extends Component {
     this.state = {
       username: '',
       password: '',
+
+      isLogin: false,
+      loginedUsername: '',
     }
+  }
+
+  componentWillMount() {
+    CommonFunc.isLogined().then(
+      res => {
+        console.log('componentDidShow-1, success, res: ' + res.username)
+        this.setState({
+          isLogin: true,
+          loginedUsername: res.username,
+        })
+      },
+      error => {
+        console.log('componentDidShow-2, fail, error: ' + error)
+        this.setState({
+            isLogin: false,
+            loginedUsername: '',
+        })
+      },
+    )
   }
 
   onInputUserNameChange = (e) =>  {
@@ -58,7 +80,15 @@ export default class Login extends Component {
       Taro.showToast({title: '请输入密码！'})
       return
     }
-
+    CommonFunc.login(this.state.username, this.state.password).then(
+        res => {
+          console.log('onSubmit, success: ' + res)
+        },
+        error => {
+          console.log('onSubmit, error: ' + error)
+        }
+    )
+    /*
     Taro.request({
       url: SERVER_HOST + '/login?username=' + this.state.username + "&password=" + this.state.password,
       success: (res) => {
@@ -92,6 +122,22 @@ export default class Login extends Component {
       },
       credentials: 'include',
     })
+    */
+  }
+
+  onExit = (e) =>  {
+    CommonFunc.logout().then(
+      res => {
+        console.log('onExit-1, success, res: ')
+        this.setState({
+          isLogin: false,
+          loginedUsername: '',
+        })
+      },
+      error => {
+        console.log('onExit-2, fail, error: ' + error)
+      },
+    )
   }
 
   onRegister = (e) =>  {
@@ -109,6 +155,7 @@ export default class Login extends Component {
       <Video width='150px' height='190px' src={namedVideo} />
       <Image src={namedPng} />
       <FixedTitle title="用户登录" />
+      {!this.state.isLogin &&
       <View className="login-top-view-1">
         <View className='login-input-container'>
           <View className='login-input-container-1'>
@@ -126,6 +173,13 @@ export default class Login extends Component {
           <Text onClick={this.onRegister} className='login-input-register'>注册新用户</Text>
         </View>
       </View>
+      }
+      {this.state.isLogin &&
+        <View>
+          <View>当前登录用户: {this.state.loginedUsername}</View>
+          <View onClick={this.onExit} className='login-input-submit'>退 出</View>
+        </View>
+      }
       <PageFooter />
       </View>
     )

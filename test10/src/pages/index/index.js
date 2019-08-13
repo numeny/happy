@@ -11,6 +11,8 @@ import namedVideo from '@res/video/1.mp4'
 
 import { SERVER_HOST, STORAGE_KEY_LOGIN, STORAGE_KEY_USER_NAME } from '../../util/const'
 
+import { CommonFunc } from '../../util/common_func'
+
 import PageFooter from '../common/pagefooter'
 import Rhlist from '../common/rhlist'
 
@@ -104,6 +106,7 @@ export default class Index extends Component {
   }
 
   componentDidShow = () => {
+    /*
     Taro.getStorage({ key: STORAGE_KEY_LOGIN })
       .then((res) => {
           Taro.getStorage({ key: STORAGE_KEY_USER_NAME })
@@ -122,6 +125,22 @@ export default class Index extends Component {
               isLogin: false
           })
       })
+      */
+    CommonFunc.isLogined().then(
+      res => {
+        console.log('componentDidShow-1, success, res: ' + res.userName)
+        this.setState({
+          isLogin: true,
+          userName: res.username,
+        })
+      },
+      error => {
+        console.log('componentDidShow-2, fail, error: ' + error)
+        this.setState({
+            isLogin: false,
+        })
+      },
+    )
   }
 
   requestAreaRhData = (selectorAreaCheckedIdx) => {
