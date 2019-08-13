@@ -42,24 +42,28 @@ export const CommonFunc = {
     return ErrorCode_OK == error_id
   },
 
-  isLogined: function() {
+  // success: userid and username
+  getLoginedInfo: function() {
+    let logined_username = ''
     const promise = new Promise(function(resolve, reject) {
       Taro.getStorage({ key: STORAGE_KEY_LOGIN })
-        .then((res) => {
-            Taro.getStorage({ key: STORAGE_KEY_USER_NAME })
-              .then(res3 => {
-                console.log("isLogined, getStorage(STORAGE_KEY_USER_NAME): " + res3.data)
-                if (resolve != null) {
-                  resolve({username: res3.data})
-                }
-              })
-        // }).then(res1 => {
-        // console.log('isLogined, success, res1: ' + res1)
+        .then(res => {
+          console.log('getLoginedInfo-getStorage(STORAGE_KEY_LOGIN), success')
+          return Taro.getStorage({ key: STORAGE_KEY_USER_NAME })
+        }).then(res => {
+          console.log('getLoginedInfo-getStorage(STORAGE_KEY_USER_NAME), success, username: ' + res.data)
+          logined_username = res.data
+          return Taro.getStorage({ key: STORAGE_KEY_USER_ID })
+        }).then(res => {
+          console.log('getLoginedInfo-getStorage(STORAGE_KEY_USER_NAME), success, userid: ' + res.data)
+          resolve({
+            userid: res.data,
+            username: logined_username,
+          })
         }).catch(error => {
-            console.log(error)
-            if (reject != null) {
-              reject(new Error('not login'))
-            }
+          console.log('getLoginedInfo-, error: ' + error)
+          console.log(error)
+          reject(error)
         })
     })
     return promise
@@ -69,16 +73,14 @@ export const CommonFunc = {
     const promise = new Promise(function(resolve, reject) {
       Taro.removeStorage({ key: STORAGE_KEY_LOGIN })
         .then(res => {
-          console.log('logout-STORAGE_KEY_LOGIN, success')
+          console.log('logout-remove-STORAGE_KEY_LOGIN, success')
           return Taro.removeStorage({ key: STORAGE_KEY_USER_NAME })
-        }).then(
-          res => {
-            console.log('logout-STORAGE_KEY_USER_NAME, success, res: ' + res)
-            resolve()
-          },
-          error => {
-            console.log('logout-STORAGE_KEY_USER_NAME, error: ' + error)
-            reject()
+        }).then(res => {
+          console.log('logout-remove-STORAGE_KEY_USER_NAME, success, res: ' + res)
+          resolve({res: 'logout success'})
+        }).catch(error => {
+          console.log('logout-remove-STORAGE_KEY_USER_NAME, error: ' + error)
+          reject({error: 'logout error'})
         })
     })
     return promise
@@ -92,12 +94,14 @@ export const CommonFunc = {
         credentials: 'include', // request with cookies etc.
       }).then(
         res => {
+          console.log('login, Taro.request success ret: ' + CommonFunc.getErrorString(res.data.ret))
           // FIXME, delete it
           // if (DEBUG)
           Taro.showToast({title: CommonFunc.getErrorString(res.data.ret)})
           if (!CommonFunc.isLoginSuccess(res.data.ret)) {
-            Taro.showToast({title: CommonFunc.getErrorString(res.data.ret)})
-            return
+            let error_msg = CommonFunc.getErrorString(res.data.ret)
+            Taro.showToast({title: error_msg})
+            return Promise.reject({error: error_msg})
           }
           logined_userid = res.data.userid
           console.log('login, will setStorage(STORAGE_KEY_LOGIN), username: ' + username + ', userid: ' + logined_userid)

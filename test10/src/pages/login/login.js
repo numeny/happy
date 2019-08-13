@@ -33,22 +33,19 @@ export default class Login extends Component {
   }
 
   componentWillMount() {
-    CommonFunc.isLogined().then(
-      res => {
-        console.log('componentDidShow-1, success, res: ' + res.username)
-        this.setState({
-          isLogin: true,
-          loginedUsername: res.username,
-        })
-      },
-      error => {
-        console.log('componentDidShow-2, fail, error: ' + error)
-        this.setState({
-            isLogin: false,
-            loginedUsername: '',
-        })
-      },
-    )
+    CommonFunc.getLoginedInfo().then(res => {
+      console.log('componentWillMount-1, success, res: ' + res.username)
+      this.setState({
+        isLogin: true,
+        loginedUsername: res.username,
+      })
+    }).catch(error => {
+      console.log('componentWillMount-2, fail, error: ' + error)
+      this.setState({
+        isLogin: false,
+        loginedUsername: '',
+      })
+    })
   }
 
   onInputUserNameChange = (e) =>  {

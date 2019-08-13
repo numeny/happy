@@ -64,7 +64,6 @@ export default class Index extends Component {
       scrollTop: 0,
 
       isLogin: false,
-      userName: '',
     }
   }
 
@@ -106,41 +105,17 @@ export default class Index extends Component {
   }
 
   componentDidShow = () => {
-    /*
-    Taro.getStorage({ key: STORAGE_KEY_LOGIN })
-      .then((res) => {
-          Taro.getStorage({ key: STORAGE_KEY_USER_NAME })
-            .then(res3 => {
-              console.log("getStorage(STORAGE_KEY_USER_NAME): " + res3.data)
-              this.setState({
-                  isLogin: true,
-                  userName: res3.data,
-              })
-            })
-      }).then(res1 => {
-        console.log('componentDidShow, success, res1: ' + res1)
-      }).catch(error => {
-          console.log(error)
-          this.setState({
-              isLogin: false
-          })
+    CommonFunc.getLoginedInfo().then(res => {
+      console.log('componentDidShow-1, success, res: ' + res.username)
+      this.setState({
+        isLogin: true,
       })
-      */
-    CommonFunc.isLogined().then(
-      res => {
-        console.log('componentDidShow-1, success, res: ' + res.userName)
-        this.setState({
-          isLogin: true,
-          userName: res.username,
-        })
-      },
-      error => {
-        console.log('componentDidShow-2, fail, error: ' + error)
-        this.setState({
-            isLogin: false,
-        })
-      },
-    )
+    }).catch(error => {
+      console.log('componentDidShow-2, fail, error: ' + error)
+      this.setState({
+        isLogin: false,
+      })
+    })
   }
 
   requestAreaRhData = (selectorAreaCheckedIdx) => {
