@@ -9,7 +9,7 @@ import './index.scss'
 import namedPng from '@images/index/1.jpeg'
 import namedVideo from '@res/video/1.mp4'
 
-import { SERVER_HOST, DEFAULT_IMG, ICON_IMG } from '@util/const'
+import { SERVER_HOST, STORAGE_KEY_LOGIN, STORAGE_KEY_USER_NAME } from '../../util/const'
 
 import PageFooter from '../common/pagefooter'
 import Rhlist from '../common/rhlist'
@@ -60,6 +60,9 @@ export default class Index extends Component {
       windowHeight: Taro.getSystemInfoSync().windowHeight,
       showIconOfToTop: false,
       scrollTop: 0,
+
+      isLogin: false,
+      userName: '',
     }
   }
 
@@ -98,6 +101,27 @@ export default class Index extends Component {
         this.state.selectorTypeCheckedIdx, this.state.selectorPropCheckedIdx,
         currProv, currCity,
         this.state.selectorAreaCheckedIdx) // 1st page
+  }
+
+  componentDidShow = () => {
+    Taro.getStorage({ key: STORAGE_KEY_LOGIN })
+      .then((res) => {
+          Taro.getStorage({ key: STORAGE_KEY_USER_NAME })
+            .then(res3 => {
+              console.log("getStorage(STORAGE_KEY_USER_NAME): " + res3.data)
+              this.setState({
+                  isLogin: true,
+                  userName: res3.data,
+              })
+            })
+      }).then(res1 => {
+        console.log('componentDidShow, success, res1: ' + res1)
+      }).catch(error => {
+          console.log(error)
+          this.setState({
+              isLogin: false
+          })
+      })
   }
 
   requestAreaRhData = (selectorAreaCheckedIdx) => {
@@ -325,6 +349,9 @@ export default class Index extends Component {
     const scrollStyle = {
       height: this.state.windowHeight,
     }
+
+    const loginIconStyle = this.state.isLogin ? '#8AC007' : '#000'
+
     return (
       <ScrollView
         className='top-container'
@@ -345,7 +372,8 @@ export default class Index extends Component {
               <Input type='text' placeholder='找养老院' className='rh-classify-search-box' />
               <View className='at-icon at-icon-search rh-classify-search-icon'></View>
             </View>
-            <AtIcon value='user' size='28' onClick={this.login} className='login-icon' />
+            <AtIcon value='user' size='28' onClick={this.login} className='login-icon' color={loginIconStyle} />
+
           </View>
           <View className='classify-title-container'>
               <Picker className='classify-title-item' mode='selector' range={this.state.selectorArea} onChange={this.onChangeArea}>

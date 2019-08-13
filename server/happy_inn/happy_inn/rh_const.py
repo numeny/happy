@@ -2,6 +2,8 @@
 
 # error code
 RetCode_Key = 'ret'
+RetUserName_Key = 'username'
+
 ErrorCode_OK = 0
 ErrorCode_UnknownError = -9999
 

@@ -63,6 +63,7 @@ def login(request):
         return JsonResponse(response)
 
     response[RetCode_Key] = ErrorCode_OK
+    response[RetUserName_Key] = username
 
     request.session['user_id'] = user.id
 

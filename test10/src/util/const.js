@@ -15,3 +15,7 @@ export const PAGE_FOOTER_MENU = ['首页', '关于我们', '联系我们', '机�
 export const ABOUT_US_MENU = ['关于我们', '联系我们', '机构入驻', '网站声明']
 
 export const HOME_URL = '/pages/index/index'
+
+export const STORAGE_KEY_LOGIN = 'login'
+export const STORAGE_VALUE_LOGIN_SUCCESS = 'Y'
+export const STORAGE_KEY_USER_NAME = 'username'

@@ -35,4 +35,8 @@ export const CommonFunc = {
     }
     return ErrorStringArray[ErrorCode_UnknownError][1]
   },
+
+  isLoginSuccess: function(error_id) {
+    return ErrorCode_OK == error_id
+  },
 }

@@ -5,8 +5,8 @@ import { AtButton } from 'taro-ui'
 import "../../../node_modules/taro-ui/dist/style/components/icon.scss";
 import "../../../node_modules/taro-ui/dist/style/components/button.scss";
 
-import { SERVER_HOST } from '@util/const'
-import { CommonFunc } from '../common/errorcode'
+import { SERVER_HOST, STORAGE_KEY_LOGIN, STORAGE_VALUE_LOGIN_SUCCESS, STORAGE_KEY_USER_NAME } from '../../util/const'
+import { CommonFunc, ErrorCode_OK } from '../common/errorcode'
 
 import './login.scss'
 import FixedTitle from '../common/fixedtitle'
@@ -62,12 +62,26 @@ export default class Login extends Component {
     Taro.request({
       url: SERVER_HOST + '/login?username=' + this.state.username + "&password=" + this.state.password,
       success: (res) => {
-        console.log("res.data:")
-        console.log(res.data)
-        Taro.showToast({title: String(res.data.ret)})
         Taro.showToast({title: CommonFunc.getErrorString(res.data.ret)})
+        if (!CommonFunc.isLoginSuccess(res.data.ret)) {
+          return
+        }
+        // login success
+        Taro.setStorage({
+            key: STORAGE_KEY_LOGIN,
+            data: STORAGE_VALUE_LOGIN_SUCCESS,
+          }).then(res1 => {
+            Taro.setStorage({
+                key: STORAGE_KEY_USER_NAME,
+                data: res.data.username,
+            })
+          }).then(res2 => {
+              console.log('onSubmit, will navigateBack, res2: ' + res2)
+              Taro.navigateBack();
+          }).catch(error => {
+              console.log(error)
+          })
 
-        Taro.navigateBack();
       },
       fail: (error) => {
         console.error('bdg-error')
