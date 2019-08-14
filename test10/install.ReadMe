@@ -1,0 +1,23 @@
+1. ReferenceError: Unknown plugin "transform-decorators-legacy" specified
+npm install babel-plugin-transform-decorators-legacy
+
+1. ReferenceError: Unknown plugin "transform-class-properties" specified
+npm install babel-plugin-transform-class-properties
+
+1. ReferenceError: Unknown plugin "transform-object-rest-spread"
+npm install babel-plugin-transform-object-rest-spread
+
+1. Error: Couldn't find preset "env" relative to directory
+npm install babel-preset-env
+
+1. Module not found: Can't resolve '@tarojs/components'
+npm install @tarojs/components
+
+1. Module not found: Can't resolve '@tarojs/router'
+npm install @tarojs/router
+
+1. Module not found: Can't resolve '@tarojs/taro-h5'
+npm install @tarojs/taro-h5
+
+1. Module not found: Can't resolve '@tarojs/taro'
+npm install @tarojs/taro
