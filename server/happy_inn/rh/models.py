@@ -51,6 +51,10 @@ class city(models.Model):
     city = models.TextField()
     area = models.TextField()
 
+class favorite(models.Model):
+    uid = models.IntegerField(default=0)
+    rhId = models.IntegerField(default=0)
+
 '''
 class User(AbstractUser):
         rh_id = models.IntegerField(primary_key=True)

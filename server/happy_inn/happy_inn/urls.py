@@ -23,7 +23,9 @@ urlpatterns = [
     url(r'^get_rh_detail', rh_data.get_rh_detail),
     url(r'^show_rh_list', rh_data.show_rh_list),
     url(r'^arealist', rh_data.areaList),
+
     url(r'^login', user_manager.login),
     url(r'^logout', user_manager.logout),
     url(r'^registerUser', user_manager.registerUser),
+    url(r'^cf', user_manager.changeUserFavoriteRh),
 ]

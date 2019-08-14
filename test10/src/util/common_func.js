@@ -2,30 +2,7 @@ import Taro from '@tarojs/taro';
 
 import { SERVER_HOST, STORAGE_KEY_LOGIN, STORAGE_VALUE_LOGIN_SUCCESS, STORAGE_KEY_USER_NAME, STORAGE_KEY_USER_ID } from './const'
 
-const ErrorCode_OK = 0
-const ErrorCode_UnknownError = -9999
-const ErrorCode_RhIdNotInput = -1
-const ErrorCode_RhIdNoExist = -2
-
-const ErrorCode_LoginUserName = -1000
-const ErrorCode_LoginPassword = -1001
-const ErrorCode_UserNotExisted = -1002
-const ErrorCode_UserExisted = -1003
-const ErrorCode_PasswordWrong = -1004
-const ErrorCode_FailToRegisterUser = -1005
-
-const ErrorStringArray = [
-  [ErrorCode_OK, '成功!'],
-  [ErrorCode_UnknownError, '错误！'],
-  [ErrorCode_RhIdNotInput, '没有输入养老院ID！'],
-  [ErrorCode_RhIdNoExist, '养老院不存在'],
-  [ErrorCode_LoginUserName, '登录用户名错误！'],
-  [ErrorCode_LoginPassword, '登录密码错误！'],
-  [ErrorCode_UserNotExisted, '此用户不存在！'],
-  [ErrorCode_UserExisted, '此用户已经存在！'],
-  [ErrorCode_PasswordWrong, '密码错误！'],
-  [ErrorCode_FailToRegisterUser, '注册用户失败！'],
-]
+import { ErrorStringArray, ErrorCode_UnknownError, ErrorCode_OK, ErrorCode_NotLogin } from './error_code'
 
 export const CommonFunc = {
 
@@ -38,7 +15,7 @@ export const CommonFunc = {
     return ErrorStringArray[ErrorCode_UnknownError][1]
   },
 
-  isLoginSuccess: function(error_id) {
+  isSuccess: function(error_id) {
     return ErrorCode_OK == error_id
   },
 
@@ -63,7 +40,7 @@ export const CommonFunc = {
         }).catch(error => {
           console.log('getLoginedInfo-, error: ' + error)
           console.log(error)
-          reject(error)
+          reject({errorCode: ErrorCode_NotLogin})
         })
     })
     return promise
@@ -76,6 +53,7 @@ export const CommonFunc = {
     }).then({
     }).catch(error => {
       console.error('cant logout on server!')
+      console.error(error)
     })
 
     const promise = new Promise(function(resolve, reject) {
@@ -106,7 +84,7 @@ export const CommonFunc = {
           // FIXME, delete it
           // if (DEBUG)
           Taro.showToast({title: CommonFunc.getErrorString(res.data.ret)})
-          if (!CommonFunc.isLoginSuccess(res.data.ret)) {
+          if (!CommonFunc.isSuccess(res.data.ret)) {
             let error_msg = CommonFunc.getErrorString(res.data.ret)
             Taro.showToast({title: error_msg})
             return Promise.reject({error: error_msg})
@@ -143,5 +121,51 @@ export const CommonFunc = {
     })
 
     return promise
+  },
+
+  changeFav: function(userId, rhId, isFavorite) {
+    let logined_userid = 0
+    const promise = new Promise(function(resolve, reject) {
+      Taro.request({
+        url: SERVER_HOST + '/cf?uid=' + userId + '&rhId=' + rhId + '&f=' + (isFavorite?'t':'f'),
+        credentials: 'include', // request with cookies etc.
+        // method: 'POST',
+      }).then(res => {
+          if (!CommonFunc.isSuccess(res.data.ret)) {
+            let error_msg = CommonFunc.getErrorString(res.data.ret)
+            Taro.showToast({title: error_msg})
+            return Promise.reject({error: error_msg})
+          }
+          console.log('changeFav, success, will navigateBack')
+          resolve(res)
+      }).catch(error => {
+          console.log('changeFav, error: ' + error)
+          reject(error)
+      })
+    })
+
+    return promise
+  },
+
+  onFavorite: function(rhId, isFavorite, e) {
+    e.stopPropagation()
+    CommonFunc.getLoginedInfo().then(res => {
+      console.log('onFavorite-1, success, res: ' + res.username)
+      return CommonFunc.changeFav(res.userid, rhId, isFavorite)
+    }).then(res => {
+      console.log('onFavorite-2, res: ' + res)
+    }).catch(error => {
+      console.log('onFavorite-3, fail, error: ' + error)
+      if (error.errorCode == ErrorCode_NotLogin) {
+        openLoginPage()
+        return
+      }
+    })
+  },
+
+  openLoginPage: function() {
+    Taro.navigateTo({
+      url: '/pages/login/login',
+    })
   },
 }

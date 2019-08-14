@@ -9,6 +9,7 @@ from django.contrib.auth.models import User
 #from rh.models import User
 from django.core.exceptions import ObjectDoesNotExist
 
+from rh.models import favorite
 
 sys.path.append("./")
 sys.path.append("../")
@@ -17,6 +18,7 @@ sys.path.append("../")
 from rh_const import *
 from settings import *
 from Log import *
+from Utils import *
 
 LOGTAG = 'user_manager'
 
@@ -60,9 +62,9 @@ def login(request):
     return JsonResponse(response)
 
 def logout(request):
-    Log.d('logout')
+    Log.d(LOGTAG, 'logout')
     request.session.clear()
-    return JsonResponse({RetCode_Key, ErrorCode_OK})
+    return JsonResponse({RetCode_Key: ErrorCode_OK})
 
 def registerUser(request):
     '''
@@ -79,8 +81,8 @@ def registerUser(request):
     username = request.GET["username"]
     password = request.GET["password"]
 
-    Log.d('username: ' + username)
-    Log.d('password: ' + username)
+    Log.d(LOGTAG, 'username: ' + username)
+    Log.d(LOGTAG, 'password: ' + username)
 
     try:
         user = User.objects.get(username=username)
@@ -94,4 +96,50 @@ def registerUser(request):
         return JsonResponse(response)
 
     response[RetCode_Key] = ErrorCode_UserExisted
+    return JsonResponse(response)
+
+def changeUserFavoriteRh(request):
+    Log.d(LOGTAG, 'changeUserFavoriteRh')
+    response = {}
+    if "uid" not in request.GET or request.GET["uid"] == '':
+        response[RetCode_Key] = ErrorCode_Param
+        return JsonResponse(response)
+    if "rhId" not in request.GET or request.GET["rhId"] == '':
+        response[RetCode_Key] = ErrorCode_Param
+        return JsonResponse(response)
+    if "f" not in request.GET or request.GET["f"] == '':
+        response[RetCode_Key] = ErrorCode_Param
+        return JsonResponse(response)
+
+    uid = request.GET["uid"]
+    f = (request.GET["f"] == 't')
+    rhId = request.GET["rhId"]
+    try:
+        rhId = Utils.get_rh_id_from_web_content(int(rhId))
+    except ValueError:
+        pass
+
+    Log.d(LOGTAG, 'uid: ' + uid)
+    Log.d(LOGTAG, 'rhId: ' + str(rhId))
+    Log.d(LOGTAG, 'favorite: ' + request.GET["f"])
+    favRecord = None
+    try:
+        favRecord = favorite.objects.get(uid=uid, rhId=rhId)
+    except ObjectDoesNotExist:
+        Log.d(LOGTAG, 'changeUserFavoriteRh, ObjectDoesNotExist')
+        pass
+
+    if favRecord is None:
+        Log.d(LOGTAG, 'changeUserFavoriteRh, favRecord is None')
+        if f:
+            Log.d(LOGTAG, 'changeUserFavoriteRh, f')
+            newFavRecord = favorite(uid=uid, rhId=rhId)
+            newFavRecord.save()
+    else:
+        Log.d(LOGTAG, 'changeUserFavoriteRh, favRecord is not None')
+        if not f:
+            Log.d(LOGTAG, 'changeUserFavoriteRh, not f')
+            favRecord.delete()
+
+    response[RetCode_Key] = ErrorCode_OK
     return JsonResponse(response)

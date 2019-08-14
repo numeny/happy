@@ -6,7 +6,9 @@ import './rhlist.scss'
 import namedPng from '@images/index/1.jpeg'
 import namedVideo from '@res/video/1.mp4'
 
-import { SERVER_HOST, DEFAULT_IMG, ICON_IMG } from '@util/const'
+import { SERVER_HOST, DEFAULT_IMG } from '@util/const'
+import { CommonFunc } from '@util/common_func'
+import { ErrorCode_NotLogin } from '@util/error_code'
 
 export default class Rhlist extends Component {
 
@@ -42,10 +44,8 @@ export default class Rhlist extends Component {
     return addedUrl
   }
 
-  onFavorite = (e) => {
-  }
-
-  onUnfavorite = (e) => {
+  onFavorite = (rhId, isFavorite, e) => {
+    CommonFunc.onFavorite(rhId, isFavorite, e)
   }
 
   loadMoreData = (e) => {
@@ -140,7 +140,7 @@ export default class Rhlist extends Component {
                 <View className='rh-one-desc-name'>{rh.name}</View>
                 <View className='rh-one-desc-address'>{rh.address}</View>
                 <View className='rh-one-desc-bednum-container'>
-                  {rh.favorite ? <AtIcon className='rh-one-desc-favorite' value='heart-1' size='15' onClick={this.onUnfavorite} /> : <AtIcon className='rh-one-desc-favorite' value='heart' size='15' onClick={this.onFavorite} />}
+                  {rh.favorite ? <AtIcon className='rh-one-desc-favorite' value='heart-1' size='15' onClick={this.onFavorite.bind(this, rh.id, false)} /> : <AtIcon className='rh-one-desc-favorite' value='heart' size='15' onClick={this.onFavorite.bind(this, rh.id, true)} />}
                   <View className='rh-one-desc-bednum'>{rh.bednum_int}个床位</View>
                   <View className='rh-one-desc-property'><Text>{rh.factory_property}</Text></View>
                 </View>

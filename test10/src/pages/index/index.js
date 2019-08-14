@@ -334,9 +334,7 @@ export default class Index extends Component {
   }
 
   login = (e) => {
-    Taro.navigateTo({
-      url: '/pages/login/login',
-    })
+    CommonFunc.openLoginPage()
   }
 
   render () {

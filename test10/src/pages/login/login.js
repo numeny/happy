@@ -85,41 +85,6 @@ export default class Login extends Component {
           console.log('onSubmit, error: ' + error)
         }
     )
-    /*
-    Taro.request({
-      url: SERVER_HOST + '/login?username=' + this.state.username + "&password=" + this.state.password,
-      success: (res) => {
-        Taro.showToast({title: CommonFunc.getErrorString(res.data.ret)})
-        if (!CommonFunc.isLoginSuccess(res.data.ret)) {
-          return
-        }
-        // login success
-        Taro.setStorage({
-            key: STORAGE_KEY_LOGIN,
-            data: STORAGE_VALUE_LOGIN_SUCCESS,
-          }).then(res1 => {
-            Taro.setStorage({
-                key: STORAGE_KEY_USER_NAME,
-                data: res.data.username,
-            })
-          }).then(res2 => {
-              console.log('onSubmit, will navigateBack, res2: ' + res2)
-              Taro.navigateBack();
-          }).catch(error => {
-              console.log(error)
-          })
-
-      },
-      fail: (error) => {
-        console.error('bdg-error')
-        Taro.showToast({title: 'fail'})
-      },
-      complete: () => {
-        // Taro.showToast({title: "complete"})
-      },
-      credentials: 'include',
-    })
-    */
   }
 
   onExit = (e) =>  {
@@ -143,7 +108,7 @@ export default class Login extends Component {
     })
   }
 
-  onChangePassword = (e) =>  {
+  onChangePassword = (e) => {
   }
 
   render () {
