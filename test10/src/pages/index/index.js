@@ -1,6 +1,9 @@
 import Taro, { Component, Events, Config } from '@tarojs/taro'
 import { View, Text, Image, Input, Video, Button, Icon, Progress, Checkbox, Switch, Form, Slider, Picker, PickerView, PickerViewColumn, Swiper, SwiperItem, Navigator, ScrollView } from '@tarojs/components'
 
+import { connect } from '@tarojs/redux'
+import { add, minus, asyncAdd } from '../../actions/counter'
+
 import { AtIcon } from 'taro-ui'
 
 import "../../../node_modules/taro-ui/dist/style/components/icon.scss";
@@ -15,6 +18,20 @@ import { CommonFunc } from '../../util/common_func'
 
 import PageFooter from '../common/pagefooter'
 import Rhlist from '../common/rhlist'
+
+@connect(({ counter }) => ({
+  counter
+}), (dispatch) => ({
+  add () {
+    dispatch(add())
+  },
+  dec () {
+    dispatch(minus())
+  },
+  asyncAdd () {
+    dispatch(asyncAdd())
+  }
+}))
 
 export default class Index extends Component {
 
@@ -307,6 +324,9 @@ export default class Index extends Component {
     })
   }
 
+  clickImage = (e) => {
+  }
+
   selectCitylist = (e) => {
     Taro.navigateTo({
       url: '/pages/citylist/citylist?prov=' + this.state.currProv + '&city=' + this.state.currCity,
@@ -352,7 +372,11 @@ export default class Index extends Component {
         style={scrollStyle}
         onScroll={this.onScroll.bind(this)}>
         <Video width='150px' height='190px' src={namedVideo} />
-        <Image src={namedPng} width='150px' height='300px' />
+        <Image onClick={this.clickImage} src={namedPng} width='150px' height='300px' />
+        <Button className='add_btn' onClick={this.props.add}>+</Button>
+        <Button className='dec_btn' onClick={this.props.dec}>-</Button>
+        <Button className='dec_btn' onClick={this.props.asyncAdd}>async</Button>
+        <View>{this.props.counter.num}</View>
         <View className='top-title-top-container'>
           <View className='top-title-container'>
             <View>

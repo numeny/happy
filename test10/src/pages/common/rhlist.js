@@ -25,6 +25,7 @@ export default class Rhlist extends Component {
 
       // internal state
       rhList: [],
+      rhFavoriteList: [],
       currPage: this.DEFAULT_CURR_PAGE,
       isOnEnd: false,
     }
