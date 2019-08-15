@@ -79,3 +79,10 @@ class DbQuery:
         for record in records:
             ret_array.append(DbQuery.get_brief_colume_from_one_record(record))
         return ret_array
+
+    @staticmethod
+    def get_fav_list_from_records(records):
+        ret_array = []
+        for record in records:
+            ret_array.append(Utils.get_rh_id_from_db(record.rhId))
+        return ret_array

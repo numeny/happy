@@ -1,23 +1,27 @@
-import { ADD, MINUS } from '../constants/counter'
+import { UPDATE, ADD_FAV_LIST, DEL_FAV_LIST } from '../constants/counter'
 
 const INITIAL_STATE = {
-  num: 0
+  rhFavList: []
 }
 
 export default function counter (state = INITIAL_STATE, action) {
   switch (action.type) {
-    case ADD:
+    case UPDATE:
       return {
         ...state,
-        num: state.num + 1
+        rhFavList: action.rhFavList
       }
-    case MINUS:
+    case ADD_FAV_LIST:
       return {
         ...state,
-        num: state.num - 1
+        rhFavList: state.rhFavList.concat(action.rhFavList)
+      }
+    case DEL_FAV_LIST:
+      return {
+        ...state,
+        rhFavList: state.rhFavList.concat(action.rhFavList)
       }
     default:
       return state
   }
 }
-

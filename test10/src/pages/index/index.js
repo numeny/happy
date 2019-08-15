@@ -2,7 +2,7 @@ import Taro, { Component, Events, Config } from '@tarojs/taro'
 import { View, Text, Image, Input, Video, Button, Icon, Progress, Checkbox, Switch, Form, Slider, Picker, PickerView, PickerViewColumn, Swiper, SwiperItem, Navigator, ScrollView } from '@tarojs/components'
 
 import { connect } from '@tarojs/redux'
-import { add, minus, asyncAdd } from '../../actions/counter'
+import { update } from '../../actions/counter'
 
 import { AtIcon } from 'taro-ui'
 
@@ -19,18 +19,13 @@ import { CommonFunc } from '../../util/common_func'
 import PageFooter from '../common/pagefooter'
 import Rhlist from '../common/rhlist'
 
-@connect(({ counter }) => ({
-  counter
-}), (dispatch) => ({
-  add () {
-    dispatch(add())
+export const myRhFavList = ['index-1', 'index-2']
+@connect((state) => {
+  return { prop_counter: state.counter }
+}, (dispatch) => ({
+  update_1 () {
+    dispatch(update(myRhFavList))
   },
-  dec () {
-    dispatch(minus())
-  },
-  asyncAdd () {
-    dispatch(asyncAdd())
-  }
 }))
 
 export default class Index extends Component {
@@ -373,10 +368,8 @@ export default class Index extends Component {
         onScroll={this.onScroll.bind(this)}>
         <Video width='150px' height='190px' src={namedVideo} />
         <Image onClick={this.clickImage} src={namedPng} width='150px' height='300px' />
-        <Button className='add_btn' onClick={this.props.add}>+</Button>
-        <Button className='dec_btn' onClick={this.props.dec}>-</Button>
-        <Button className='dec_btn' onClick={this.props.asyncAdd}>async</Button>
-        <View>{this.props.counter.num}</View>
+        <Button className='dec_btn' onClick={this.props.update_1}>update</Button>
+
         <View className='top-title-top-container'>
           <View className='top-title-container'>
             <View>

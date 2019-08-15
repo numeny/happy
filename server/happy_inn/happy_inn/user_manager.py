@@ -8,6 +8,8 @@ from json_response import JsonResponse
 from django.contrib.auth.models import User
 #from rh.models import User
 from django.core.exceptions import ObjectDoesNotExist
+from django.core.exceptions import MultipleObjectsReturned
+from django.db.models import Q
 
 from rh.models import favorite
 
@@ -19,6 +21,7 @@ from rh_const import *
 from settings import *
 from Log import *
 from Utils import *
+from DbQuery import *
 
 LOGTAG = 'user_manager'
 
@@ -57,7 +60,7 @@ def login(request):
     response[RetUserName_Key] = username
     response[RetUserId_Key] = user.id
 
-    request.session['user_id'] = user.id
+    request.session[SESSION_KEY_UID] = user.id
 
     return JsonResponse(response)
 
@@ -101,9 +104,16 @@ def registerUser(request):
 def changeUserFavoriteRh(request):
     Log.d(LOGTAG, 'changeUserFavoriteRh')
     response = {}
+
+    if request.session.get(SESSION_KEY_UID, default=None) is None:
+        response[RetCode_Key] = ErrorCode_NotLogin
+        return JsonResponse(response)
+
+    '''
     if "uid" not in request.GET or request.GET["uid"] == '':
         response[RetCode_Key] = ErrorCode_Param
         return JsonResponse(response)
+    '''
     if "rhId" not in request.GET or request.GET["rhId"] == '':
         response[RetCode_Key] = ErrorCode_Param
         return JsonResponse(response)
@@ -111,15 +121,19 @@ def changeUserFavoriteRh(request):
         response[RetCode_Key] = ErrorCode_Param
         return JsonResponse(response)
 
-    uid = request.GET["uid"]
     f = (request.GET["f"] == 't')
     rhId = request.GET["rhId"]
+
+    uid = request.session[SESSION_KEY_UID]
+    '''
+    uid = request.GET["uid"]
     try:
         rhId = Utils.get_rh_id_from_web_content(int(rhId))
     except ValueError:
         pass
+    '''
 
-    Log.d(LOGTAG, 'uid: ' + uid)
+    Log.d(LOGTAG, 'uid: ' + str(uid))
     Log.d(LOGTAG, 'rhId: ' + str(rhId))
     Log.d(LOGTAG, 'favorite: ' + request.GET["f"])
     favRecord = None
@@ -143,3 +157,31 @@ def changeUserFavoriteRh(request):
 
     response[RetCode_Key] = ErrorCode_OK
     return JsonResponse(response)
+
+def getUserFavoriteList(request):
+    Log.d(LOGTAG, 'getUserFavoriteList')
+    response = {}
+    if request.session.get(SESSION_KEY_UID, default=None) is None:
+        response[RetCode_Key] = ErrorCode_NotLogin
+        return JsonResponse(response)
+
+    uid = request.session[SESSION_KEY_UID]
+    Log.d(LOGTAG, 'uid: ' + str(uid))
+
+
+
+    try:
+        favRecords = favorite.objects.filter(Q(uid=uid))
+    except ObjectDoesNotExist:
+        Log.d(LOGTAG, 'changeUserFavoriteRh, ObjectDoesNotExist')
+        response[RetCode_Key] = ErrorCode_NoData
+        return JsonResponse(response)
+    except MultipleObjectsReturned:
+        pass
+    
+
+    if favRecords is None:
+        response[RetCode_Key] = ErrorCode_NoData
+        return JsonResponse(response)
+
+    return JsonResponse(DbQuery.get_fav_list_from_records(favRecords))

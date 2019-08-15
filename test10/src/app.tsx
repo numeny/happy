@@ -13,6 +13,7 @@ import './app.scss'
 //   require('nerv-devtools')
 // }
 
+
 const store = configStore()
 
 class App extends Component {

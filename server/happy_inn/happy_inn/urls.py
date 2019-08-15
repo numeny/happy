@@ -28,4 +28,5 @@ urlpatterns = [
     url(r'^logout', user_manager.logout),
     url(r'^registerUser', user_manager.registerUser),
     url(r'^cf', user_manager.changeUserFavoriteRh),
+    url(r'^gfl', user_manager.getUserFavoriteList),
 ]

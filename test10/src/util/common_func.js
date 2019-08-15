@@ -1,4 +1,6 @@
 import Taro from '@tarojs/taro';
+import { update, addFavList } from '../actions/counter'
+// import { useDispatch } from '@tarojs/redux'
 
 import { SERVER_HOST, STORAGE_KEY_LOGIN, STORAGE_VALUE_LOGIN_SUCCESS, STORAGE_KEY_USER_NAME, STORAGE_KEY_USER_ID } from './const'
 
@@ -72,6 +74,20 @@ export const CommonFunc = {
     return promise
   },
 
+  updateLoginUserFavList: function() {
+    Taro.request({
+      url: SERVER_HOST + '/gfl',
+      credentials: 'include', // request with cookies etc.
+    }).then(res => {
+      console.error(res)
+      console.error(res.data)
+      // const dispatch = useDispatch()
+      // dispatch(update(res.data))
+    }).catch(error => {
+        console.log('updateLoginUserFavList, error: ' + error)
+    })
+  },
+
   login: function(username, password) {
     let logined_userid = 0
     const promise = new Promise(function(resolve, reject) {
@@ -89,6 +105,7 @@ export const CommonFunc = {
             Taro.showToast({title: error_msg})
             return Promise.reject({error: error_msg})
           }
+          CommonFunc.updateLoginUserFavList()
           logined_userid = res.data.userid
           console.log('login, will setStorage(STORAGE_KEY_LOGIN), username: ' + username + ', userid: ' + logined_userid)
           // login success
@@ -136,7 +153,7 @@ export const CommonFunc = {
             Taro.showToast({title: error_msg})
             return Promise.reject({error: error_msg})
           }
-          console.log('changeFav, success, will navigateBack')
+          console.log('changeFav, success')
           resolve(res)
       }).catch(error => {
           console.log('changeFav, error: ' + error)
@@ -149,18 +166,22 @@ export const CommonFunc = {
 
   onFavorite: function(rhId, isFavorite, e) {
     e.stopPropagation()
-    CommonFunc.getLoginedInfo().then(res => {
-      console.log('onFavorite-1, success, res: ' + res.username)
-      return CommonFunc.changeFav(res.userid, rhId, isFavorite)
-    }).then(res => {
-      console.log('onFavorite-2, res: ' + res)
-    }).catch(error => {
-      console.log('onFavorite-3, fail, error: ' + error)
-      if (error.errorCode == ErrorCode_NotLogin) {
-        openLoginPage()
-        return
-      }
+    const promise = new Promise(function(resolve, reject) {
+      CommonFunc.getLoginedInfo().then(res => {
+        console.log('onFavorite-1, success, res: ' + res.username)
+        return CommonFunc.changeFav(res.userid, rhId, isFavorite)
+      }).then(res => {
+        console.log('onFavorite-2, res: ' + res)
+        resolve(res)
+      }).catch(error => {
+        console.log('onFavorite-3, fail, error: ' + error)
+        if (error.errorCode == ErrorCode_NotLogin) {
+          CommonFunc.openLoginPage()
+        }
+        reject(error)
+      })
     })
+    return promise
   },
 
   openLoginPage: function() {

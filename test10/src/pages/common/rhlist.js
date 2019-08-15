@@ -10,6 +10,24 @@ import { SERVER_HOST, DEFAULT_IMG } from '@util/const'
 import { CommonFunc } from '@util/common_func'
 import { ErrorCode_NotLogin } from '@util/error_code'
 
+import { connect } from '@tarojs/redux'
+import { update, addFavList } from '../../actions/counter'
+
+export const myRhFavList = [1, 2]
+export const myRhFavList_1 = [8, 9]
+
+@connect((state) => {
+  return { prop_counter: state.counter }
+}, (dispatch) => ({
+  update_1 () {
+    dispatch(update(myRhFavList))
+  },
+  addFavList_1 (rhId) {
+    console.error('addFavList_1, surccess, ' + rhId)
+    dispatch(addFavList([rhId]))
+  },
+}))
+
 export default class Rhlist extends Component {
 
   constructor(props) {
@@ -46,7 +64,12 @@ export default class Rhlist extends Component {
   }
 
   onFavorite = (rhId, isFavorite, e) => {
-    CommonFunc.onFavorite(rhId, isFavorite, e)
+    CommonFunc.onFavorite(rhId, isFavorite, e).then(res => {
+      console.error('onFavorite, surccess')
+      this.props.addFavList_1(rhId)
+    }).catch(error => {
+      console.error(error)
+    })
   }
 
   loadMoreData = (e) => {
@@ -127,6 +150,14 @@ export default class Rhlist extends Component {
 
     // Taro.showNavigationBarLoading();
   }
+  isRhInFavList = (rhId) => {
+    for (var idx = 0; idx < this.props.prop_counter.rhFavList.length; idx++) {
+      if (rhId == this.props.prop_counter.rhFavList[idx]) {
+        return true
+      }
+    }
+    return false
+  }
 
   render () {
     const { rhList } = this.state
@@ -141,7 +172,7 @@ export default class Rhlist extends Component {
                 <View className='rh-one-desc-name'>{rh.name}</View>
                 <View className='rh-one-desc-address'>{rh.address}</View>
                 <View className='rh-one-desc-bednum-container'>
-                  {rh.favorite ? <AtIcon className='rh-one-desc-favorite' value='heart-1' size='15' onClick={this.onFavorite.bind(this, rh.id, false)} /> : <AtIcon className='rh-one-desc-favorite' value='heart' size='15' onClick={this.onFavorite.bind(this, rh.id, true)} />}
+                  {this.isRhInFavList(rh.id) ? <AtIcon className='rh-one-desc-favorite' value='heart-2' color= '#F00' size='15' onClick={this.onFavorite.bind(this, rh.id, false)} /> : <AtIcon className='rh-one-desc-favorite' value='heart' size='15' onClick={this.onFavorite.bind(this, rh.id, true)} />}
                   <View className='rh-one-desc-bednum'>{rh.bednum_int}个床位</View>
                   <View className='rh-one-desc-property'><Text>{rh.factory_property}</Text></View>
                 </View>
@@ -158,6 +189,11 @@ export default class Rhlist extends Component {
 
     return (
       <View>
+        <Button className='dec_btn' onClick={this.props.update_1}>update</Button>
+
+        {this.props.prop_counter.rhFavList.map((rh) =>
+          <View>{rh}</View>
+        )}
       {this.state.stateCurrCity.length != 0 ?
       <View className='rhlist-total-rh-count-container'>
         <View className='rhlist-total-rh-count-title'>

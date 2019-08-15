@@ -1,24 +1,26 @@
 import {
-  ADD,
-  MINUS
+  UPDATE,
+  ADD_FAV_LIST,
+  DEL_FAV_LIST,
 } from '../constants/counter'
 
-export const add = () => {
+export const update = (rhFavList) => {
   return {
-    type: ADD
-  }
-}
-export const minus = () => {
-  return {
-    type: MINUS
+    type: UPDATE, 
+    rhFavList: rhFavList
   }
 }
 
-// 异步的 action
-export function asyncAdd () {
-  return dispatch => {
-    setTimeout(() => {
-      dispatch(add())
-    }, 2000)
+export const addFavList = (rhFavList) => {
+  return {
+    type: ADD_FAV_LIST, 
+    rhFavList: rhFavList
+  }
+}
+
+export const delFavList = (rhFavList) => {
+  return {
+    type: DEL_FAV_LIST,
+    rhFavList: rhFavList
   }
 }
