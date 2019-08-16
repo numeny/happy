@@ -75,21 +75,28 @@ export const CommonFunc = {
   },
 
   updateLoginUserFavList: function() {
-    Taro.request({
-      url: SERVER_HOST + '/gfl',
-      credentials: 'include', // request with cookies etc.
-    }).then(res => {
-      console.error(res)
-      console.error(res.data)
-      // const dispatch = useDispatch()
-      // dispatch(update(res.data))
-    }).catch(error => {
+    const promise = new Promise(function(resolve, reject) {
+      Taro.request({
+        url: SERVER_HOST + '/gfl',
+        credentials: 'include', // request with cookies etc.
+      }).then(res => {
+        console.log('updateLoginUserFavList, res.data: ' + res.data)
+        resolve(res)
+        // const dispatch = useDispatch()
+        // dispatch(update(res.data))
+      }).catch(error => {
         console.log('updateLoginUserFavList, error: ' + error)
+        // resolve even if error
+        resolve([])
+      })
     })
+
+    return promise
   },
 
   login: function(username, password) {
     let logined_userid = 0
+    let rhFavList = []
     const promise = new Promise(function(resolve, reject) {
       Taro.request({
         url: SERVER_HOST + '/login?username=' + username + "&password=" + password,
@@ -105,23 +112,29 @@ export const CommonFunc = {
             Taro.showToast({title: error_msg})
             return Promise.reject({error: error_msg})
           }
-          CommonFunc.updateLoginUserFavList()
           logined_userid = res.data.userid
-          console.log('login, will setStorage(STORAGE_KEY_LOGIN), username: ' + username + ', userid: ' + logined_userid)
+      }).then(res => {
+          return CommonFunc.updateLoginUserFavList()
+      }).then(res => {
+          rhFavList = res.data
+          console.log('login, will setStorage(STORAGE_KEY_LOGIN), username: '
+              + username + ', userid: ' + logined_userid)
           // login success
           return Taro.setStorage({
               key: STORAGE_KEY_LOGIN,
               data: STORAGE_VALUE_LOGIN_SUCCESS,
           })
       }).then(res => {
-        console.log('login, will setStorage(STORAGE_KEY_USER_NAME), res: ' + res + ', username: ' + username)
+        console.log('login, will setStorage(STORAGE_KEY_USER_NAME), res: '
+            + res + ', username: ' + username)
         return Taro.setStorage({
             key: STORAGE_KEY_USER_NAME,
             data: username,
             // data: '',
         })
       }).then(res => {
-        console.log('login, will setStorage(STORAGE_KEY_USER_ID), res: ' + res + ', userid: ' + logined_userid)
+        console.log('login, will setStorage(STORAGE_KEY_USER_ID), res: '
+            + res + ', userid: ' + logined_userid)
         return Taro.setStorage({
             key: STORAGE_KEY_USER_ID,
             data: logined_userid,
@@ -129,7 +142,9 @@ export const CommonFunc = {
       }).then(
         res => {
           console.log('login, success, will navigateBack')
-          resolve(res)
+          // FIMXE, rhFavList is forward to login page to update rhFavList on redux's store
+          // because h5 do not support dispatch's calling from user
+          resolve(rhFavList)
           Taro.navigateBack();
       }).catch(error => {
           reject(error)

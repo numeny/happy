@@ -123,7 +123,7 @@ def changeUserFavoriteRh(request):
 
     f = (request.GET["f"] == 't')
     rhId = request.GET["rhId"]
-
+    rhId = Utils.get_rh_id_from_web_content(int(rhId))
     uid = request.session[SESSION_KEY_UID]
     '''
     uid = request.GET["uid"]

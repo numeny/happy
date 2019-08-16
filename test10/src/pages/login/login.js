@@ -15,6 +15,15 @@ import PageFooter from '../common/pagefooter'
 import namedVideo from '@res/video/1.mp4'
 import namedPng from '@images/index/1.jpeg'
 
+import { connect } from '@tarojs/redux'
+import { update, addFavList } from '../../actions/counter'
+
+@connect((state) => {}, (dispatch) => ({
+  updateProp (rhFavList) {
+    dispatch(update(rhFavList))
+  },
+}))
+
 export default class Login extends Component {
 
   config: Config = {
@@ -77,29 +86,28 @@ export default class Login extends Component {
       Taro.showToast({title: '请输入密码！'})
       return
     }
-    CommonFunc.login(this.state.username, this.state.password).then(
-        res => {
+    CommonFunc.login(this.state.username, this.state.password)
+      .then(res => {
           console.log('onSubmit, success: ' + res)
-        },
-        error => {
+          // set user fav list, res is rhFavList
+          this.props.updateProp(res)
+      }).catch(error => {
           console.log('onSubmit, error: ' + error)
-        }
-    )
+      })
   }
 
   onExit = (e) =>  {
-    CommonFunc.logout().then(
-      res => {
+    CommonFunc.logout().then(res => {
         console.log('onExit-1, success, res: ')
+        // clear user fav list
+        this.props.updateProp([])
         this.setState({
           isLogin: false,
           loginedUsername: '',
         })
-      },
-      error => {
+      }).catch(error => {
         console.log('onExit-2, fail, error: ' + error)
-      },
-    )
+      })
   }
 
   onRegister = (e) =>  {
@@ -122,7 +130,8 @@ export default class Login extends Component {
         <View className='login-input-container'>
           <View className='login-input-container-1'>
             <View className='user-icon'/>
-            <Input type='text' placeholder='请输入手机号码' className='login-input-username' onInput={this.onInputUserNameChange} />
+            <Input type='text' placeholder='请输入手机号码'
+              className='login-input-username' onInput={this.onInputUserNameChange} />
           </View>
           <View className='login-input-container-1'>
             <View className='passwd-icon'/>

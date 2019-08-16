@@ -1,9 +1,6 @@
 import Taro, { Component, Events, Config } from '@tarojs/taro'
 import { View, Text, Image, Input, Video, Button, Icon, Progress, Checkbox, Switch, Form, Slider, Picker, PickerView, PickerViewColumn, Swiper, SwiperItem, Navigator, ScrollView } from '@tarojs/components'
 
-import { connect } from '@tarojs/redux'
-import { update } from '../../actions/counter'
-
 import { AtIcon } from 'taro-ui'
 
 import "../../../node_modules/taro-ui/dist/style/components/icon.scss";
@@ -18,15 +15,6 @@ import { CommonFunc } from '../../util/common_func'
 
 import PageFooter from '../common/pagefooter'
 import Rhlist from '../common/rhlist'
-
-export const myRhFavList = ['index-1', 'index-2']
-@connect((state) => {
-  return { prop_counter: state.counter }
-}, (dispatch) => ({
-  update_1 () {
-    dispatch(update(myRhFavList))
-  },
-}))
 
 export default class Index extends Component {
 
@@ -118,7 +106,8 @@ export default class Index extends Component {
 
   componentDidShow = () => {
     CommonFunc.getLoginedInfo().then(res => {
-      console.log('componentDidShow-1, success, res: ' + res.username)
+      console.log('componentDidShow-1, success, res: '
+          + res.username)
       this.setState({
         isLogin: true,
       })
@@ -368,8 +357,6 @@ export default class Index extends Component {
         onScroll={this.onScroll.bind(this)}>
         <Video width='150px' height='190px' src={namedVideo} />
         <Image onClick={this.clickImage} src={namedPng} width='150px' height='300px' />
-        <Button className='dec_btn' onClick={this.props.update_1}>update</Button>
-
         <View className='top-title-top-container'>
           <View className='top-title-container'>
             <View>
@@ -407,7 +394,8 @@ export default class Index extends Component {
               </Picker>
           </View>
         </View>
-        <Rhlist searchCondition={this.state.searchCondition} currCity={this.state.currCity} />
+        <Rhlist searchCondition={this.state.searchCondition}
+              currCity={this.state.currCity} isLogin={this.state.isLogin}/>
         {this.state.showIconOfToTop &&
         <View onClick={this.scrollToTop} className='fixed-to-top'>
             <View className='at-icon at-icon-chevron-up'>

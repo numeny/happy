@@ -11,20 +11,18 @@ import { CommonFunc } from '@util/common_func'
 import { ErrorCode_NotLogin } from '@util/error_code'
 
 import { connect } from '@tarojs/redux'
-import { update, addFavList } from '../../actions/counter'
-
-export const myRhFavList = [1, 2]
-export const myRhFavList_1 = [8, 9]
+import { update, addFavList, delFavList } from '../../actions/counter'
 
 @connect((state) => {
   return { prop_counter: state.counter }
 }, (dispatch) => ({
-  update_1 () {
-    dispatch(update(myRhFavList))
-  },
-  addFavList_1 (rhId) {
-    console.error('addFavList_1, surccess, ' + rhId)
+  addFavListProp (rhId) {
+    console.error('addFavList, surccess, ' + rhId)
     dispatch(addFavList([rhId]))
+  },
+  delFavListProp (rhId) {
+    console.error('delFavList, surccess, ' + rhId)
+    dispatch(delFavList([rhId]))
   },
 }))
 
@@ -66,8 +64,13 @@ export default class Rhlist extends Component {
   onFavorite = (rhId, isFavorite, e) => {
     CommonFunc.onFavorite(rhId, isFavorite, e).then(res => {
       console.error('onFavorite, surccess')
-      this.props.addFavList_1(rhId)
+      if (isFavorite) {
+        this.props.addFavListProp(rhId)
+      } else {
+        this.props.delFavListProp(rhId)
+      }
     }).catch(error => {
+      console.error('onFavorite, error')
       console.error(error)
     })
   }
@@ -189,11 +192,6 @@ export default class Rhlist extends Component {
 
     return (
       <View>
-        <Button className='dec_btn' onClick={this.props.update_1}>update</Button>
-
-        {this.props.prop_counter.rhFavList.map((rh) =>
-          <View>{rh}</View>
-        )}
       {this.state.stateCurrCity.length != 0 ?
       <View className='rhlist-total-rh-count-container'>
         <View className='rhlist-total-rh-count-title'>
