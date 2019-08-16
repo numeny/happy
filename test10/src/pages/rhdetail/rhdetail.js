@@ -15,7 +15,7 @@ export default class Rhdetail extends Component {
   constructor(props) {
     super(props)
     this.state = {
-      rhId : this.$router.params.rh_id,
+      rhId : parseInt(this.$router.params.rh_id),
       rhRecord : {},
       rhRecordHandled: {
         inst_charge_handled: [],
@@ -67,7 +67,7 @@ export default class Rhdetail extends Component {
     let images_handled_tmp = String(images).split(",")
 
     try {
-      const rhId = parseInt(this.state.rhId) - NUM_TRANSFORM_RH_ID
+      const rhId = this.state.rhId - NUM_TRANSFORM_RH_ID
       images_handled_tmp.forEach(
           function(value, index, array) {
           if (value != "") {
@@ -126,7 +126,7 @@ export default class Rhdetail extends Component {
     })
   }
 
-  componentDidMount () {
+  componentWillMount () {
     Taro.showToast({title: String(this.state.rhId)})
     Taro.request({
       url: SERVER_HOST + '/get_rh_detail?rhid=' + String(this.state.rhId),
