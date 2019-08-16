@@ -1,5 +1,6 @@
 import Taro, { Component, Events } from '@tarojs/taro'
 import { View, Text, Image, Input, Video, Button, Icon, Progress, Checkbox, Switch, Form, Slider, Picker, PickerView, PickerViewColumn, Swiper, SwiperItem, Navigator, ScrollView } from '@tarojs/components'
+import { AtIcon } from 'taro-ui'
 
 import './rhdetail.scss'
 
@@ -9,6 +10,25 @@ import { SERVER_HOST, DEFAULT_IMG, IMGS_ROOT_PATH, NUM_TRANSFORM_RH_ID } from '@
 
 import FixedTitle from '../common/fixedtitle'
 import PageFooter from '../common/pagefooter'
+import FavIcon from '../common/favicon'
+
+import { CommonFunc } from '@util/common_func'
+
+import { connect } from '@tarojs/redux'
+import { update, addFavList, delFavList } from '../../actions/counter'
+
+@connect((state) => {
+  return { prop_counter: state.counter }
+}, (dispatch) => ({
+  addFavListProp (rhId) {
+    console.error('addFavList, surccess, ' + rhId)
+    dispatch(addFavList([rhId]))
+  },
+  delFavListProp (rhId) {
+    console.error('delFavList, surccess, ' + rhId)
+    dispatch(delFavList([rhId]))
+  },
+}))
 
 export default class Rhdetail extends Component {
 
@@ -288,10 +308,16 @@ export default class Rhdetail extends Component {
       <Video width='150px' height='190px' src={namedVideo} />
       <Image src={namedPng} />
       <FixedTitle title="养老院详情" />
+      {this.props.prop_counter.rhFavList.map((fav) =>
+          <Text>{fav}, </Text>
+      )}
       <View className="rhdetail-top-view-1">
         {images_swiper}
         <View className="rh-name">
         {this.state.rhRecord.name}
+        <View>
+        <FavIcon rhId={this.state.rhId}/>
+        </View>
         </View>
         <View className="important-container">
           <View className="important-item">

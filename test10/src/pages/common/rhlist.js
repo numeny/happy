@@ -124,6 +124,9 @@ export default class Rhlist extends Component {
   }
 
   componentWillReceiveProps(nextProps) {
+    console.error('rhlist.componentWillReceiveProps, shouldRerenderRhlist: '
+        + this.props.shouldRerenderRhlist)
+    
     if (this.state.stateSearchCondition == nextProps.searchCondition) {
       return
     }
