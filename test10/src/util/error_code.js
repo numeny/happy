@@ -11,6 +11,8 @@ const ErrorCode_UserNotExisted = -1002
 const ErrorCode_UserExisted = -1003
 const ErrorCode_PasswordWrong = -1004
 const ErrorCode_FailToRegisterUser = -1005
+// use both on client and server
+export const ErrorCode_NotLogin = -1006
 
 export const ErrorStringArray = [
   [ErrorCode_OK, '成功!'],
@@ -25,6 +27,3 @@ export const ErrorStringArray = [
   [ErrorCode_FailToRegisterUser, '注册用户失败！'],
   [ErrorCode_NotLogin, '用户没有登录！'],
 ]
-
-// used only in client
-export const ErrorCode_NotLogin = -5006

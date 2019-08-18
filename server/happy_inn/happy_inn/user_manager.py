@@ -61,6 +61,8 @@ def login(request):
     response[RetUserId_Key] = user.id
 
     request.session[SESSION_KEY_UID] = user.id
+    uid = request.session[SESSION_KEY_UID]
+    Log.d(LOGTAG, 'login: uid: ' + str(uid))
 
     return JsonResponse(response)
 
@@ -168,13 +170,12 @@ def getUserFavoriteList(request):
     uid = request.session[SESSION_KEY_UID]
     Log.d(LOGTAG, 'uid: ' + str(uid))
 
-
-
     try:
         favRecords = favorite.objects.filter(Q(uid=uid))
     except ObjectDoesNotExist:
-        Log.d(LOGTAG, 'changeUserFavoriteRh, ObjectDoesNotExist')
+        Log.d(LOGTAG, 'getUserFavoriteList, ObjectDoesNotExist')
         response[RetCode_Key] = ErrorCode_NoData
+        response[RetCode_Data] = []
         return JsonResponse(response)
     except MultipleObjectsReturned:
         pass
@@ -182,6 +183,10 @@ def getUserFavoriteList(request):
 
     if favRecords is None:
         response[RetCode_Key] = ErrorCode_NoData
+        response[RetCode_Data] = []
         return JsonResponse(response)
 
-    return JsonResponse(DbQuery.get_fav_list_from_records(favRecords))
+    response[RetCode_Key] = ErrorCode_OK
+    response[RetCode_Data] = DbQuery.get_fav_list_from_records(favRecords)
+    Log.d(LOGTAG, 'getUserFavoriteList, data: ' + str(response[RetCode_Data]))
+    return JsonResponse(response)

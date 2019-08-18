@@ -21,6 +21,10 @@ export const CommonFunc = {
     return ErrorCode_OK == error_id
   },
 
+  isNotLogin: function(error_id) {
+    return ErrorCode_NotLogin == error_id
+  },
+
   // success: userid and username
   getLoginedInfo: function() {
     let logined_username = ''
@@ -40,8 +44,7 @@ export const CommonFunc = {
             username: logined_username,
           })
         }).catch(error => {
-          console.log('getLoginedInfo-, error: ' + error)
-          console.log(error)
+          console.log('getLoginedInfo-, not login: ')
           reject({errorCode: ErrorCode_NotLogin})
         })
     })
@@ -80,8 +83,17 @@ export const CommonFunc = {
         url: SERVER_HOST + '/gfl',
         credentials: 'include', // request with cookies etc.
       }).then(res => {
-        console.log('updateLoginUserFavList, res.data: ' + res.data)
-        resolve(res)
+        if (CommonFunc.isNotLogin(res.data.ret)) {
+          console.log('updateLoginUserFavList-1, fail, not login')
+          // CommonFunc.openLoginPage()
+          return Promise.reject({error: 'not login'})
+        }
+        if (!CommonFunc.isSuccess(res.data.ret)) {
+          return Promise.reject({error: 'get favorite list error!'})
+        }
+        console.log('updateLoginUserFavList, success, data: '
+                + res.data.data)
+        resolve(res.data.data)
         // const dispatch = useDispatch()
         // dispatch(update(res.data))
       }).catch(error => {
@@ -116,7 +128,8 @@ export const CommonFunc = {
       }).then(res => {
           return CommonFunc.updateLoginUserFavList()
       }).then(res => {
-          rhFavList = res.data
+          rhFavList = res
+          console.log('login, will setStorage(STORAGE_KEY_LOGIN), res: ' + res)
           console.log('login, will setStorage(STORAGE_KEY_LOGIN), username: '
               + username + ', userid: ' + logined_userid)
           // login success
@@ -168,6 +181,7 @@ export const CommonFunc = {
           console.log('changeFav, success: ' + res.data.ret)
           if (!CommonFunc.isSuccess(res.data.ret)) {
             let error_msg = CommonFunc.getErrorString(res.data.ret)
+            console.log('changeFav, error: ' + error_msg)
             Taro.showToast({title: error_msg})
             return Promise.reject({error: error_msg})
           }
@@ -194,7 +208,7 @@ export const CommonFunc = {
       }).catch(error => {
         console.log('onFavorite-3, fail, error: ' + error)
         if (error.errorCode == ErrorCode_NotLogin) {
-        console.log('onFavorite-3, fail, not login')
+          console.log('onFavorite-3, fail, not login')
           CommonFunc.openLoginPage()
         }
         reject(error)

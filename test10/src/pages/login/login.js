@@ -16,9 +16,11 @@ import namedVideo from '@res/video/1.mp4'
 import namedPng from '@images/index/1.jpeg'
 
 import { connect } from '@tarojs/redux'
-import { update, addFavList } from '../../actions/counter'
+import { update } from '../../actions/counter'
 
-@connect((state) => {}, (dispatch) => ({
+@connect((state) => {
+  return { prop_counter: state.counter }
+}, (dispatch) => ({
   updateProp (rhFavList) {
     dispatch(update(rhFavList))
   },

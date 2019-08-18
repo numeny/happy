@@ -2,6 +2,7 @@
 
 # error code
 RetCode_Key = 'ret'
+RetCode_Data = 'data'
 RetUserName_Key = 'username'
 RetUserId_Key = 'userid'
 
