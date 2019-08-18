@@ -9,6 +9,7 @@ import namedVideo from '@res/video/1.mp4'
 import { SERVER_HOST, DEFAULT_IMG } from '@util/const'
 import { CommonFunc } from '@util/common_func'
 import { ErrorCode_NotLogin } from '@util/error_code'
+import FavIcon from '../common/favicon'
 
 import { connect } from '@tarojs/redux'
 import { update, addFavList, delFavList } from '../../actions/counter'
@@ -170,7 +171,7 @@ export default class Rhlist extends Component {
                 <View className='rh-one-desc-name'>{rh.name}</View>
                 <View className='rh-one-desc-address'>{rh.address}</View>
                 <View className='rh-one-desc-bednum-container'>
-                  {this.props.prop_counter.rhFavList.indexOf(rh.id) != -1 ? <AtIcon className='rh-one-desc-favorite' value='heart-2' color= '#F00' size='15' onClick={this.onFavorite.bind(this, rh.id, false)} /> : <AtIcon className='rh-one-desc-favorite' value='heart' size='15' onClick={this.onFavorite.bind(this, rh.id, true)} />}
+                  <FavIcon rhId={rh.id}/>
                   <View className='rh-one-desc-bednum'>{rh.bednum_int}个床位</View>
                   <View className='rh-one-desc-property'><Text>{rh.factory_property}</Text></View>
                 </View>

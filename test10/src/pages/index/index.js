@@ -281,8 +281,6 @@ export default class Index extends Component {
 
   componentWillUnmount () { }
 
-  componentDidShow () { }
-
   componentDidHide () { }
 
   onChangeArea = e => {

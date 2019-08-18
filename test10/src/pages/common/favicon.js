@@ -27,7 +27,7 @@ export default class FavIcon extends Component {
   constructor(props) {
     super(props)
     this.state = {
-      rhId : this.props.rhId,
+      rhIdProp : this.props.rhId,
     }
   }
 
@@ -35,6 +35,7 @@ export default class FavIcon extends Component {
   }
 
   onFavorite = (rhId, isFavorite, e) => {
+    console.error('onFavorite, rhId: ' + rhId)
     CommonFunc.onFavorite(rhId, isFavorite, e).then(res => {
       console.error('onFavorite, surccess')
       if (isFavorite) {
@@ -51,7 +52,7 @@ export default class FavIcon extends Component {
   render () {
     return (
       <View className="">
-        {this.props.prop_counter.rhFavList.indexOf(this.state.rhId) != -1 ? <AtIcon value='heart-2' color= '#F00' size='15' onClick={this.onFavorite.bind(this, this.state.rhId, false)} /> : <AtIcon value='heart' size='15' onClick={this.onFavorite.bind(this, this.state.rhId, true)} />}
+        {this.props.prop_counter.rhFavList.indexOf(this.state.rhIdProp) != -1 ? <AtIcon value='heart-2' color= '#F00' size='15' onClick={this.onFavorite.bind(this, this.state.rhIdProp, false)} /> : <AtIcon value='heart' size='15' onClick={this.onFavorite.bind(this, this.state.rhIdProp, true)} />}
       </View>
     )
   }

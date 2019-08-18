@@ -158,11 +158,14 @@ export const CommonFunc = {
   changeFav: function(userId, rhId, isFavorite) {
     let logined_userid = 0
     const promise = new Promise(function(resolve, reject) {
+      console.log('changeFav, url: '
+              + ('/cf?uid=' + userId + '&rhId=' + rhId + '&f=' + (isFavorite?'t':'f')))
       Taro.request({
         url: SERVER_HOST + '/cf?uid=' + userId + '&rhId=' + rhId + '&f=' + (isFavorite?'t':'f'),
         credentials: 'include', // request with cookies etc.
         // method: 'POST',
       }).then(res => {
+          console.log('changeFav, success: ' + res.data.ret)
           if (!CommonFunc.isSuccess(res.data.ret)) {
             let error_msg = CommonFunc.getErrorString(res.data.ret)
             Taro.showToast({title: error_msg})
@@ -183,7 +186,7 @@ export const CommonFunc = {
     e.stopPropagation()
     const promise = new Promise(function(resolve, reject) {
       CommonFunc.getLoginedInfo().then(res => {
-        console.log('onFavorite-1, success, res: ' + res.username)
+        console.log('onFavorite-1, get login info success, res: ' + res.username)
         return CommonFunc.changeFav(res.userid, rhId, isFavorite)
       }).then(res => {
         console.log('onFavorite-2, res: ' + res)
@@ -191,6 +194,7 @@ export const CommonFunc = {
       }).catch(error => {
         console.log('onFavorite-3, fail, error: ' + error)
         if (error.errorCode == ErrorCode_NotLogin) {
+        console.log('onFavorite-3, fail, not login')
           CommonFunc.openLoginPage()
         }
         reject(error)
