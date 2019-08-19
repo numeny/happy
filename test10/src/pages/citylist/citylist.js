@@ -10,6 +10,7 @@ import { SERVER_HOST } from '@util/const'
 import './citylist.scss'
 import FixedTitle from '../common/fixedtitle'
 import PageFooter from '../common/pagefooter'
+import { CommonFunc } from '../../util/common_func'
 
 import namedVideo from '@res/video/1.mp4'
 import namedPng from '@images/index/1.jpeg'
@@ -84,17 +85,6 @@ export default class Citylist extends Component {
     })
   }
 
-  requestRhList = (prov, city) => {
-    let addedUrl = (prov.length > 0) ? ('?prov=' + prov) : ''
-    if(city.length > 0) {
-      addedUrl = addedUrl + (addedUrl.length > 0 ? '&' : '?') + 'city=' + city
-    }
-
-    Taro.navigateTo({
-      url: '/pages/index/index' + addedUrl,
-    })
-  }
-
   showAreaList (prov, e) {
     this.showAreaListImpl(prov)
   }
@@ -123,7 +113,7 @@ export default class Citylist extends Component {
         // FIXME
         Taro.showToast({title: '请选城市!'})
       } else {
-        this.requestRhList(this.state.selectedProv, this.state.selectedCity)
+        CommonFunc.requestRhListWithCityInfo(this.state.selectedProv, this.state.selectedCity)
       }
     }
   }

@@ -222,4 +222,15 @@ export const CommonFunc = {
       url: '/pages/login/login',
     })
   },
+
+  requestRhListWithCityInfo: function(prov, city) {
+    let addedUrl = (prov.length > 0) ? ('?prov=' + prov) : ''
+    if(city.length > 0) {
+      addedUrl = addedUrl + (addedUrl.length > 0 ? '&' : '?') + 'city=' + city
+    }
+
+    Taro.navigateTo({
+      url: '/pages/index/index' + addedUrl,
+    })
+  },
 }
