@@ -15,7 +15,9 @@ from rh_const import *
 
 from QueryParam import *
 from DbQuery import *
+from FavoriteDb import *
 
+LOGTAG = 'RhListQuery'
 class RhListQuery:
     LOGTAT = "RhListQuery"
     def __init__(self, query_param):
@@ -78,6 +80,64 @@ class RhListQuery:
         return all_filter
 
     def get_rh_list(self):
+        if self.query_param.favList:
+            return self.get_rh_fav_list()
+        else:
+            return self.get_rh_list_filter()
+
+    def get_rh_fav_list(self):
+        response = {}
+        favRhIdList = []
+        ret = FavoriteDb.getFavoriteList(self.query_param.uid, favRhIdList)
+        response[RetCode_Key] = ret
+        if ret is not ErrorCode_OK:
+            return response
+
+        '''
+        TODO, should refactor this search
+        '''
+        records = []
+        for i, val in enumerate(favRhIdList):
+            try:
+                r = rh.objects.filter(id=val)
+                records.append(DbQuery.get_brief_colume_from_one_record(r[0]))
+            except ObjectDoesNotExist:
+                if Log.DEBUG:
+                    Log.e(LOGTAG, 'rhid[%d] is in favorite.db but not in rh.db!')
+                continue
+            except Exception as e:
+                if Log.DEBUG:
+                    Log.e(LOGTAG, 'get_rh_fav_list, ' + e)
+                continue
+
+        record_num = len(records)
+        page_num = record_num / RH_NUM_PER_PAGE
+        if record_num % RH_NUM_PER_PAGE > 0:
+            page_num = page_num + 1
+
+        page_idx = self.query_param.page
+
+        result_record = records[((page_idx - 1) * RH_NUM_PER_PAGE) : (page_idx * RH_NUM_PER_PAGE)]
+
+
+        response['records'] = result_record
+        if page_idx < page_num:
+            response['record_num'] = RH_NUM_PER_PAGE
+        else:
+            response['record_num'] = (record_num - RH_NUM_PER_PAGE * (page_idx - 1))
+        response['pageNum'] = page_num
+        response['currPage'] = page_idx
+        response['totalNum'] = record_num
+
+        if Log.DEBUG:
+            self.query_param.prt()
+            message = "currPage: "+ str(page_idx)
+            message = message + ", pageNum: "+ str(page_num)
+            message = message + ", records_num: "+ str(record_num)
+            Log.d(RhListQuery.LOGTAT, message)
+        return response
+
+    def get_rh_list_filter(self):
         global RH_NUM_PER_PAGE
         # FIXME, should not query all DB
         # db = rh.objects.filter(Q(rh_area__endswith="门头沟区"))
@@ -102,21 +162,14 @@ class RhListQuery:
         response['pageNum'] = page_num
         response['currPage'] = page_idx
         response['totalNum'] = record_num
+        response[RetCode_Key] = ErrorCode_OK
 
         if Log.DEBUG:
-            message = "province: " + self.query_param.province
-            message = message + ", city: " + self.query_param.city
-            message = message + ", area: "+ self.query_param.area
-            message = message + ", currPage: "+ str(page_idx)
+            self.query_param.prt()
+            message = "currPage: "+ str(page_idx)
             message = message + ", pageNum: "+ str(page_num)
             message = message + ", records_num: "+ str(record_num)
-            message = message + ", minprice: "+ str(self.query_param.minprice)
-            message = message + ", maxprice: "+ str(self.query_param.maxprice)
-            message = message + ", minbed: "+ str(self.query_param.minbed)
-            message = message + ", maxbed: "+ str(self.query_param.maxbed)
-            message = message + ", str_type: " + str(self.query_param.str_type)
-            message = message + ", prop: "+ str(self.query_param.prop)
-            Log.e(RhListQuery.LOGTAT, message)
+            Log.d(RhListQuery.LOGTAT, message)
         return response
 
     @staticmethod

@@ -22,6 +22,8 @@ class QueryParam:
         self.prop = ""
         self.page = QueryParam.DEFAULT_PAGE
         self.searchKey = ""
+        self.favList = False
+        self.uid = 0
 
     '''
     def __init__(self, province, city, area,
@@ -46,15 +48,18 @@ class QueryParam:
         return (self.minprice != QueryParam.MIN_PRICE) | (self.maxprice != QueryParam.MAX_PRICE)
 
     def prt(self):
-        Log.d(QueryParam.LOGTAT, " QueryParam.province : " + self.province)
-        Log.d(QueryParam.LOGTAT, " city : " + self.city)
-        Log.d(QueryParam.LOGTAT, " area : " + self.area)
-        Log.d(QueryParam.LOGTAT, " minprice : " + str(self.minprice))
-        Log.d(QueryParam.LOGTAT, " maxprice : " + str(self.maxprice))
-        Log.d(QueryParam.LOGTAT, " minbed : " + str(self.minbed))
-        Log.d(QueryParam.LOGTAT, " maxbed : " + str(self.maxbed))
-        Log.d(QueryParam.LOGTAT, " strtype : " + self.str_type)
-        Log.d(QueryParam.LOGTAT, " prop : " + self.prop)
-        Log.d(QueryParam.LOGTAT, " page : " + str(self.page))
-        Log.d(QueryParam.LOGTAT, " searchKey : " + str(self.searchKey))
-
+        if Log.DEBUG:
+            message = " QueryParam.province : " + self.province
+            message = message + " city : " + self.city
+            message = message + " area : " + self.area
+            message = message + " minprice : " + str(self.minprice)
+            message = message + " maxprice : " + str(self.maxprice)
+            message = message + " minbed : " + str(self.minbed)
+            message = message + " maxbed : " + str(self.maxbed)
+            message = message + " strtype : " + self.str_type
+            message = message + " prop : " + self.prop
+            message = message + " page : " + str(self.page)
+            message = message + " searchKey : " + str(self.searchKey)
+            message = message + " favList : " + str(self.favList)
+            message = message + " uid : " + str(self.uid)
+            Log.d(QueryParam.LOGTAT, message)

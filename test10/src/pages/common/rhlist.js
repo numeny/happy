@@ -35,6 +35,9 @@ export default class Rhlist extends Component {
     this.state = {
       // input
       stateSearchCondition: (this.props.searchCondition != null) ? this.props.searchCondition : '',
+      stateShowResult: (this.props.showResult != null && this.props.showResult == 'false') ? false : true,
+      stateTitle: (this.props.title != null) ? this.props.title : '',
+
       currSearchRhNum: 0,
 
       stateCurrCity: (this.props.currCity != null) ? this.props.currCity : '',
@@ -96,6 +99,10 @@ export default class Rhlist extends Component {
     Taro.request({
       url: SERVER_HOST + '/show_rh_list' + addedUrl,
       success: (res) => {
+        if (!CommonFunc.isSuccess(res.data.ret)) {
+          console.error(res.data.ret)
+          // return Promise.reject({error: CommonFunc.getErrorString(res.data.ret)})
+        }
         console.log(res.data.records)
         let rhList = []
         if (requestPage == this.DEFAULT_CURR_PAGE) {
@@ -113,11 +120,13 @@ export default class Rhlist extends Component {
         })
       },
       fail: (error) => {
+        console.error(error)
         Taro.showToast({title: 'fail'})
       },
       complete: () => {
         // Taro.showToast({title: "complete"})
       },
+      credentials: 'include', // request with cookies etc.
     })
   }
 
@@ -179,12 +188,20 @@ export default class Rhlist extends Component {
 
     const hasMoreData = (
         <View>
-        { rhList.length == 0 ? (<View className='rh-list-loading-more'><View>暂无数据，</View><View>请换条件重新查询。</View></View>) : (this.state.isOnEnd ? (<Text className='rh-list-loading-more'>已经到底了</Text>) : (<Text className='rh-list-loading-more' onClick={this.loadMoreData}> 点击查看更多 </Text>)) }
+        { rhList.length == 0 ?
+            (this.state.stateShowResult ?
+              (<View className='rh-list-loading-more'><View>暂无数据，</View><View>请换条件重新查询。</View></View>) :
+              (<View></View>)) :
+            (this.state.isOnEnd ?
+              (<Text className='rh-list-loading-more'>已经到底了</Text>) :
+              (<Text className='rh-list-loading-more' onClick={this.loadMoreData}> 点击查看更多 </Text>)) }
         </View>
         )
 
     return (
       <View>
+      {this.props.title != null && this.props.title.length > 0 &&
+        <View>{this.props.title}</View>}
       {this.state.stateCurrCity.length != 0 ?
       <View className='rhlist-total-rh-count-container'>
         <View className='rhlist-total-rh-count-title'>
@@ -194,7 +211,9 @@ export default class Rhlist extends Component {
           共计{this.state.currCityRhNum}家
         </View>
         </View>: <View className='rhlist-curr-rh-count-container'>
-        当前查询共计<Text>{this.state.currSearchRhNum}</Text>家
+        {this.state.stateShowResult &&
+          <View>当前查询共计<Text>{this.state.currSearchRhNum}</Text>家</View>
+        }
       </View>}
 
       <View className='rhlist-top-container'>

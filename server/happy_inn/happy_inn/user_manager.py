@@ -18,10 +18,11 @@ sys.path.append("../")
 
 # ErroCode_* .etc
 from rh_const import *
+from common import *
 from settings import *
 from Log import *
 from Utils import *
-from DbQuery import *
+from FavoriteDb import *
 
 LOGTAG = 'user_manager'
 
@@ -170,6 +171,7 @@ def getUserFavoriteList(request):
     uid = request.session[SESSION_KEY_UID]
     Log.d(LOGTAG, 'uid: ' + str(uid))
 
+    '''
     try:
         favRecords = favorite.objects.filter(Q(uid=uid))
     except ObjectDoesNotExist:
@@ -187,6 +189,12 @@ def getUserFavoriteList(request):
         return JsonResponse(response)
 
     response[RetCode_Key] = ErrorCode_OK
-    response[RetCode_Data] = DbQuery.get_fav_list_from_records(favRecords)
+    response[RetCode_Data] = FavoriteDb.get_fav_list_from_records_with_web_rhid(favRecords)
     Log.d(LOGTAG, 'getUserFavoriteList, data: ' + str(response[RetCode_Data]))
+    '''
+    favList = []
+    favDb = FavoriteDb(uid)
+    response[RetCode_Key] = favDb.getFavoriteListForWeb(favList)
+    response[RetCode_Data] = favList
+    Log.d(LOGTAG, 'getUserFavoriteList, ret: ' + getErrorString(response[RetCode_Key]) + ', data: ' + str(response[RetCode_Data]))
     return JsonResponse(response)

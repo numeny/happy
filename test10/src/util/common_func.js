@@ -14,7 +14,7 @@ export const CommonFunc = {
         return ErrorStringArray[i][1]
       }
     }
-    return ErrorStringArray[ErrorCode_UnknownError][1]
+    return '错误!'
   },
 
   isSuccess: function(error_id) {

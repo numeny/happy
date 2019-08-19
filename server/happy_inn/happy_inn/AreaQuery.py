@@ -24,8 +24,10 @@ class AreaQuery:
         areas = city.objects.order_by('privince', 'city', 'area').values('privince', 'city', 'area').distinct()
         for r in areas:
             if len(r['privince']) == 0 or len(r['city']) == 0 or len(r['area']) == 0:
+                ''' FIXME
                 print("city's field is null. [%s] [%s] [%s]"\
                     % (r['privince'].encode('utf-8'), r['city'].encode('utf-8'), r['area'].encode('utf-8')))
+                '''
                 continue;
             if 'privince' not in g_area_map:
                 privince_map = {}

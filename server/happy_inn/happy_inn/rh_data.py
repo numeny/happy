@@ -106,6 +106,20 @@ def show_rh_list(request):
             pass
     if "searchKey" in request.GET:
         query_param.searchKey = request.GET['searchKey']
+
+    response = {}
+    if "favList" in request.GET:
+        if Log.DEBUG:
+            Log.i(LOGTAG, 'Requesting user favorite rh details info!')
+        uid = request.session.get(SESSION_KEY_UID, default=None)
+        if uid is None:
+            Log.e(LOGTAG, 'User not login in!')
+            response[RetCode_Key] = ErrorCode_NotLogin
+            response[RetCode_Data] = []
+            return JsonResponse(response)
+        query_param.favList = (request.GET["favList"] == 't')
+        query_param.uid = uid
+
     # FIXME
     rh_list_query = RhListQuery(query_param)
     response = rh_list_query.get_rh_list()

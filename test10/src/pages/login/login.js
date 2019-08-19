@@ -11,6 +11,7 @@ import { CommonFunc } from '@util/common_func'
 import './login.scss'
 import FixedTitle from '../common/fixedtitle'
 import PageFooter from '../common/pagefooter'
+import Rhlist from '../common/rhlist'
 
 import namedVideo from '@res/video/1.mp4'
 import namedPng from '@images/index/1.jpeg'
@@ -151,6 +152,12 @@ export default class Login extends Component {
         <View>
           <View>当前登录用户: {this.state.loginedUsername}</View>
           <View onClick={this.onExit} className='login-input-submit'>退 出</View>
+          <View>
+            <Rhlist searchCondition='favList=t'
+              isLogin={this.state.isLogin}
+              showResult='false'
+              title='您的收藏：'/>
+          </View>
         </View>
       }
       <PageFooter />
