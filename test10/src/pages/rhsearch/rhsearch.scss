@@ -35,3 +35,19 @@ $page-bg-color: #EEE;
   background-color: $page-bg-color;
   border-radius: 0px 20px 20px 0px;
 }
+
+.hot-city-row-container {
+  display: flex;
+  flex-direction: colume;
+}
+
+.hot-city-item {
+  background-color: $city-item-background-color;
+  padding: $city-item-top-bottom-padding 40px;
+  flex: 1;
+  justify-content: center;
+  text-align: center;
+  margin: $city-item-margin;
+  overflow: hidden;
+  white-space: nowrap;
+}

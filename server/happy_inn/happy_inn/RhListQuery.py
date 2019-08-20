@@ -107,7 +107,7 @@ class RhListQuery:
                 continue
             except Exception as e:
                 if Log.DEBUG:
-                    Log.e(LOGTAG, 'get_rh_fav_list, ' + e)
+                    Log.e(LOGTAG, 'error on get_rh_fav_list!')
                 continue
 
         record_num = len(records)
