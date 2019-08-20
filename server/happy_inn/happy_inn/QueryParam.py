@@ -59,7 +59,7 @@ class QueryParam:
             message = message + " strtype : " + self.str_type
             message = message + " prop : " + self.prop
             message = message + " page : " + str(self.page)
-            message = message + " searchKey : " + str(self.searchKey)
+            message = message + " searchKey : " + self.searchKey
             message = message + " favList : " + str(self.favList)
             message = message + " uid : " + str(self.uid)
             Log.d(QueryParam.LOGTAT, message)
