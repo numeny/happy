@@ -148,28 +148,18 @@ export default class Rhdetail extends Component {
 
   componentWillMount () {
     Taro.showToast({title: String(this.state.rhId)})
-    Taro.request({
-      url: SERVER_HOST + '/get_rh_detail?rhid=' + String(this.state.rhId),
-      success: (res) => {
-        console.log(res.data.record)
-        Taro.showToast({title: res.data.record.name})
+    CommonFunc.requestRhDetail(this.state.rhId).then(res => {
+      Taro.showToast({title: res.data.record.name})
 
-        var rhRecordHandled = this.handleAllContent(res)
+      var rhRecordHandled = this.handleAllContent(res)
 
-        this.setState({
-            message: 'success',
-            rhRecord: res.data.record,
-            rhRecordHandled: rhRecordHandled,
-        })
-      },
-      fail: (error) => {
-        console.error('bdg-error')
-        Taro.showToast({title: 'fail'})
-      },
-      complete: () => {
-        // Taro.showToast({title: "complete"})
-      },
-    })//.then(res => Taro.showToast({title: "1111"}))
+      this.setState({
+          rhRecord: res.data.record,
+          rhRecordHandled: rhRecordHandled,
+      })
+    }).catch(error => {
+      Taro.showToast({title: '请求数据失败！'})
+    })
   }
 
   makePhoneCall (phoneNum, e) {

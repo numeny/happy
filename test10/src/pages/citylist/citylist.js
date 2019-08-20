@@ -54,34 +54,25 @@ export default class Citylist extends Component {
   }
 
   requestCityData = (prov) => {
-    console.error('requestCityData, prov: ' + prov)
-    let url = SERVER_HOST + '/arealist' + ((prov.length > 0) ? ("?prov=" + prov) : "")
-    Taro.request({
-      url: url,
-      success: (res) => {
-        let currCityItems = []
-        let newElem = []
-        for (let i = 0; i < res.data.length; i++) {
-          if (i % 3 == 0) {
-            newElem = new Array()
-            currCityItems.push(newElem)
-          } else {
-            newElem = currCityItems[currCityItems.length-1]
-          }
-          newElem.push(res.data[i])
+    CommonFunc.requestCityData(prov).then(res => {
+      let currCityItems = []
+      let newElem = []
+      for (let i = 0; i < res.data.length; i++) {
+        if (i % 3 == 0) {
+          newElem = new Array()
+          currCityItems.push(newElem)
+        } else {
+          newElem = currCityItems[currCityItems.length-1]
         }
+        newElem.push(res.data[i])
+      }
 
-        this.setState({
-            currCityItems: currCityItems,
-            isDisplayingCity: (prov.length > 0),
-        })
-      },
-      fail: (error) => {
-        console.error("fail")
-      },
-      complete: () => {
-        console.error("complete")
-      },
+      this.setState({
+          currCityItems: currCityItems,
+          isDisplayingCity: (prov.length > 0),
+      })
+    }).catch(error => {
+        console.error("request city data fail!")
     })
   }
 

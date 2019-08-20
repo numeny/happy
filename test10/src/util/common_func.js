@@ -17,6 +17,13 @@ export const CommonFunc = {
     return '错误!'
   },
 
+  setInterval: function(callback) {
+    const timeId = setInterval(() => {
+        callback()
+        clearInterval(timeId)
+    }, 1500);
+  },
+  
   isSuccess: function(error_id) {
     return ErrorCode_OK == error_id
   },
@@ -209,7 +216,11 @@ export const CommonFunc = {
         console.log('onFavorite-3, fail, error: ' + error)
         if (error.errorCode == ErrorCode_NotLogin) {
           console.log('onFavorite-3, fail, not login')
-          CommonFunc.openLoginPage()
+          Taro.showToast({title: '请先登录！'})
+
+          CommonFunc.setInterval(() => {
+            CommonFunc.openLoginPage()
+          })
         }
         reject(error)
       })
@@ -233,4 +244,48 @@ export const CommonFunc = {
       url: '/pages/index/index' + addedUrl,
     })
   },
+
+  requestRhList: function(addedUrl) {
+    return Taro.request({
+      url: SERVER_HOST + '/show_rh_list' + addedUrl,
+      credentials: 'include', // request with cookies etc.
+    })
+  },
+
+  requestRhDetail: function(rhId) {
+    return Taro.request({
+      url: SERVER_HOST + '/get_rh_detail?rhid=' + String(rhId),
+      credentials: 'include', // request with cookies etc.
+    })
+  },
+
+  registerUser: function(username, password) {
+    const promise = new Promise(function(resolve, reject) {
+      return Taro.request({
+        url: SERVER_HOST + '/registerUser?username=' + username + "&password=" + password,
+        credentials: 'include', // request with cookies etc.
+      }).then(res => {
+        Taro.showToast({title: CommonFunc.getErrorString(res.data.ret)})
+        if (!CommonFunc.isSuccess(res.data.ret)) {
+          return Promise.reject({error: 'register failed!'})
+        }
+        resolve(res)
+        CommonFunc.setInterval(() => {
+          Taro.navigateBack()
+        })
+      }).catch(error => {
+        reject(error)
+      })
+    })
+
+    return promise
+  },
+
+
+  requestCityData: function(prov) {
+    let url = SERVER_HOST + '/arealist' + ((prov.length > 0) ? ("?prov=" + prov) : "")
+    return Taro.request({
+      url: url,
+    })
+  }
 }

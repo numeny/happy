@@ -73,28 +73,11 @@ export default class Register extends Component {
       Taro.showToast({title: '请输入用户名！'})
       return
     }
-    if (!this.checkPassword(this.state.password, this.state.password2)) {
+    if (!this.checkPassword(this.state.password,
+          this.state.password2)) {
       return
     }
-
-    Taro.request({
-      url: SERVER_HOST + '/registerUser?username=' + this.state.username + "&password=" + this.state.password,
-      success: (res) => {
-        console.log(res.data)
-        Taro.showToast({title: String(res.data.ret)})
-        Taro.showToast({title: CommonFunc.getErrorString(res.data.ret)})
-
-        this.setState({
-        })
-      },
-      fail: (error) => {
-        console.error('bdg-error')
-        Taro.showToast({title: 'fail'})
-      },
-      complete: () => {
-        // Taro.showToast({title: "complete"})
-      },
-    })
+    CommonFunc.registerUser(this.state.username, this.state.password)
   }
 
   onChangePassword = (e) =>  {

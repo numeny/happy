@@ -96,37 +96,30 @@ export default class Rhlist extends Component {
         isOnlySearchCity = false
     }
 
-    Taro.request({
-      url: SERVER_HOST + '/show_rh_list' + addedUrl,
-      success: (res) => {
-        if (!CommonFunc.isSuccess(res.data.ret)) {
-          console.error(res.data.ret)
-          // return Promise.reject({error: CommonFunc.getErrorString(res.data.ret)})
-        }
-        console.log(res.data.records)
-        let rhList = []
-        if (requestPage == this.DEFAULT_CURR_PAGE) {
-          rhList = res.data.records
-        } else {
-          rhList = this.state.rhList.concat(res.data.records)
-        }
-        // Taro.showToast({title: res.data.records[0].title_image})
-        this.setState({
-            rhList: rhList,
-            currSearchRhNum: res.data.totalNum,
-            currPage: res.data.currPage,
-            isOnEnd: (res.data.currPage >= res.data.pageNum),
-            currCityRhNum: isOnlySearchCity ? res.data.totalNum : this.state.currCityRhNum,
-        })
-      },
-      fail: (error) => {
-        console.error(error)
-        Taro.showToast({title: 'fail'})
-      },
-      complete: () => {
-        // Taro.showToast({title: "complete"})
-      },
-      credentials: 'include', // request with cookies etc.
+    // request rh list from server
+    CommonFunc.requestRhList(addedUrl).then(res => {
+      if (!CommonFunc.isSuccess(res.data.ret)) {
+        console.error(res.data.ret)
+        // return Promise.reject({error: CommonFunc.getErrorString(res.data.ret)})
+      }
+      console.log(res.data.records)
+      let rhList = []
+      if (requestPage == this.DEFAULT_CURR_PAGE) {
+        rhList = res.data.records
+      } else {
+        rhList = this.state.rhList.concat(res.data.records)
+      }
+      // Taro.showToast({title: res.data.records[0].title_image})
+      this.setState({
+          rhList: rhList,
+          currSearchRhNum: res.data.totalNum,
+          currPage: res.data.currPage,
+          isOnEnd: (res.data.currPage >= res.data.pageNum),
+          currCityRhNum: isOnlySearchCity ? res.data.totalNum : this.state.currCityRhNum,
+      })
+    }).catch(error => {
+      console.error(error)
+      Taro.showToast({title: 'fail'})
     })
   }
 
