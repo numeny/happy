@@ -419,7 +419,7 @@ export default class Index extends Component {
             <View className='at-icon at-icon-chevron-up'>
             </View>
         </View>}
-        <PageFooter />
+        <PageFooter showHomePageItem='false' />
       </ScrollView>
     )
   }

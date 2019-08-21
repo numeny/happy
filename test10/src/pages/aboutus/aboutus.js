@@ -23,7 +23,7 @@ export default class AboutUs extends Component {
   constructor(props) {
     super(props)
     this.state = {
-      currItem: (this.$router.params.idx == null) ? 0 : (this.$router.params.idx - 1),
+      currItem: (this.$router.params.idx == null) ? 0 : (this.$router.params.idx),
     }
   }
 
