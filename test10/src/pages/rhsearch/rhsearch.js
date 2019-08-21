@@ -17,6 +17,19 @@ import namedPng from '@images/index/1.jpeg'
 import { connect } from '@tarojs/redux'
 import { update, addFavList, delFavList } from '../../actions/counter'
 
+@connect((state) => {
+  return { prop_counter: state.counter }
+}, (dispatch) => ({
+  addFavListProp (rhId) {
+    console.error('addFavList, surccess, ' + rhId)
+    dispatch(addFavList([rhId]))
+  },
+  delFavListProp (rhId) {
+    console.error('delFavList, surccess, ' + rhId)
+    dispatch(delFavList([rhId]))
+  },
+}))
+
 export default class RhSearch extends Component {
 
   config: Config = {

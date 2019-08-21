@@ -48,32 +48,11 @@ export default class Register extends Component {
     })
   }
 
-  checkUsername = (username) =>  {
-    return username.length != 0
-  }
-
-  checkPassword = (password, password2) =>  {
-    if (password.length == 0) {
-      Taro.showToast({title: '请输入密码！'})
-      return false
-    }
-    if (password2.length == 0) {
-      Taro.showToast({title: '请再次输入密码！'})
-      return false
-    }
-    if (password != password2) {
-      Taro.showToast({title: '两次输入密码不一致！'})
-      return false;
-    }
-    return true;
-  }
-
   onSubmit = (e) =>  {
-    if (!this.checkUsername(this.state.username)) {
-      Taro.showToast({title: '请输入用户名！'})
+    if (!CommonFunc.checkUsername(this.state.username)) {
       return
     }
-    if (!this.checkPassword(this.state.password,
+    if (!CommonFunc.checkPassword2(this.state.password,
           this.state.password2)) {
       return
     }

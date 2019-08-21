@@ -72,21 +72,11 @@ export default class Login extends Component {
     })
   }
 
-  checkUsername = (username) =>  {
-    return username.length != 0
-  }
-
-  checkPassword = (password) =>  {
-    return password.length != 0
-  }
-
   onSubmit = (e) =>  {
-    if (!this.checkUsername(this.state.username)) {
-      Taro.showToast({title: '请输入用户名！'})
+    if (!CommonFunc.checkUsername(this.state.username)) {
       return
     }
-    if (!this.checkPassword(this.state.password)) {
-      Taro.showToast({title: '请输入密码！'})
+    if (!CommonFunc.checkPassword(this.state.password)) {
       return
     }
     CommonFunc.login(this.state.username, this.state.password)
