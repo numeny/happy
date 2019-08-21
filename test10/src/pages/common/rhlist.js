@@ -196,18 +196,19 @@ export default class Rhlist extends Component {
       {this.props.title != null && this.props.title.length > 0 &&
         <View>{this.props.title}</View>}
       {this.state.stateCurrCity.length != 0 ?
-      <View className='rhlist-total-rh-count-container'>
-        <View className='rhlist-total-rh-count-title'>
-          {this.state.stateCurrCity}养老院
+        <View className='rhlist-total-rh-count-container'>
+          <View className='rhlist-total-rh-count-title'>
+            {this.state.stateCurrCity}养老院
+          </View>
+          <View className='rhlist-total-rh-count-content'>
+            共计{this.state.currCityRhNum}家
+          </View>
         </View>
-        <View className='rhlist-total-rh-count-content'>
-          共计{this.state.currCityRhNum}家
-        </View>
-        </View>: <View className='rhlist-curr-rh-count-container'>
+        :
+        <View className='rhlist-curr-rh-count-container'>
         {this.state.stateShowResult &&
-          <View>当前查询共计<Text>{this.state.currSearchRhNum}</Text>家</View>
-        }
-      </View>}
+          <View>当前查询共计<Text>{this.state.currSearchRhNum}</Text>家</View>}
+        </View>}
 
       <View className='rhlist-top-container'>
         {restHomeList}
