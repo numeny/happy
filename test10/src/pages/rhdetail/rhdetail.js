@@ -66,9 +66,18 @@ export default class Rhdetail extends Component {
       inst_notes_handled: [],
       images_handled: [],
     }
+    /*
+    console.error("handleAllContent, inst_intro: " + res.data.record.inst_intro);
+    console.error("inst_charge: " + res.data.record.inst_charge);
+    console.error("transportation: " + res.data.record.transportation);
+    console.error("inst_intro: " + res.data.record.inst_intro);
+    console.error("special_services: " + res.data.record.special_services);
+    console.error("facilities: " + res.data.record.facilities);
+    console.error("service_content: " + res.data.record.service_content);
+    console.error("inst_notes: " + res.data.record.inst_notes);
+    */
     this.handleContent(res.data.record.inst_charge, rhRecordHandled_2.inst_charge_handled)
     this.handleContent(res.data.record.transportation, rhRecordHandled_2.transportation_handled)
-    // console.error("1111111- inst_intro_handled: " + res.data.record.inst_intro);
     this.handleContent(res.data.record.inst_intro, rhRecordHandled_2.inst_intro_handled)
     // console.error("2222222- inst_intro_handled: " + rhRecordHandled_2.inst_intro_handled);
     this.handleContent(res.data.record.special_services, rhRecordHandled_2.special_services_handled)
@@ -104,6 +113,9 @@ export default class Rhdetail extends Component {
     content = content.replace(/<\/strong>/g, "")
     // FIXME, delete image first
     content = content.replace(/<img.*>/g, "")
+    // FIXME
+    content = content.replace(/<font.*>/g, "")
+    content = content.replace(/<\/font.*>/g, "")
 
     // content_handled_tmp = String(content).split(/< *\/p *>|<br *>|< *\/div *>/)
     // </tr> -- yh id = 10016299
