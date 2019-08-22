@@ -22,6 +22,10 @@ ErrorCode_PasswordWrong = -1004
 ErrorCode_FailToRegisterUser = -1005
 ErrorCode_NotLogin = -1006
 
+ErrorCode_WeixinLoginNoCode = -1020
+ErrorCode_WeixinServerError = -1021
+
+
 # error code for add/delete user's favorite resthome
 ErrorCode_ErrorUsername = -1100
 ErrorCode_ErrorRhid = -1101

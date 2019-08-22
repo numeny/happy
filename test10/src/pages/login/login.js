@@ -73,6 +73,26 @@ export default class Login extends Component {
   }
 
   onSubmit = (e) =>  {
+    /*
+    Taro.login({
+      success (res) {
+        if (res.code) {
+          console.log('登录成功！' + res.code)
+          //发起网络请求
+          Taro.request({
+            url: SERVER_HOST + '/weixinlogin?code=' + res.code,
+            data: {
+              code: res.code
+            },
+          }).then(res => {
+            console.log('获取session_id成功！:' + res.data)
+          })
+        } else {
+          console.log('登录失败！' + res.errMsg)
+        }
+      }
+    })
+    */
     if (!CommonFunc.checkUsername(this.state.username)) {
       return
     }

@@ -15,6 +15,7 @@ from django.contrib import admin
 
 from . import rh_data
 from . import user_manager
+from . import weapp_login
 
 urlpatterns = [
     url(r'^admin/', admin.site.urls),
@@ -29,4 +30,6 @@ urlpatterns = [
     url(r'^registerUser', user_manager.registerUser),
     url(r'^cf', user_manager.changeUserFavoriteRh),
     url(r'^gfl', user_manager.getUserFavoriteList),
+
+    url(r'^weixinlogin', weapp_login.weixinlogin),
 ]
