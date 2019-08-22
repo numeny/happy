@@ -121,15 +121,15 @@ def getUid(request, response):
             return JsonResponse(response)
         uid = request.session[SESSION_KEY_UID]
     elif request.GET["etype"] == ETYPE_WEAPP:
-        if "openid" not in request.GET:
-            Log.e(LOGTAG, 'Request has no parameter of openid when get uid from request for weapp!')
+        if "unionid" not in request.GET:
+            Log.e(LOGTAG, 'Request has no parameter of unionid when get uid from request for weapp!')
             response[RetCode_Key] = ErrorCode_Param
             return -1
-        # TODO, should not only use openid to identify user's session
+        # TODO, should not only use unionid to identify user's session
         # we should add session id to identify it
-        openid = request.GET["openid"]
+        unionid = request.GET["unionid"]
         # TODO, FIXME
-        uid = 0 # SessionManager.getUid(openid)
+        uid = 0 # SessionManager.getUid(unionid)
     response[RetCode_Key] = ErrorCode_OK
     return uid
 

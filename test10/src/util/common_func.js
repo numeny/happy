@@ -89,7 +89,7 @@ export const CommonFunc = {
       let url = (SERVER_HOST + '/gfl' + '?etype=' + process.env.TARO_ENV)
       if (process.env.TARO_ENV === 'weapp') {
         // FIXME
-        url += '&openid=' + 'openid'
+        url += '&unionid=' + 'unionid'
       }
       Taro.request({
         url: url,
@@ -188,14 +188,11 @@ export const CommonFunc = {
             + '&etype=' + process.env.TARO_ENV)
       if (process.env.TARO_ENV === 'weapp') {
         // FIXME
-        url += '&openid=' + 'openid'
+        url += '&unionid=' + 'unionid'
       }
       console.log('changeFav, url: ' + url)
       Taro.request({
-        url: (SERVER_HOST + '/cf?uid=' + userId
-            + '&rhId=' + rhId
-            + '&f=' + (isFavorite?'t':'f')
-            + '&etype=' + process.env.TARO_ENV),
+        url: url,
         credentials: 'include', // request with cookies etc.
         // method: 'POST',
       }).then(res => {
