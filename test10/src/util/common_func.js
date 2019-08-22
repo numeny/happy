@@ -86,8 +86,13 @@ export const CommonFunc = {
 
   updateLoginUserFavList: function() {
     const promise = new Promise(function(resolve, reject) {
+      let url = (SERVER_HOST + '/gfl' + '?etype=' + process.env.TARO_ENV)
+      if (process.env.TARO_ENV === 'weapp') {
+        // FIXME
+        url += '&openid=' + 'openid'
+      }
       Taro.request({
-        url: SERVER_HOST + '/gfl',
+        url: url,
         credentials: 'include', // request with cookies etc.
       }).then(res => {
         if (CommonFunc.isNotLogin(res.data.ret)) {
@@ -159,8 +164,7 @@ export const CommonFunc = {
             key: STORAGE_KEY_USER_ID,
             data: logined_userid,
         })
-      }).then(
-        res => {
+      }).then(res => {
           console.log('login, success, will navigateBack')
           // FIMXE, rhFavList is forward to login page to update rhFavList on redux's store
           // because h5 do not support dispatch's calling from user
@@ -178,10 +182,20 @@ export const CommonFunc = {
   changeFav: function(userId, rhId, isFavorite) {
     let logined_userid = 0
     const promise = new Promise(function(resolve, reject) {
-      console.log('changeFav, url: '
-              + ('/cf?uid=' + userId + '&rhId=' + rhId + '&f=' + (isFavorite?'t':'f')))
+      let url = (SERVER_HOST + '/cf?uid=' + userId
+            + '&rhId=' + rhId
+            + '&f=' + (isFavorite?'t':'f')
+            + '&etype=' + process.env.TARO_ENV)
+      if (process.env.TARO_ENV === 'weapp') {
+        // FIXME
+        url += '&openid=' + 'openid'
+      }
+      console.log('changeFav, url: ' + url)
       Taro.request({
-        url: SERVER_HOST + '/cf?uid=' + userId + '&rhId=' + rhId + '&f=' + (isFavorite?'t':'f'),
+        url: (SERVER_HOST + '/cf?uid=' + userId
+            + '&rhId=' + rhId
+            + '&f=' + (isFavorite?'t':'f')
+            + '&etype=' + process.env.TARO_ENV),
         credentials: 'include', // request with cookies etc.
         // method: 'POST',
       }).then(res => {

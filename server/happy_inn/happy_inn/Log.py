@@ -14,8 +14,7 @@ class Log:
 
     @staticmethod
     def e(tag, message):
-        if Log.DEBUG:
-            print("[Error][%s]: %s" % (tag, message))
+        print("[Error][%s]: %s" % (tag, message))
 
     @staticmethod
     def w(tag, message):

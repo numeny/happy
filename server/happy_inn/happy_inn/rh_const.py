@@ -7,6 +7,7 @@ RetUserName_Key = 'username'
 RetUserId_Key = 'userid'
 
 ErrorCode_OK = 0
+ErrorCode_NOK = -9998
 ErrorCode_UnknownError = -9999
 
 ErrorCode_RhIdNotInput = -1
@@ -38,3 +39,7 @@ DEFAULT_IMG = "default.jpg"
 
 # internal used
 SESSION_KEY_UID = 'user_id'
+
+# Client's environment
+ETYPE_WEAPP = 'weapp'
+ETYPE_H5 = 'h5'

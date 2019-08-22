@@ -26,6 +26,7 @@ from FavoriteDb import *
 
 LOGTAG = 'user_manager'
 
+# only for h5
 def login(request):
     response = {}
     if "username" not in request.GET or request.GET["username"] == '':
@@ -67,11 +68,13 @@ def login(request):
 
     return JsonResponse(response)
 
+# only for h5
 def logout(request):
     Log.d(LOGTAG, 'logout')
     request.session.clear()
     return JsonResponse({RetCode_Key: ErrorCode_OK})
 
+# only for h5
 def registerUser(request):
     '''
     return JsonResponse("hello")
@@ -104,19 +107,37 @@ def registerUser(request):
     response[RetCode_Key] = ErrorCode_UserExisted
     return JsonResponse(response)
 
+
+''' Get uid '''
+def getUid(request, response):
+    if "etype" not in request.GET:
+        Log.e(LOGTAG, 'Request has no parameter of etype when get uid from request!')
+        response[RetCode_Key] = ErrorCode_Param
+        return -1
+
+    if request.GET["etype"] == ETYPE_H5:
+        if request.session.get(SESSION_KEY_UID, default=None) is None:
+            response[RetCode_Key] = ErrorCode_NotLogin
+            return JsonResponse(response)
+        uid = request.session[SESSION_KEY_UID]
+    elif request.GET["etype"] == ETYPE_WEAPP:
+        if "openid" not in request.GET:
+            Log.e(LOGTAG, 'Request has no parameter of openid when get uid from request for weapp!')
+            response[RetCode_Key] = ErrorCode_Param
+            return -1
+        # TODO, should not only use openid to identify user's session
+        # we should add session id to identify it
+        openid = request.GET["openid"]
+        # TODO, FIXME
+        uid = 0 # SessionManager.getUid(openid)
+    response[RetCode_Key] = ErrorCode_OK
+    return uid
+
+# for h5 and weapp
 def changeUserFavoriteRh(request):
     Log.d(LOGTAG, 'changeUserFavoriteRh')
     response = {}
 
-    if request.session.get(SESSION_KEY_UID, default=None) is None:
-        response[RetCode_Key] = ErrorCode_NotLogin
-        return JsonResponse(response)
-
-    '''
-    if "uid" not in request.GET or request.GET["uid"] == '':
-        response[RetCode_Key] = ErrorCode_Param
-        return JsonResponse(response)
-    '''
     if "rhId" not in request.GET or request.GET["rhId"] == '':
         response[RetCode_Key] = ErrorCode_Param
         return JsonResponse(response)
@@ -125,16 +146,19 @@ def changeUserFavoriteRh(request):
         return JsonResponse(response)
 
     f = (request.GET["f"] == 't')
-    rhId = request.GET["rhId"]
-    rhId = Utils.get_rh_id_from_web_content(int(rhId))
-    uid = request.session[SESSION_KEY_UID]
-    '''
-    uid = request.GET["uid"]
     try:
-        rhId = Utils.get_rh_id_from_web_content(int(rhId))
+        rhId = int(request.GET["rhId"])
+        rhId = Utils.get_rh_id_from_web_content(rhId)
     except ValueError:
-        pass
-    '''
+        Log.e(LOGTAG, 'Request has no error parameter of rhId when change user favorite rh!')
+        response[RetCode_Key] = ErrorCode_Param
+        return JsonResponse(response)
+
+    # get uid from request
+    uid = getUid(request, response)
+    if response[RetCode_Key] != ErrorCode_OK:
+        Log.e(LOGTAG, 'Request has error when get uid on changing user favorite rh!')
+        return JsonResponse(response)
 
     Log.d(LOGTAG, 'uid: ' + str(uid))
     Log.d(LOGTAG, 'rhId: ' + str(rhId))
@@ -164,34 +188,14 @@ def changeUserFavoriteRh(request):
 def getUserFavoriteList(request):
     Log.d(LOGTAG, 'getUserFavoriteList')
     response = {}
-    if request.session.get(SESSION_KEY_UID, default=None) is None:
-        response[RetCode_Key] = ErrorCode_NotLogin
-        return JsonResponse(response)
 
-    uid = request.session[SESSION_KEY_UID]
+    # get uid from request
+    uid = getUid(request, response)
+    if response[RetCode_Key] != ErrorCode_OK:
+        Log.e(LOGTAG, 'Request has error when get uid on changing user favorite rh!')
+        return JsonResponse(response)
     Log.d(LOGTAG, 'uid: ' + str(uid))
 
-    '''
-    try:
-        favRecords = favorite.objects.filter(Q(uid=uid))
-    except ObjectDoesNotExist:
-        Log.d(LOGTAG, 'getUserFavoriteList, ObjectDoesNotExist')
-        response[RetCode_Key] = ErrorCode_NoData
-        response[RetCode_Data] = []
-        return JsonResponse(response)
-    except MultipleObjectsReturned:
-        pass
-    
-
-    if favRecords is None:
-        response[RetCode_Key] = ErrorCode_NoData
-        response[RetCode_Data] = []
-        return JsonResponse(response)
-
-    response[RetCode_Key] = ErrorCode_OK
-    response[RetCode_Data] = FavoriteDb.get_fav_list_from_records_with_web_rhid(favRecords)
-    Log.d(LOGTAG, 'getUserFavoriteList, data: ' + str(response[RetCode_Data]))
-    '''
     favList = []
     favDb = FavoriteDb(uid)
     response[RetCode_Key] = favDb.getFavoriteListForWeb(favList)
