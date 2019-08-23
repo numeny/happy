@@ -2,7 +2,7 @@ import Taro from '@tarojs/taro';
 import { update, addFavList } from '../actions/counter'
 // import { useDispatch } from '@tarojs/redux'
 
-import { SERVER_HOST, STORAGE_KEY_LOGIN, STORAGE_VALUE_LOGIN_SUCCESS, STORAGE_KEY_USER_NAME, STORAGE_KEY_USER_ID } from './const'
+import { SERVER_HOST, STORAGE_KEY_LOGIN, STORAGE_VALUE_LOGIN_SUCCESS, STORAGE_KEY_USER_ID } from './const'
 
 import { ErrorStringArray, ErrorCode_UnknownError, ErrorCode_OK, ErrorCode_NotLogin } from './error_code'
 
@@ -32,23 +32,16 @@ export const CommonFunc = {
     return ErrorCode_NotLogin == error_id
   },
 
-  // success: userid and username
+  // success: userid
   getLoginedInfo: function() {
-    let logined_username = ''
     const promise = new Promise(function(resolve, reject) {
       Taro.getStorage({ key: STORAGE_KEY_LOGIN })
         .then(res => {
-          console.log('getLoginedInfo-getStorage(STORAGE_KEY_LOGIN), success')
-          return Taro.getStorage({ key: STORAGE_KEY_USER_NAME })
-        }).then(res => {
-          console.log('getLoginedInfo-getStorage(STORAGE_KEY_USER_NAME), success, username: ' + res.data)
-          logined_username = res.data
           return Taro.getStorage({ key: STORAGE_KEY_USER_ID })
         }).then(res => {
-          console.log('getLoginedInfo-getStorage(STORAGE_KEY_USER_NAME), success, userid: ' + res.data)
+          console.log('getLoginedInfo-getStorage(STORAGE_KEY_USER_ID), success, userid: ' + res.data)
           resolve({
             userid: res.data,
-            username: logined_username,
           })
         }).catch(error => {
           console.log('getLoginedInfo-, not login: ')
@@ -58,9 +51,27 @@ export const CommonFunc = {
     return promise
   },
 
+  saveLoginStorage: function(uid) {
+    const promise = new Promise(function(resolve, reject) {
+      Taro.setStorage({
+          key: STORAGE_KEY_LOGIN,
+          data: STORAGE_VALUE_LOGIN_SUCCESS,
+      }).then(res => {
+        return Taro.setStorage({
+            key: STORAGE_KEY_USER_ID,
+            data: uid,
+        })
+      }).then(res => {
+        resolve(res)
+      }).catch(error => {
+        reject(error)
+      })
+    })
+    return promise
+  },
+
   clearLoginStorage: function() {
     Taro.removeStorage({ key: STORAGE_KEY_LOGIN })
-    Taro.removeStorage({ key: STORAGE_KEY_USER_NAME })
     Taro.removeStorage({ key: STORAGE_KEY_USER_ID })
   },
 
@@ -116,7 +127,6 @@ export const CommonFunc = {
   },
 
   login: function(username, password) {
-    let logined_userid = 0
     let rhFavList = []
     const promise = new Promise(function(resolve, reject) {
       Taro.request({
@@ -133,39 +143,15 @@ export const CommonFunc = {
             Taro.showToast({title: error_msg})
             return Promise.reject({error: error_msg})
           }
-          logined_userid = res.data.userid
+          return CommonFunc.saveLoginStorage(res.data.userid)
       }).then(res => {
           return CommonFunc.updateLoginUserFavList()
       }).then(res => {
-          rhFavList = res
-          console.log('login, will setStorage(STORAGE_KEY_LOGIN), res: ' + res)
-          console.log('login, will setStorage(STORAGE_KEY_LOGIN), username: '
-              + username + ', userid: ' + logined_userid)
-          // login success
-          return Taro.setStorage({
-              key: STORAGE_KEY_LOGIN,
-              data: STORAGE_VALUE_LOGIN_SUCCESS,
-          })
-      }).then(res => {
-        console.log('login, will setStorage(STORAGE_KEY_USER_NAME), res: '
-            + res + ', username: ' + username)
-        return Taro.setStorage({
-            key: STORAGE_KEY_USER_NAME,
-            data: username,
-            // data: '',
-        })
-      }).then(res => {
-        console.log('login, will setStorage(STORAGE_KEY_USER_ID), res: '
-            + res + ', userid: ' + logined_userid)
-        return Taro.setStorage({
-            key: STORAGE_KEY_USER_ID,
-            data: logined_userid,
-        })
-      }).then(res => {
+          // res => rhFavList
           console.log('login, success, will navigateBack')
           // FIMXE, rhFavList is forward to login page to update rhFavList on redux's store
           // because h5 do not support dispatch's calling from user
-          resolve(rhFavList)
+          resolve(res)
           Taro.navigateBack();
       }).catch(error => {
           reject(error)

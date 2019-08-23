@@ -18,5 +18,4 @@ export const HOME_URL = '/pages/index/index'
 
 export const STORAGE_KEY_LOGIN = 'login'
 export const STORAGE_VALUE_LOGIN_SUCCESS = 'Y'
-export const STORAGE_KEY_USER_NAME = 'username'
-export const STORAGE_KEY_USER_ID = 'userid'
+export const STORAGE_KEY_USER_ID = 'uid'
