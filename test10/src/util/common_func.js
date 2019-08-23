@@ -58,6 +58,12 @@ export const CommonFunc = {
     return promise
   },
 
+  clearLoginStorage: function() {
+    Taro.removeStorage({ key: STORAGE_KEY_LOGIN })
+    Taro.removeStorage({ key: STORAGE_KEY_USER_NAME })
+    Taro.removeStorage({ key: STORAGE_KEY_USER_ID })
+  },
+
   logout: function() {
     Taro.request({
         url: SERVER_HOST + '/logout',
@@ -69,17 +75,8 @@ export const CommonFunc = {
     })
 
     const promise = new Promise(function(resolve, reject) {
-      Taro.removeStorage({ key: STORAGE_KEY_LOGIN })
-        .then(res => {
-          console.log('logout-remove-STORAGE_KEY_LOGIN, success')
-          return Taro.removeStorage({ key: STORAGE_KEY_USER_NAME })
-        }).then(res => {
-          console.log('logout-remove-STORAGE_KEY_USER_NAME, success, res: ' + res)
-          resolve({res: 'logout success'})
-        }).catch(error => {
-          console.log('logout-remove-STORAGE_KEY_USER_NAME, error: ' + error)
-          reject({error: 'logout error'})
-        })
+      CommonFunc.clearLoginStorage()
+      resolve({ret: ErrorCode_OK})
     })
     return promise
   },
@@ -201,7 +198,7 @@ export const CommonFunc = {
             let error_msg = CommonFunc.getErrorString(res.data.ret)
             console.log('changeFav, error: ' + error_msg)
             Taro.showToast({title: error_msg})
-            return Promise.reject({error: error_msg})
+            return Promise.reject({errorCode: res.data.ret})
           }
           console.log('changeFav, success')
           resolve(res)
@@ -230,6 +227,7 @@ export const CommonFunc = {
           Taro.showToast({title: '请先登录！'})
 
           CommonFunc.setInterval(() => {
+            CommonFunc.clearLoginStorage()
             CommonFunc.openLoginPage()
           })
         }
