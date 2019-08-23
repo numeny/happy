@@ -5,8 +5,8 @@ import sys
 from django.contrib.auth import authenticate
 from json_response import JsonResponse
  
-from django.contrib.auth.models import User
-#from rh.models import User
+#from django.contrib.auth.models import User
+from rh.models import RhUser
 from django.core.exceptions import ObjectDoesNotExist
 from django.core.exceptions import MultipleObjectsReturned
 from django.db.models import Q
@@ -43,7 +43,7 @@ def login(request):
     Log.d(LOGTAG, 'password: ' + username)
 
     try:
-        user = User.objects.get(username=username)
+        user = RhUser.objects.get(username=username)
     except ObjectDoesNotExist:
         response[RetCode_Key] = ErrorCode_UserNotExisted
         return JsonResponse(response)
@@ -94,9 +94,10 @@ def registerUser(request):
     Log.d(LOGTAG, 'password: ' + username)
 
     try:
-        user = User.objects.get(username=username)
+        user = RhUser.objects.get(username=username)
     except ObjectDoesNotExist:
-        user = User.objects.create_user(username, '', password)
+        user = RhUser.objects.create_user(
+                username=username, password=password, user_type=1)
         if user is None:
             response[RetCode_Key] = ErrorCode_FailToRegisterUser
             return JsonResponse(response)

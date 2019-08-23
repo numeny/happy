@@ -55,12 +55,11 @@ class favorite(models.Model):
     uid = models.IntegerField(default=0)
     rhId = models.IntegerField(default=0)
 
-'''
-class User(AbstractUser):
-        rh_id = models.IntegerField(primary_key=True)
-        rh_password = models.TextField()
-        nickname = models.CharField(max_length=50, blank=True)
+class RhUser(AbstractUser):
+    # 0: h5, 1: weixin
+    user_type = models.IntegerField(default=0)
 
-        class Meta(AbstractUser.Meta):
-            pass
-'''
+    # unionid, only for weixin
+    unionid = models.TextField(default="")
+    # openid, only for weixin
+    openid = models.TextField(default="")
