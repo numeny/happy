@@ -26,6 +26,7 @@ from QueryParam import *
 from RhDetailQuery import *
 from RhListQuery import *
 from AreaQuery import *
+from user_manager import *
 
 from settings import *
 
@@ -110,8 +111,13 @@ def show_rh_list(request):
     response = {}
     if "favList" in request.GET:
         if Log.DEBUG:
-            Log.i(LOGTAG, 'Requesting user favorite rh details info!')
-        uid = request.session.get(SESSION_KEY_UID, default=None)
+            Log.i(LOGTAG, 'Requesting user favorite rh list!')
+
+        # get uid from request
+        uid = getUid(request, response)
+        if response[RetCode_Key] != ErrorCode_OK:
+            Log.e(LOGTAG, 'Request has error when get uid on changing user favorite rh!')
+            return JsonResponse(response)
         if uid is None:
             Log.e(LOGTAG, 'User not login in!')
             response[RetCode_Key] = ErrorCode_NotLogin
@@ -119,6 +125,7 @@ def show_rh_list(request):
             return JsonResponse(response)
         query_param.favList = (request.GET["favList"] == 't')
         query_param.uid = uid
+        Log.i(LOGTAG, 'Requesting user favorite rh, uid: ' + str(query_param.uid))
 
     # FIXME
     rh_list_query = RhListQuery(query_param)

@@ -9,6 +9,7 @@ from json_response import JsonResponse
 from rh.models import RhUser
 from django.core.exceptions import ObjectDoesNotExist
 from django.core.exceptions import MultipleObjectsReturned
+from django.db import IntegrityError
 from django.db.models import Q
 
 from rh.models import favorite
@@ -39,8 +40,8 @@ def login(request):
     username = request.GET["username"]
     password = request.GET["password"]
 
-    Log.d(LOGTAG, 'username: ' + username)
-    Log.d(LOGTAG, 'password: ' + username)
+    Log.d(LOGTAG, 'login, username: ' + username)
+    Log.d(LOGTAG, 'login, password: ' + password)
 
     try:
         user = RhUser.objects.get(username=username)
@@ -59,12 +60,12 @@ def login(request):
         return JsonResponse(response)
 
     response[RetCode_Key] = ErrorCode_OK
-    response[RetUserName_Key] = username
+    # response[RetUserName_Key] = username
     response[RetUserId_Key] = user.id
 
     request.session[SESSION_KEY_UID] = user.id
     uid = request.session[SESSION_KEY_UID]
-    Log.d(LOGTAG, 'login: uid: ' + str(uid))
+    Log.d(LOGTAG, 'login, uid: ' + str(uid))
 
     return JsonResponse(response)
 
@@ -74,11 +75,54 @@ def logout(request):
     request.session.clear()
     return JsonResponse({RetCode_Key: ErrorCode_OK})
 
+# only for weixin
+#FIXME, will be deleted
+def getUidFromUnionidForWeixin(response, unionid):
+    try:
+        user = RhUser.objects.get(unionid=unionid)
+    except ObjectDoesNotExist:
+        response[RetCode_Key] = ErrorCode_UserNotExisted
+        return -1
+
+    if user is None:
+        response[RetCode_Key] = ErrorCode_UserNotExisted
+        return -1
+
+    response[RetCode_Key] = ErrorCode_OK
+    return user.id
+
+# only for weixin
+def registerUserForWeixin(unionid):
+    Log.d(LOGTAG, 'registerUserForWeixin, unionid: ' + unionid)
+    response = {}
+    try:
+        user = RhUser.objects.get(unionid=unionid)
+    except ObjectDoesNotExist:
+        Log.d(LOGTAG, 'registerUserForWeixin, ObjectDoesNotExist')
+        try:
+            user = RhUser.objects.create_user(
+                    username=unionid, user_type=USER_TYPE_WEIXIN)
+            if user is None:
+                Log.e(LOGTAG, 'Create user record fail! unionid: ' + unionid)
+                response[RetCode_Key] = ErrorCode_FailToRegisterUser
+                return response
+
+            Log.e(LOGTAG, 'registerUserForWeixin! create OK, uid: ' + str(user.id))
+            response[RetCode_Key] = ErrorCode_OK
+            response[RetUserId_Key] = user.id
+            return response
+        except IntegrityError:
+            Log.e(LOGTAG, 'Create user record fail! unionid: ' + unionid)
+            response[RetCode_Key] = ErrorCode_FailToRegisterUser
+            return response
+
+    Log.e(LOGTAG, 'registerUserForWeixin! ErrorCode_UserExisted')
+    response[RetCode_Key] = ErrorCode_UserExisted
+    response[RetUserId_Key] = user.id
+    return response
+
 # only for h5
 def registerUser(request):
-    '''
-    return JsonResponse("hello")
-    '''
     response = {}
     if "username" not in request.GET or request.GET["username"] == '':
         response[RetCode_Key] = ErrorCode_LoginUserName
@@ -90,14 +134,14 @@ def registerUser(request):
     username = request.GET["username"]
     password = request.GET["password"]
 
-    Log.d(LOGTAG, 'username: ' + username)
-    Log.d(LOGTAG, 'password: ' + username)
+    Log.d(LOGTAG, 'registerUser, username: ' + username)
+    Log.d(LOGTAG, 'registerUser, password: ' + password)
 
     try:
         user = RhUser.objects.get(username=username)
     except ObjectDoesNotExist:
         user = RhUser.objects.create_user(
-                username=username, password=password, user_type=1)
+                username=username, password=password, user_type=USER_TYPE_H5)
         if user is None:
             response[RetCode_Key] = ErrorCode_FailToRegisterUser
             return JsonResponse(response)
@@ -119,18 +163,28 @@ def getUid(request, response):
     if request.GET["etype"] == ETYPE_H5:
         if request.session.get(SESSION_KEY_UID, default=None) is None:
             response[RetCode_Key] = ErrorCode_NotLogin
-            return JsonResponse(response)
+            return -1
         uid = request.session[SESSION_KEY_UID]
     elif request.GET["etype"] == ETYPE_WEAPP:
-        if "unionid" not in request.GET:
-            Log.e(LOGTAG, 'Request has no parameter of unionid when get uid from request for weapp!')
-            response[RetCode_Key] = ErrorCode_Param
-            return -1
         # TODO, should not only use unionid to identify user's session
         # we should add session id to identify it
-        unionid = request.GET["unionid"]
+        if "uid" not in request.GET or request.GET["uid"] == '':
+            Log.e(LOGTAG, 'Request has no parameter of uid when get uid from request for weapp!')
+            response[RetCode_Key] = ErrorCode_Param
+            return JsonResponse(response)
+        # unionid = request.GET["unionid"]
         # TODO, FIXME
-        uid = 0 # SessionManager.getUid(unionid)
+        # SessionManager.getUid(unionid)
+        # uid = getUidFromUnionidForWeixin(response, unionid)
+        # if response[RetCode_Key] != ErrorCode_OK:
+        #     return -1
+        try:
+            uid = int(request.GET["uid"])
+        except ValueError:
+            Log.e(LOGTAG, 'Request has error parameter of uid!')
+            response[RetCode_Key] = ErrorCode_Param
+            return JsonResponse(response)
+
     response[RetCode_Key] = ErrorCode_OK
     return uid
 
@@ -151,7 +205,7 @@ def changeUserFavoriteRh(request):
         rhId = int(request.GET["rhId"])
         rhId = Utils.get_rh_id_from_web_content(rhId)
     except ValueError:
-        Log.e(LOGTAG, 'Request has no error parameter of rhId when change user favorite rh!')
+        Log.e(LOGTAG, 'Request has error parameter of rhId when change user favorite rh!')
         response[RetCode_Key] = ErrorCode_Param
         return JsonResponse(response)
 

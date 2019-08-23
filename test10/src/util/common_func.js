@@ -7,10 +7,9 @@ import { SERVER_HOST, STORAGE_KEY_LOGIN, STORAGE_VALUE_LOGIN_SUCCESS, STORAGE_KE
 import { ErrorStringArray, ErrorCode_UnknownError, ErrorCode_OK, ErrorCode_NotLogin } from './error_code'
 
 export const CommonFunc = {
-
   getErrorString: function(error_id) {
     for (var i = 0; i < ErrorStringArray.length; i++) {
-      if (ErrorStringArray[i][0] == error_id) {
+      if (ErrorStringArray[i][0] === error_id) {
         return ErrorStringArray[i][1]
       }
     }
@@ -25,11 +24,16 @@ export const CommonFunc = {
   },
   
   isSuccess: function(error_id) {
-    return ErrorCode_OK == error_id
+    return ErrorCode_OK === error_id
   },
 
   isNotLogin: function(error_id) {
-    return ErrorCode_NotLogin == error_id
+    return ErrorCode_NotLogin === error_id
+  },
+
+  // success: userid
+  getLoginedInfoSync: function() {
+    return Taro.getStorageSync(STORAGE_KEY_USER_ID)
   },
 
   // success: userid
@@ -62,6 +66,15 @@ export const CommonFunc = {
             data: uid,
         })
       }).then(res => {
+        Taro.setStorageSync({
+            key: STORAGE_KEY_USER_ID,
+            data: uid,
+        })
+        let uid2 = Taro.getStorageSync(STORAGE_KEY_USER_ID)
+
+        console.error('saveLoginStorage: uid: ' + uid)
+        console.error('saveLoginStorage: uid2: ' + uid2)
+        console.error(CommonFunc.getLoginedInfoSync())
         resolve(res)
       }).catch(error => {
         reject(error)
@@ -92,32 +105,38 @@ export const CommonFunc = {
     return promise
   },
 
-  updateLoginUserFavList: function() {
+  getTaroEnv: function() {
+    // return process.env.TARO_ENV
+    return 'weapp'
+  },
+
+  // should called after logined
+  getUserFavList: function() {
     const promise = new Promise(function(resolve, reject) {
-      let url = (SERVER_HOST + '/gfl' + '?etype=' + process.env.TARO_ENV)
-      if (process.env.TARO_ENV === 'weapp') {
+      let url = (SERVER_HOST + '/gfl' + '?etype=' + CommonFunc.getTaroEnv())
+      if (CommonFunc.getTaroEnv() === 'weapp') {
         // FIXME
-        url += '&unionid=' + 'unionid'
+        url += '&uid=' + CommonFunc.getLoginedInfoSync()
       }
       Taro.request({
         url: url,
         credentials: 'include', // request with cookies etc.
       }).then(res => {
         if (CommonFunc.isNotLogin(res.data.ret)) {
-          console.log('updateLoginUserFavList-1, fail, not login')
+          console.log('getUserFavList-1, fail, not login')
           // CommonFunc.openLoginPage()
           return Promise.reject({error: 'not login'})
         }
         if (!CommonFunc.isSuccess(res.data.ret)) {
           return Promise.reject({error: 'get favorite list error!'})
         }
-        console.log('updateLoginUserFavList, success, data: '
+        console.log('getUserFavList, success, data: '
                 + res.data.data)
         resolve(res.data.data)
         // const dispatch = useDispatch()
         // dispatch(update(res.data))
       }).catch(error => {
-        console.log('updateLoginUserFavList, error: ' + error)
+        console.log('getUserFavList, error: ' + error)
         // resolve even if error
         resolve([])
       })
@@ -126,33 +145,77 @@ export const CommonFunc = {
     return promise
   },
 
+  // res.data.ret : return code
+  // res.data.userid : return user id
+  onLoginSuccess: function(res) {
+    const promise = new Promise(function(resolve, reject) {
+      console.log('login, onLoginSuccess ret: ' + CommonFunc.getErrorString(res.data.ret))
+      console.log('login, onLoginSuccess uid: ' + res.data.userid)
+      Taro.showToast({title: CommonFunc.getErrorString(res.data.ret)})
+      if (!CommonFunc.isSuccess(res.data.ret)) {
+        let error_msg = CommonFunc.getErrorString(res.data.ret)
+        Taro.showToast({title: error_msg})
+        return reject({errorCode: res.data.ret})
+      }
+      CommonFunc.saveLoginStorage(res.data.userid).then(res => {
+        console.error('login, save login storage success, res: ' + res)
+        console.error(res)
+        Taro.navigateBack();
+        return CommonFunc.getUserFavList()
+      }).then(res => {
+        // res => rhFavList
+        console.log('login, update user fav list success, will navigateBack')
+        // FIMXE, rhFavList is forward to login page to update rhFavList on redux's store
+        // because h5 do not support dispatch's calling from user
+        resolve(res)
+      }).catch(error => {
+        reject(error)
+        console.log('login, error: ' + error)
+      })
+    })
+
+    return promise
+  },
+
+  // for weixin test
+  loginForWeixin: function(unionid) {
+    const promise = new Promise(function(resolve, reject) {
+      Taro.request({
+        url: SERVER_HOST + '/weixinlogin_test?unionid=' + unionid,
+        credentials: 'include', // request with cookies etc.
+      }).then(res => {
+        console.log('loginForWeixin')
+        console.log(res)
+        return CommonFunc.onLoginSuccess(res)
+      }).then(res => {
+          // res => rhFavList
+          console.log('login, update user fav list success, will navigateBack')
+          // FIMXE, rhFavList is forward to login page to update rhFavList on redux's store
+          // because h5 do not support dispatch's calling from user
+          resolve(res)
+      }).catch(error => {
+          console.log('loginForWeixin')
+          console.log(error)
+          reject(error)
+      })
+    })
+
+    return promise
+  },
+
   login: function(username, password) {
-    let rhFavList = []
     const promise = new Promise(function(resolve, reject) {
       Taro.request({
         url: SERVER_HOST + '/login?username=' + username + "&password=" + password,
         credentials: 'include', // request with cookies etc.
-      }).then(
-        res => {
-          console.log('login, Taro.request success ret: ' + CommonFunc.getErrorString(res.data.ret))
-          // FIXME, delete it
-          // if (DEBUG)
-          Taro.showToast({title: CommonFunc.getErrorString(res.data.ret)})
-          if (!CommonFunc.isSuccess(res.data.ret)) {
-            let error_msg = CommonFunc.getErrorString(res.data.ret)
-            Taro.showToast({title: error_msg})
-            return Promise.reject({error: error_msg})
-          }
-          return CommonFunc.saveLoginStorage(res.data.userid)
       }).then(res => {
-          return CommonFunc.updateLoginUserFavList()
+        return CommonFunc.onLoginSuccess(res)
       }).then(res => {
           // res => rhFavList
-          console.log('login, success, will navigateBack')
+          console.log('login, update user fav list success, will navigateBack')
           // FIMXE, rhFavList is forward to login page to update rhFavList on redux's store
           // because h5 do not support dispatch's calling from user
           resolve(res)
-          Taro.navigateBack();
       }).catch(error => {
           reject(error)
           console.log('login, error: ' + error)
@@ -168,11 +231,7 @@ export const CommonFunc = {
       let url = (SERVER_HOST + '/cf?uid=' + userId
             + '&rhId=' + rhId
             + '&f=' + (isFavorite?'t':'f')
-            + '&etype=' + process.env.TARO_ENV)
-      if (process.env.TARO_ENV === 'weapp') {
-        // FIXME
-        url += '&unionid=' + 'unionid'
-      }
+            + '&etype=' + CommonFunc.getTaroEnv())
       console.log('changeFav, url: ' + url)
       Taro.request({
         url: url,
@@ -208,7 +267,7 @@ export const CommonFunc = {
         resolve(res)
       }).catch(error => {
         console.log('onFavorite-3, fail, error: ' + error)
-        if (error.errorCode == ErrorCode_NotLogin) {
+        if (error.errorCode === ErrorCode_NotLogin) {
           console.log('onFavorite-3, fail, not login')
           Taro.showToast({title: '请先登录！'})
 
@@ -241,8 +300,15 @@ export const CommonFunc = {
   },
 
   requestRhList: function(addedUrl) {
+    let url = SERVER_HOST + '/show_rh_list' + '?etype=' + CommonFunc.getTaroEnv() + addedUrl
+    if (CommonFunc.getTaroEnv() === 'weapp') {
+      // FIXME
+      url += ('&uid=' + CommonFunc.getLoginedInfoSync())
+    }
+
+    console.error('requestRhList: url: ' + url)
     return Taro.request({
-      url: SERVER_HOST + '/show_rh_list' + addedUrl,
+      url: url,
       credentials: 'include', // request with cookies etc.
     })
   },
@@ -285,7 +351,7 @@ export const CommonFunc = {
   },
 
   checkUsername: function(username) {
-    if (username.length == 0) {
+    if (username.length === 0) {
       Taro.showToast({title: '请输入用户名！'})
       return false
     }
@@ -293,7 +359,7 @@ export const CommonFunc = {
   },
 
   checkPassword: function(password) {
-    if (password.length == 0) {
+    if (password.length === 0) {
       Taro.showToast({title: '请输入密码！'})
       return false
     }
@@ -306,11 +372,11 @@ export const CommonFunc = {
   },
 
   checkPassword2: function(password, password2) {
-    if (password.length == 0) {
+    if (password.length === 0) {
       Taro.showToast({title: '请输入密码！'})
       return false
     }
-    if (password2.length == 0) {
+    if (password2.length === 0) {
       Taro.showToast({title: '请再次输入密码！'})
       return false
     }

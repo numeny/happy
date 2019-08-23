@@ -47,3 +47,5 @@ SESSION_KEY_UID = 'user_id'
 # Client's environment
 ETYPE_WEAPP = 'weapp'
 ETYPE_H5 = 'h5'
+USER_TYPE_H5 = 0
+USER_TYPE_WEIXIN = 1

@@ -24,8 +24,22 @@ from settings import *
 from Log import *
 from Utils import *
 from FavoriteDb import *
+from user_manager import *
 
-LOGTAG = 'user_manager'
+LOGTAG = 'weapp_login'
+
+def weixinlogin_test(request):
+    Log.e(LOGTAG, 'weixinlogin_test')
+    response = {}
+    if "unionid" not in request.GET or request.GET["unionid"] == '':
+        response[RetCode_Key] = ErrorCode_WeixinLoginNoCode
+        return JsonResponse(response)
+
+    unionid = request.GET["unionid"]
+    Log.e(LOGTAG, 'Weixin login, weixin unionid: ' + unionid)
+
+    response = registerUserForWeixin(unionid)
+    return JsonResponse(response)
 
 def weixinlogin(request):
     response = {}
@@ -59,5 +73,3 @@ def weixinlogin(request):
     print(response.read().decode('utf-8'))
     Log.d(LOGTAG, 'weixinCode: ' + weixinCode)
     return JsonResponse(response)
-    
-

@@ -73,6 +73,9 @@ export default class Login extends Component {
   }
 
   onSubmit = (e) =>  {
+    if (!CommonFunc.checkUsername(this.state.username)) {
+      return
+    }
     /*
     Taro.login({
       success (res) {
@@ -92,7 +95,18 @@ export default class Login extends Component {
         }
       }
     })
-    */
+*/
+    // CommonFunc.login(this.state.username, this.state.password)
+/*
+*/
+    CommonFunc.loginForWeixin(this.state.username)
+      .then(res => {
+        console.log('onSubmit, success: ' + res)
+        this.props.updateProp(res)
+      }).catch(error => {
+        console.log('onSubmit, error: ' + error)
+      })
+    /*
     if (!CommonFunc.checkUsername(this.state.username)) {
       return
     }
@@ -107,6 +121,7 @@ export default class Login extends Component {
       }).catch(error => {
           console.log('onSubmit, error: ' + error)
       })
+    */
   }
 
   onExit = (e) =>  {
