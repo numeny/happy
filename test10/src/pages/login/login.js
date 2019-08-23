@@ -49,12 +49,14 @@ export default class Login extends Component {
       console.log('componentWillMount-1, success, res: ' + res.username)
       this.setState({
         isLogin: true,
+        // FIXME, not set
         loginedUsername: res.username,
       })
     }).catch(error => {
       console.log('componentWillMount-2, fail, error: ' + error)
       this.setState({
         isLogin: false,
+        // FIXME, not set
         loginedUsername: '',
       })
     })

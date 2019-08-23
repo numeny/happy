@@ -60,3 +60,15 @@ bdg@bdg:~/downloads$ sudo service mysql restart
 解决方案：1) 删除rm happy_inn/rh/migrations/ -rf
 2) python manage.py makemigrations rh(应用名)
 3) python manage.py migrate
+
+1.
+场景：在运行时，出现找不到数据库表中的某字段时。
+解决方案：
+1) 尝试删除数据库rh: drop database rh;
+2) 建立空数据库rh：create database rh;
+3) 在django里生成数据表：
+python manage.py makemigrations rh
+python manage.py migrate rh
+python manage.py migrate
+4) 将数据库rh从备份中恢复：mysql -u bdg -p rh < rh.backup.sql
+

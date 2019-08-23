@@ -1,4 +1,4 @@
 #备份
-mysqldump --add-drop-table -u root -p rh > rh.backup.sql
+mysqldump --add-drop-table -u bdg -p rh > rh.backup.sql
 #还原
 mysql -u bdg -p rh < rh.backup.sql
