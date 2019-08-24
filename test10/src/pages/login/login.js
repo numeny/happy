@@ -101,29 +101,30 @@ export default class Login extends Component {
     // CommonFunc.login(this.state.username, this.state.password)
 /*
 */
-    CommonFunc.loginForWeixin(this.state.username)
-      .then(res => {
-        console.log('onSubmit, success: ' + res)
-        this.props.updateProp(res)
-      }).catch(error => {
-        console.log('onSubmit, error: ' + error)
-      })
-    /*
-    if (!CommonFunc.checkUsername(this.state.username)) {
-      return
-    }
-    if (!CommonFunc.checkPassword(this.state.password)) {
-      return
-    }
-    CommonFunc.login(this.state.username, this.state.password)
-      .then(res => {
+    if (CommonFunc.getTaroEnv() === 'weapp') {
+      CommonFunc.loginForWeixin(this.state.username)
+        .then(res => {
           console.log('onSubmit, success: ' + res)
-          // set user fav list, res is rhFavList
           this.props.updateProp(res)
-      }).catch(error => {
+        }).catch(error => {
           console.log('onSubmit, error: ' + error)
-      })
-    */
+        })
+    } else if (CommonFunc.getTaroEnv() === 'h5') {
+      if (!CommonFunc.checkUsername(this.state.username)) {
+        return
+      }
+      if (!CommonFunc.checkPassword(this.state.password)) {
+        return
+      }
+      CommonFunc.login(this.state.username, this.state.password)
+        .then(res => {
+            console.log('onSubmit, success: ' + res)
+            // set user fav list, res is rhFavList
+            this.props.updateProp(res)
+        }).catch(error => {
+            console.log('onSubmit, error: ' + error)
+        })
+    }
   }
 
   onExit = (e) =>  {

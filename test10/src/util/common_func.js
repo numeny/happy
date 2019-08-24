@@ -20,7 +20,7 @@ export const CommonFunc = {
     const timeId = setInterval(() => {
         callback()
         clearInterval(timeId)
-    }, 1500);
+    }, 1000);
   },
   
   isSuccess: function(error_id) {
