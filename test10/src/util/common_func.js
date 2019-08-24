@@ -106,8 +106,8 @@ export const CommonFunc = {
   },
 
   getTaroEnv: function() {
-    // return process.env.TARO_ENV
-    return 'weapp'
+    return process.env.TARO_ENV
+    // return 'weapp'
   },
 
   // should called after logined
@@ -149,8 +149,8 @@ export const CommonFunc = {
   // res.data.userid : return user id
   onLoginSuccess: function(res) {
     const promise = new Promise(function(resolve, reject) {
-      console.log('login, onLoginSuccess ret: ' + CommonFunc.getErrorString(res.data.ret))
-      console.log('login, onLoginSuccess uid: ' + res.data.userid)
+      console.log('onLoginSuccess ret: ' + CommonFunc.getErrorString(res.data.ret))
+      console.log('onLoginSuccess uid: ' + res.data.userid)
       Taro.showToast({title: CommonFunc.getErrorString(res.data.ret)})
       if (!CommonFunc.isSuccess(res.data.ret)) {
         let error_msg = CommonFunc.getErrorString(res.data.ret)
@@ -180,11 +180,27 @@ export const CommonFunc = {
   // for weixin test
   loginForWeixin: function(unionid) {
     const promise = new Promise(function(resolve, reject) {
-      Taro.request({
-        url: SERVER_HOST + '/weixinlogin_test?unionid=' + unionid,
-        credentials: 'include', // request with cookies etc.
+      Taro.login().then(res => {
+        if (!res.code) {
+          return Promise.reject({errorCode: ErrorCode_CantGetWeixinCode})
+        }
+        console.log('登录成功！' + res.code)
+        //发起网络请求
+        return Taro.request({
+          url: SERVER_HOST + '/weixinlogin?code=' + res.code,
+          data: {
+            code: res.code
+          },
+          credentials: 'include', // request with cookies etc.
+        })
+      /*
       }).then(res => {
-        console.log('loginForWeixin')
+        Taro.request({
+          url: SERVER_HOST + '/weixinlogin_test?unionid=' + unionid,
+          credentials: 'include', // request with cookies etc.
+      */
+      }).then(res => {
+        console.log('loginForWeixin, success!')
         console.log(res)
         return CommonFunc.onLoginSuccess(res)
       }).then(res => {
@@ -300,7 +316,10 @@ export const CommonFunc = {
   },
 
   requestRhList: function(addedUrl) {
-    let url = SERVER_HOST + '/show_rh_list' + '?etype=' + CommonFunc.getTaroEnv() + addedUrl
+    let url = SERVER_HOST + '/show_rh_list'
+              + addedUrl
+              + ((addedUrl.length > 0) ? '&' : '?')
+              + 'etype=' + CommonFunc.getTaroEnv()
     if (CommonFunc.getTaroEnv() === 'weapp') {
       // FIXME
       url += ('&uid=' + CommonFunc.getLoginedInfoSync())

@@ -110,8 +110,7 @@ def show_rh_list(request):
 
     response = {}
     if "favList" in request.GET:
-        if Log.DEBUG:
-            Log.i(LOGTAG, 'Requesting user favorite rh list!')
+        Log.i(LOGTAG, 'Requesting user favorite rh list!')
 
         # get uid from request
         uid = getUid(request, response)
@@ -124,6 +123,7 @@ def show_rh_list(request):
             response[RetCode_Data] = []
             return JsonResponse(response)
         query_param.favList = (request.GET["favList"] == 't')
+        Log.i(LOGTAG, 'Requesting user favorite rh, favList: ' + str(query_param.favList))
         query_param.uid = uid
         Log.i(LOGTAG, 'Requesting user favorite rh, uid: ' + str(query_param.uid))
 

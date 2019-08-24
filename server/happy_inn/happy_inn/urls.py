@@ -31,6 +31,6 @@ urlpatterns = [
     url(r'^cf', user_manager.changeUserFavoriteRh),
     url(r'^gfl', user_manager.getUserFavoriteList),
 
-    url(r'^weixinlogin_test', weapp_login.weixinlogin_test),
     url(r'^weixinlogin', weapp_login.weixinlogin),
+    url(r'^weixinlogin_test', weapp_login.weixinlogin_test),
 ]

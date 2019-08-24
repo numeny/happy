@@ -7,8 +7,8 @@ RetUserName_Key = 'username'
 RetUserId_Key = 'userid'
 
 ErrorCode_OK = 0
-ErrorCode_NOK = -9998
-ErrorCode_UnknownError = -9999
+ErrorCode_NOK = -9999
+ErrorCode_UnknownError = -9998
 
 ErrorCode_RhIdNotInput = -1
 ErrorCode_RhIdNoExist = -2
@@ -49,3 +49,7 @@ ETYPE_WEAPP = 'weapp'
 ETYPE_H5 = 'h5'
 USER_TYPE_H5 = 0
 USER_TYPE_WEIXIN = 1
+
+# weixin appid
+WEIXIN_APPID = 'wx0075bca25e961250'
+WEIXIN_SECRET = 'e724fb3262ef839384db4417e99f40d7'

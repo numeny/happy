@@ -92,34 +92,40 @@ def getUidFromUnionidForWeixin(response, unionid):
     return user.id
 
 # only for weixin
+# return: ret[RetCode_Key] = ErrorCode_OK 
+#                            ErrorCode_FailToRegisterUser
+#                            ErrorCode_UserExisted
+#         ret[RetUserId_Key] = user id
 def registerUserForWeixin(unionid):
     Log.d(LOGTAG, 'registerUserForWeixin, unionid: ' + unionid)
-    response = {}
+    ret = {}
     try:
-        user = RhUser.objects.get(unionid=unionid)
+        # FIXME, unionid saved as username
+        user = RhUser.objects.get(username=unionid)
     except ObjectDoesNotExist:
         Log.d(LOGTAG, 'registerUserForWeixin, ObjectDoesNotExist')
         try:
-            user = RhUser.objects.create_user(
-                    username=unionid, user_type=USER_TYPE_WEIXIN)
+            # FIXME, unionid saved as username andunionid
+            user = RhUser.objects.create_user(username=unionid,
+                unionid=unionid, user_type=USER_TYPE_WEIXIN)
             if user is None:
                 Log.e(LOGTAG, 'Create user record fail! unionid: ' + unionid)
-                response[RetCode_Key] = ErrorCode_FailToRegisterUser
-                return response
+                ret[RetCode_Key] = ErrorCode_FailToRegisterUser
+                return ret
 
             Log.e(LOGTAG, 'registerUserForWeixin! create OK, uid: ' + str(user.id))
-            response[RetCode_Key] = ErrorCode_OK
-            response[RetUserId_Key] = user.id
-            return response
+            ret[RetCode_Key] = ErrorCode_OK
+            ret[RetUserId_Key] = user.id
+            return ret
         except IntegrityError:
             Log.e(LOGTAG, 'Create user record fail! unionid: ' + unionid)
-            response[RetCode_Key] = ErrorCode_FailToRegisterUser
-            return response
+            ret[RetCode_Key] = ErrorCode_FailToRegisterUser
+            return ret
 
     Log.e(LOGTAG, 'registerUserForWeixin! ErrorCode_UserExisted')
-    response[RetCode_Key] = ErrorCode_UserExisted
-    response[RetUserId_Key] = user.id
-    return response
+    ret[RetCode_Key] = ErrorCode_UserExisted
+    ret[RetUserId_Key] = user.id
+    return ret
 
 # only for h5
 def registerUser(request):

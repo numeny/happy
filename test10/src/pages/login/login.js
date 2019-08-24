@@ -75,10 +75,10 @@ export default class Login extends Component {
   }
 
   onSubmit = (e) =>  {
+    /*
     if (!CommonFunc.checkUsername(this.state.username)) {
       return
     }
-    /*
     Taro.login({
       success (res) {
         if (res.code) {

@@ -4,6 +4,7 @@ import sys
 import urllib
 
 from django.contrib.auth import authenticate
+from django.http import HttpResponse
 from json_response import JsonResponse
  
 from django.contrib.auth.models import User
@@ -42,6 +43,7 @@ def weixinlogin_test(request):
     return JsonResponse(response)
 
 def weixinlogin(request):
+    Log.d(LOGTAG, 'Weixin login!')
     response = {}
     if "code" not in request.GET or request.GET["code"] == '':
         response[RetCode_Key] = ErrorCode_WeixinLoginNoCode
@@ -53,23 +55,43 @@ def weixinlogin(request):
     # url = 'https://api.weixin.qq.com/sns/jscode2session?appid=APPID&secret=SECRET&js_code=JSCODE&grant_type=authorization_code 
     # url = 'http://www.baidu.com'
     url = ('https://api.weixin.qq.com/sns/jscode2session?appid='
-            + 'wx0075bca25e961250'
-            + '&secret=' + 'e724fb3262ef839384db4417e99f40d7'
+            + WEIXIN_APPID
+            + '&secret=' + WEIXIN_SECRET
             + '&js_code=' + weixinCode
             + '&grant_type=authorization_code')
+    Log.d(LOGTAG, 'Weixin login, url: ' + url)
     try: 
-        response = urllib.request.urlopen(url)
-        response = urllib.request.urlopen(url, timeout=1.0)
+        response = urllib.request.urlopen(url, timeout=5.0)
     except urllib.error.URLError as e:
         if isinstance(e.reason,socket.timeout):
             response[RetCode_Key] = ErrorCode_WeixinServerError
-            Log.e(LOGTAG, 'Fail to requesting unionid of weixin, code: ' + weixinCode)
+            Log.e(LOGTAG, 'Fail to requesting unionid of weixin on timeout, code: ' + weixinCode)
             return JsonResponse(response)
+
+    if response is None:
+        response = {}
+        response[RetCode_Key] = ErrorCode_WeixinServerError
+        Log.e(LOGTAG, 'Fail to requesting unionid of weixin with none response, code: ' + weixinCode)
+        return JsonResponse(response)
 
     # wx0075bca25e961250
     # b96f3b34e596f414744d56cd8081d2ed
-    print(response.read())
-    print(type(response.read().decode('utf-8')))
-    print(response.read().decode('utf-8'))
-    Log.d(LOGTAG, 'weixinCode: ' + weixinCode)
-    return JsonResponse(response)
+    data_1 = response.read()
+    Log.d(LOGTAG, 'Success to requesting unionid of weixin, data: ' + str(data_1))
+    response = json.loads(data_1)
+    Log.d(LOGTAG, 'Success to requesting unionid of weixin, data.map: ' + str(response))
+
+    if 'openid' not in response or response['openid'] == '' or 'session_key' not in response or response['session_key'] == '':
+        response = {}
+        response[RetCode_Key] = ErrorCode_WeixinServerError
+        Log.e(LOGTAG, 'Fail to requesting openid or sesseion_key of weixin, code: ' + weixinCode)
+        return JsonResponse(response)
+
+    # FIXME
+    unionid = response['openid']
+
+    ret = registerUserForWeixin(unionid)
+    if ret[RetCode_Key] == ErrorCode_UserExisted:
+        ret[RetCode_Key] = ErrorCode_OK
+
+    return JsonResponse(ret)
