@@ -1,6 +1,7 @@
 import Taro, { Component, Events } from '@tarojs/taro'
 import { View, Text, Image, Input, Video, Button, Icon, Progress, Checkbox, Switch, Form, Slider, Picker, PickerView, PickerViewColumn, Swiper, SwiperItem, Navigator, ScrollView } from '@tarojs/components'
 import { AtIcon } from 'taro-ui'
+import "../../../node_modules/taro-ui/dist/style/components/icon.scss";
 
 import './favicon.scss'
 
