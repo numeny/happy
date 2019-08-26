@@ -20,19 +20,6 @@ import { CommonFunc } from '@util/common_func'
 import { connect } from '@tarojs/redux'
 import { update, addFavList, delFavList } from '../../actions/counter'
 
-@connect((state) => {
-  return { prop_counter: state.counter }
-}, (dispatch) => ({
-  addFavListProp (rhId) {
-    console.error('addFavList, surccess, ' + rhId)
-    dispatch(addFavList([rhId]))
-  },
-  delFavListProp (rhId) {
-    console.error('delFavList, surccess, ' + rhId)
-    dispatch(delFavList([rhId]))
-  },
-}))
-
 export default class Rhdetail extends Component {
 
   constructor(props) {
@@ -313,9 +300,6 @@ export default class Rhdetail extends Component {
       <Video width='150px' height='190px' src={namedVideo} />
       <Image src={namedPng} />
       <FixedTitle title="养老院详情" />
-      {this.props.prop_counter.rhFavList.map((fav) =>
-          <Text>{fav}, </Text>
-      )}
       <View className="rhdetail-top-view-1">
         {images_swiper}
         <View className="rh-name">

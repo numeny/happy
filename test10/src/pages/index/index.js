@@ -20,19 +20,6 @@ import Rhlist from '../common/rhlist'
 import { connect } from '@tarojs/redux'
 import { update, addFavList, delFavList } from '../../actions/counter'
 
-@connect((state) => {
-  return { prop_counter: state.counter }
-}, (dispatch) => ({
-  addFavListProp (rhId) {
-    console.error('addFavList, surccess, ' + rhId)
-    dispatch(addFavList([rhId]))
-  },
-  delFavListProp (rhId) {
-    console.error('delFavList, surccess, ' + rhId)
-    dispatch(delFavList([rhId]))
-  },
-}))
-
 export default class Index extends Component {
 
   /**
@@ -372,9 +359,6 @@ export default class Index extends Component {
         onScroll={this.onScroll.bind(this)}>
         <Video width='150px' height='190px' src={namedVideo} />
         <Image onClick={this.clickImage} src={namedPng} width='150px' height='300px' />
-      {this.props.prop_counter.rhFavList.map((fav) =>
-          <View>{fav}</View>
-      )}
         <View className='top-title-top-container'>
           <View className='top-title-container'>
             <View>
