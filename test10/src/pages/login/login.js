@@ -153,11 +153,11 @@ export default class Login extends Component {
   render () {
     return (
       <View className="login-top-view">
-      <Video width='150px' height='190px' src={namedVideo} />
-      <Image src={namedPng} />
-      <FixedTitle title="用户登录" />
-      {!this.state.isLogin &&
+      {CommonFunc.isTaroEnvH5() &&
+        <FixedTitle title="登录" />}
       <View className="login-top-view-1">
+      {!this.state.isLogin &&
+      <View>
         <View className='login-input-container'>
           <View className='login-input-container-1'>
             <View className='user-icon'/>
@@ -188,6 +188,7 @@ export default class Login extends Component {
           </View>
         </View>
       }
+      </View>
       <PageFooter />
       </View>
     )
