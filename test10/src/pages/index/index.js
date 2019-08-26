@@ -88,9 +88,44 @@ export default class Index extends Component {
       },
     })
     */
+    const timeId = setInterval(() => {
+        this.requestRhDataOfCurrCity('北京市', '北京市')
+        clearInterval(timeId)
+    }, 3000);
 
+    CommonFunc.getCurrCity().then(res => {
+        if (res.data.province.length > 0
+            && res.data.city.length > 0) {
+        /*
+          this.setState({
+            currProv: res.data.province,
+            currCity: res.data.city,
+          })
+          */
+          console.error("CommonFunc.getCurrCity, province: "
+              + res.data.province + ", city: " + res.data.city)
+          clearInterval(timeId)
+          this.requestRhDataOfCurrCity(res.data.province, res.data.city)
+        }
+      }).catch(error => {
+        console.error(error)
+      })
+
+  }
+
+  requestRhDataOfCurrCity(province, city) {
     let currProv = this.state.currProv
     let currCity = this.state.currCity
+    console.error("requestRhDataOfCurrCity, province: "
+        + province + ", city: " + city
+        + "currProv: " + currProv + ", currCity: " + currCity
+        )
+    if (province === currProv && city === currCity) {
+      return
+    }
+    currProv = province
+    currCity = city
+
     if (this.$router.params.prov != null
         && this.$router.params.prov.length > 0
         && this.$router.params.city != null

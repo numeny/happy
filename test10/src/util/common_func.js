@@ -431,4 +431,40 @@ export const CommonFunc = {
     */
     return true
   },
+
+  getCurrCity: function() {
+    const promise = new Promise(function(resolve, reject) {
+      let url = 'https://restapi.amap.com/v3/geocode/regeo?output=json&location=114.310003,39.991957&key=2b4bc515610655bb54dc9f979a6a857e&radius=1000&extensions=all'
+      Taro.request({
+          url: url,
+          // credentials: 'include', // request with cookies etc.
+          mode: 'cors',
+          // dataType: '', // not json data
+      }).then(res => {
+        console.error('getCurrCity success-1')
+        console.error(res)
+        console.error('getCurrCity success-2')
+        console.error(res.data.regeocode.addressComponent.province)
+        console.error(res.data.regeocode.addressComponent.city)
+        resolve({
+          data: {
+            province: res.data.regeocode.addressComponent.province,
+            city: res.data.regeocode.addressComponent.city,
+          },
+        })
+      }).catch(error => {
+        console.error('getCurrCity error-1!')
+        console.error(error)
+        console.error('getCurrCity error-2!')
+        console.error(error.status)
+        console.error('getCurrCity error-3!')
+        console.error(typeof(error))
+        console.error('getCurrCity error-4!')
+        reject(error)
+      })
+    })
+
+    return promise
+  },
+
 }
