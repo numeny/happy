@@ -37,7 +37,7 @@ ErrorCode_Param = 1200
 
 RH_NUM_PER_PAGE = 20
 
-IMG_SERVER_HOST="http://127.0.0.1"
+IMG_SERVER_HOST="http://192.168.31.160"
 IMGS_PATH="images"
 DEFAULT_IMG = "default.jpg"
 

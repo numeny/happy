@@ -439,7 +439,41 @@ export const CommonFunc = {
 
   getCurrCity: function() {
     const promise = new Promise(function(resolve, reject) {
-      let url = 'https://restapi.amap.com/v3/geocode/regeo?output=json&location=114.310003,39.991957&key=2b4bc515610655bb54dc9f979a6a857e&radius=1000&extensions=all'
+      Taro.getLocation().then(res => {
+          Taro.showToast({title: 'success'})
+          const latitude = res.latitude
+          const longitude = res.longitude
+          const speed = res.speed
+          const accuracy = res.accuracy
+          console.error("success, res: " + res)
+          console.error("success, latitude: " + latitude)
+          console.error("success, longitude: " + longitude)
+          console.error("success, speed: " + speed)
+          console.error("success, accuracy: " + accuracy)
+          return CommonFunc.getCurrCityImpl(res.longitude, res.latitude)
+        }).then(res => {
+          if (res.data.province.length <= 0
+              || res.data.city.length <= 0) {
+            return
+          }
+          console.error("CommonFunc.getCurrCity, province: "
+              + res.data.province + ", city: " + res.data.city)
+          resolve(res)
+        }).catch(error => {
+          Taro.showToast({title: 'error'})
+          console.error("error")
+          reject(error)
+        })
+    })
+
+    return promise
+  },
+
+  getCurrCityImpl: function(longitude, latitude) {
+    const promise = new Promise(function(resolve, reject) {
+      let url = 'https://restapi.amap.com/v3/geocode/regeo?output=json&location='
+        + longitude + ', ' + latitude
+        + '&key=2b4bc515610655bb54dc9f979a6a857e&radius=1000&extensions=all'
       Taro.request({
           url: url,
           // credentials: 'include', // request with cookies etc.

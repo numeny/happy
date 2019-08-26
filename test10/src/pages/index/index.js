@@ -39,8 +39,8 @@ export default class Index extends Component {
     this.state = {
       searchCondition: '',
 
-      currProv: "北京市",
-      currCity: "北京市",
+      currProv: '',
+      currCity: '',
 
       selectorArea: [],
       selectorAreaChecked: '不限',
@@ -73,73 +73,82 @@ export default class Index extends Component {
 
   componentWillMount() {
     /*
-    Taro.getLocation({
-      success: (res) => {
-        console.error("success, res: " + res)
-        Taro.showToast({title: 'success'})
-      },
-      fail: (error) => {
-        Taro.showToast({title: 'fail'})
-        console.error("fail")
-      },
-      complete: () => {
-        Taro.showToast({title: 'complete'})
-        console.error("complete")
-      },
-    })
-    */
     const timeId = setInterval(() => {
         this.requestRhDataOfCurrCity('北京市', '北京市')
         clearInterval(timeId)
-    }, 3000);
+    }, 30000);
+    */
+    requestRhDataOfCurrCity()
+  }
 
-    CommonFunc.getCurrCity().then(res => {
-        if (res.data.province.length > 0
-            && res.data.city.length > 0) {
-        /*
-          this.setState({
-            currProv: res.data.province,
-            currCity: res.data.city,
-          })
-          */
-          console.error("CommonFunc.getCurrCity, province: "
-              + res.data.province + ", city: " + res.data.city)
-          clearInterval(timeId)
-          this.requestRhDataOfCurrCity(res.data.province, res.data.city)
+  getCurrCity () {
+    CommonFunc.getCurrCityImpl(114.310003, 39.991957)
+      .then(res => {
+        if (res.data.province.length <= 0
+            || res.data.city.length <= 0) {
+          return
         }
+        /*
+        this.setState({
+          currProv: res.data.province,
+          currCity: res.data.city,
+        })
+        */
+        console.error("CommonFunc.getCurrCityImpl, province: "
+            + res.data.province + ", city: " + res.data.city)
+        clearInterval(timeId)
+        this.requestRhDataOfCurrCity2(res.data.province, res.data.city)
       }).catch(error => {
         console.error(error)
       })
-
   }
 
-  requestRhDataOfCurrCity(province, city) {
-    let currProv = this.state.currProv
-    let currCity = this.state.currCity
-    console.error("requestRhDataOfCurrCity, province: "
-        + province + ", city: " + city
-        + "currProv: " + currProv + ", currCity: " + currCity
-        )
-    if (province === currProv && city === currCity) {
-      return
-    }
-    currProv = province
-    currCity = city
-
+  requestRhDataOfCurrCity() {
     if (this.$router.params.prov != null
         && this.$router.params.prov.length > 0
         && this.$router.params.city != null
         && this.$router.params.city.length > 0) {
-      currProv = this.$router.params.prov
-      currCity = this.$router.params.city
-      this.setState({
-        currProv: currProv,
-        currCity: currCity,
-      })
+        this.requestRhDataOfCurrCity2(
+            this.$router.params.province,
+            this.$router.params.city)
+          return
     }
+    CommonFunc.getCurrCity()
+      .then(res => {
+        if (res.data.province.length <= 0
+            || res.data.city.length <= 0) {
+          return
+        }
+        console.error("CommonFunc.getCurrCity, province: "
+            + res.data.province + ", city: " + res.data.city)
+        this.requestRhDataOfCurrCity2(res.data.province, res.data.city)
+      }).catch(error => {
+        console.error(error)
+      })
+  }
+
+  requestRhDataOfCurrCity2(province, city) {
+    console.error("requestRhDataOfCurrCity2, province: "
+        + province + ", city: " + city
+        + ", currProv: " + this.state.currProv
+        + ", currCity: " + this.state.currCity)
+    if (province === this.state.currProv
+        && city === this.state.currCity) {
+      return
+    }
+    console.error("requestRhDataOfCurrCity2-2, province: "
+        + province + ", city: " + city
+        + ", currProv: " + this.state.currProv
+        + ", currCity: " + this.state.currCity)
+
+    this.setState({
+      currProv: province,
+      currCity: city,
+    })
+
     this.requestData(this.state.selectorPriceCheckedIdx, this.state.selectorBednumCheckedIdx,
         this.state.selectorTypeCheckedIdx, this.state.selectorPropCheckedIdx,
-        currProv, currCity,
+        province, city,
         this.state.selectorAreaCheckedIdx) // 1st page
   }
 
