@@ -105,6 +105,11 @@ export const CommonFunc = {
     // return 'weapp'
   },
 
+  isTaroEnvH5: function() {
+    return process.env.TARO_ENV === 'h5'
+    // return 'weapp'
+  },
+
   // should called after logined
   getUserFavList: function() {
     const promise = new Promise(function(resolve, reject) {

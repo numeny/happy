@@ -1,7 +1,7 @@
 import Taro from '@tarojs/taro';
 import namedPng from '@images/index/1.jpeg'
 
-const HOST = "http://127.0.0.1"
+const HOST = "http://192.168.31.160"
 export const SERVER_HOST = HOST + ":8001"
 export const DEFAULT_IMG = namedPng
 export const ICON_IMG = namedPng
