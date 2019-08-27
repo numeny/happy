@@ -310,6 +310,8 @@ export const CommonFunc = {
   },
 
   requestRhListWithCityInfo: function(prov, city) {
+    console.error('requestRhList: prov: '
+        + prov + ', city: ' + city)
     let addedUrl = (prov.length > 0) ? ('?prov=' + prov) : ''
     if(city.length > 0) {
       addedUrl = addedUrl + (addedUrl.length > 0 ? '&' : '?') + 'city=' + city
@@ -453,15 +455,21 @@ export const CommonFunc = {
           return CommonFunc.getCurrCityImpl(res.longitude, res.latitude)
         }).then(res => {
           if (res.data.province.length <= 0
-              || res.data.city.length <= 0) {
+              && res.data.city.length <= 0) {
             return
+          }
+          if (res.data.city.length > 0) {
+            res.data.city = res.data.city[0]
+          } else {
+            // 直辖市
+            res.data.city = res.data.province
           }
           console.error("CommonFunc.getCurrCity, province: "
               + res.data.province + ", city: " + res.data.city)
           resolve(res)
         }).catch(error => {
           Taro.showToast({title: 'error'})
-          console.error("error")
+          console.error("getCurrCity, error")
           reject(error)
         })
     })
@@ -491,6 +499,7 @@ export const CommonFunc = {
             city: res.data.regeocode.addressComponent.city,
           },
         })
+        return
       }).catch(error => {
         console.error('getCurrCity error-1!')
         console.error(error)
@@ -505,5 +514,4 @@ export const CommonFunc = {
 
     return promise
   },
-
 }

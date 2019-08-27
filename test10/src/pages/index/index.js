@@ -78,7 +78,8 @@ export default class Index extends Component {
         clearInterval(timeId)
     }, 30000);
     */
-    requestRhDataOfCurrCity()
+    this.requestRhDataOfCurrCity()
+    // this.getCurrCity()
   }
 
   getCurrCity () {
@@ -94,9 +95,8 @@ export default class Index extends Component {
           currCity: res.data.city,
         })
         */
-        console.error("CommonFunc.getCurrCityImpl, province: "
+        console.error("this.getCurrCity, province: "
             + res.data.province + ", city: " + res.data.city)
-        clearInterval(timeId)
         this.requestRhDataOfCurrCity2(res.data.province, res.data.city)
       }).catch(error => {
         console.error(error)
@@ -104,26 +104,36 @@ export default class Index extends Component {
   }
 
   requestRhDataOfCurrCity() {
+    console.error('requestRhDataOfCurrCity')
     if (this.$router.params.prov != null
         && this.$router.params.prov.length > 0
         && this.$router.params.city != null
         && this.$router.params.city.length > 0) {
+        console.error("requestRhDataOfCurrCity-1, province: "
+            + this.$router.params.prov + ", city: " + this.$router.params.city)
         this.requestRhDataOfCurrCity2(
-            this.$router.params.province,
+            this.$router.params.prov,
             this.$router.params.city)
           return
     }
+    let province = ''
+    let city = ''
     CommonFunc.getCurrCity()
       .then(res => {
         if (res.data.province.length <= 0
             || res.data.city.length <= 0) {
           return
         }
+        province = res.data.province
+        city = res.data.city
         console.error("CommonFunc.getCurrCity, province: "
             + res.data.province + ", city: " + res.data.city)
-        this.requestRhDataOfCurrCity2(res.data.province, res.data.city)
+        this.requestRhDataOfCurrCity2(province, city)
       }).catch(error => {
         console.error(error)
+        province = '北京市'
+        city = '北京市'
+        this.requestRhDataOfCurrCity2(province, city)
       })
   }
 
@@ -132,8 +142,10 @@ export default class Index extends Component {
         + province + ", city: " + city
         + ", currProv: " + this.state.currProv
         + ", currCity: " + this.state.currCity)
-    if (province === this.state.currProv
-        && city === this.state.currCity) {
+    if (province.length <= 0
+          || city.length <= 0
+          || (province == this.state.currProv
+              && city == this.state.currCity)) {
       return
     }
     console.error("requestRhDataOfCurrCity2-2, province: "
@@ -283,6 +295,10 @@ export default class Index extends Component {
   }
 
   requestAreaData = () => {
+    if (this.state.currProv.length <= 0
+        || this.state.currCity <= 0) {
+      return
+    }
     let url = SERVER_HOST + '/arealist' + "?prov=" + this.state.currProv + "&city=" + this.state.currCity
     Taro.request({
       url: url,
@@ -438,13 +454,14 @@ export default class Index extends Component {
               </Picker>
           </View>
         </View>
-        <Rhlist searchCondition={this.state.searchCondition}
-              currCity={this.state.currCity} isLogin={this.state.isLogin} />
+        {this.state.searchCondition.length > 0 &&
+          <Rhlist searchCondition={this.state.searchCondition}
+              currCity={this.state.currCity} isLogin={this.state.isLogin} />}
         {this.state.showIconOfToTop &&
-        <View onClick={this.scrollToTop} className='fixed-to-top'>
+          <View onClick={this.scrollToTop} className='fixed-to-top'>
             <View className='at-icon at-icon-chevron-up'>
             </View>
-        </View>}
+          </View>}
         <PageFooter showHomePageItem='false' />
       </ScrollView>
     )

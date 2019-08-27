@@ -35,9 +35,9 @@ class App extends Component {
       'pages/login/login',
       'pages/login/register',
     ],
-    permission: {
-      scope.userLocation: {
-        desc: "小猪佩奇需要您的位置信息:-)" // 高速公路行驶持续后台定位
+    "permission": {
+      "scope.userLocation": {
+        "desc": "你的位置信息将用于小程序位置接口的效果展示"
       }
     },
     window: {

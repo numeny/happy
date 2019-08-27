@@ -104,6 +104,9 @@ export default class Citylist extends Component {
         // FIXME
         Taro.showToast({title: '请选城市!'})
       } else {
+        console.error('onButtonClicked: prov: '
+            + this.state.selectedProv
+            + ', city: ' + this.state.selectedCity)
         CommonFunc.requestRhListWithCityInfo(this.state.selectedProv, this.state.selectedCity)
       }
     }
