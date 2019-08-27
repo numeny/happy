@@ -437,33 +437,18 @@ export const CommonFunc = {
   getCurrCity: function() {
     const promise = new Promise(function(resolve, reject) {
       Taro.getLocation().then(res => {
-          Taro.showToast({title: 'success'})
-          const latitude = res.latitude
-          const longitude = res.longitude
-          const speed = res.speed
-          const accuracy = res.accuracy
-          console.error("success, res: " + res)
-          console.error("success, latitude: " + latitude)
-          console.error("success, longitude: " + longitude)
-          console.error("success, speed: " + speed)
-          console.error("success, accuracy: " + accuracy)
+          console.log("Taro.getLocation(), success, latitude: "
+              + res.latitude + ', longitude: ' + res.longitude)
           return CommonFunc.getCurrCityImpl(res.longitude, res.latitude)
         }).then(res => {
           if (res.data.province.length <= 0
-              && res.data.city.length <= 0) {
+              || res.data.city.length <= 0) {
             return
           }
-          if (res.data.city.length > 0) {
-            res.data.city = res.data.city[0]
-          } else {
-            // 直辖市
-            res.data.city = res.data.province
-          }
-          console.error("CommonFunc.getCurrCity, province: "
+          console.log("CommonFunc.getCurrCity, province: "
               + res.data.province + ", city: " + res.data.city)
           resolve(res)
         }).catch(error => {
-          Taro.showToast({title: 'error'})
           console.error("getCurrCity, error")
           reject(error)
         })
@@ -473,40 +458,56 @@ export const CommonFunc = {
   },
 
   getCurrCityImpl: function(longitude, latitude) {
+    // web api of gao de map
     const promise = new Promise(function(resolve, reject) {
       let url = 'https://restapi.amap.com/v3/geocode/regeo?output=json&location='
         + longitude + ', ' + latitude
         + '&key=2b4bc515610655bb54dc9f979a6a857e&radius=1000&extensions=all'
       Taro.request({
           url: url,
-          // credentials: 'include', // request with cookies etc.
           mode: 'cors',
-          // dataType: '', // not json data
       }).then(res => {
-        console.error('getCurrCity success-1')
-        console.error(res)
-        console.error('getCurrCity success-2')
-        console.error(res.data.regeocode.addressComponent.province)
-        console.error(res.data.regeocode.addressComponent.city)
+        console.log('getCurrCityImpl success! province: '
+            + res.data.regeocode.addressComponent.province
+            + ', city: ' + res.data.regeocode.addressComponent.city)
+        let province = res.data.regeocode.addressComponent.province
+        let city = res.data.regeocode.addressComponent.city
+        if (CommonFunc.isArray(city)) {
+          if (city.length <= 0 || city[0].length <= 0) {
+            city = province
+          } else {
+            city = city[0]
+          }
+        }
+        console.log('getCurrCityImpl success 2! province: '
+            + province + ', city: ' + city)
         resolve({
           data: {
-            province: res.data.regeocode.addressComponent.province,
-            city: res.data.regeocode.addressComponent.city,
+            province: province,
+            city: city,
           },
         })
         return
       }).catch(error => {
-        console.error('getCurrCity error-1!')
+        console.error('getCurrCityImpl error!')
         console.error(error)
-        console.error('getCurrCity error-2!')
-        console.error(error.status)
-        console.error('getCurrCity error-3!')
-        console.error(typeof(error))
-        console.error('getCurrCity error-4!')
         reject(error)
       })
     })
 
     return promise
+  },
+
+  isInstanceOf: function(thisVar, varType) {
+    return Object.prototype.toString.call(thisVar)
+            === "[object " + varType + "]"
+  },
+
+  isString: function(thisVar) {
+    return CommonFunc.isInstanceOf(thisVar, 'String')
+  },
+
+  isArray: function(thisVar) {
+    return CommonFunc.isInstanceOf(thisVar, 'Array')
   },
 }

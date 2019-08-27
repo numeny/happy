@@ -20,6 +20,19 @@ import Rhlist from '../common/rhlist'
 import { connect } from '@tarojs/redux'
 import { update, addFavList, delFavList } from '../../actions/counter'
 
+@connect((state) => {
+  return { prop_counter: state.counter }
+}, (dispatch) => ({
+  addFavListProp (rhId) {
+    console.error('addFavList, surccess, ' + rhId)
+    dispatch(addFavList([rhId]))
+  },
+  delFavListProp (rhId) {
+    console.error('delFavList, surccess, ' + rhId)
+    dispatch(delFavList([rhId]))
+  },
+}))
+
 export default class Index extends Component {
 
   /**
@@ -72,68 +85,78 @@ export default class Index extends Component {
   }
 
   componentWillMount() {
-    /*
-    const timeId = setInterval(() => {
-        this.requestRhDataOfCurrCity('北京市', '北京市')
-        clearInterval(timeId)
-    }, 30000);
-    */
-    this.requestRhDataOfCurrCity()
-    // this.getCurrCity()
+    // this.requestRhDataOfCurrCity()
+    this.requestRhDataOfCurrCityForTest()
   }
 
-  getCurrCity () {
-    CommonFunc.getCurrCityImpl(114.310003, 39.991957)
-      .then(res => {
-        if (res.data.province.length <= 0
-            || res.data.city.length <= 0) {
-          return
-        }
-        /*
-        this.setState({
-          currProv: res.data.province,
-          currCity: res.data.city,
+  getCurrCityForTest = () => {
+    const promise = new Promise(function(resolve, reject) {
+      CommonFunc.getCurrCityImpl(116.310003, 39.991957) // 北京市
+      // CommonFunc.getCurrCityImpl(115.310003, 39.991957) // 河北省张家口市
+        .then(res => {
+          if (res.data.province.length <= 0
+              || res.data.city.length <= 0) {
+            return
+          }
+          console.log("this.getCurrCity, province: "
+              + res.data.province + ", city: " + res.data.city)
+          resolve(res)
+        }).catch(error => {
+          console.error(error)
+          reject(error)
         })
-        */
-        console.error("this.getCurrCity, province: "
-            + res.data.province + ", city: " + res.data.city)
-        this.requestRhDataOfCurrCity2(res.data.province, res.data.city)
-      }).catch(error => {
-        console.error(error)
-      })
+    })
+
+    return promise
   }
 
   requestRhDataOfCurrCity() {
-    console.error('requestRhDataOfCurrCity')
     if (this.$router.params.prov != null
         && this.$router.params.prov.length > 0
         && this.$router.params.city != null
         && this.$router.params.city.length > 0) {
-        console.error("requestRhDataOfCurrCity-1, province: "
-            + this.$router.params.prov + ", city: " + this.$router.params.city)
         this.requestRhDataOfCurrCity2(
             this.$router.params.prov,
             this.$router.params.city)
           return
     }
-    let province = ''
-    let city = ''
     CommonFunc.getCurrCity()
       .then(res => {
         if (res.data.province.length <= 0
             || res.data.city.length <= 0) {
           return
         }
-        province = res.data.province
-        city = res.data.city
         console.error("CommonFunc.getCurrCity, province: "
             + res.data.province + ", city: " + res.data.city)
-        this.requestRhDataOfCurrCity2(province, city)
+        this.requestRhDataOfCurrCity2(res.data.province, res.data.city)
       }).catch(error => {
         console.error(error)
-        province = '北京市'
-        city = '北京市'
-        this.requestRhDataOfCurrCity2(province, city)
+        this.requestRhDataOfCurrCity2('北京市', '北京市')
+      })
+  }
+
+  requestRhDataOfCurrCityForTest() {
+    if (this.$router.params.prov != null
+        && this.$router.params.prov.length > 0
+        && this.$router.params.city != null
+        && this.$router.params.city.length > 0) {
+        this.requestRhDataOfCurrCity2(
+            this.$router.params.prov,
+            this.$router.params.city)
+          return
+    }
+    this.getCurrCityForTest()
+      .then(res => {
+        if (res.data.province.length <= 0
+            || res.data.city.length <= 0) {
+          return
+        }
+        console.error("CommonFunc.getCurrCity, province: "
+            + res.data.province + ", city: " + res.data.city)
+        this.requestRhDataOfCurrCity2(res.data.province, res.data.city)
+      }).catch(error => {
+        console.error(error)
+        this.requestRhDataOfCurrCity2('北京市', '北京市')
       })
   }
 

@@ -149,12 +149,8 @@ export default class Rhdetail extends Component {
   }
 
   componentWillMount () {
-    Taro.showToast({title: String(this.state.rhId)})
     CommonFunc.requestRhDetail(this.state.rhId).then(res => {
-      Taro.showToast({title: res.data.record.name})
-
       var rhRecordHandled = this.handleAllContent(res)
-
       this.setState({
           rhRecord: res.data.record,
           rhRecordHandled: rhRecordHandled,
