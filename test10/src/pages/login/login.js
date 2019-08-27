@@ -130,6 +130,13 @@ export default class Login extends Component {
     })
   }
 
+  onGetPhoneNumber = (e) =>  {
+    console.log('onGetPhoneNumber')
+    console.log(e.detail.errMsg)
+    console.log(e.detail.iv)
+    console.log(e.detail.encryptedData)
+  }
+
   onLoginWithWeixin = (e) =>  {
     if (CommonFunc.getTaroEnv() != 'weapp') {
       // FIXME, h5 do not support weixin login
@@ -196,7 +203,12 @@ export default class Login extends Component {
             微信登录
           </View>
           <View onClick={this.onLoginWithPhone} className='login-input-submit'>手机号登录</View>
+          <View onGetPhoneNumber={this.onGetPhoneNumber}
+              className='login-input-submit'>
+            获取手机号
+          </View>
         </View>}
+ 
 
       {!this.state.isLogin && this.state.loginType == LOGIN_TYPE_PHONE &&
         <View>

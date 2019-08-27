@@ -444,6 +444,7 @@ export const CommonFunc = {
     return promise
   },
 
+  // FIXME, To be deleted
   getUserInfo: function() {
     const promise = new Promise(function(resolve, reject) {
       Taro.getUserInfo().then(res => {
@@ -485,4 +486,28 @@ export const CommonFunc = {
     return promise
   },
 
+  requestDecryptPhoneNumber: function(iv, encryptedData) {
+    const promise = new Promise(function(resolve, reject) {
+      if (iv.length <= 0 || encryptedData.length <= 0) {
+        return Promise.reject({errorCode: ErrorCode_NOK})
+      }
+      const uid = getLoginedInfoSync()
+      const url = SERVER_HOST + '/dpn'
+            + '?iv=' + iv + '&encryptedData=' + encryptedData
+            + '?uid=' + uid
+      console.log('requestDecryptPhoneNumber: url: ' + url)
+      Taro.request({
+        url: url,
+      }).then(res => {
+        console.log('requestDecryptPhoneNumber success, res: ' + res)
+        resolve(res)
+        return
+      }).catch(error => {
+        console.error('requestDecryptPhoneNumber error: ' + error)
+        reject(error)
+      })
+    })
+
+    return promise
+  },
 }
