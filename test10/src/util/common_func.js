@@ -61,10 +61,12 @@ export const CommonFunc = {
             data: uid,
         })
       }).then(res => {
+/*FIXME
         Taro.setStorageSync({
             key: STORAGE_KEY_USER_ID,
             data: uid,
         })
+*/
         console.log('saveLoginStorage: uid: ' + uid)
         resolve(res)
       }).catch(error => {
@@ -146,6 +148,8 @@ export const CommonFunc = {
 
   // res.data.ret : return code
   // res.data.userid : return user id
+  // return:
+  //        res: rhFavList on success
   onLoginSuccess: function(res) {
     const promise = new Promise(function(resolve, reject) {
       console.log('onLoginSuccess ret: ' + CommonFunc.getErrorString(res.data.ret))
@@ -158,7 +162,6 @@ export const CommonFunc = {
       }
       CommonFunc.saveLoginStorage(res.data.userid).then(res => {
         console.log('onLoginSuccess, save login storage success, res: ' + res)
-        Taro.navigateBack();
         return CommonFunc.getUserFavList()
       }).then(res => {
         // res => rhFavList
@@ -166,6 +169,7 @@ export const CommonFunc = {
         // FIMXE, rhFavList is forward to login page to update rhFavList on redux's store
         // because h5 do not support dispatch's calling from user
         resolve(res)
+        Taro.navigateBack();
       }).catch(error => {
         console.log('onLoginSuccess, error: ' + error)
         reject(error)
@@ -176,14 +180,15 @@ export const CommonFunc = {
   },
 
   // for weixin test
-  loginForWeixin: function(unionid) {
+  loginForWeixin: function() {
+    let rhFavList = []
     const promise = new Promise(function(resolve, reject) {
+        console.log('loginForWeixin, start!')
       Taro.login().then(res => {
         if (!res.code) {
           return Promise.reject({errorCode: ErrorCode_CantGetWeixinCode})
         }
         console.log('登录成功！' + res.code)
-        //发起网络请求
         return Taro.request({
           url: SERVER_HOST + '/weixinlogin?code=' + res.code,
           data: {
@@ -197,9 +202,17 @@ export const CommonFunc = {
       }).then(res => {
           // res => rhFavList
           console.log('loginForWeixin update local info success!')
-          // FIMXE, rhFavList is forward to login page to update rhFavList on redux's store
+      /* FIXME
+          rhFavList = res
+          return CommonFunc.getUserInfo()
+      }).then(res => {
+      */
+          // FIXME, rhFavList is forward to login page to update rhFavList on redux's store
           // because h5 do not support dispatch's calling from user
-          resolve(res)
+          resolve({
+            rhFavList: res,
+            // userInfo: res.userInfo
+          })
       }).catch(error => {
           console.log('loginForWeixin fail, error:')
           console.log(error)
@@ -449,6 +462,19 @@ export const CommonFunc = {
         console.error(error)
         reject(error)
       })
+      /*
+      resolve({
+        userInfo: {
+          nickName: 'womenshi',
+          avatarUrl: 'http://10.129.192.204/images/228/e7f83d4a04f3697ac8a3f347a6fa19fc.jpg',
+          gender: '',
+          province: '',
+          province: '',
+          city: '',
+          country: '',
+        },
+      })
+      */
     })
 
     return promise

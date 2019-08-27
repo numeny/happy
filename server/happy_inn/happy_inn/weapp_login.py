@@ -32,12 +32,12 @@ LOGTAG = 'weapp_login'
 def weixinlogin_test(request):
     Log.e(LOGTAG, 'weixinlogin_test')
     response = {}
-    if "unionid" not in request.GET or request.GET["unionid"] == '':
+    if "code" not in request.GET or request.GET["code"] == '':
         response[RetCode_Key] = ErrorCode_WeixinLoginNoCode
         return JsonResponse(response)
 
-    unionid = request.GET["unionid"]
-    Log.e(LOGTAG, 'Weixin login, weixin unionid: ' + unionid)
+    unionid = request.GET["code"]
+    Log.e(LOGTAG, 'Weixin login, weixin code: ' + unionid)
 
     response = registerUserForWeixin(unionid)
     return JsonResponse(response)

@@ -52,8 +52,10 @@ export default class FavIcon extends Component {
 
   render () {
     return (
-      <View className="">
-        {this.props.prop_counter.rhFavList.indexOf(this.state.rhIdProp) != -1 ? <AtIcon value='heart-2' color= '#F00' size='15' onClick={this.onFavorite.bind(this, this.state.rhIdProp, false)} /> : <AtIcon value='heart' size='15' onClick={this.onFavorite.bind(this, this.state.rhIdProp, true)} />}
+      <View>
+        {this.props.prop_counter.rhFavList.indexOf(this.state.rhIdProp) != -1 ?
+          <AtIcon value='heart-2' color= '#F00' size='15' onClick={this.onFavorite.bind(this, this.state.rhIdProp, false)} /> :
+          <AtIcon value='heart' size='15' onClick={this.onFavorite.bind(this, this.state.rhIdProp, true)} />}
       </View>
     )
   }
