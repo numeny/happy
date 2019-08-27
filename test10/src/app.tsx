@@ -27,13 +27,13 @@ class App extends Component {
    */
   config: Config = {
     pages: [
-      'pages/index/index',
-      'pages/rhdetail/rhdetail',
-      'pages/citylist/citylist',
-      'pages/rhsearch/rhsearch',
       'pages/aboutus/aboutus',
+      'pages/citylist/citylist',
+      'pages/index/index',
       'pages/login/login',
       'pages/login/register',
+      'pages/rhdetail/rhdetail',
+      'pages/rhsearch/rhsearch',
     ],
     "permission": {
       "scope.userLocation": {

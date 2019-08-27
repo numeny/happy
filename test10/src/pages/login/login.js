@@ -7,6 +7,7 @@ import "../../../node_modules/taro-ui/dist/style/components/button.scss";
 
 import { SERVER_HOST, STORAGE_KEY_LOGIN, STORAGE_VALUE_LOGIN_SUCCESS, STORAGE_KEY_USER_NAME } from '../../util/const'
 import { CommonFunc } from '@util/common_func'
+import { Util } from '@util/util'
 
 import './login.scss'
 import FixedTitle from '../common/fixedtitle'
@@ -76,7 +77,7 @@ export default class Login extends Component {
 
   onSubmit = (e) =>  {
     /*
-    if (!CommonFunc.checkUsername(this.state.username)) {
+    if (!Util.checkUsername(this.state.username)) {
       return
     }
     Taro.login({
@@ -110,10 +111,10 @@ export default class Login extends Component {
           console.log('onSubmit, error: ' + error)
         })
     } else if (CommonFunc.getTaroEnv() === 'h5') {
-      if (!CommonFunc.checkUsername(this.state.username)) {
+      if (!Util.checkUsername(this.state.username)) {
         return
       }
-      if (!CommonFunc.checkPassword(this.state.password)) {
+      if (!Util.checkPassword(this.state.password)) {
         return
       }
       CommonFunc.login(this.state.username, this.state.password)

@@ -7,6 +7,7 @@ import "../../../node_modules/taro-ui/dist/style/components/button.scss";
 
 import { SERVER_HOST } from '@util/const'
 import { CommonFunc } from '@util/common_func'
+import { Util } from '@util/util'
 
 import './register.scss'
 import FixedTitle from '../common/fixedtitle'
@@ -49,10 +50,10 @@ export default class Register extends Component {
   }
 
   onSubmit = (e) =>  {
-    if (!CommonFunc.checkUsername(this.state.username)) {
+    if (!Util.checkUsername(this.state.username)) {
       return
     }
-    if (!CommonFunc.checkPassword2(this.state.password,
+    if (!Util.checkPassword2(this.state.password,
           this.state.password2)) {
       return
     }

@@ -6,6 +6,8 @@ import { SERVER_HOST, STORAGE_KEY_LOGIN, STORAGE_VALUE_LOGIN_SUCCESS, STORAGE_KE
 
 import { ErrorStringArray, ErrorCode_UnknownError, ErrorCode_OK, ErrorCode_NotLogin } from './error_code'
 
+import { Util } from './util'
+
 export const CommonFunc = {
   getErrorString: function(error_id) {
     for (var i = 0; i < ErrorStringArray.length; i++) {
@@ -16,13 +18,6 @@ export const CommonFunc = {
     return '错误!'
   },
 
-  setInterval: function(callback) {
-    const timeId = setInterval(() => {
-        callback()
-        clearInterval(timeId)
-    }, 1000);
-  },
-  
   isSuccess: function(error_id) {
     return ErrorCode_OK === error_id
   },
@@ -287,7 +282,7 @@ export const CommonFunc = {
           console.log('onFavorite-3, fail, not login')
           Taro.showToast({title: '请先登录！'})
 
-          CommonFunc.setInterval(() => {
+          Util.setInterval(() => {
             CommonFunc.clearLoginStorage()
             CommonFunc.openLoginPage()
           })
@@ -352,7 +347,7 @@ export const CommonFunc = {
           return Promise.reject({error: 'register failed!'})
         }
         resolve(res)
-        CommonFunc.setInterval(() => {
+        Util.setInterval(() => {
           Taro.navigateBack()
         })
       }).catch(error => {
@@ -370,69 +365,6 @@ export const CommonFunc = {
       url: url,
     })
   },
-
-  checkUsername: function(username) {
-    if (username.length === 0) {
-      Taro.showToast({title: '请输入用户名！'})
-      return false
-    }
-    return true
-  },
-
-  checkPassword: function(password) {
-    if (password.length === 0) {
-      Taro.showToast({title: '请输入密码！'})
-      return false
-    }
-
-    if (!CommonFunc.checkPasswd(password)) {
-      Taro.showToast({title: '密码复杂度不够，请重新设置！'})
-      return false
-    }
-    return true
-  },
-
-  checkPassword2: function(password, password2) {
-    if (password.length === 0) {
-      Taro.showToast({title: '请输入密码！'})
-      return false
-    }
-    if (password2.length === 0) {
-      Taro.showToast({title: '请再次输入密码！'})
-      return false
-    }
-    if (password != password2) {
-      Taro.showToast({title: '两次输入密码不一致！'})
-      return false;
-    }
-    if (!CommonFunc.checkPasswd(password)) {
-      Taro.showToast({title: '密码复杂度不够，请重新设置！'})
-      return false
-    }
-    return true;
-  },
-
-  checkPasswd: function(passwd) {
-    /* FIXME
-    if(passwd.length < 6) {
-      return false
-    }
-    var ls = 0;
-    if (passwd.match(/([a-z])+/)) {
-      ls++;
-    }
-    if (passwd.match(/([0-9])+/)) {
-      ls++;  
-    }
-    if (passwd.match(/([A-Z])+/)) {
-      ls++;
-    }
-    if (passwd.match(/[^a-zA-Z0-9]+/)) {
-       ls++;
-    }
-    */
-    return true
-  },
 
   getCurrCity: function() {
     const promise = new Promise(function(resolve, reject) {
@@ -472,7 +404,7 @@ export const CommonFunc = {
             + ', city: ' + res.data.regeocode.addressComponent.city)
         let province = res.data.regeocode.addressComponent.province
         let city = res.data.regeocode.addressComponent.city
-        if (CommonFunc.isArray(city)) {
+        if (Util.isArray(city)) {
           if (city.length <= 0 || city[0].length <= 0) {
             city = province
           } else {
@@ -498,16 +430,4 @@ export const CommonFunc = {
     return promise
   },
 
-  isInstanceOf: function(thisVar, varType) {
-    return Object.prototype.toString.call(thisVar)
-            === "[object " + varType + "]"
-  },
-
-  isString: function(thisVar) {
-    return CommonFunc.isInstanceOf(thisVar, 'String')
-  },
-
-  isArray: function(thisVar) {
-    return CommonFunc.isInstanceOf(thisVar, 'Array')
-  },
 }
