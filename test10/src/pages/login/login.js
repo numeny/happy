@@ -5,7 +5,7 @@ import { AtButton } from 'taro-ui'
 import "../../../node_modules/taro-ui/dist/style/components/icon.scss";
 import "../../../node_modules/taro-ui/dist/style/components/button.scss";
 
-import { SERVER_HOST, STORAGE_KEY_LOGIN, STORAGE_VALUE_LOGIN_SUCCESS, STORAGE_KEY_USER_NAME } from '../../util/const'
+import { IMGS_ROOT_PATH } from '../../util/const'
 import { CommonFunc } from '@util/common_func'
 import { Util } from '@util/util'
 
@@ -42,6 +42,7 @@ export default class Login extends Component {
 
       isLogin: false,
       loginedUsername: '',
+      loginedAvatarUrl: IMGS_ROOT_PATH + '/default.jpg',
     }
   }
 
@@ -154,6 +155,10 @@ export default class Login extends Component {
       {this.state.isLogin &&
         <View>
           <View>当前登录用户: {this.state.loginedUsername}</View>
+          <View className='login-input-container-1'>
+            <Image src={this.state.loginedAvatarUrl} className='login-avatar' />
+            <Text className='login-username'>numeny</Text>
+          </View>
           <View onClick={this.onExit} className='login-input-submit'>退 出</View>
           <View>
             <Rhlist searchCondition='favList=t'

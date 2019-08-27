@@ -426,4 +426,32 @@ export const CommonFunc = {
     return promise
   },
 
+  getUserInfo: function() {
+    const promise = new Promise(function(resolve, reject) {
+      Taro.getUserInfo().then(res => {
+        var userInfo = res.userInfo
+        var nickName = userInfo.nickName
+        var avatarUrl = userInfo.avatarUrl
+        var gender = userInfo.gender //性别 0：未知、1：男、2：女
+        var province = userInfo.province
+        var city = userInfo.city
+        var country = userInfo.country
+        console.log('getUserInfo success, '
+            + ', nickName: ' + userInfo.nickName
+            + ', avatarUrl: ' + userInfo.avatarUrl
+            + ', gender: ' + userInfo.gender
+            + ', country: ' + userInfo.country
+            + ', province: ' + userInfo.province
+            + ', city: ' + userInfo.city)
+        resolve(res)
+      }).catch(error => {
+        console.error('getUserInfo error!')
+        console.error(error)
+        reject(error)
+      })
+    })
+
+    return promise
+  },
+
 }

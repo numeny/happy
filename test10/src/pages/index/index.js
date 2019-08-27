@@ -85,8 +85,8 @@ export default class Index extends Component {
   }
 
   componentWillMount() {
-    // this.requestRhDataOfCurrCity()
-    this.requestRhDataOfCurrCityForTest()
+    this.requestRhDataOfCurrCity()
+    // this.requestRhDataOfCurrCityForTest()
   }
 
   getCurrCityForTest = () => {

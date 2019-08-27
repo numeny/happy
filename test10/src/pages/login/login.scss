@@ -34,6 +34,16 @@ $user-name-icon-size: 26px;
   text-align: center;
 }
 
+.login-avatar {
+  width: 100px;
+  height: 100px;
+  margin: 20px;
+}
+
+.login-username {
+  margin: 20px;
+}
+
 .login-register-container {
   display: flex;
   flex-direction: colume;
