@@ -76,32 +76,6 @@ export default class Login extends Component {
   }
 
   onSubmit = (e) =>  {
-    /*
-    if (!Util.checkUsername(this.state.username)) {
-      return
-    }
-    Taro.login({
-      success (res) {
-        if (res.code) {
-          console.log('登录成功！' + res.code)
-          //发起网络请求
-          Taro.request({
-            url: SERVER_HOST + '/weixinlogin?code=' + res.code,
-            data: {
-              code: res.code
-            },
-          }).then(res => {
-            console.log('获取session_id成功！:' + res.data)
-          })
-        } else {
-          console.log('登录失败！' + res.errMsg)
-        }
-      }
-    })
-*/
-    // CommonFunc.login(this.state.username, this.state.password)
-/*
-*/
     if (CommonFunc.getTaroEnv() === 'weapp') {
       CommonFunc.loginForWeixin(this.state.username)
         .then(res => {

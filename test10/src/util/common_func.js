@@ -65,13 +65,10 @@ export const CommonFunc = {
             key: STORAGE_KEY_USER_ID,
             data: uid,
         })
-        let uid2 = Taro.getStorageSync(STORAGE_KEY_USER_ID)
-
-        console.error('saveLoginStorage: uid: ' + uid)
-        console.error('saveLoginStorage: uid2: ' + uid2)
-        console.error(CommonFunc.getLoginedInfoSync())
+        console.log('saveLoginStorage: uid: ' + uid)
         resolve(res)
       }).catch(error => {
+        console.log('saveLoginStorage: error: ' + error)
         reject(error)
       })
     })
@@ -87,9 +84,10 @@ export const CommonFunc = {
     Taro.request({
         url: SERVER_HOST + '/logout',
         credentials: 'include', // request with cookies etc.
-    }).then({
+    }).then(res => {
+      console.log('logout success on server!')
     }).catch(error => {
-      console.error('cant logout on server!')
+      console.error('logout fail on server!')
       console.error(error)
     })
 
@@ -113,25 +111,31 @@ export const CommonFunc = {
         // FIXME
         url += '&uid=' + CommonFunc.getLoginedInfoSync()
       }
+      console.log('getUserFavList: url: ' + url)
       Taro.request({
         url: url,
         credentials: 'include', // request with cookies etc.
       }).then(res => {
         if (CommonFunc.isNotLogin(res.data.ret)) {
-          console.log('getUserFavList-1, fail, not login')
+          console.error('getUserFavList, fail, not login')
           // CommonFunc.openLoginPage()
-          return Promise.reject({error: 'not login'})
+          return Promise.reject({errorCode: res.data.ret})
         }
         if (!CommonFunc.isSuccess(res.data.ret)) {
-          return Promise.reject({error: 'get favorite list error!'})
+          console.error('getUserFavList, fail, error: '
+              + CommonFunc.getErrorString(res.data.ret))
+          return Promise.reject({errorCode: res.data.ret})
         }
-        console.log('getUserFavList, success, data: '
-                + res.data.data)
+        console.log('getUserFavList, success, data: ' + res.data.data)
+        if (!Util.isArray(res.data.data)) {
+          console.error('getUserFavList, data is not array')
+          return Promise.reject({errorCode: ErrorCode_NOK})
+        }
         resolve(res.data.data)
         // const dispatch = useDispatch()
         // dispatch(update(res.data))
       }).catch(error => {
-        console.log('getUserFavList, error: ' + error)
+        console.error('getUserFavList, error: ' + error)
         // resolve even if error
         resolve([])
       })
@@ -153,19 +157,18 @@ export const CommonFunc = {
         return reject({errorCode: res.data.ret})
       }
       CommonFunc.saveLoginStorage(res.data.userid).then(res => {
-        console.error('login, save login storage success, res: ' + res)
-        console.error(res)
+        console.log('onLoginSuccess, save login storage success, res: ' + res)
         Taro.navigateBack();
         return CommonFunc.getUserFavList()
       }).then(res => {
         // res => rhFavList
-        console.log('login, update user fav list success, will navigateBack')
+        console.log('onLoginSuccess, update user fav list success!')
         // FIMXE, rhFavList is forward to login page to update rhFavList on redux's store
         // because h5 do not support dispatch's calling from user
         resolve(res)
       }).catch(error => {
+        console.log('onLoginSuccess, error: ' + error)
         reject(error)
-        console.log('login, error: ' + error)
       })
     })
 
@@ -188,24 +191,17 @@ export const CommonFunc = {
           },
           credentials: 'include', // request with cookies etc.
         })
-      /*
-      }).then(res => {
-        Taro.request({
-          url: SERVER_HOST + '/weixinlogin_test?unionid=' + unionid,
-          credentials: 'include', // request with cookies etc.
-      */
       }).then(res => {
         console.log('loginForWeixin, success!')
-        console.log(res)
         return CommonFunc.onLoginSuccess(res)
       }).then(res => {
           // res => rhFavList
-          console.log('login, update user fav list success, will navigateBack')
+          console.log('loginForWeixin update local info success!')
           // FIMXE, rhFavList is forward to login page to update rhFavList on redux's store
           // because h5 do not support dispatch's calling from user
           resolve(res)
       }).catch(error => {
-          console.log('loginForWeixin')
+          console.log('loginForWeixin fail, error:')
           console.log(error)
           reject(error)
       })
@@ -223,13 +219,13 @@ export const CommonFunc = {
         return CommonFunc.onLoginSuccess(res)
       }).then(res => {
           // res => rhFavList
-          console.log('login, update user fav list success, will navigateBack')
+          console.log('login, onLoginSuccess success')
           // FIMXE, rhFavList is forward to login page to update rhFavList on redux's store
           // because h5 do not support dispatch's calling from user
           resolve(res)
       }).catch(error => {
-          reject(error)
           console.log('login, error: ' + error)
+          reject(error)
       })
     })
 
@@ -281,7 +277,6 @@ export const CommonFunc = {
         if (error.errorCode === ErrorCode_NotLogin) {
           console.log('onFavorite-3, fail, not login')
           Taro.showToast({title: '请先登录！'})
-
           Util.setInterval(() => {
             CommonFunc.clearLoginStorage()
             CommonFunc.openLoginPage()
@@ -300,12 +295,11 @@ export const CommonFunc = {
   },
 
   requestRhListWithCityInfo: function(prov, city) {
-    console.error('requestRhList: prov: '
-        + prov + ', city: ' + city)
     let addedUrl = (prov.length > 0) ? ('?prov=' + prov) : ''
     if(city.length > 0) {
       addedUrl = addedUrl + (addedUrl.length > 0 ? '&' : '?') + 'city=' + city
     }
+    console.log('requestRhList: url: ' + addedUrl)
 
     Taro.navigateTo({
       url: '/pages/index/index' + addedUrl,
@@ -322,7 +316,7 @@ export const CommonFunc = {
       url += ('&uid=' + CommonFunc.getLoginedInfoSync())
     }
 
-    console.error('requestRhList: url: ' + url)
+    console.log('requestRhList: url: ' + url)
     return Taro.request({
       url: url,
       credentials: 'include', // request with cookies etc.
@@ -338,18 +332,20 @@ export const CommonFunc = {
 
   registerUser: function(username, password) {
     const promise = new Promise(function(resolve, reject) {
+      let url = SERVER_HOST + '/registerUser?username=' + username + "&password=" + password
+      console.log('registerUser: url: ' + url)
       return Taro.request({
-        url: SERVER_HOST + '/registerUser?username=' + username + "&password=" + password,
+        url: url,
         credentials: 'include', // request with cookies etc.
       }).then(res => {
         Taro.showToast({title: CommonFunc.getErrorString(res.data.ret)})
         if (!CommonFunc.isSuccess(res.data.ret)) {
           return Promise.reject({error: 'register failed!'})
         }
-        resolve(res)
         Util.setInterval(() => {
           Taro.navigateBack()
         })
+        resolve(res)
       }).catch(error => {
         reject(error)
       })
@@ -358,9 +354,9 @@ export const CommonFunc = {
     return promise
   },
 
-
   requestCityData: function(prov) {
     let url = SERVER_HOST + '/arealist' + ((prov.length > 0) ? ("?prov=" + prov) : "")
+    console.log('requestCityData: url: ' + url)
     return Taro.request({
       url: url,
     })
@@ -369,7 +365,7 @@ export const CommonFunc = {
   getCurrCity: function() {
     const promise = new Promise(function(resolve, reject) {
       Taro.getLocation().then(res => {
-          console.log("Taro.getLocation(), success, latitude: "
+          console.log("getCurrCity, Taro.getLocation() success, latitude: "
               + res.latitude + ', longitude: ' + res.longitude)
           return CommonFunc.getCurrCityImpl(res.longitude, res.latitude)
         }).then(res => {
@@ -377,7 +373,7 @@ export const CommonFunc = {
               || res.data.city.length <= 0) {
             return
           }
-          console.log("CommonFunc.getCurrCity, province: "
+          console.log("getCurrCity, province: "
               + res.data.province + ", city: " + res.data.city)
           resolve(res)
         }).catch(error => {

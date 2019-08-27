@@ -6,11 +6,11 @@ export const Util = {
   },
 
   isString: function(thisVar) {
-    return CommonFunc.isInstanceOf(thisVar, 'String')
+    return Util.isInstanceOf(thisVar, 'String')
   },
 
   isArray: function(thisVar) {
-    return CommonFunc.isInstanceOf(thisVar, 'Array')
+    return Util.isInstanceOf(thisVar, 'Array')
   },
 
   setInterval: function(callback) {
@@ -34,7 +34,7 @@ export const Util = {
       return false
     }
 
-    if (!CommonFunc.checkPasswd(password)) {
+    if (!Util.checkPasswd(password)) {
       Taro.showToast({title: '密码复杂度不够，请重新设置！'})
       return false
     }
@@ -54,7 +54,7 @@ export const Util = {
       Taro.showToast({title: '两次输入密码不一致！'})
       return false;
     }
-    if (!CommonFunc.checkPasswd(password)) {
+    if (!Util.checkPasswd(password)) {
       Taro.showToast({title: '密码复杂度不够，请重新设置！'})
       return false
     }
