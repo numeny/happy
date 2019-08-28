@@ -6,3 +6,4 @@ node_modules/
 *.swp
 *.swo
 *.pyc
+server/happy_inn/rh/migrations/
