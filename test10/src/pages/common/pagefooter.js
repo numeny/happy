@@ -14,6 +14,16 @@ export default class PageFooter extends Component {
     }
   }
 
+  onTest = (e) => {
+    if (!DEBUG) {
+      return
+    }
+    console.log('onTest')
+    Taro.navigateTo({
+      url: '/pages/test/test',
+    })
+  }
+
   onNavigateToAboutUs (idx, e) {
     if (this.state.stateShowHomePageItem && idx == 0) {
       // first item is '首页'
@@ -44,7 +54,7 @@ export default class PageFooter extends Component {
         <View className='copyright-container'>
           Copyright@老玩童 All Rights Reserved
         </View>
-        <View className='copyright-container'>
+        <View className='copyright-container' onClick={this.onTest}>
           京ICP备xxxxxxxxx号 京公网安备xxxxxxxxxx号
         </View>
       </View>

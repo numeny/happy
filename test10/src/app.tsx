@@ -34,6 +34,7 @@ class App extends Component {
       'pages/login/register',
       'pages/rhdetail/rhdetail',
       'pages/rhsearch/rhsearch',
+      'pages/test/test',
     ],
     "permission": {
       "scope.userLocation": {
