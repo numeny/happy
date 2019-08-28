@@ -30,12 +30,7 @@ from user_manager import *
 
 from settings import *
 
-default_img = "/static/images/default.jpg"
 LOGTAG = "RhData"
-
-def hello(request):
-    return JsonResponse("Hello world ! ")
-    # return HttpResponse("Hello world ! ")
 
 # 数据库操作
 def testdb(request):
@@ -50,7 +45,7 @@ def testdb(request):
     response = list[0].rh_name
     return JsonResponse({'rh_name': response, 'ret': 'ok'})
 
-def get_rh_detail(request):
+def getRhDetail(request):
     if "rhid" not in request.GET:
         response = {}
         response[RetCode_Key] = str(ErroCode_RhIdNotInput)
@@ -58,15 +53,8 @@ def get_rh_detail(request):
     # get_data_from_rh_id(response, request.GET['rhid'])
     detail_query = RhDetailQuery(request.GET['rhid'])
     return JsonResponse(detail_query.get_data_from_rh_id())
-    '''
-    if "user_name" in request.session:
-        response["user_name"] = request.session['user_name']
-    else:
-        request.session['user_name'] = "admin"
-    response["session_key"] = request.session.session_key
-    '''
 
-def show_rh_list(request):
+def showRhList(request):
     query_param = QueryParam()
 
     if "prov" in request.GET:
@@ -131,11 +119,6 @@ def show_rh_list(request):
     rh_list_query = RhListQuery(query_param)
     response = rh_list_query.get_rh_list()
 
-    response['has_located'] = request.session.get('has_located', 'n')
-    response['geolocation_province'] = request.session.get('geolocation_province', '')
-    response['geolocation_city'] = request.session.get('geolocation_city', '')
-    if Log.DEBUG:
-        response['message'] = "session_key: "+ str(request.session.session_key)
     return JsonResponse(response)
 
 def areaList(request):
@@ -157,4 +140,3 @@ def areaList(request):
         area_list_1.append(elem)
 
     return JsonResponse(area_list_1)
-    # return JsonResponse(area_list)

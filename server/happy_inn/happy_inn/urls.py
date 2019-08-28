@@ -18,11 +18,8 @@ from . import user_manager
 from . import weapp_login
 
 urlpatterns = [
-    url(r'^admin/', admin.site.urls),
-    url(r'^hello', rh_data.hello),
-    url(r'^testdb', rh_data.testdb),
-    url(r'^get_rh_detail', rh_data.get_rh_detail),
-    url(r'^show_rh_list', rh_data.show_rh_list),
+    url(r'^get_rh_detail', rh_data.getRhDetail),
+    url(r'^show_rh_list', rh_data.showRhList),
     url(r'^arealist', rh_data.areaList),
 
     url(r'^login', user_manager.login),
@@ -33,4 +30,7 @@ urlpatterns = [
 
     url(r'^weixinlogin', weapp_login.weixinlogin),
     url(r'^weixinlogin_test', weapp_login.weixinlogin_test),
+
+    url(r'^admin/', admin.site.urls),
+    url(r'^testdb', rh_data.testdb),
 ]

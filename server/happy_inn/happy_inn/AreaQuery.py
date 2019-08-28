@@ -16,7 +16,7 @@ class AreaQuery:
     LOGTAT = "AreaQuery"
 
     @staticmethod
-    def init_g_area_map_if_neccesary():
+    def initIfNeccesary():
         global g_area_map
         if g_area_map is not None and len(g_area_map) != 0:
             return
@@ -44,7 +44,7 @@ class AreaQuery:
     def getAreaList(privince, city):
         global g_area_map
 
-        AreaQuery.init_g_area_map_if_neccesary()
+        AreaQuery.initIfNeccesary()
 
         if privince is None or len(privince) == 0:
             return g_area_map.keys()
