@@ -90,8 +90,9 @@ export default class RhSearch extends Component {
 
     return (
       <View className="rs-top-view">
-        {CommonFunc.isTaroEnvH5() &&
-          <FixedTitle title='搜索养老院'/>}
+        <Video width='150px' height='190px' src={namedVideo} />
+        <Image src={namedPng} />
+        <FixedTitle title='搜索养老院'/>
         <View className='sb-container'>
           <View className='sb-container-2'>
             <Input type='text' placeholder='找养老院' onInput={this.onInputChanged} onConfirm={this.startSearch} className='sb-search-box' />

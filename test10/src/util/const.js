@@ -1,7 +1,7 @@
 import Taro from '@tarojs/taro';
 import namedPng from '@images/index/1.jpeg'
 
-const HOST = "http://192.168.31.160"
+const HOST = "http://10.129.192.204"
 const IMAGES_PATH = "/images"
 const DEF_AVATAR = "/avatar.png"
 const DEF_LOGO = "/logo.png"
