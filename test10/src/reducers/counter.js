@@ -1,8 +1,15 @@
-import { UPDATE_FAV_LIST, ADD_FAV_LIST, DEL_FAV_LIST, UPDATE_AVATAR } from '../constants/counter'
+import {
+  UPDATE_FAV_LIST,
+  ADD_FAV_LIST,
+  DEL_FAV_LIST,
+  UPDATE_USERNAME,
+  UPDATE_AVATAR
+} from '../constants/counter'
 
 const INITIAL_STATE = {
   rhFavList: [],
-  avatar: ''
+  avatar: '',
+  username: ''
 }
 
 function unique(arr) {
@@ -39,6 +46,11 @@ export default function counter (state = INITIAL_STATE, action) {
       return {
         ...state,
         rhFavList: delFavList_1(state.rhFavList, action.rhFavList)
+      }
+    case UPDATE_USERNAME:
+      return {
+        ...state,
+        username: action.username
       }
     case UPDATE_AVATAR:
       return {

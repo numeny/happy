@@ -1,2 +1,3 @@
 #!/bin/bash
+cd $HAPPY_SERVER_PATH
 python manage.py runserver 0.0.0.0:8001&

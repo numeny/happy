@@ -18,7 +18,7 @@ import namedVideo from '@res/video/1.mp4'
 import namedPng from '@images/index/1.jpeg'
 
 import { connect } from '@tarojs/redux'
-import { updateFavList, updateAvatar } from '../../actions/counter'
+import { updateFavList, updateAvatar, updateUsername } from '../../actions/counter'
 
 const LOGIN_TYPE_NONE = 0
 const LOGIN_TYPE_WEIXIN = 1
@@ -29,6 +29,9 @@ const LOGIN_TYPE_PHONE = 2
 }, (dispatch) => ({
   updateFavListProp (rhFavList) {
     dispatch(updateFavList(rhFavList))
+  },
+  updateUsernameProp (username) {
+    dispatch(updateUsername(username))
   },
   updateAvatarProp (avatar) {
     dispatch(updateAvatar(avatar))
@@ -112,6 +115,12 @@ export default class Login extends Component {
             console.log('loginWithPhone, error: ' + error)
         })
     // }
+  }
+
+  onUpdateUsernameProp = (e) =>  {
+    console.log('onUpdateUsernameProp')
+
+    this.props.updateUsernameProp('my good')
   }
 
   onGetUserInfo = (e) =>  {
@@ -207,6 +216,9 @@ export default class Login extends Component {
               className='login-input-submit'>
             获取手机号
           </View>
+          <View onClick={this.onUpdateUsernameProp} className='login-input-submit'>
+            更新username 
+          </View>
         </View>}
  
 
@@ -235,7 +247,7 @@ export default class Login extends Component {
           <View>当前登录用户: {this.state.loginedUsername}</View>
           <View className='login-input-container-1'>
             <Image src={this.props.prop_counter.avatar} className='login-avatar' />
-            <Text className='login-username'>{this.state.loginedUsername}</Text>
+            <Text className='login-username'>{this.props.prop_counter.username}</Text>
           </View>
           <View onClick={this.onExit} className='login-input-submit'>退 出</View>
           <View>

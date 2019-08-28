@@ -1,2 +1,2 @@
 #!/bin/bash
-ps -aX | grep npm 
+ps -aX | grep npm
