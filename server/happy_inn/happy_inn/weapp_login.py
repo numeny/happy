@@ -27,7 +27,6 @@ from Log import *
 from Utils import *
 from FavoriteDb import *
 from user_manager import *
-from WXBizDataCrypt import *
 
 LOGTAG = 'weapp_login'
 
@@ -97,14 +96,3 @@ def weixinlogin(request):
         ret[RetCode_Key] = ErrorCode_OK
 
     return JsonResponse(ret)
-
-def descryptPhoneNumber(request):
-    Log.d(LOGTAG, 'Weixin login!')
-    response = {}
-    if "iv" not in request.GET or request.GET["iv"] == '' or "iv" not in request.GET or request.GET["iv"] == '':
-        response[RetCode_Key] = ErrorCode_WeixinLoginNoCode
-        return JsonResponse(response)
-
-encryptedData
-    weixinCode = request.GET["code"]
-    Log.d(LOGTAG, 'Weixin login, weixinCode: ' + weixinCode)

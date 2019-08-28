@@ -32,6 +32,5 @@ urlpatterns = [
     url(r'^gfl', user_manager.getUserFavoriteList),
 
     url(r'^weixinlogin', weapp_login.weixinlogin),
-    url(r'^dpn', weapp_login.weixinlogin), # descrypt phone number
     url(r'^weixinlogin_test', weapp_login.weixinlogin_test),
 ]
