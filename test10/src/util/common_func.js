@@ -389,7 +389,7 @@ export const CommonFunc = {
         }).then(res => {
           if (res.data.province.length <= 0
               || res.data.city.length <= 0) {
-            return
+            return Promise.reject(res)
           }
           console.log("getCurrCity, province: "
               + res.data.province + ", city: " + res.data.city)

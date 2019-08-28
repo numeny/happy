@@ -1,4 +1,5 @@
 $city-item-top-bottom-padding: 20px;
+$city-item-left-right-padding: 40px;
 $city-item-background-color: #FFF;
 $city-item-margin: 10px;
 $selected-item-color: #00F;
@@ -20,8 +21,20 @@ $selected-item-color: #00F;
 .curr-city {
   background-color: $city-item-background-color;
   padding: $city-item-top-bottom-padding 0px;
-  text-align: center;
   margin: $city-item-margin;
+
+  display: flex;
+  flex-direction: colume;
+}
+
+.curr-city-text {
+  padding-left: 60px;
+  flex: 4;
+}
+
+.curr-city-loc {
+  padding: $city-item-top-bottom-padding 50px;
+  flex: 1;
 }
 
 .hot-city-row-container {
@@ -31,7 +44,7 @@ $selected-item-color: #00F;
 
 .hot-city-item {
   background-color: $city-item-background-color;
-  padding: $city-item-top-bottom-padding 40px;
+  padding: $city-item-top-bottom-padding $city-item-left-right-padding;
   flex: 1;
   justify-content: center;
   text-align: center;

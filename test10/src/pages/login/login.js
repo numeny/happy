@@ -129,9 +129,21 @@ export default class Login extends Component {
     console.log(e.detail.userInfo)
     console.log(e.detail.rawData)
 
-    this.props.updateAvatarProp(e.detail.userInfo.avatarUrl)
-    console.log('onGetUserInfo, userInfo.avatarUrl: ' + e.detail.userInfo.avatarUrl)
-    console.log('onGetUserInfo, userInfo.nickName: ' + e.detail.userInfo.nickName)
+    const userInfo = e.detail.userInfo
+    this.props.updateAvatarProp(userInfo.avatarUrl)
+    console.log('onGetUserInfo, avatarUrl: ' + userInfo.avatarUrl
+                + ', nickName: ' + userInfo.nickName)
+
+    const country = userInfo.country
+    const province = userInfo.province
+    const city = userInfo.city
+    const gender = userInfo.gender //性别 0：未知、1：男、2：女
+
+    console.log('onGetUserInfo'
+                + ', country: ' + userInfo.country
+                + ', province: ' + userInfo.province
+                + ', city: ' + userInfo.city
+                + ', gender: ' + userInfo.gender)
 
     // FIXME, should be saved to storage or redux
     this.setState({

@@ -1,6 +1,7 @@
 import Taro, { Component, Events } from '@tarojs/taro'
 import { View, Text, Image, Input, Video, Button, Icon, Progress, Checkbox, Switch, Form, Slider, Picker, PickerView, PickerViewColumn, Swiper, SwiperItem, Navigator } from '@tarojs/components'
 
+import { AtIcon } from 'taro-ui'
 import { AtButton } from 'taro-ui'
 import "../../../node_modules/taro-ui/dist/style/components/icon.scss";
 import "../../../node_modules/taro-ui/dist/style/components/button.scss";
@@ -76,6 +77,25 @@ export default class Citylist extends Component {
     })
   }
 
+  getGeolocationCity = (e) => {
+    CommonFunc.getCurrCity()
+      .then(res => {
+        if (res.data.province.length <= 0
+            || res.data.city.length <= 0) {
+          return Promise.reject(res)
+        }
+        console.log("CommonFunc.getCurrCity, province: "
+            + res.data.province + ", city: " + res.data.city)
+        this.setState({
+            currProv: res.data.province,
+            currCity: res.data.city,
+        })
+        this.selectHotCity(res.data.province, res.data.city)
+      }).catch(error => {
+        console.error(error)
+      })
+  }
+
   showAreaList (prov, e) {
     this.showAreaListImpl(prov)
   }
@@ -129,10 +149,10 @@ export default class Citylist extends Component {
     }
   }
 
-  selectHotCity (prov, city, e) {
+  selectHotCity = (prov, city, e) => {
     this.setState({
         selectedProv: prov,
-        selectedCity: city
+        selectedCity: city,
     })
     this.requestCityData(prov)
   }
@@ -173,7 +193,11 @@ export default class Citylist extends Component {
         <View className='city-container'>
           <View className='curr-city-container'>
             当前城市
-            <View className='curr-city'>{this.state.currCity}</View>
+            <View onClick={this.selectHotCity.bind(this, this.state.currProv, this.state.currCity)} className='curr-city'>
+              <View className='curr-city-text'>{this.state.currCity}</View>
+              <AtIcon onClick={this.getGeolocationCity} value='map-pin'
+                  className='curr-city-loc' color= '#F00' size='15' />
+            </View>
           </View>
           <View className='hot-city-container'>
             热点城市
@@ -181,17 +205,18 @@ export default class Citylist extends Component {
           </View>
           <View className='hot-city-container'>
             <View>当前选择城市</View>
-            <Text className='selected-area' onClick={this.showAreaList.bind(this, '')}>全国</Text>
+            <Text className='selected-area'
+                    onClick={this.showAreaList.bind(this, '')}>全国</Text>
             {this.state.selectedProv.length > 0 &&
-            <Text>
-            -><Text className='selected-area' onClick={this.showAreaList.bind(this, this.state.selectedProv)}>{this.state.selectedProv}</Text>
-              {this.state.selectedCity.length >0 && 
               <Text>
-              -><Text className='selected-area'>{this.state.selectedCity}</Text>
-              </Text>
-              }
-            </Text>
-             }
+              -><Text className='selected-area' onClick={this.showAreaList.bind(this, this.state.selectedProv)}>{this.state.selectedProv}</Text>
+                {this.state.selectedCity.length > 0 &&
+                  <Text>
+                  -><Text className='selected-area'>{this.state.selectedCity}</Text>
+                  </Text>
+                }
+              </Text>}
+
             <View className="button-container">
               <View onClick={this.onButtonClicked.bind(this, 1)} className="button reset-button"><Text>重 置</Text></View>
               <View onClick={this.onButtonClicked.bind(this, 2)} className="button cancel-button"><Text>取 消</Text></View>
