@@ -54,7 +54,7 @@ export default class Citylist extends Component {
   }
 
   requestCityData = (prov) => {
-    CommonFunc.requestCityData(prov).then(res => {
+    CommonFunc.requestCityData(prov, '').then(res => {
       let currCityItems = []
       let newElem = []
       for (let i = 0; i < res.data.length; i++) {

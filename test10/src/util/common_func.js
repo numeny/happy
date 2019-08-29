@@ -325,9 +325,8 @@ export const CommonFunc = {
   },
 
   requestRhList: function(addedUrl) {
-    let url = SERVER_HOST + '/show_rh_list'
-              + addedUrl
-              + ((addedUrl.length > 0) ? '&' : '?')
+    addedUrl = (Util.isString(addedUrl) && addedUrl.length > 0) ? (addedUrl + '&') : '?'
+    let url = SERVER_HOST + '/show_rh_list' + addedUrl
               + 'etype=' + CommonFunc.getTaroEnv()
     if (CommonFunc.getTaroEnv() === 'weapp') {
       // FIXME
@@ -372,8 +371,10 @@ export const CommonFunc = {
     return promise
   },
 
-  requestCityData: function(prov) {
-    let url = SERVER_HOST + '/arealist' + ((prov.length > 0) ? ("?prov=" + prov) : "")
+  requestCityData: function(prov, city) {
+    let url = SERVER_HOST + '/arealist'
+      + ((prov.length > 0) ? ("?prov=" + prov) : "")
+      + ((prov.length > 0 && city.length > 0) ? ("&city=" + city) : "")
     console.log('requestCityData: url: ' + url)
     return Taro.request({
       url: url,

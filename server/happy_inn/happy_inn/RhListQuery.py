@@ -138,23 +138,32 @@ class RhListQuery:
         return response
 
     def get_rh_list_filter(self):
+        Log.m(LOGTAG, 'showRhList, get_rh_list_filter, 1')
         global RH_NUM_PER_PAGE
         # FIXME, should not query all DB
         # db = rh.objects.filter(Q(rh_area__endswith="门头沟区"))
         response = {}
         all_filter = self.get_filter(response)
 
+        Log.m(LOGTAG, 'showRhList, get_rh_list_filter, 2')
         records = rh.objects.filter(all_filter).order_by('-rh_bednum_int', 'rh_name', 'rh_ylw_id')
+        Log.m(LOGTAG, 'showRhList, get_rh_list_filter, 3')
         record_num = records.count()
+        # record_num = 100
+        Log.m(LOGTAG, 'showRhList, get_rh_list_filter, 3-1')
         page_num = record_num / RH_NUM_PER_PAGE
         if record_num % RH_NUM_PER_PAGE > 0:
             page_num = page_num + 1
+        Log.m(LOGTAG, 'showRhList, get_rh_list_filter, 3-2')
 
         page_idx = self.query_param.page
 
+        Log.m(LOGTAG, 'showRhList, get_rh_list_filter, 4')
         result_record = records[((page_idx - 1) * RH_NUM_PER_PAGE) : (page_idx * RH_NUM_PER_PAGE)]
+        Log.m(LOGTAG, 'showRhList, get_rh_list_filter, 5')
 
         response['records'] = DbQuery.get_brief_colume_from_records(result_record)
+        Log.m(LOGTAG, 'showRhList, get_rh_list_filter, 6')
         if page_idx < page_num:
             response['record_num'] = RH_NUM_PER_PAGE
         else:

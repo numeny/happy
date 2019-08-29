@@ -249,6 +249,11 @@ def changeUserFavoriteRh(request):
 def getUserFavoriteList(request):
     Log.d(LOGTAG, 'getUserFavoriteList')
     response = {}
+    '''
+    response[RetCode_Key] = ErrorCode_OK
+    response[RetCode_Data] = ['mm']
+    return JsonResponse(response)
+    '''
 
     # get uid from request
     uid = getUid(request, response)

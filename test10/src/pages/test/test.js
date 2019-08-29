@@ -17,12 +17,15 @@ import Rhlist from '../common/rhlist'
 import namedVideo from '@res/video/1.mp4'
 import namedPng from '@images/index/1.jpeg'
 
-import { connect } from '@tarojs/redux'
-import { updateFavList, updateAvatar, updateUsername } from '../../actions/counter'
-
-const LOGIN_TYPE_NONE = 0
-const LOGIN_TYPE_WEIXIN = 1
-const LOGIN_TYPE_PHONE = 2
+const allFunctions = [
+  {name: CommonFunc.getUserFavList, },
+  {name: CommonFunc.requestRhList, params: ['']},
+  {name: CommonFunc.requestRhDetail, params: [10018644]},
+  {name: CommonFunc.login, params: ['m', 'm']},
+  {name: CommonFunc.logout, },
+  {name: CommonFunc.requestCityData, params: ['山东省', '']},
+  {name: CommonFunc.requestCityData, params: ['北京市', '']},
+]
 
 export default class Login extends Component {
 
@@ -33,8 +36,6 @@ export default class Login extends Component {
   constructor(props) {
     super(props)
     this.state = {
-      username: '',
-      password: '',
     }
   }
 
@@ -52,31 +53,31 @@ export default class Login extends Component {
     for (var idx = 0; idx < 100; idx++) {
       CommonFunc.requestRhList('')
         .then(res => {
-          console.log('end testRhData: interval: '
+          console.log('end2 testRhData: interval: '
             + (this.currTime() - start) + ' ms');
         }).catch(error => {
           reject(error)
         })
     }
     let end = this.currTime()
-    console.log('end testRhData: interval: '
+    console.log('end1 testRhData: interval: '
         + (end - start) + ' ms');
   }
 
-  testRhData1 = (e) =>  {
-    console.log('start getUserFavList: ');
+  testrequestRhDetail = (e) =>  {
+    console.log('start testrequestRhDetail: ');
     const start = this.currTime()
     for (var idx = 0; idx < 1000; idx++) {
-      CommonFunc.getUserFavList()
+      CommonFunc.requestRhDetail(10018644)
         .then(res => {
-          console.log('end getUserFavList: interval: '
+          console.log('end2 testrequestRhDetail: interval: '
             + (this.currTime() - start) + ' ms');
         }).catch(error => {
           reject(error)
         })
     }
     let end = this.currTime()
-    console.log('end testRhData: interval: '
+    console.log('end1 testrequestRhDetail: interval: '
         + (end - start) + ' ms');
   }
 
@@ -84,9 +85,71 @@ export default class Login extends Component {
   }
 
   testFavList = (e) =>  {
+    console.log('start getUserFavList: ');
+    const start = this.currTime()
+    for (var idx = 0; idx < 100; idx++) {
+      CommonFunc.getUserFavList()
+        .then(res => {
+          console.log('end2 getUserFavList: interval: '
+            + (this.currTime() - start) + ' ms');
+        }).catch(error => {
+          reject(error)
+        })
+    }
+    let end = this.currTime()
+    console.log('end1 getUserFavList: interval: '
+        + (end - start) + ' ms');
+  }
+
+  testOneCase = (testFunc) => {
+    const funcName = testFunc.name.name
+    console.log('start ' + funcName);
+    const start = this.currTime()
+    for (var idx = 0; idx < 100; idx++) {
+      if ('params' in testFunc) {
+        testFunc.name(testFunc.params)
+          .then(res => {
+            console.log('end2 ' + funcName + ': interval: '
+              + (this.currTime() - start) + ' ms');
+          }).catch(error => {
+            reject(error)
+          })
+      } else {
+        testFunc.name()
+          .then(res => {
+            console.log('end2 ' + funcName + ': interval: '
+              + (this.currTime() - start) + ' ms');
+          }).catch(error => {
+            reject(error)
+          })
+      }
+    }
+    let end = this.currTime()
+    console.log('end1 ' + funcName + ': interval: '
+        + (end - start) + ' ms');
+  }
+
+  testAllCases = (func, idx, e) =>  {
+    this.testOneCase(func)
+    // this.testOneCase(CommonFunc.getUserFavList)
   }
 
   render () {
+
+    const testButtons = (
+          <View className='rh-list-container'>
+          {allFunctions.map((func, i) =>
+            <View onClick={this.testAllCases.bind(this, func, i)}
+              className='login-input-submit'>
+              {func.name.name}{'params' in func && func.params.length &&
+                  func.params.map((par, i) =>
+                    (par)
+                  )
+              }
+            </View>
+          )}
+          </View>)
+    
     return (
       <View className="login-top-view">
       <Video width='150px' height='190px' src={namedVideo} />
@@ -97,14 +160,21 @@ export default class Login extends Component {
               className='login-input-submit'>
             testRhData
           </View>
-          <View onClick={this.testUserManager} className='login-input-submit'>
-            testUserManager
+          <View onClick={this.testrequestRhDetail}
+              className='login-input-submit'>
+            testrequestRhDetail
           </View>
           <View onClick={this.testFavList}
               className='login-input-submit'>
             testFavList
           </View>
+          <View onClick={this.testAllCases}
+              className='login-input-submit'>
+            testAllCases
+          </View>
         </View>
+<View>mmmmmmmmmmm</View>
+      {testButtons}
       <PageFooter />
       </View>
     )

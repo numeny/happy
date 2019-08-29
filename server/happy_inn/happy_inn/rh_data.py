@@ -55,6 +55,9 @@ def getRhDetail(request):
     return JsonResponse(detail_query.get_data_from_rh_id())
 
 def showRhList(request):
+    # return JsonResponse('hello')
+    Log.m(LOGTAG, 'showRhList, start', True)
+
     query_param = QueryParam()
 
     if "prov" in request.GET:
@@ -96,6 +99,7 @@ def showRhList(request):
     if "searchKey" in request.GET:
         query_param.searchKey = request.GET['searchKey']
 
+    Log.m(LOGTAG, 'showRhList, start-1')
     response = {}
     if "favList" in request.GET:
         Log.i(LOGTAG, 'Requesting user favorite rh list!')
@@ -115,10 +119,12 @@ def showRhList(request):
         query_param.uid = uid
         Log.i(LOGTAG, 'Requesting user favorite rh, uid: ' + str(query_param.uid))
 
+    Log.m(LOGTAG, 'showRhList, start-2')
     # FIXME
     rh_list_query = RhListQuery(query_param)
     response = rh_list_query.get_rh_list()
 
+    Log.m(LOGTAG, 'showRhList, end')
     return JsonResponse(response)
 
 def areaList(request):

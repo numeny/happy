@@ -322,10 +322,9 @@ export default class Index extends Component {
         || this.state.currCity <= 0) {
       return
     }
-    let url = SERVER_HOST + '/arealist' + "?prov=" + this.state.currProv + "&city=" + this.state.currCity
-    Taro.request({
-      url: url,
-      success: (res) => {
+
+    CommonFunc.requestCityData(this.state.currProv, this.state.currCity)
+      .then(res => {
         console.log(res.data)
         let selectorArea = ['不限']
         for (var i in res.data) {
@@ -334,15 +333,10 @@ export default class Index extends Component {
         this.setState({
             selectorArea: selectorArea,
         })
-      },
-      fail: (error) => {
-        console.error('fail')
-        Taro.showToast({title: 'fail'})
-      },
-      complete: () => {
-        // Taro.showToast({title: "complete"})
-      },
-    })
+      }).catch(error => {
+        console.error("requestAreaData, error")
+        // Taro.showToast({title: 'fail'})
+      })
   }
 
   componentDidMount () {

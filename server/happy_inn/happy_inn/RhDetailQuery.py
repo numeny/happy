@@ -27,10 +27,8 @@ class RhDetailQuery:
     def get_rh_location_id(record):
         municipality = [u'北京市', u'上海市', u'天津市', u'重庆市']
         if record.rh_privince in municipality:
-            print('get_rh_location_id: in ')
             province = ''
         else:
-            print('get_rh_location_id: not in value:%s' %(record.rh_privince))
             province = record.rh_privince
         record.rh_location_id = province + record.rh_city + record.rh_area
 
