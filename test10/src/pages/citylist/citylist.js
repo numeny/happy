@@ -2,7 +2,6 @@ import Taro, { Component, Events } from '@tarojs/taro'
 import { View, Text, Image, Input, Video, Button, Icon, Progress, Checkbox, Switch, Form, Slider, Picker, PickerView, PickerViewColumn, Swiper, SwiperItem, Navigator } from '@tarojs/components'
 
 import { AtIcon } from 'taro-ui'
-import { AtButton } from 'taro-ui'
 import "../../../node_modules/taro-ui/dist/style/components/icon.scss";
 import "../../../node_modules/taro-ui/dist/style/components/button.scss";
 
@@ -78,7 +77,7 @@ export default class Citylist extends Component {
   }
 
   getGeolocationCity = (e) => {
-    CommonFunc.getCurrCity()
+    CommonFunc.getCurrCity(true)
       .then(res => {
         if (res.data.province.length <= 0
             || res.data.city.length <= 0) {

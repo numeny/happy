@@ -380,10 +380,10 @@ export const CommonFunc = {
     })
   },
 
-  getCurrCity: function() {
+  getCurrCityInternal: function() {
     const promise = new Promise(function(resolve, reject) {
       Taro.getLocation().then(res => {
-          console.log("getCurrCity, Taro.getLocation() success, latitude: "
+          console.log("getCurrCityInternal, Taro.getLocation() success, latitude: "
               + res.latitude + ', longitude: ' + res.longitude)
           return CommonFunc.getCurrCityImpl(res.longitude, res.latitude)
         }).then(res => {
@@ -391,11 +391,47 @@ export const CommonFunc = {
               || res.data.city.length <= 0) {
             return Promise.reject(res)
           }
-          console.log("getCurrCity, province: "
+          console.log("getCurrCityInternal, province: "
               + res.data.province + ", city: " + res.data.city)
           resolve(res)
         }).catch(error => {
-          console.error("getCurrCity, error")
+          console.error("getCurrCityInternal, error")
+          reject(error)
+        })
+    })
+
+    return promise
+  },
+
+  // @force: true, request authorize again even if user has
+  //               denied this authorization ever
+  //         false, do not request authorize again if user has
+  //               denied this authorization ever
+  getCurrCity: function(force) {
+    if (!force) {
+      const promise = new Promise(function(resolve, reject) {
+        CommonFunc.getCurrCityInternal()
+          .then(res => {
+            resolve(res)
+          }).catch(error => {
+            console.error(error)
+            reject(error)
+          })
+      })
+      return promise
+    }
+
+    const promise = new Promise(function(resolve, reject) {
+      Taro.openSetting()
+        .then(res => {
+          if (res.authSetting["scope.userLocation"] != true) {
+            return Promise.reject(res)
+          }
+          return CommonFunc.getCurrCityInternal()
+        }).then(res => {
+          resolve(res)
+        }).catch(error => {
+          console.error(error)
           reject(error)
         })
     })
