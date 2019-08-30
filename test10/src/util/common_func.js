@@ -61,12 +61,6 @@ export const CommonFunc = {
             data: uid,
         })
       }).then(res => {
-/*FIXME
-        Taro.setStorageSync({
-            key: STORAGE_KEY_USER_ID,
-            data: uid,
-        })
-*/
         console.log('saveLoginStorage: uid: ' + uid)
         resolve(res)
       }).catch(error => {

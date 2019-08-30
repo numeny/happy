@@ -7,6 +7,8 @@ $selected-item-color: #00F;
 .top-view {
   font-size: 34px;
   background-color: #EEE;
+  user-select: text;
+  -webkit-user-select: text;
 }
 
 .hot-city-container, .curr-city-container {

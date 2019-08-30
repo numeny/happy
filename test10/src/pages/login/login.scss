@@ -3,6 +3,8 @@ $user-name-icon-size: 26px;
 .login-top-view {
   font-size: 35px;
   background-color: #EEE;
+  user-select: text;
+  -webkit-user-select: text;
 }
 
 .login-top-view-1 {

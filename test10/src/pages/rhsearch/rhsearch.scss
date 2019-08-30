@@ -7,6 +7,8 @@ $page-bg-color: #EEE;
 .rs-top-view {
   font-size: 34px;
   background-color: $page-bg-color;
+  user-select: text;
+  -webkit-user-select: text;
 }
 
 // search box

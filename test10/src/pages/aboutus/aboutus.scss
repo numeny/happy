@@ -5,6 +5,8 @@ $city-item-margin: 10px;
 .au-top-view {
   font-size: 34px;
   background-color: #EEE;
+  user-select: text;
+  -webkit-user-select: text;
 }
 
 .au-title-container {

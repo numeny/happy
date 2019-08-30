@@ -20,11 +20,17 @@ import namedPng from '@images/index/1.jpeg'
 const allFunctions = [
   {name: CommonFunc.getUserFavList, },
   {name: CommonFunc.requestRhList, params: ['']},
+  {name: CommonFunc.requestRhList, params: ['prov=北京市&city=北京市']},
+  {name: CommonFunc.requestRhList, params: ['searchKey=美']},
   {name: CommonFunc.requestRhDetail, params: [10018644]},
   {name: CommonFunc.login, params: ['m', 'm']},
+  {name: CommonFunc.loginForWeixin, },
   {name: CommonFunc.logout, },
-  {name: CommonFunc.requestCityData, params: ['山东省', '']},
+  {name: CommonFunc.requestCityData, params: ['', '']},
   {name: CommonFunc.requestCityData, params: ['北京市', '']},
+  {name: CommonFunc.requestCityData, params: ['山东省', '淄博市']},
+  {name: CommonFunc.changeFav, params: [0, 10018644, true]},
+  {name: CommonFunc.getCurrCityImpl, params: [116.310003, 39.991957]},
 ]
 
 const TEST_COUNT = 100
@@ -56,16 +62,18 @@ export default class Login extends Component {
       if ('params' in testFunc) {
         testFunc.name.apply(this, testFunc.params)
           .then(res => {
+            const endTime = (this.currTime() - start)
             console.log('end2 ' + funcName + ': interval: '
-              + (this.currTime() - start) + ' ms');
+              + endTime + ' ms');
           }).catch(error => {
             reject(error)
           })
       } else {
         testFunc.name()
           .then(res => {
+            const endTime = (this.currTime() - start)
             console.log('end2 ' + funcName + ': interval: '
-              + (this.currTime() - start) + ' ms');
+              + endTime + ' ms');
           }).catch(error => {
             reject(error)
           })
@@ -103,6 +111,7 @@ export default class Login extends Component {
       <Video width='150px' height='190px' src={namedVideo} />
       <Image src={namedPng} />
       <FixedTitle title="用户登录" />
+      <View> 总次数：{TEST_COUNT}</View>
       {testButtons}
       <PageFooter />
       </View>

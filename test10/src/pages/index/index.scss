@@ -9,6 +9,8 @@ $page-background-color: #FFF;
 .top-container {
   background-color: $page-background-color;
   font-size: 35px;
+  user-select: text;
+  -webkit-user-select: text;
 }
 
 .top-title-top-container {

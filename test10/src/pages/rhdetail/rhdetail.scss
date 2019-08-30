@@ -5,6 +5,8 @@ $divider-color: #3CA467;
 .rhdetail-top-view-1 {
   margin: 120px 10px 0px 10px;
   font-size: 34px;
+  user-select: text;
+  -webkit-user-select: text;
 }
 
 .swiper-view {
