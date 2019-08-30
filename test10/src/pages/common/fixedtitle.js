@@ -6,6 +6,7 @@ import "../../../node_modules/taro-ui/dist/style/components/icon.scss";
 
 import './fixedtitle.scss'
 import { HOME_URL } from '@util/const'
+import { Util } from '../../util/util'
 
 export default class FixedTitle extends Component {
 
@@ -41,7 +42,8 @@ export default class FixedTitle extends Component {
       <View className='ft-title'>
         <AtIcon value='chevron-left' size='20' onClick={this.goBack} className='ft-back-icon'></AtIcon>
         <View className='ft-text'>{this.state.stateTitle}</View>
-        <AtIcon value='home' size='20' onClick={this.goHome} className='ft-home-icon'></AtIcon>
+        {Util.isH5() &&
+        <AtIcon value='home' size='20' onClick={this.goHome} className='ft-home-icon'></AtIcon>}
       </View>
     )
   }

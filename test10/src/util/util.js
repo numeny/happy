@@ -1,3 +1,5 @@
+import Taro from '@tarojs/taro';
+
 export const Util = {
 
   isInstanceOf: function(thisVar, varType) {
@@ -83,4 +85,16 @@ export const Util = {
     return true
   },
 
+  isH5: function() {
+    return process.env.TARO_ENV == 'h5'
+    // return true
+  },
+  isWeapp: function() {
+    // return true
+    return process.env.TARO_ENV == 'weapp'
+  },
+  getTaroEnv: function() {
+    return process.env.TARO_ENV
+    // return 'weapp'
+  },
 }

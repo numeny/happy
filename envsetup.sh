@@ -20,11 +20,11 @@ function ps.process {
 }
 
 function kill.adb {
-  kill.process "adb shell logcat"
+  kill.process "logcat"
 }
 
 function ps.adb {
-  ps.process "adb shell logcat"
+  ps.process "logcat"
 }
 
 function kill.npm {

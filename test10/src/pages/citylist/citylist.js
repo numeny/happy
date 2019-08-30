@@ -126,7 +126,9 @@ export default class Citylist extends Component {
         console.error('onButtonClicked: prov: '
             + this.state.selectedProv
             + ', city: ' + this.state.selectedCity)
-        CommonFunc.requestRhListWithCityInfo(this.state.selectedProv, this.state.selectedCity)
+
+        CommonFunc.selectNewCity(
+            this.state.selectedProv, this.state.selectedCity)
       }
     }
   }

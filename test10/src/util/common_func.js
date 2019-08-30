@@ -107,8 +107,8 @@ export const CommonFunc = {
   // should called after logined
   getUserFavList: function() {
     const promise = new Promise(function(resolve, reject) {
-      let url = (SERVER_HOST + '/gfl' + '?etype=' + CommonFunc.getTaroEnv())
-      if (CommonFunc.getTaroEnv() === 'weapp') {
+      let url = (SERVER_HOST + '/gfl' + '?etype=' + Util.getTaroEnv())
+      if (Util.getTaroEnv() === 'weapp') {
         // FIXME
         url += '&uid=' + CommonFunc.getLoginedInfoSync()
       }
@@ -250,7 +250,7 @@ export const CommonFunc = {
       let url = (SERVER_HOST + '/cf?uid=' + userId
             + '&rhId=' + rhId
             + '&f=' + (isFavorite?'t':'f')
-            + '&etype=' + CommonFunc.getTaroEnv())
+            + '&etype=' + Util.getTaroEnv())
       console.log('changeFav, url: ' + url)
       Taro.request({
         url: url,
@@ -318,11 +318,36 @@ export const CommonFunc = {
     })
   },
 
+  selectNewCity: function(prov, city) {
+    if (Util.isH5()) {
+      // only for h5
+      CommonFunc.requestRhListWithCityInfo(prov, city)
+    } else {
+      // for weapp, because view stack length should be small than 10
+      // FIXME
+      let pages = Taro.getCurrentPages();
+      console.error('pages')
+      console.error(pages)
+      console.error(pages.length)
+      let currPage = pages[ pages.length - 1 ];
+      console.error('currPage')
+      console.error(currPage)
+      let prevPage = pages[ pages.length - 2 ];
+      console.error('prevPage')
+      console.error(prevPage)
+      prevPage.setState({
+        currProv: prov,
+        currCity: city
+      })
+      Taro.navigateBack()
+    }
+  },
+
   requestRhList: function(addedUrl) {
     addedUrl = (Util.isString(addedUrl) && addedUrl.length > 0) ? (addedUrl + '&') : '?'
     let url = SERVER_HOST + '/show_rh_list' + addedUrl
-              + 'etype=' + CommonFunc.getTaroEnv()
-    if (CommonFunc.getTaroEnv() === 'weapp') {
+              + 'etype=' + Util.getTaroEnv()
+    if (Util.getTaroEnv() === 'weapp') {
       // FIXME
       url += ('&uid=' + CommonFunc.getLoginedInfoSync())
     }

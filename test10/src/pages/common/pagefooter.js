@@ -3,6 +3,7 @@ import { View, Text } from '@tarojs/components'
 
 import './pagefooter.scss'
 import { PAGE_FOOTER_MENU, ABOUT_US_MENU, HOME_URL } from '@util/const'
+import { Util } from '@util/util'
 
 export default class PageFooter extends Component {
 
@@ -10,7 +11,10 @@ export default class PageFooter extends Component {
     super(props)
     this.state = {
       stateShowAboutMenu: (this.props.showAboutMenu != null && this.props.showAboutMenu == 'false' ? false : true),
-      stateShowHomePageItem: (this.props.showHomePageItem != null && this.props.showHomePageItem == 'false' ? false : true),
+      stateShowHomePageItem: (!Util.isH5()
+                              || (this.props.showHomePageItem != null
+                              && this.props.showHomePageItem == 'false')
+                                ? false : true),
     }
   }
 

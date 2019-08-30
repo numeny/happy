@@ -90,7 +90,7 @@ export default class Login extends Component {
 
   loginWithPhone = (e) =>  {
     /*
-    if (CommonFunc.getTaroEnv() === 'weapp') {
+    if (Util.getTaroEnv() === 'weapp') {
       CommonFunc.loginForWeixin()
         .then(res => {
           console.log('loginWithPhone, success: ' + res)
@@ -98,7 +98,7 @@ export default class Login extends Component {
         }).catch(error => {
           console.log('loginWithPhone, error: ' + error)
         })
-    } else if (CommonFunc.getTaroEnv() === 'h5') {
+    } else if (Util.getTaroEnv() === 'h5') {
     */
       if (!Util.checkUsername(this.state.username)) {
         return
@@ -159,7 +159,7 @@ export default class Login extends Component {
   }
 
   onLoginWithWeixin = (e) =>  {
-    if (CommonFunc.getTaroEnv() != 'weapp') {
+    if (Util.getTaroEnv() != 'weapp') {
       // FIXME, h5 do not support weixin login
       return
     }
