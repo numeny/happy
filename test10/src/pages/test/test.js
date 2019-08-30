@@ -27,6 +27,7 @@ const allFunctions = [
   {name: CommonFunc.requestCityData, params: ['北京市', '']},
 ]
 
+const TEST_COUNT = 100
 export default class Login extends Component {
 
   config: Config = {
@@ -47,67 +48,13 @@ export default class Login extends Component {
     return (new Date()).getTime()
   }
 
-  testRhData = (e) =>  {
-    console.log('start testRhData: ');
-    const start = this.currTime()
-    for (var idx = 0; idx < 100; idx++) {
-      CommonFunc.requestRhList('')
-        .then(res => {
-          console.log('end2 testRhData: interval: '
-            + (this.currTime() - start) + ' ms');
-        }).catch(error => {
-          reject(error)
-        })
-    }
-    let end = this.currTime()
-    console.log('end1 testRhData: interval: '
-        + (end - start) + ' ms');
-  }
-
-  testrequestRhDetail = (e) =>  {
-    console.log('start testrequestRhDetail: ');
-    const start = this.currTime()
-    for (var idx = 0; idx < 1000; idx++) {
-      CommonFunc.requestRhDetail(10018644)
-        .then(res => {
-          console.log('end2 testrequestRhDetail: interval: '
-            + (this.currTime() - start) + ' ms');
-        }).catch(error => {
-          reject(error)
-        })
-    }
-    let end = this.currTime()
-    console.log('end1 testrequestRhDetail: interval: '
-        + (end - start) + ' ms');
-  }
-
-  testUserManager = (e) =>  {
-  }
-
-  testFavList = (e) =>  {
-    console.log('start getUserFavList: ');
-    const start = this.currTime()
-    for (var idx = 0; idx < 100; idx++) {
-      CommonFunc.getUserFavList()
-        .then(res => {
-          console.log('end2 getUserFavList: interval: '
-            + (this.currTime() - start) + ' ms');
-        }).catch(error => {
-          reject(error)
-        })
-    }
-    let end = this.currTime()
-    console.log('end1 getUserFavList: interval: '
-        + (end - start) + ' ms');
-  }
-
   testOneCase = (testFunc) => {
     const funcName = testFunc.name.name
     console.log('start ' + funcName);
     const start = this.currTime()
-    for (var idx = 0; idx < 100; idx++) {
+    for (var idx = 0; idx < TEST_COUNT; idx++) {
       if ('params' in testFunc) {
-        testFunc.name(testFunc.params)
+        testFunc.name.apply(this, testFunc.params)
           .then(res => {
             console.log('end2 ' + funcName + ': interval: '
               + (this.currTime() - start) + ' ms');
@@ -137,43 +84,25 @@ export default class Login extends Component {
   render () {
 
     const testButtons = (
-          <View className='rh-list-container'>
+          <View className='test-container'>
           {allFunctions.map((func, i) =>
             <View onClick={this.testAllCases.bind(this, func, i)}
-              className='login-input-submit'>
-              {func.name.name}{'params' in func && func.params.length &&
+              className='test-submit'>
+              {func.name.name}(
+                {'params' in func && func.params.length &&
                   func.params.map((par, i) =>
-                    (par)
+                    i==0 ? (par) : (',' + par)
                   )
-              }
+              })
             </View>
           )}
           </View>)
     
     return (
-      <View className="login-top-view">
+      <View className="test-top-view">
       <Video width='150px' height='190px' src={namedVideo} />
       <Image src={namedPng} />
       <FixedTitle title="用户登录" />
-        <View className="login-top-view-1">
-          <View onClick={this.testRhData}
-              className='login-input-submit'>
-            testRhData
-          </View>
-          <View onClick={this.testrequestRhDetail}
-              className='login-input-submit'>
-            testrequestRhDetail
-          </View>
-          <View onClick={this.testFavList}
-              className='login-input-submit'>
-            testFavList
-          </View>
-          <View onClick={this.testAllCases}
-              className='login-input-submit'>
-            testAllCases
-          </View>
-        </View>
-<View>mmmmmmmmmmm</View>
       {testButtons}
       <PageFooter />
       </View>
