@@ -10,7 +10,7 @@ import FixedTitle from '../common/fixedtitle'
 import PageFooter from '../common/pagefooter'
 import Rhlist from '../common/rhlist'
 import { CommonFunc } from '../../util/common_func'
-import { Util } from '../../util/common_func'
+import { Util } from '../../util/util'
 
 import namedVideo from '@res/video/1.mp4'
 import namedPng from '@images/index/1.jpeg'

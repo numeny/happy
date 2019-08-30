@@ -335,9 +335,9 @@ export const CommonFunc = {
       let prevPage = pages[ pages.length - 2 ];
       console.error('prevPage')
       console.error(prevPage)
-      prevPage.setState({
+      prevPage.setData({
         currProv: prov,
-        currCity: city
+        currCity: city,
       })
       Taro.navigateBack()
     }

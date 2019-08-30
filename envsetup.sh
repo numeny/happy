@@ -5,18 +5,30 @@ export HAPPY_PATH=`pwd`
 export HAPPY_CLIENT_PATH="$HAPPY_PATH/test10"
 export HAPPY_SERVER_PATH="$HAPPY_PATH/server/happy_inn"
 
-alias cdhappy1="cd $HAPPY_PATH"
+alias cdhappy="cd $HAPPY_PATH"
 alias cdclient="cd $HAPPY_CLIENT_PATH"
 alias cdserver="cd $HAPPY_SERVER_PATH"
 
 # export PATH=$PATH:$HAPPY_PATH/tools/bin/
 
 function kill.process {
-  ps -aX | grep $1 |  awk '{print $1}' | xargs kill -9
+    if [[ `uname -a` =~ "Darwin" ]];then
+        # mac os
+        ps -ax | grep $1 |  awk '{print $1}' | xargs kill -9
+    else
+        # linux
+        ps -aX | grep $1 |  awk '{print $1}' | xargs kill -9
+    fi
 }
 
 function ps.process {
-  ps -aX | grep $1
+    if [[ `uname -a` =~ "Darwin" ]];then
+        # mac os
+        ps -ax | grep $1
+    else
+        # linux
+        ps -aX | grep $1
+    fi
 }
 
 function kill.adb {
@@ -53,7 +65,7 @@ export NPM_PORT_CONF=node_modules/@tarojs/webpack-runner/dist/config/devServer.c
 function rand() {
   min=$1
   max=$(($2-$min+1))
-  num=$(date +%s%N)
+  num=$(($RANDOM+1000000000)) #增加一个10位的数再求余
   echo $(($num%$max+$min))
 }
  

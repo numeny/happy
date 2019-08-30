@@ -200,6 +200,13 @@ export default class Index extends Component {
         isLogin: false,
       })
     })
+    let pages = getCurrentPages();
+    let currPage = pages[pages.length-1];
+    if (currPage.data.currProv == ""){
+    } else {
+      this.requestRhDataOfCurrCity2(
+          currPage.data.currProv, currPage.data.currCity)
+    }
   }
 
   requestAreaRhData = (selectorAreaCheckedIdx) => {
