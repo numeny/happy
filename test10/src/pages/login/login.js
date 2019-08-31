@@ -5,7 +5,7 @@ import { AtButton } from 'taro-ui'
 import "../../../node_modules/taro-ui/dist/style/components/icon.scss";
 import "../../../node_modules/taro-ui/dist/style/components/button.scss";
 
-import { IMGS_ROOT_PATH } from '../../util/const'
+import { DEF_AVATAR_IMG, DEF_USER_NAME } from '../../util/const'
 import { CommonFunc } from '@util/common_func'
 import { Util } from '@util/util'
 
@@ -52,9 +52,6 @@ export default class Login extends Component {
 
       isLogin: false,
       loginType: LOGIN_TYPE_NONE,
-
-      loginedUsername: '',
-      loginedAvatarUrl: IMGS_ROOT_PATH + '/default.jpg',
     }
   }
 
@@ -63,15 +60,11 @@ export default class Login extends Component {
       console.log('componentWillMount-1, success, res: ' + res.username)
       this.setState({
         isLogin: true,
-        // FIXME, not set
-        loginedUsername: res.username,
       })
     }).catch(error => {
       console.log('componentWillMount-2, fail, error: ' + error)
       this.setState({
         isLogin: false,
-        // FIXME, not set
-        loginedUsername: '',
       })
     })
   }
@@ -117,38 +110,46 @@ export default class Login extends Component {
     // }
   }
 
-  onUpdateUsernameProp = (e) =>  {
-    console.log('onUpdateUsernameProp')
-
-    this.props.updateUsernameProp('my good')
-  }
-
   onGetUserInfo = (e) =>  {
     console.log('onGetUserInfo')
+    console.log(e)
+    console.log(e.detail)
     console.log(e.detail.errMsg)
     console.log(e.detail.userInfo)
     console.log(e.detail.rawData)
 
-    const userInfo = e.detail.userInfo
-    this.props.updateAvatarProp(userInfo.avatarUrl)
-    console.log('onGetUserInfo, avatarUrl: ' + userInfo.avatarUrl
-                + ', nickName: ' + userInfo.nickName)
+    let avatarUrl = ''
+    let nickName = ''
+    if (!!e.detail && !!e.detail.userInfo) {
+      let userInfo = e.detail.userInfo
+      avatarUrl = userInfo.avatarUrl
+      nickName = userInfo.nickName
 
-    const country = userInfo.country
-    const province = userInfo.province
-    const city = userInfo.city
-    const gender = userInfo.gender //性别 0：未知、1：男、2：女
+      const country = userInfo.country
+      const province = userInfo.province
+      const city = userInfo.city
+      const gender = userInfo.gender //性别 0：未知、1：男、2：女
 
-    console.log('onGetUserInfo'
-                + ', country: ' + userInfo.country
-                + ', province: ' + userInfo.province
-                + ', city: ' + userInfo.city
-                + ', gender: ' + userInfo.gender)
+      console.log('onGetUserInfo'
+                  + ', country: ' + userInfo.country
+                  + ', province: ' + userInfo.province
+                  + ', city: ' + userInfo.city
+                  + ', gender: ' + userInfo.gender)
 
-    // FIXME, should be saved to storage or redux
-    this.setState({
-      loginedUsername: e.detail.userInfo.nickName,
-    })
+    } else {
+      console.log('onGetUserInfo, Can not get user info!')
+      avatarUrl = DEF_AVATAR_IMG
+      nickName = DEF_USER_NAME
+    }
+    this.props.updateAvatarProp(avatarUrl)
+    this.props.updateUsernameProp(nickName)
+    console.log('onGetUserInfo, avatarUrl: '
+                + avatarUrl
+                + ', nickName: ' + nickName)
+    console.log('onGetUserInfo, props.avatar: '
+                + this.props.prop_counter.avatar
+                + ', props.nickName: '
+                + this.props.prop_counter.nickName)
   }
 
   onGetPhoneNumber = (e) =>  {
@@ -167,14 +168,6 @@ export default class Login extends Component {
         console.log('onLoginWithWeixin, success: ' + res)
         this.props.updateFavListProp(res.rhFavList)
         console.log('onLoginWithWeixin, res.rhFavList: ' + res.rhFavList)
-        /*
-        this.props.updateAvatarProp(res.userInfo.avatarUrl)
-        console.log('onLoginWithWeixin, res.userInfo.avatarUrl: ' + res.userInfo.avatarUrl)
-        console.log('onLoginWithWeixin, res.userInfo.nickName: ' + res.userInfo.nickName)
-        this.setState({
-          loginedUsername: res.userInfo.nickName,
-        })
-        */
       }).catch(error => {
         console.log('onLoginWithWeixin, error: ' + error)
       })
@@ -194,7 +187,6 @@ export default class Login extends Component {
         this.props.updateFavListProp([])
         this.setState({
           isLogin: false,
-          loginedUsername: '',
         })
       }).catch(error => {
         console.log('onExit-2, fail, error: ' + error)
@@ -218,18 +210,16 @@ export default class Login extends Component {
         <FixedTitle title="登录" />}
       {!this.state.isLogin && this.state.loginType == LOGIN_TYPE_NONE &&
         <View className="login-top-view-1">
-          <View onClick={this.onLoginWithWeixin}
+          <Button onClick={this.onLoginWithWeixin}
+              open-type='getUserInfo'
               onGetUserInfo={this.onGetUserInfo}
               className='login-input-submit'>
             微信登录
-          </View>
+          </Button>
           <View onClick={this.onLoginWithPhone} className='login-input-submit'>手机号登录</View>
           <View onGetPhoneNumber={this.onGetPhoneNumber}
               className='login-input-submit'>
             获取手机号
-          </View>
-          <View onClick={this.onUpdateUsernameProp} className='login-input-submit'>
-            更新username 
           </View>
         </View>}
  
@@ -256,10 +246,22 @@ export default class Login extends Component {
 
       {this.state.isLogin &&
         <View>
-          <View>当前登录用户: {this.state.loginedUsername}</View>
+          <View>当前登录用户: </View>
           <View className='login-input-container-1'>
-            <Image src={this.props.prop_counter.avatar} className='login-avatar' />
-            <Text className='login-username'>{this.props.prop_counter.username}</Text>
+            {this.props.prop_counter.avatar.length > 0 &&
+              <Image src={this.props.prop_counter.avatar}
+                className='login-avatar' />
+            }
+            {this.props.prop_counter.username.length > 0 &&
+              <Text className='login-username'>
+                {this.props.prop_counter.username}</Text>
+            }
+            {this.props.prop_counter.avatar == DEF_AVATAR_IMG &&
+              <Button open-type='getUserInfo'
+                  onGetUserInfo={this.onGetUserInfo}
+                  className='login-input-submit'>
+                更新您的登录信息</Button>
+            }
           </View>
           <View onClick={this.onExit} className='login-input-submit'>退 出</View>
           <View>

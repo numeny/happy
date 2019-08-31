@@ -442,6 +442,8 @@ export default class Index extends Component {
         style={scrollStyle}
         onScroll={this.onScroll.bind(this)}>
         <View className='top-title-top-container'>
+      <Video width='150px' height='190px' src={namedVideo} />
+      <Image src={namedPng} />
           <View className='top-title-container'>
             <View>
               <Text className='top-title-city' onClick={this.selectCitylist}>{this.state.currCity}</Text>

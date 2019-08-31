@@ -41,6 +41,9 @@ python manage.py runserver 0.0.0.0:8000
 10.192.100.11:8000
 
 
+6. 需要将默认的头像avatar，Logo图片，默认的养老院无图片等资源放到服务器
+
+
 
 FAQ:
 
