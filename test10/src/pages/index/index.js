@@ -12,6 +12,7 @@ import namedVideo from '@res/video/1.mp4'
 import { SERVER_HOST, STORAGE_KEY_LOGIN, STORAGE_KEY_USER_NAME } from '../../util/const'
 
 import { CommonFunc } from '../../util/common_func'
+import { Util } from '../../util/util'
 
 import PageFooter from '../common/pagefooter'
 import Rhlist from '../common/rhlist'
@@ -200,12 +201,13 @@ export default class Index extends Component {
         isLogin: false,
       })
     })
-    let pages = getCurrentPages();
-    let currPage = pages[pages.length-1];
-    if (currPage.data.currProv == ""){
-    } else {
-      this.requestRhDataOfCurrCity2(
-          currPage.data.currProv, currPage.data.currCity)
+    if (!Util.isH5()) {
+      let pages = getCurrentPages();
+      let currPage = pages[pages.length-1];
+      if (currPage.data.currProv != ""){
+        this.requestRhDataOfCurrCity2(
+            currPage.data.currProv, currPage.data.currCity)
+      }
     }
   }
 
