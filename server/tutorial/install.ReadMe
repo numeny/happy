@@ -1,7 +1,9 @@
 1.mysql:
 mysql -u bdg -p
 
-2.
+happy目录为源码根目录
+1.
+mysql -u root -p
 CREATE USER bdg IDENTIFIED BY '1';
 CREATE USER bdg@localhost IDENTIFIED BY '1';
 GRANT ALL PRIVILEGES ON *.* TO bdg;
@@ -9,10 +11,11 @@ GRANT ALL PRIVILEGES ON *.* TO bdg@localhost;
 
 create database rh;
 
-cd ~/happy-inn/data.bak/db.use.command/ylw.and.ylxxw
+cd happy/server/data.bak/data.handled.5.15.rh_address.of.ylw
 mysql -u "root" -p rh < rh.backup.sql
 
-3.
+2.
+cd happy/server/happy_inn/
 python manage.py migrate
 python manage.py makemigrations RHModel
 python manage.py migrate RHModel

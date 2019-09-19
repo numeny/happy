@@ -109,3 +109,15 @@ function f.js() {
 
   find $SEARCH_PATH -regex '.*\.\(js\|tsx\)' -type f | xargs grep "$SEARCH_STR" --color=auto -i
 }
+
+function ssh.aliyun.root() {
+  ssh root@39.106.220.0
+}
+
+function ssh.aliyun.yl51() {
+  ssh yl51@39.106.220.0
+}
+
+function ssh.aliyun() {
+  ssh.aliyun.yl51
+}

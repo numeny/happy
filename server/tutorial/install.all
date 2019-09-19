@@ -1,13 +1,41 @@
+1. Ubuntu下更新可以安装的软件列表/etc/apt/sources.list：
 sudo cp /etc/apt/sources.list /etc/apt/sources.list.old
 sudo cp sources.list /etc/apt/sources.list
 sudo apt-get update
-sudo apt-get install vim chromium-browser apache2 git exuberant-ctags cscope
 
-sudo apt-get install mysql-server mysql-client python-mysqldb
+2. 安装服务器端所需要的软件：
+1)
+sudo apt-get install apache2 git
+2) 数据库相关软件
+sudo apt-get install mysql-server mysql-client
+python3-mysqldb 或者 python-mysqldb (python2.x)
 
+# pip install mysqlclient需要
+sudo apt-get install libmysqlclient-dev python3.5-dev
+
+3.
+pip3/python3.5的安装可参照"菜鸟教程"的django的安装。
 pip install Django
 pip install django-cors-headers
 pip install django-json-response
+# django使用mysql需要
+pip install mysqlclient
+
+
+4. 用git下载服务器端代码到服务器：
+1) 服务器端公钥：ssh-keygen -t rsa
+2) 将生成的公钥发到git代码服务器上：
+~/.ssh/id_rsa.pub
+3) 下载代码：
+git clone 代码仓库的url
+
+
+
+
+
+
+3. 安装开发环境需要的软件
+sudo apt-get install vim chromium-browser exuberant-ctags cscope
 
 scrapy:
 sudo apt-get install python-dev python-pip libxml2-dev libxslt1-dev zlib1g-dev libffi-dev libssl-dev
