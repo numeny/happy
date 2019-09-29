@@ -102,7 +102,7 @@ function f.js() {
       SEARCH_STR="$2"
   else
       echo "[Usage] $0 [search_path] search_string"
-      exit 0
+      return 0
   fi
 
   echo "$0 $SEARCH_PATH $SEARCH_STR"
@@ -120,4 +120,12 @@ function ssh.aliyun.yl51() {
 
 function ssh.aliyun() {
   ssh.aliyun.yl51
+}
+
+function scp.aliyun() {
+  if [ $# -ne 1 ];then
+    echo "[Usage] scp.aliyun <file>"
+    return 0
+  fi
+  scp $1 yl51@39.106.220.0:/tmp/
 }
