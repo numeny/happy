@@ -190,8 +190,9 @@ export default class Citylist extends Component {
 
     return (
       <View className="top-view">
-        {CommonFunc.isTaroEnvH5() &&
-          <FixedTitle title="选择城市" />}
+        <Video width='150px' height='190px' src={namedVideo} />
+        <Image src={namedPng} />
+        <FixedTitle title="选择城市" />
         <View className='city-container'>
           <View className='curr-city-container'>
             当前城市
