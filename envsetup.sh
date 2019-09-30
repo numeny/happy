@@ -55,11 +55,6 @@ function ps.runserver {
   ps.process "runserver"
 }
 
-function run.npm.h5 {
-  ps.process "runserver"
-}
-
-
 export NPM_PORT_CONF=node_modules/@tarojs/webpack-runner/dist/config/devServer.conf.js
 
 function rand() {
@@ -75,6 +70,10 @@ function run.npm.h5() {
 
 function run.npm.weapp() {
   run.npm weapp
+}
+
+function run.npm.alipay() {
+  run.npm alipay
 }
 
 function run.npm() {
