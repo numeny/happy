@@ -205,9 +205,9 @@ export default class Login extends Component {
   render () {
     return (
       <View className="login-top-view">
-      <Video width='150px' height='190px' src={namedVideo} />
-      <Image src={namedPng} />
-      <FixedTitle title="用户登录" />
+      <View className="login-top-view-1">
+      {CommonFunc.isTaroEnvH5() &&
+        <FixedTitle title="登录" />}
       {!this.state.isLogin && this.state.loginType == LOGIN_TYPE_NONE &&
         <View className="login-top-view-1">
           <Button onClick={this.onLoginWithWeixin}
@@ -225,7 +225,7 @@ export default class Login extends Component {
  
 
       {!this.state.isLogin && this.state.loginType == LOGIN_TYPE_PHONE &&
-        <View className="login-top-view-1">
+        <View>
           <View className='login-input-container'>
             <View className='login-input-container-1'>
               <View className='user-icon'/>
@@ -270,8 +270,8 @@ export default class Login extends Component {
               showResult='false'
               title='您的收藏：'/>
           </View>
-        </View>
-      }
+        </View>}
+      </View>
       <PageFooter />
       </View>
     )

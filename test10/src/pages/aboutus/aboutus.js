@@ -6,6 +6,7 @@ import "../../../node_modules/taro-ui/dist/style/components/icon.scss";
 import "../../../node_modules/taro-ui/dist/style/components/button.scss";
 
 import { ABOUT_US_MENU } from '@util/const'
+import { CommonFunc } from '@util/common_func'
 
 import './aboutus.scss'
 import FixedTitle from '../common/fixedtitle'
@@ -53,9 +54,8 @@ export default class AboutUs extends Component {
         </View>)
     return (
       <View className="au-top-view">
-        <Video width='150px' height='190px' src={namedVideo} />
-        <Image src={namedPng} />
-        <FixedTitle title={ABOUT_US_MENU[this.state.currItem]}/>
+        {CommonFunc.isTaroEnvH5() &&
+          <FixedTitle title={ABOUT_US_MENU[this.state.currItem]}/>}
         {titleViews}
         <View>
         </View>
