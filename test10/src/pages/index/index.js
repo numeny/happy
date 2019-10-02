@@ -332,8 +332,13 @@ export default class Index extends Component {
       return
     }
 
+    console.log('bdg1-requestAreaData-------------')
     CommonFunc.requestCityData(this.state.currProv, this.state.currCity)
       .then(res => {
+        console.log('bdg1-requestAreaData-------------response')
+        console.log('res')
+        console.log(res)
+        console.log('res.data')
         console.log(res.data)
         let selectorArea = ['不限']
         for (var i in res.data) {
@@ -343,6 +348,7 @@ export default class Index extends Component {
             selectorArea: selectorArea,
         })
       }).catch(error => {
+        console.log('bdg1-requestAreaData-------------error')
         console.error("requestAreaData, error")
         // Taro.showToast({title: 'fail'})
       })
@@ -443,12 +449,11 @@ export default class Index extends Component {
         scrollTop={this.state.scrollTop}
         style={scrollStyle}
         onScroll={this.onScroll.bind(this)}>
+        mmmmm
         <View className='top-title-top-container'>
-      <Video width='150px' height='190px' src={namedVideo} />
-      <Image src={namedPng} />
           <View className='top-title-container'>
-            <View>
-              <Text className='top-title-city' onClick={this.selectCitylist}>{this.state.currCity}</Text>
+            <View onClick={this.selectCitylist}>
+              <Text className='top-title-city'>{this.state.currCity}</Text>
               <View onClick={this.selectCitylist} className='at-icon at-icon-chevron-down'></View>
             </View>
 
@@ -456,8 +461,12 @@ export default class Index extends Component {
               <Input type='text' placeholder='找养老院' className='rh-classify-search-box' />
               <View className='at-icon at-icon-search rh-classify-search-icon'></View>
             </View>
-            <AtIcon value='user' size='28' onClick={this.login} className='login-icon' color={loginIconStyle} />
-
+            {!Util.isAlipay() &&
+              <AtIcon value='user' size='28' onClick={this.login} className='login-icon' color={loginIconStyle} />
+            }
+            {Util.isAlipay() &&
+              <View className='at-icon at-icon-user'></View>
+            }
           </View>
           <View className='classify-title-container'>
               <Picker className='classify-title-item' mode='selector' range={this.state.selectorArea} onChange={this.onChangeArea}>
@@ -485,12 +494,20 @@ export default class Index extends Component {
         {this.state.searchCondition.length > 0 &&
           <Rhlist searchCondition={this.state.searchCondition}
               currCity={this.state.currCity} isLogin={this.state.isLogin} />}
+        {Util.isAlipay() &&
+          <Rhlist />
+        }
         {this.state.showIconOfToTop &&
           <View onClick={this.scrollToTop} className='fixed-to-top'>
             <View className='at-icon at-icon-chevron-up'>
             </View>
           </View>}
-        <PageFooter showHomePageItem='false' />
+        {!Util.isAlipay() &&
+          <PageFooter showHomePageItem='false' />
+        }
+        {!Util.isAlipay() &&
+          <PageFooter />
+        }
       </ScrollView>
     )
   }

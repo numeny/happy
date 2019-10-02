@@ -16,6 +16,7 @@ import PageFooter from '../common/pagefooter'
 import FavIcon from '../common/favicon'
 
 import { CommonFunc } from '@util/common_func'
+import { Util } from '../../util/util'
 
 import { connect } from '@tarojs/redux'
 import { update, addFavList, delFavList } from '../../actions/counter'
@@ -303,7 +304,12 @@ export default class Rhdetail extends Component {
         <View className="rh-name">
         {this.state.rhRecord.name}
         <View>
-        <FavIcon rhId={this.state.rhId}/>
+        {!Util.isAlipay() &&
+          <FavIcon rhId={this.state.rhId}/>
+        }
+        {Util.isAlipay() &&
+          <FavIcon />
+        }
         </View>
         </View>
         <View className="important-container">

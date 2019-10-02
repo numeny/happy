@@ -93,6 +93,10 @@ export const Util = {
     // return true
     return process.env.TARO_ENV == 'weapp'
   },
+  isAlipay: function() {
+    // return true
+    return process.env.TARO_ENV == 'alipay'
+  },
   getTaroEnv: function() {
     return process.env.TARO_ENV
     // return 'weapp'

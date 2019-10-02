@@ -255,7 +255,7 @@ export const CommonFunc = {
       Taro.request({
         url: url,
         credentials: 'include', // request with cookies etc.
-        // method: 'POST',
+        // method: 'POST', // FIXME
       }).then(res => {
           console.log('changeFav, success: ' + res.data.ret)
           if (!CommonFunc.isSuccess(res.data.ret)) {
@@ -392,8 +392,8 @@ export const CommonFunc = {
 
   requestCityData: function(prov, city) {
     let url = SERVER_HOST + '/arealist'
-      + ((prov.length > 0) ? ("?prov=" + prov) : "")
-      + ((prov.length > 0 && city.length > 0) ? ("&city=" + city) : "")
+      + ((prov.length > 0) ? ("?prov=" + encodeURI(prov)) : "")
+      + ((prov.length > 0 && city.length > 0) ? ("&city=" + encodeURI(city)) : "")
     console.log('requestCityData: url: ' + url)
     return Taro.request({
       url: url,

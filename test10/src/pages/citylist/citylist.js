@@ -11,6 +11,7 @@ import './citylist.scss'
 import FixedTitle from '../common/fixedtitle'
 import PageFooter from '../common/pagefooter'
 import { CommonFunc } from '../../util/common_func'
+import { Util } from '../../util/util'
 
 import namedVideo from '@res/video/1.mp4'
 import namedPng from '@images/index/1.jpeg'
@@ -196,8 +197,13 @@ export default class Citylist extends Component {
             当前城市
             <View onClick={this.selectHotCity.bind(this, this.state.currProv, this.state.currCity)} className='curr-city'>
               <View className='curr-city-text'>{this.state.currCity}</View>
-              <AtIcon onClick={this.getGeolocationCity} value='map-pin'
+              {!Util.isAlipay() &&
+                <AtIcon onClick={this.getGeolocationCity} value='map-pin'
                   className='curr-city-loc' color= '#F00' size='15' />
+              }
+              {Util.isAlipay() &&
+                <View className='at-icon at-icon-map-pin'></View>
+              }
             </View>
           </View>
           <View className='hot-city-container'>
