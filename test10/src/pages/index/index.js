@@ -180,12 +180,15 @@ export default class Index extends Component {
     this.setState({
       currProv: province,
       currCity: city,
+      selectorAreaChecked: '不限',
+      selectorAreaCheckedIdx: 0,
     })
 
     this.requestData(this.state.selectorPriceCheckedIdx, this.state.selectorBednumCheckedIdx,
         this.state.selectorTypeCheckedIdx, this.state.selectorPropCheckedIdx,
         province, city,
-        this.state.selectorAreaCheckedIdx) // 1st page
+        0) // 1st page
+    this.requestAreaData(province, city)
   }
 
   componentDidShow = () => {
@@ -309,7 +312,7 @@ export default class Index extends Component {
     if (selectorAreaCheckedIdx != 0) {
       addedUrl = addedUrl + (addedUrl.length > 0 ? '&' : '') + 'area=' + this.state.selectorArea[selectorAreaCheckedIdx]
     }
-    return addedUrl
+    return encodeURI(addedUrl)
   }
 
   requestData = (selectorPriceCheckedIdx, selectorBednumCheckedIdx,
@@ -326,14 +329,14 @@ export default class Index extends Component {
     })
   }
 
-  requestAreaData = () => {
-    if (this.state.currProv.length <= 0
-        || this.state.currCity <= 0) {
+  requestAreaData = (province, city) => {
+    if (province.length <= 0
+        || city <= 0) {
       return
     }
 
     console.log('bdg1-requestAreaData-------------')
-    CommonFunc.requestCityData(this.state.currProv, this.state.currCity)
+    CommonFunc.requestCityData(province, city)
       .then(res => {
         console.log('bdg1-requestAreaData-------------response')
         console.log('res')
@@ -355,7 +358,6 @@ export default class Index extends Component {
   }
 
   componentDidMount () {
-    this.requestAreaData()
   }
 
   componentWillUnmount () { }
@@ -425,6 +427,9 @@ export default class Index extends Component {
   }
 
   onScroll = e => {
+    if (Util.isAlipay()) {
+      return
+    }
     this.setState({
       showIconOfToTop: e.detail.scrollTop > this.state.windowHeight * 2,
       scrollTop: e.detail.scrollTop, // remain this scrollTop
@@ -442,6 +447,9 @@ export default class Index extends Component {
 
     const loginIconStyle = this.state.isLogin ? '#8AC007' : '#000'
 
+    // FIXME
+    const classifyTitleItem = !Util.isAlipay() ? 'classify-title-item' : 'classify-title-item-alipay'
+
     return (
       <ScrollView
         className='top-container'
@@ -449,10 +457,10 @@ export default class Index extends Component {
         scrollTop={this.state.scrollTop}
         style={scrollStyle}
         onScroll={this.onScroll.bind(this)}>
-        mmmmm
         <View className='top-title-top-container'>
           <View className='top-title-container'>
-            <View onClick={this.selectCitylist}>
+            <View onClick={this.selectCitylist}
+                  className='top-title-cc-container'>
               <Text className='top-title-city'>{this.state.currCity}</Text>
               <View onClick={this.selectCitylist} className='at-icon at-icon-chevron-down'></View>
             </View>
@@ -465,49 +473,41 @@ export default class Index extends Component {
               <AtIcon value='user' size='28' onClick={this.login} className='login-icon' color={loginIconStyle} />
             }
             {Util.isAlipay() &&
-              <View className='at-icon at-icon-user'></View>
+              <View className='at-icon at-icon-user login-icon'></View>
             }
           </View>
           <View className='classify-title-container'>
-              <Picker className='classify-title-item' mode='selector' range={this.state.selectorArea} onChange={this.onChangeArea}>
-                {this.state.selectorAreaChecked == "不限"?<View className='classify-title-item'>区域</View>:
-                <View className='classify-title-item'>{this.state.selectorAreaChecked}</View>}
+              <Picker className={classifyTitleItem} mode='selector' range={this.state.selectorArea} onChange={this.onChangeArea}>
+                {this.state.selectorAreaChecked == "不限"?<View className={classifyTitleItem}>区域</View>:
+                <View className={classifyTitleItem}>{this.state.selectorAreaChecked}</View>}
               </Picker>
-              <Picker className='classify-title-item' mode='selector' range={this.state.selectorPrice} onChange={this.onChangePrice}>
-                {this.state.selectorPriceChecked == "不限"?<View className='classify-title-item'>价格</View>:
-                <View className='classify-title-item'>{this.state.selectorPriceChecked}元</View>}
+              <Picker className={classifyTitleItem} mode='selector' range={this.state.selectorPrice} onChange={this.onChangePrice}>
+                {this.state.selectorPriceChecked == "不限"?<View className={classifyTitleItem}>价格</View>:
+                <View className={classifyTitleItem}>{this.state.selectorPriceChecked}元</View>}
               </Picker>
-              <Picker className='classify-title-item' mode='selector' range={this.state.selectorBednum} onChange={this.onChangeBednum}>
-                {this.state.selectorBednumChecked == "不限"?<View className='classify-title-item'>床位数</View>:
-                <View className='classify-title-item'>{this.state.selectorBednumChecked}</View>}
+              <Picker className={classifyTitleItem} mode='selector' range={this.state.selectorBednum} onChange={this.onChangeBednum}>
+                {this.state.selectorBednumChecked == "不限"?<View className={classifyTitleItem}>床位数</View>:
+                <View className={classifyTitleItem}>{this.state.selectorBednumChecked}</View>}
               </Picker>
-              <Picker className='classify-title-item' mode='selector' range={this.state.selectorType} onChange={this.onChangeType}>
-                {this.state.selectorTypeChecked == "不限"?<View className='classify-title-item'>类型</View>:
-                  <View className='classify-title-item'>{this.state.selectorTypeChecked}</View>}
+              <Picker className={classifyTitleItem} mode='selector' range={this.state.selectorType} onChange={this.onChangeType}>
+                {this.state.selectorTypeChecked == "不限"?<View className={classifyTitleItem}>类型</View>:
+                  <View className={classifyTitleItem}>{this.state.selectorTypeChecked}</View>}
               </Picker>
-              <Picker className='classify-title-item' mode='selector' range={this.state.selectorProp} onChange={this.onChangeProp}>
-                {this.state.selectorPropChecked == "不限"?<View className='classify-title-item'>性质</View>:
-                <View className='classify-title-item'>{this.state.selectorPropChecked}</View>}
+              <Picker className={classifyTitleItem} mode='selector' range={this.state.selectorProp} onChange={this.onChangeProp}>
+                {this.state.selectorPropChecked == "不限"?<View className={classifyTitleItem}>性质</View>:
+                <View className={classifyTitleItem}>{this.state.selectorPropChecked}</View>}
               </Picker>
           </View>
         </View>
         {this.state.searchCondition.length > 0 &&
           <Rhlist searchCondition={this.state.searchCondition}
               currCity={this.state.currCity} isLogin={this.state.isLogin} />}
-        {Util.isAlipay() &&
-          <Rhlist />
-        }
         {this.state.showIconOfToTop &&
           <View onClick={this.scrollToTop} className='fixed-to-top'>
             <View className='at-icon at-icon-chevron-up'>
             </View>
           </View>}
-        {!Util.isAlipay() &&
-          <PageFooter showHomePageItem='false' />
-        }
-        {!Util.isAlipay() &&
-          <PageFooter />
-        }
+        <PageFooter showHomePageItem='false' />
       </ScrollView>
     )
   }

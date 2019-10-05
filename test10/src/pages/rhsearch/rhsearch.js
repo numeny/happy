@@ -59,7 +59,7 @@ export default class RhSearch extends Component {
       (this.state.inputValue.length != 0) ? ('searchKey=' + this.state.inputValue) : ''
       // startedSearch: false,
     this.setState({
-      searchCondition: searchCondition,
+      searchCondition: encodeURI(searchCondition),
       startedSearch: true,
     })
   }

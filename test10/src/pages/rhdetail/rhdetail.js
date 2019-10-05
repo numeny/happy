@@ -187,6 +187,10 @@ export default class Rhdetail extends Component {
   }
 
   onScroll = e => {
+    // FIXME, should can show To-Top-Icon
+    if (Util.isAlipay()) {
+      return
+    }
     this.setState({
       showIconOfToTop: e.detail.scrollTop > this.state.windowHeight * 2,
       scrollTop: e.detail.scrollTop, // remain this scrollTop
@@ -269,7 +273,7 @@ export default class Rhdetail extends Component {
         <View>
           { this.state.rhRecordHandled.images_handled.map((image) =>
               <View>
-                <Image src={image} width="100%" />
+                <Image src={image} width="100%" lazy-load='true' />
               </View>
             )
           }
@@ -280,11 +284,11 @@ export default class Rhdetail extends Component {
         <Swiper indicatorColor='#999' indicatorActiveColor='#333'
                 indicatorDots autoplay className="swiper-view">
           <SwiperItem className="swiper-view-item">
-            <Image src={this.state.rhRecord.title_image} />
+            <Image src={this.state.rhRecord.title_image} mode="aspectFit" />
           </SwiperItem>
           { this.state.rhRecordHandled.images_handled.map((image) =>
               <SwiperItem className="swiper-view-item">
-                <Image src={image} />
+                <Image src={image} mode="aspectFit" />
               </SwiperItem>
             )
           }

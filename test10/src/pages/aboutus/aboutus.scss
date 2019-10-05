@@ -12,14 +12,14 @@ $city-item-margin: 10px;
 .au-title-container {
   width: 100%;
   display: flex;
-  flex-direction: colume;
+  flex-direction: row;
   justify-content: space-around;
   text-align: center;
   margin-top: 100px;
 }
 
 .au-title-item {
-  flex: 1;
+  flex: auto;
   background-color: #FFF;
   border: 3px solid #EEE;
 }

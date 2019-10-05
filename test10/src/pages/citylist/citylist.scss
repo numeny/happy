@@ -7,8 +7,6 @@ $selected-item-color: #00F;
 .top-view {
   font-size: 34px;
   background-color: #EEE;
-  user-select: text;
-  -webkit-user-select: text;
 }
 
 .hot-city-container, .curr-city-container {
@@ -22,26 +20,26 @@ $selected-item-color: #00F;
 
 .curr-city {
   background-color: $city-item-background-color;
-  padding: $city-item-top-bottom-padding 0px;
   margin: $city-item-margin;
 
   display: flex;
-  flex-direction: colume;
+  flex-direction: row;
+  align-items: center;
 }
 
 .curr-city-text {
-  padding-left: 60px;
-  flex: 4;
+  flex: 4 4 auto;
+  padding: $city-item-top-bottom-padding $city-item-left-right-padding;
 }
 
-.curr-city-loc {
-  padding: $city-item-top-bottom-padding 50px;
-  flex: 1;
+.curr-city-icon {
+  flex: auto;
+  padding: $city-item-top-bottom-padding $city-item-left-right-padding;
 }
 
 .hot-city-row-container {
   display: flex;
-  flex-direction: colume;
+  flex-direction: row;
 }
 
 .hot-city-item {
@@ -61,7 +59,7 @@ $selected-item-color: #00F;
   text-decoration: underline;
   font-color: $selected-item-color;
   color: $selected-item-color;
-  padding: 10px 10px;
+  padding: 20px 20px;
 }
 
 .button-container {

@@ -199,10 +199,10 @@ export default class Citylist extends Component {
               <View className='curr-city-text'>{this.state.currCity}</View>
               {!Util.isAlipay() &&
                 <AtIcon onClick={this.getGeolocationCity} value='map-pin'
-                  className='curr-city-loc' color= '#F00' size='15' />
+                  className='curr-city-icon' color= '#F00' size='15' />
               }
               {Util.isAlipay() &&
-                <View className='at-icon at-icon-map-pin'></View>
+                <View className='at-icon at-icon-map-pin curr-city-icon'></View>
               }
             </View>
           </View>
