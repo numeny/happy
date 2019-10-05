@@ -3,8 +3,10 @@ mysql -u bdg -p
 
 happy目录为源码根目录
 1.
-启动mysql服务：
+ubuntu启动mysql服务：
 service mysql restart
+MacOS启动mysql服务：
+mysql.server start
 2.
 mysql -u root -p
 CREATE USER bdg IDENTIFIED BY '1';
@@ -22,7 +24,7 @@ python manage.py migrate rh
 
 alter table rh_rh convert to charset utf8;
 
-4. 回复数据库，必须在3步骤的后面：
+4. 恢复数据库，必须在3步骤的后面：
 cd happy/server/data.bak/data.handled.5.15.rh_address.of.ylw
 mysql -u "root" -p rh < rh.backup.sql
 

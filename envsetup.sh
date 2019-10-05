@@ -121,6 +121,18 @@ function ssh.aliyun() {
   ssh.aliyun.yl51
 }
 
+function ssh.tengxun.root() {
+  ssh ubuntu@192.144.213.106
+}
+
+function ssh.tengxun.yl51() {
+  ssh yl51@192.144.213.106
+}
+
+function ssh.tengxun() {
+  ssh.tengxun.yl51
+}
+
 function scp.aliyun() {
   if [ $# -ne 1 ];then
     echo "[Usage] scp.aliyun <file>"
