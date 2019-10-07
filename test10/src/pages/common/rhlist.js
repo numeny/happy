@@ -49,6 +49,7 @@ export default class Rhlist extends Component {
       rhFavoriteList: [],
       currPage: this.DEFAULT_CURR_PAGE,
       isOnEnd: false,
+      isLoadingMore: false,
     }
   }
 
@@ -68,6 +69,9 @@ export default class Rhlist extends Component {
 
   loadMoreData = (e) => {
     this.requestData(this.state.stateSearchCondition, this.state.currPage + 1) // 1st page
+    this.setState({
+      isLoadingMore: true,
+    })
   }
 
   requestData = (searchCondition, requestPage) => {
@@ -98,15 +102,19 @@ export default class Rhlist extends Component {
       }
       // Taro.showToast({title: res.data.records[0].title_image})
       this.setState({
-          rhList: rhList,
-          currSearchRhNum: res.data.totalNum,
-          currPage: res.data.currPage,
-          isOnEnd: (res.data.currPage >= res.data.pageNum),
-          currCityRhNum: isOnlySearchCity ? res.data.totalNum : this.state.currCityRhNum,
+        rhList: rhList,
+        currSearchRhNum: res.data.totalNum,
+        currPage: res.data.currPage,
+        isOnEnd: (res.data.currPage >= res.data.pageNum),
+        currCityRhNum: isOnlySearchCity ? res.data.totalNum : this.state.currCityRhNum,
+        isLoadingMore: false,
       })
     }).catch(error => {
       console.error(error)
       Taro.showToast({title: 'fail'})
+      this.setState({
+        isLoadingMore: false,
+      })
     })
   }
 
@@ -201,7 +209,7 @@ export default class Rhlist extends Component {
               (<View></View>)) :
             (this.state.isOnEnd ?
               (<Text className='rh-list-loading-more'>已经到底了</Text>) :
-              (<Text className='rh-list-loading-more' onClick={this.loadMoreData}> 点击查看更多 </Text>)) }
+              (<Button className='rh-list-loading-more' onClick={this.loadMoreData} loading={this.state.isLoadingMore}>点击查看更多</Button>)) }
         </View>
         )
 

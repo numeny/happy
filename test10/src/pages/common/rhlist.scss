@@ -30,6 +30,9 @@ $page-background-color: #FFF;
   height: 160px;
   justify-content: center;
   align-items: center;
+  background-color: $page-background-color;
+  border-bottom: 5px solid $item-border-color;
+  border-radius: 20px;
 }
 
 .rh-one-img {
