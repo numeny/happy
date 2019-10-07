@@ -46,6 +46,8 @@ export default class Rhdetail extends Component {
       windowHeight: Taro.getSystemInfoSync().windowHeight,
       showIconOfToTop: false,
       scrollTop: 0,
+      showAll: [],
+      LOAD_MORE_MENU_NUM:  7,
     }
   }
 
@@ -162,13 +164,23 @@ export default class Rhdetail extends Component {
     }).catch(error => {
       Taro.showToast({title: '请求数据失败！'})
     })
+    let showAll2 = []
+    // FIXME
+    for (var i = 0; i < this.state.LOAD_MORE_MENU_NUM; i++) {
+      showAll2[i] = false
+    }
+
+    this.setState({
+      showAll: showAll2,
+    })
   }
 
   makePhoneCall (phoneNum, e) {
     let phone = String(phoneNum).split("/")
-    if (phone.length > 0) {
+    if (phone.length > 0 && phone != '-') {
+      phone = phone[0].replace(/,/g, "")
       Taro.makePhoneCall({
-          phoneNumber: phone[0],
+          phoneNumber: phone,
       })
     }
   }
@@ -179,11 +191,23 @@ export default class Rhdetail extends Component {
     })
   }
 
+  loadAll = (idx, e) => {
+    let showAll2 = this.state.showAll
+    showAll2[idx] = !showAll2[idx]
+    console.error("loadAll, idx: " + idx);
+    for (var i = 0; i < showAll2.length; i++) {
+      console.error("loadAll, i: " + i + ", " + showAll2[i]);
+    }
+
+    this.setState({
+      showAll: showAll2,
+    })
+  }
+
   scrollToTop = (e) => {
     this.setState({
       scrollTop: 0,
     })
-    console.log('scrollToTop-2')
   }
 
   onScroll = e => {
@@ -298,6 +322,10 @@ export default class Rhdetail extends Component {
     const scrollStyle = {
       height: this.state.windowHeight,
     }
+    let content_info = []
+    for (var idx = 0; idx < this.state.showAll.length; idx++) {
+      content_info[idx] = this.state.showAll[idx] ? 'content-info' : 'content-info-1'
+    }
 
     return (
       <ScrollView scrollY scrollTop={this.state.scrollTop} style={scrollStyle} onScroll={this.onScroll.bind(this)}>
@@ -340,7 +368,7 @@ export default class Rhdetail extends Component {
           <View className="content-title">
             基本信息
           </View>
-          <View className="brief-info-content">
+          <View className='brief-info-content'>
             {this.state.rhRecord.ylw_id != "" &&
             <View className="show-part-text">
               ylw_id: {this.state.rhRecord.ylw_id}
@@ -425,37 +453,58 @@ export default class Rhdetail extends Component {
         {this.state.rhRecordHandled.special_services_handled.length > 0 &&
         <View>
           <View className="content-title">特殊服务</View>
-          <View className="content-info">{special_services_handled}</View>
+          <View className={content_info[0]}>{special_services_handled}</View>
+          <View onClick={this.loadAll.bind(this, 0)} className="load-more">
+            {this.state.showAll[0] ? '收起内容':'查看全部'}
+          </View>
         </View>}
         {this.state.rhRecordHandled.inst_intro_handled.length > 0 &&
         <View>
           <View className="content-title">机构介绍</View>
-          <View className="content-info">{inst_intro_handled}</View>
+          <View className={content_info[1]}>{inst_intro_handled}</View>
+          <View onClick={this.loadAll.bind(this, 1)} className="load-more">
+            {this.state.showAll[1] ? '收起内容':'查看全部'}
+          </View>
         </View>}
         {this.state.rhRecordHandled.inst_charge_handled.length > 0 &&
         <View>
           <View className="content-title">收费详情</View>
-          <View className="content-info">{inst_charge_handled}</View>
+          <View className={content_info[2]}>{inst_charge_handled}</View>
+          <View onClick={this.loadAll.bind(this, 2)} className="load-more">
+            {this.state.showAll[2] ? '收起内容':'查看全部'}
+          </View>
         </View>}
         {this.state.rhRecordHandled.facilities_handled.length > 0 &&
         <View>
           <View className="content-title">环境设施</View>
-          <View className="content-info">{facilities_handled}</View>
+          <View className={content_info[3]}>{facilities_handled}</View>
+          <View onClick={this.loadAll.bind(this, 3)} className="load-more">
+            {this.state.showAll[3] ? '收起内容':'查看全部'}
+          </View>
         </View>}
         {this.state.rhRecordHandled.service_content_handled.length > 0 &&
         <View>
           <View className="content-title">服务内容</View>
-          <View className="content-info">{service_content_handled}</View>
+          <View className={content_info[4]}>{service_content_handled}</View>
+          <View onClick={this.loadAll.bind(this, 4)} className="load-more">
+            {this.state.showAll[4] ? '收起内容':'查看全部'}
+          </View>
         </View>}
         {this.state.rhRecordHandled.inst_notes_handled.length > 0 &&
         <View>
           <View className="content-title">入住须知</View>
-          <View className="content-info">{inst_notes_handled}</View>
+          <View className={content_info[5]}>{inst_notes_handled}</View>
+          <View onClick={this.loadAll.bind(this, 5)} className="load-more">
+            {this.state.showAll[5] ? '收起内容':'查看全部'}
+          </View>
         </View>}
         {this.state.rhRecordHandled.transportation_handled.length > 0 &&
         <View>
           <View className="content-title">交通信息</View>
-          <View className="content-info">{transportation_handled}</View>
+          <View className={content_info[6]}>{transportation_handled}</View>
+          <View onClick={this.loadAll.bind(this, 6)} className="load-more">
+            {this.state.showAll[6] ? '收起内容':'查看全部'}
+          </View>
         </View>}
         {this.state.rhRecordHandled.images_handled.length > 0 &&
         <View>
