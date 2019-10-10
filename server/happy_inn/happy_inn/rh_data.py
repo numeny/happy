@@ -27,6 +27,8 @@ from RhDetailQuery import *
 from RhListQuery import *
 from AreaQuery import *
 from user_manager import *
+from Utils import *
+from UserStat import *
 
 from settings import *
 
@@ -52,6 +54,13 @@ def getRhDetail(request):
         return JsonResponse(response)
     # get_data_from_rh_id(response, request.GET['rhid'])
     detail_query = RhDetailQuery(request.GET['rhid'])
+    # userIp, clientType, userId, visitTime, location, function, param
+    ipAddr = Utils.getIpAddress(request)
+    print(type(ipAddr))
+    '''
+    '''
+    UserStat.addVisitRequest(request, 'rhdetail',
+            "rhid=" + str(Utils.get_rh_id_from_web_content(int(rh_id))))
     return JsonResponse(detail_query.get_data_from_rh_id())
 
 def showRhList(request):

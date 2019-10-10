@@ -19,7 +19,6 @@ from FavoriteDb import *
 
 LOGTAG = 'RhListQuery'
 class RhListQuery:
-    LOGTAT = "RhListQuery"
     def __init__(self, query_param):
         self.query_param = query_param
 
@@ -134,7 +133,7 @@ class RhListQuery:
             message = "currPage: "+ str(page_idx)
             message = message + ", pageNum: "+ str(page_num)
             message = message + ", records_num: "+ str(record_num)
-            Log.d(RhListQuery.LOGTAT, message)
+            Log.d(LOGTAG, message)
         return response
 
     def get_rh_list_filter(self):
@@ -178,7 +177,7 @@ class RhListQuery:
             message = "currPage: "+ str(page_idx)
             message = message + ", pageNum: "+ str(page_num)
             message = message + ", records_num: "+ str(record_num)
-            Log.d(RhListQuery.LOGTAT, message)
+            Log.d(LOGTAG, message)
         return response
 
     @staticmethod
@@ -223,8 +222,8 @@ class RhListQuery:
 
     @staticmethod
     def get_search_key_q_query(searchKey):
-        Log.e(RhListQuery.LOGTAT, 'get_search_key_q_query')
-        Log.e(RhListQuery.LOGTAT, searchKey)
+        Log.e(LOGTAG, 'get_search_key_q_query')
+        Log.e(LOGTAG, searchKey)
         prop_filter = Q(rh_name__contains=searchKey)
         return prop_filter
 

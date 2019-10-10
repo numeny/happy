@@ -45,10 +45,13 @@ DEFAULT_IMG = "default.jpg"
 SESSION_KEY_UID = 'user_id'
 
 # Client's environment
-ETYPE_WEAPP = 'weapp'
-ETYPE_H5 = 'h5'
+ETYPE_KEY = 'etype'
+ETYPE_WEAPP = 'weapp' # weapp
+ETYPE_H5 = 'h5' # h5
+ETYPE_ALIPAY = 'alipay' # h5
 USER_TYPE_H5 = 0
 USER_TYPE_WEIXIN = 1
+USER_TYPE_ALIPAY = 2
 
 # weixin appid
 WEIXIN_APPID = 'wx0075bca25e961250'
