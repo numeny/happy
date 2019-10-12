@@ -22,22 +22,6 @@ class RhListQuery:
     def __init__(self, query_param):
         self.query_param = query_param
 
-    def update_title_image(self, record):
-        found_img = False
-        if len(record.rh_title_image) > 0:
-            record.rh_title_image = "title/" + record.rh_title_image
-            found_img = True
-        else:
-            if len(record.rh_images) > 0:
-                first_img = record.rh_images.split(',')
-                if len(first_img) > 0:
-                    record.rh_title_image = first_img[0]
-                    found_img = True
-        if found_img:
-            record.rh_title_image = ("%s/%s/%d/%s" % (IMG_SERVER_HOST, IMGS_PATH, record.id, record.rh_title_image))
-        else:
-            record.rh_title_image = ("%s/%s/%s" % (IMG_SERVER_HOST, IMGS_PATH, DEFAULT_IMG))
-
     def get_filter(self, response):
         all_filter = Q()
         if len(self.query_param.province) != 0:

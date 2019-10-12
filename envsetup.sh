@@ -92,6 +92,12 @@ function runserver() {
   python manage.py runserver 0.0.0.0:8001&
 }
 
+function run.uwsgi() {
+  # nginx config: /etc/nginx/sites-enabled/default
+  cd $HAPPY_SERVER_PATH
+  uwsgi --ini uwsgi/uwsgi.ini --socket 8001&
+}
+
 function f.js() {
   if [ $# -eq 1 ];then
       SEARCH_PATH=.

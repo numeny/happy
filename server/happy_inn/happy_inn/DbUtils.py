@@ -3,8 +3,6 @@
 from Log import *
 from rh_const import *
 
-IMGS_ROOT_PATH = IMG_SERVER_HOST + '/' + IMGS_PATH
-
 class DbUtils:
     LOGTAT = "DbUtils"
     def __init__(self):
@@ -27,7 +25,7 @@ class DbUtils:
                     rh_title_image = first_img[0]
                     found_img = True
         if found_img:
-            rh_title_image = ("%s/%d/%s" % (IMGS_ROOT_PATH, record.id, rh_title_image))
+            rh_title_image = ("%d/%s" % (record.id, rh_title_image))
         if Log.DEBUG:
             Log.d(DbUtils.LOGTAT, "rh_title_image: " + rh_title_image)
         return rh_title_image
