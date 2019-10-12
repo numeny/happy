@@ -33,6 +33,6 @@ class UserStat:
         user_ip=Utils.getIpAddress(request)
 
         # create visit record
-        userstat(user_ip=user_ip, user_type=etype,
+        newRec = userstat(user_ip=user_ip, user_type=etype,
                 visit_func=visit_func, visit_param=visit_param)
-        newFavRecord.save()
+        newRec.save()

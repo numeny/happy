@@ -56,12 +56,13 @@ def getRhDetail(request):
     detail_query = RhDetailQuery(request.GET['rhid'])
     # userIp, clientType, userId, visitTime, location, function, param
     ipAddr = Utils.getIpAddress(request)
-    print(type(ipAddr))
-    '''
     '''
     UserStat.addVisitRequest(request, 'rhdetail',
-            "rhid=" + str(Utils.get_rh_id_from_web_content(int(rh_id))))
-    return JsonResponse(detail_query.get_data_from_rh_id())
+            "rhid=" + str(detail_query.getIntRhId()))
+    '''
+    ret = detail_query.get_data_from_rh_id()
+
+    return JsonResponse(ret)
 
 def showRhList(request):
     # return JsonResponse('hello')

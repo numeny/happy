@@ -47,3 +47,6 @@ class RhDetailQuery:
         RhDetailQuery.get_rh_location_id(record)
         response['record'] = DbQuery.get_all_colume_from_one_record(record)
         return response
+
+    def getIntRhId(self):
+        return self.rh_id
