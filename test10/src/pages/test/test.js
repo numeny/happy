@@ -33,7 +33,7 @@ const allFunctions = [
   {name: CommonFunc.getCurrCityImpl, params: [116.310003, 39.991957]},
 ]
 
-const TEST_COUNT = 100
+const TEST_COUNT = 1000
 export default class Login extends Component {
 
   config: Config = {
@@ -58,13 +58,14 @@ export default class Login extends Component {
     const funcName = testFunc.name.name
     console.log('start ' + funcName);
     const start = this.currTime()
+    let retIdx = 0
     for (var idx = 0; idx < TEST_COUNT; idx++) {
       if ('params' in testFunc) {
         testFunc.name.apply(this, testFunc.params)
           .then(res => {
             const endTime = (this.currTime() - start)
-            console.log('end2 ' + funcName + ': interval: '
-              + endTime + ' ms');
+            console.log('end2 idx: ' + (retIdx++)
+                + ", " + funcName + ': interval: ' + endTime + ' ms');
           }).catch(error => {
             reject(error)
           })
@@ -72,8 +73,8 @@ export default class Login extends Component {
         testFunc.name()
           .then(res => {
             const endTime = (this.currTime() - start)
-            console.log('end2 ' + funcName + ': interval: '
-              + endTime + ' ms');
+            console.log('end2 idx: ' + (retIdx++)
+                + ", " + funcName + ': interval: ' + endTime + ' ms');
           }).catch(error => {
             reject(error)
           })
