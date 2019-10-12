@@ -84,7 +84,7 @@ export default class Rhdetail extends Component {
     this.handleImages(res.data.record.images, rhRecordHandled_2.images_handled)
 
     // handle title image
-    res.data.record.title_image = res.data.record.title_image.length > 0 ? res.data.record.title_image : DEFAULT_IMG
+    res.data.record.title_image = res.data.record.title_image.length > 0 ? (IMGS_ROOT_PATH + res.data.record.title_image) : DEFAULT_IMG
     return rhRecordHandled_2
   }
 
@@ -96,7 +96,7 @@ export default class Rhdetail extends Component {
       images_handled_tmp.forEach(
           function(value, index, array) {
           if (value != "") {
-              images_handled.push(IMGS_ROOT_PATH + "/" + rhId + "/" + value)
+              images_handled.push(rhId + "/" + value)
           }
       })
     } catch(err) {
@@ -297,7 +297,7 @@ export default class Rhdetail extends Component {
         <View>
           { this.state.rhRecordHandled.images_handled.map((image) =>
               <View>
-                <Image src={image} width="100%" lazy-load='true' />
+                <Image src={IMGS_ROOT_PATH + image} width="100%" lazy-load='true' />
               </View>
             )
           }
@@ -307,13 +307,15 @@ export default class Rhdetail extends Component {
     const images_swiper = (
         <Swiper indicatorColor='#999' indicatorActiveColor='#333'
                 indicatorDots autoplay className="swiper-view">
-          <SwiperItem className="swiper-view-item">
-            <Image src={this.state.rhRecord.title_image} mode="aspectFit" />
-          </SwiperItem>
-          { this.state.rhRecordHandled.images_handled.map((image) =>
-              <SwiperItem className="swiper-view-item">
-                <Image src={image} mode="aspectFit" />
-              </SwiperItem>
+          {this.state.rhRecord.title_image != "" &&
+            <SwiperItem className="swiper-view-item">
+              <Image src={this.state.rhRecord.title_image} mode="aspectFit" />
+            </SwiperItem>
+          }
+          {this.state.rhRecordHandled.images_handled.map((image) =>
+             <SwiperItem className="swiper-view-item">
+               <Image src={IMGS_ROOT_PATH + image} mode="aspectFit" />
+             </SwiperItem>
             )
           }
         </Swiper>

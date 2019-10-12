@@ -6,7 +6,7 @@ import './rhlist.scss'
 import namedPng from '@images/index/1.jpeg'
 import namedVideo from '@res/video/1.mp4'
 
-import { SERVER_HOST, DEFAULT_IMG } from '@util/const'
+import { SERVER_HOST, IMGS_ROOT_PATH, DEFAULT_IMG } from '@util/const'
 import { CommonFunc } from '@util/common_func'
 import { ErrorCode_NotLogin } from '@util/error_code'
 import { Util } from '../../util/util'
@@ -183,7 +183,7 @@ export default class Rhlist extends Component {
           <View className='rh-list-container'>
           {rhList.map((rh) =>
             <View className='rh-one-container' onClick={this.showRhDetail.bind(this, rh.id)}>
-              <Image src={rh.title_image != "" ? rh.title_image : DEFAULT_IMG} className='rh-one-img'/>
+              <Image src={rh.title_image != "" ? (IMGS_ROOT_PATH + rh.title_image) : DEFAULT_IMG} className='rh-one-img'/>
               <View className='rh-one-desc-container'>
                 <View className='rh-one-desc-name'>{rh.name}</View>
                 <View className='rh-one-desc-address'>{rh.address}</View>

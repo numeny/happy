@@ -1,18 +1,20 @@
 import Taro from '@tarojs/taro';
 
-const HOST = "http://192.168.31.160"
+const HOST = "http://192.144.213.106"
+const SERVER_PORT = ""
 const IMAGES_PATH = "/images"
 const DEF_AVATAR = "/avatar.png"
 const DEF_LOGO = "/logo.png"
 
+// FIXME
 export const IMG_SERVER_HOST = HOST
 
-export const IMGS_ROOT_PATH = IMG_SERVER_HOST + IMAGES_PATH
+export const IMGS_ROOT_PATH = IMG_SERVER_HOST + IMAGES_PATH + '/'
 export const DEF_LOGO_IMG = IMGS_ROOT_PATH + DEF_LOGO
 
 // FIXME, load default image of NoImage from local
 export const defaultPng = IMGS_ROOT_PATH + "/default.jpg"
-export const SERVER_HOST = HOST + ":8001"
+export const SERVER_HOST = (SERVER_PORT == "") ? HOST : (HOST + ":" + SERVER_PORT)
 export const DEFAULT_IMG = defaultPng
 // FIXME, load icon image from local
 export const ICON_IMG = defaultPng
