@@ -22,6 +22,9 @@ import { connect } from '@tarojs/redux'
 import { update, addFavList, delFavList } from '../../actions/counter'
 
 export default class Rhdetail extends Component {
+  config: Config = {
+    navigationBarTitleText: '养老院详情',
+  }
 
   constructor(props) {
     super(props)
@@ -328,9 +331,8 @@ export default class Rhdetail extends Component {
 
     return (
       <ScrollView scrollY scrollTop={this.state.scrollTop} style={scrollStyle} onScroll={this.onScroll.bind(this)}>
-      <Video width='150px' height='190px' src={namedVideo} />
-      <Image src={namedPng} />
-      <FixedTitle title="养老院详情" />
+      {CommonFunc.isTaroEnvH5() &&
+        <FixedTitle title="养老院详情" />}
       <View className="rhdetail-top-view-1">
         {images_swiper}
         <View className="rh-name">
