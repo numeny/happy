@@ -12,7 +12,7 @@ import { Util } from '@util/util'
 import './login.scss'
 import FixedTitle from '../common/fixedtitle'
 import PageFooter from '../common/pagefooter'
-import Rhlist from '../common/rhlist'
+import { Rhlist, RHLIST_TYPE_FAVORIT } from '../common/rhlist'
 
 import namedVideo from '@res/video/1.mp4'
 import namedPng from '@images/index/1.jpeg'
@@ -268,7 +268,8 @@ export default class Login extends Component {
             <Rhlist searchCondition='favList=t'
               isLogin={this.state.isLogin}
               showResult='false'
-              title='您的收藏：'/>
+              title='您的收藏：'
+              type={RHLIST_TYPE_FAVORIT} />
           </View>
         </View>}
       </View>

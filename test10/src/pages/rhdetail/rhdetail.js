@@ -155,6 +155,7 @@ export default class Rhdetail extends Component {
   }
 
   componentWillMount () {
+    console.error("componentWillMount, rhId: " + this.state.rhId);
     CommonFunc.requestRhDetail(this.state.rhId).then(res => {
       var rhRecordHandled = this.handleAllContent(res)
       this.setState({

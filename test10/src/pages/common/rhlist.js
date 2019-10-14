@@ -15,6 +15,11 @@ import FavIcon from '../common/favicon'
 import { connect } from '@tarojs/redux'
 import { update, addFavList, delFavList } from '../../actions/counter'
 
+export const RHLIST_TYPE_NONE = -1
+export const RHLIST_TYPE_CLASSIFY = 0
+export const RHLIST_TYPE_SEARCH = 1
+export const RHLIST_TYPE_FAVORIT = 2
+
 @connect((state) => {
   return { prop_counter: state.counter }
 }, (dispatch) => ({
@@ -38,6 +43,7 @@ export default class Rhlist extends Component {
       stateSearchCondition: (this.props.searchCondition != null) ? this.props.searchCondition : '',
       stateShowResult: (this.props.showResult != null && this.props.showResult == 'false') ? false : true,
       stateTitle: (this.props.title != null) ? this.props.title : '',
+      stateType: (this.props.type != null) ? this.props.type : RHLIST_TYPE_NONE,
 
       currSearchRhNum: 0,
 
@@ -201,12 +207,18 @@ export default class Rhlist extends Component {
           )}
           </View>)
 
+    const footerForNoData = (
+        <View className='rh-list-loading-more'>
+          {(this.state.stateType == RHLIST_TYPE_CLASSIFY
+            || this.state.stateType == RHLIST_TYPE_SEARCH) &&
+           (<View className='rh-list-loading-more'>暂无数据，请换条件重新查询。</View>)}
+          {(this.state.stateType == RHLIST_TYPE_FAVORIT) &&
+           (<View>没有收藏数据。</View>)}
+        </View>)
     const hasMoreData = (
         <View>
         { rhList.length == 0 ?
-            (this.state.stateShowResult ?
-              (<View className='rh-list-loading-more'><View>暂无数据，</View><View>请换条件重新查询。</View></View>) :
-              (<View></View>)) :
+            footerForNoData :
             (this.state.isOnEnd ?
               (<Text className='rh-list-loading-more'>已经到底了</Text>) :
               (<Button className='rh-list-loading-more' onClick={this.loadMoreData} loading={this.state.isLoadingMore}>点击查看更多</Button>)) }

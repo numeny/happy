@@ -8,7 +8,7 @@ import './rhsearch.scss'
 
 import FixedTitle from '../common/fixedtitle'
 import PageFooter from '../common/pagefooter'
-import Rhlist from '../common/rhlist'
+import { Rhlist, RHLIST_TYPE_SEARCH } from '../common/rhlist'
 import { CommonFunc } from '../../util/common_func'
 import { Util } from '../../util/util'
 
@@ -101,7 +101,8 @@ export default class RhSearch extends Component {
         <View>热门搜索：</View>
         {hotCityItems}
         {this.state.startedSearch &&
-          <Rhlist searchCondition={this.state.searchCondition} />}
+          <Rhlist searchCondition={this.state.searchCondition}
+            type={RHLIST_TYPE_SEARCH} />}
         <PageFooter />
       </View>
     )

@@ -15,8 +15,7 @@ import { CommonFunc } from '../../util/common_func'
 import { Util } from '../../util/util'
 
 import PageFooter from '../common/pagefooter'
-import Rhlist from '../common/rhlist'
-
+import { Rhlist, RHLIST_TYPE_CLASSIFY } from '../common/rhlist'
 
 import { connect } from '@tarojs/redux'
 import { update, addFavList, delFavList } from '../../actions/counter'
@@ -501,7 +500,8 @@ export default class Index extends Component {
         </View>
         {this.state.searchCondition.length > 0 &&
           <Rhlist searchCondition={this.state.searchCondition}
-              currCity={this.state.currCity} isLogin={this.state.isLogin} />}
+              currCity={this.state.currCity} isLogin={this.state.isLogin}
+              type={RHLIST_TYPE_CLASSIFY} />}
         {this.state.showIconOfToTop &&
           <View onClick={this.scrollToTop} className='fixed-to-top'>
             <View className='at-icon at-icon-chevron-up'>

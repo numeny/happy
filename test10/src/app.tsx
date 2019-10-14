@@ -30,7 +30,6 @@ class App extends Component {
       'pages/index/index',
       'pages/aboutus/aboutus',
       'pages/citylist/citylist',
-      'pages/common/mywebview',
       'pages/login/login',
       'pages/login/register',
       'pages/rhdetail/rhdetail',
