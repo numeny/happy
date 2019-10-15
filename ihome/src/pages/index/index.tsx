@@ -2,6 +2,8 @@ import Taro, { Component, Config } from '@tarojs/taro'
 import { View, Text, Image, Input, Video, Button, RadioGroup, Radio, Checkbox, CheckboxGroup } from '@tarojs/components'
 import './index.scss'
 
+import { Util } from '../../util/util'
+
 import namedPng from '@images/index/1.jpeg'
 import namedVideo from '@res/video/1.mp4'
 
@@ -67,8 +69,9 @@ export default class Index extends Component {
       mOtherLoanInterestRate: 0,
       mOtherLoanMonthlySupply: 0,
 
-      mInputDeedTaxManual: false,
-      mInputPersonalIncomeTaxManual: false,
+      mWillInputDeedTaxManual: false,
+      mInputDeedTaxManual: 0,
+      mWillInputPersonalIncomeTaxManual: false,
 
       mFirstHomeRadioValue: 1,
       mAboveTwoYearsRadioValue: 1,
@@ -114,32 +117,54 @@ export default class Index extends Component {
   }
 
   updateTotalLoan = (commercialLoan, providentFundLoan, otherLoan) => {
-    let totalPayment = commercialLoan + providentFundLoan + otherLoan
+    let totalLoan = commercialLoan + providentFundLoan + otherLoan
     this.setState({
-        mTotalLoan: totalPayment,
+        mTotalLoan: totalLoan,
     })
+    this.updateFirstPayment(this.state.mTotalPrice, totalLoan,
+            this.state.mTotalFee, this.state.mTotalTax)
   }
 
   updateTotalFee = (agencyFee, loanServiceFee, evaluationFee,
           mortgageRegistrationFee, otherFee) => {
+    let totalFee = (agencyFee + loanServiceFee + evaluationFee
+                    + mortgageRegistrationFee + otherFee)
     this.setState({
-        mTotalFee: (agencyFee + loanServiceFee + evaluationFee
-                    + mortgageRegistrationFee + otherFee),
+        mTotalFee: totalFee,
     })
+    this.updateFirstPayment(this.state.mTotalPrice, this.state.mTotalLoan,
+            totalFee, this.state.mTotalTax)
+    this.updateTotalPayment(this.state.mTotalPrice,
+            totalFee, this.state.mTotalTax)
   }
 
   updateTotalTax = (deedTax, personalIncomeTax,
           businessTax, otherTax) => {
-    this.setState({
-        mTotalTax: (deedTax + personalIncomeTax +
+    let totalTax = (deedTax + personalIncomeTax +
                     + businessTax + otherTax)
+    this.setState({
+        mTotalTax: totalTax,
     })
+    this.updateFirstPayment(this.state.mTotalPrice,
+            this.state.mTotalLoan, this.state.mTotalFee, totalTax)
+    this.updateTotalPayment(this.state.mTotalPrice,
+            this.state.mTotalFee, totalTax)
   }
 
   updatePersonalIncomeTax = (webSignPrice, originPrice) {
+    let personalIncomeTax = (webSignPrice * 0.9 - originPrice) * 0.2
+    if (personalIncomeTax <= 0) {
+      personalIncomeTax = 0
+    }
     this.setState({
-        mPersonalIncomeTax: (webSignPrice * 0.9 - originPrice) * 0.2
+        mPersonalIncomeTax: personalIncomeTax,
     })
+
+    this.updateTotalTax(this.state.mDeedTax, personalIncomeTax,
+            this.state.mBusinessTax, this.state.mOtherTax)
+  }
+
+  updateDeedTax = (webSignPrice, deedTaxRate, inputDeedTaxManual) {
   }
 
   updateLetPersonalIncomeTaxEqualZero = (webSignPrice, originPrice) {
@@ -151,17 +176,38 @@ export default class Index extends Component {
   }
 
   onInputTotalPrice = (e) => {
-    console.log('onInputTotalPrice, e.target.value:', )
-    /*
+    console.log('onInputTotalPrice, e.target.value:', e.target.value)
     try {
-      let totalPrice = int(e.target.value)
-      updateFirstPayment(totalPrice)
+      let totalPrice = Number(e.target.value)
+      this.updateFirstPayment(totalPrice, this.state.mTotalLoan,
+              this.state.mTotalFee, this.state.mTotalTax)
+      this.updateTotalPayment(totalPrice,
+              this.state.mTotalFee, this.state.mTotalTax)
+    } catch(err) {
+      console.log("onInputTotalPrice: ", err);
+      Taro.showToast({title: "请输入正确的总价！"})
     }
-    */
   }
 
   onInputOriginPrice = (e) => {
-    console.log('onInputOriginPrice, e.target.value:', e.target.value)
+    try {
+      let originPrice = 0
+      if (e.target.value.length != 0) {
+        originPrice = parseFloat(e.target.value)
+      }
+      // FIXME
+      if (e.target.value.length != 0 && !Util.isNumber(originPrice)) {
+        console.log("onInputOriginPrice-1-2: ", err);
+        Taro.showToast({title: "请输入正确的原值！"})
+        return
+      }
+      console.log('onInputOriginPrice-1-1, originPrice:', originPrice)
+      this.updatePersonalIncomeTax(this.state.mWebSignPrice, originPrice)
+
+    } catch(err) {
+      console.log("onInputOriginPrice: ", err);
+      Taro.showToast({title: "请输入正确的原值！"})
+    }
   }
 
 
@@ -183,16 +229,24 @@ export default class Index extends Component {
 
   onInputDeedTaxManual = (e) => {
     console.log('onInputDeedTaxManual, e.target.value:', e.target.value)
-  }
+    try {
+      let originPrice = Number(e.target.value)
+mInputDeedTaxManual
 
-  onInputDeedTaxManualCheckboxChange = (e) => {
-    console.log('onInputDeedTaxManualCheckboxChange, e.detail:', e.detail)
+
+      this.updatePersonalIncomeTax(this.state.mWebSignPrice, originPrice)
+
+    } catch(err) {
+      console.log("onInputOriginPrice: ", err);
+      Taro.showToast({title: "请输入正确的原值！"})
+    }
+
   }
 
   clickInputDeedTaxManualCheckbox = (e) => {
     console.log('clickInputDeedTaxManualCheckbox, e.detail:', e.detail)
     this.setState({
-        mInputDeedTaxManual: !this.state.mInputDeedTaxManual,
+        mWillInputDeedTaxManual: !this.state.mWillInputDeedTaxManual,
     })
   }
 
@@ -218,7 +272,7 @@ export default class Index extends Component {
   }
 
   render () {
-    let classNameForInputDeedTaxManual = this.state.mInputDeedTaxManual ?
+    let classNameForInputDeedTaxManual = this.state.mWillInputDeedTaxManual ?
             'idx-input-text' : 'idx-input-text-disable'
 
     return (
@@ -247,14 +301,14 @@ export default class Index extends Component {
           <View className='idx-input-text-container'>
             <Text className='idx-input-title'>契税</Text>
             <Input className={classNameForInputDeedTaxManual}
-              disabled={!this.state.mInputDeedTaxManual} type='text'
+              disabled={!this.state.mWillInputDeedTaxManual} type='text'
               placeholder='请输入契税' maxLength='10'
               onInput={this.onInputDeedTaxManual} />
           </View>
           <CheckboxGroup>
             <View>
-              <Checkbox checked={this.state.mInputDeedTaxManual}
-                onClick={this.clickInputDeedTaxManualCheckbox} value={1}>
+              <Checkbox checked={this.state.mWillInputDeedTaxManual}
+                onClick={this.clickInputDeedTaxManualCheckbox}>
                     手动输入契税</Checkbox>
             </View>
           </CheckboxGroup>
@@ -329,6 +383,12 @@ export default class Index extends Component {
           <View>总支付：{this.state.mTotalPayment}</View>
           <View>总费用：{this.state.mTotalFee}</View>
           <View>总税款：{this.state.mTotalTax}</View>
+          <View>契税：{this.state.mDeedTax}</View>
+          <View>个人所得税：{this.state.mPersonalIncomeTax}</View>
+          <View>营业税：{this.state.mBusinessTax}</View>
+          <View>其他税：{this.state.mOtherTax}</View>
+          <View>中介费：{this.state.mAgencyFee}</View>
+          <View>贷款服务费：{this.state.mLoanServiceFee}</View>
           <Button type='primary'>开始计算</Button>
         </View>
       </View>
