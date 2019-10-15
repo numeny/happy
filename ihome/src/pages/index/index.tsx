@@ -29,7 +29,8 @@ export default class Index extends Component {
       mTotalFee: 0,
       mTotalTax: 0,
 
-      mTotolPrice: 0,
+      // input
+      mTotalPrice: 0,
       mOriginPrice: 0,
       mWebSignPrice: 0,
 
@@ -48,6 +49,7 @@ export default class Index extends Component {
       mMortgageRegistrationFee: 0,
       mOtherFee: 0,
 
+      // input
       // Loan
       mCommercialLoan: 0,
       mCommercialLoanYears: 0,
@@ -99,21 +101,22 @@ export default class Index extends Component {
 
   componentDidHide () { }
 
-  updateFirstPayment = (totolPrice, totalLoan, totalFee, totalTax) => {
+  updateFirstPayment = (totalPrice, totalLoan, totalFee, totalTax) => {
     this.setState({
-        mFirstPayment: totolPrice - totalLoan + totalFee + totalTax,
+        mFirstPayment: totalPrice - totalLoan + totalFee + totalTax,
     })
   }
 
-  updateTotalPayment = (totolPrice, totalFee, totalTax) => {
+  updateTotalPayment = (totalPrice, totalFee, totalTax) => {
     this.setState({
-        mTotalPayment: totolPrice + totalFee + totalTax,
+        mTotalPayment: totalPrice + totalFee + totalTax,
     })
   }
 
   updateTotalLoan = (commercialLoan, providentFundLoan, otherLoan) => {
+    let totalPayment = commercialLoan + providentFundLoan + otherLoan
     this.setState({
-        mTotalPayment: (commercialLoan + providentFundLoan + otherLoan),
+        mTotalLoan: totalPayment,
     })
   }
 
@@ -143,11 +146,44 @@ export default class Index extends Component {
   }
 
 
+  onInputHomeName = (e) => {
+    console.log('onInputHomeName, e.target.value:', e.target.value)
+  }
+
+  onInputTotalPrice = (e) => {
+    console.log('onInputTotalPrice, e.target.value:', )
+    /*
+    try {
+      let totalPrice = int(e.target.value)
+      updateFirstPayment(totalPrice)
+    }
+    */
+  }
+
+  onInputOriginPrice = (e) => {
+    console.log('onInputOriginPrice, e.target.value:', e.target.value)
+  }
 
 
+  onInputWebSignPrice = (e) => {
+    console.log('onInputWebSignPrice, e.target.value:', e.target.value)
+  }
 
+  onInputCommercialLoan = (e) => {
+    console.log('onInputCommercialLoan, e.target.value:', e.target.value)
+  }
 
+  onInputProvidentFundLoan = (e) => {
+    console.log('onInputProvidentFundLoan, e.target.value:', e.target.value)
+  }
 
+  onInputOtherLoan = (e) => {
+    console.log('onInputOtherLoan, e.target.value:', e.target.value)
+  }
+
+  onInputDeedTaxManual = (e) => {
+    console.log('onInputDeedTaxManual, e.target.value:', e.target.value)
+  }
 
   onInputDeedTaxManualCheckboxChange = (e) => {
     console.log('onInputDeedTaxManualCheckboxChange, e.detail:', e.detail)
@@ -182,7 +218,7 @@ export default class Index extends Component {
   }
 
   render () {
-    let colorForInputDeedTaxManual = this.state.mInputDeedTaxManual ?
+    let classNameForInputDeedTaxManual = this.state.mInputDeedTaxManual ?
             'idx-input-text' : 'idx-input-text-disable'
 
     return (
@@ -191,14 +227,29 @@ export default class Index extends Component {
           <Video width='150px' height='190px' src={namedVideo} />
           <Image src={namedPng} width='150px' height='300px' />
           <Text>Hello world!</Text>
-          <View className='idx-input-text-container'><Text className='idx-input-title'>房子名称</Text><Input className='idx-input-text' type='text' placeholder='请输入房子位置' /></View>
-          <View className='idx-input-text-container'><Text className='idx-input-title'>总价（万元）</Text><Input className='idx-input-text' type='digit' placeholder='请输入总价' maxLength='10' /></View>
-          <View className='idx-input-text-container'><Text className='idx-input-title'>原值（万元）</Text><Input className='idx-input-text' type='digit' placeholder='请输入房子原购买价' maxLength='10' /></View>
-          <View className='idx-input-text-container'><Text className='idx-input-title'>网签价（万元）</Text><Input className='idx-input-text' type='digit' placeholder='请输入网签价' maxLength='10' /></View>
+          <View className='idx-input-text-container'>
+            <Text className='idx-input-title'>房子名称</Text>
+            <Input className='idx-input-text' type='text' placeholder='请输入房子位置' onInput={this.onInputHomeName} />
+          </View>
+          <View className='idx-input-text-container'>
+            <Text className='idx-input-title'>总价（万元）</Text>
+            <Input className='idx-input-text' type='digit' placeholder='请输入总价' maxLength='10' onInput={this.onInputTotalPrice} />
+          </View>
+          <View className='idx-input-text-container'>
+            <Text className='idx-input-title'>原值（万元）</Text>
+            <Input className='idx-input-text' type='digit' placeholder='请输入房子原购买价' maxLength='10' onInput={this.onInputOriginPrice} />
+          </View>
+          <View className='idx-input-text-container'>
+            <Text className='idx-input-title'>网签价（万元）</Text>
+            <Input className='idx-input-text' type='digit' placeholder='请输入网签价' maxLength='10' onInput={this.onInputWebSignPrice} />
+          </View>
 
           <View className='idx-input-text-container'>
             <Text className='idx-input-title'>契税</Text>
-            <Input className={colorForInputDeedTaxManual} disabled={!this.state.mInputDeedTaxManual} type='text' placeholder='请输入契税' maxLength='10' />
+            <Input className={classNameForInputDeedTaxManual}
+              disabled={!this.state.mInputDeedTaxManual} type='text'
+              placeholder='请输入契税' maxLength='10'
+              onInput={this.onInputDeedTaxManual} />
           </View>
           <CheckboxGroup>
             <View>
@@ -261,13 +312,23 @@ export default class Index extends Component {
           </RadioGroup>
 
 
-          <View className='idx-input-text-container'><Text className='idx-input-title'>商贷（万元）</Text><Input className='idx-input-text' type='digit' placeholder='请输入商贷总额' maxLength='10' /></View>
-          <View className='idx-input-text-container'><Text className='idx-input-title'>公积金贷款（万元）</Text><Input className='idx-input-text' type='digit' placeholder='请输入公积金贷款总额' maxLength='10' /></View>
-          <View className='idx-input-text-container'><Text className='idx-input-title'>其他贷款（万元）</Text><Input className='idx-input-text' type='digit' placeholder='请输入其他贷款总额' maxLength='10' /></View>
+          <View className='idx-input-text-container'>
+            <Text className='idx-input-title'>商贷（万元）</Text>
+            <Input className='idx-input-text' type='digit' placeholder='请输入商贷总额' maxLength='10' onInput={this.onInputCommercialLoan} />
+          </View>
+          <View className='idx-input-text-container'>
+            <Text className='idx-input-title'>公积金贷款（万元）</Text>
+            <Input className='idx-input-text' type='digit' placeholder='请输入公积金贷款总额' maxLength='10' onInput={this.onInputProvidentFundLoan} />
+          </View>
+          <View className='idx-input-text-container'>
+            <Text className='idx-input-title'>其他贷款（万元）</Text>
+            <Input className='idx-input-text' type='digit' placeholder='请输入其他贷款总额' maxLength='10' onInput={this.onInputOtherLoan} />
+          </View>
 
-          <View className='idx-input-text-container'><Text className='idx-input-title'>总价：</Text><Input className='idx-input-text' type='text' placeholder='请输入总价' maxLength='10' />万</View>
-
-          <View className='idx-input-text-container'><Text className='idx-input-title'>总价：</Text><Input className='idx-input-text' type='text' placeholder='请输入总价' maxLength='10' />万</View>
+          <View>首付：{this.state.mFirstPayment}</View>
+          <View>总支付：{this.state.mTotalPayment}</View>
+          <View>总费用：{this.state.mTotalFee}</View>
+          <View>总税款：{this.state.mTotalTax}</View>
           <Button type='primary'>开始计算</Button>
         </View>
       </View>
