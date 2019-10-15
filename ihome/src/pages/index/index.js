@@ -151,7 +151,7 @@ export default class Index extends Component {
             this.state.mTotalFee, totalTax)
   }
 
-  updatePersonalIncomeTax = (webSignPrice, originPrice) {
+  updatePersonalIncomeTax = (webSignPrice, originPrice) => {
     let personalIncomeTax = (webSignPrice * 0.9 - originPrice) * 0.2
     if (personalIncomeTax <= 0) {
       personalIncomeTax = 0
@@ -164,10 +164,10 @@ export default class Index extends Component {
             this.state.mBusinessTax, this.state.mOtherTax)
   }
 
-  updateDeedTax = (webSignPrice, deedTaxRate, inputDeedTaxManual) {
+  updateDeedTax = (webSignPrice, deedTaxRate, inputDeedTaxManual) => {
   }
 
-  updateLetPersonalIncomeTaxEqualZero = (webSignPrice, originPrice) {
+  updateLetPersonalIncomeTaxEqualZero = (webSignPrice, originPrice) => {
   }
 
 
@@ -231,8 +231,6 @@ export default class Index extends Component {
     console.log('onInputDeedTaxManual, e.target.value:', e.target.value)
     try {
       let originPrice = Number(e.target.value)
-mInputDeedTaxManual
-
 
       this.updatePersonalIncomeTax(this.state.mWebSignPrice, originPrice)
 
