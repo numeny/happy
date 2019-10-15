@@ -2,14 +2,10 @@
 
 export HAPPY_PATH=`pwd`
 #echo "HAPPY_PATH: $HAPPY_PATH'"
-export HAPPY_CLIENT_PATH="$HAPPY_PATH/test10"
+
+. ihome/envsetup.sh
+
 export HAPPY_SERVER_PATH="$HAPPY_PATH/server/happy_inn"
-
-alias cdhappy="cd $HAPPY_PATH"
-alias cdclient="cd $HAPPY_CLIENT_PATH"
-alias cdserver="cd $HAPPY_SERVER_PATH"
-
-# export PATH=$PATH:$HAPPY_PATH/tools/bin/
 
 function kill.process {
     if [[ `uname -a` =~ "Darwin" ]];then
@@ -31,8 +27,20 @@ function ps.process {
     fi
 }
 
+function cdhappy {
+  cd $HAPPY_PATH
+}
+
 function kill.adb {
   kill.process "logcat"
+}
+
+function cdclient {
+  cd $HAPPY_CLIENT_PATH
+}
+
+function cdserver {
+  cd $HAPPY_SERVER_PATH
 }
 
 function ps.adb {

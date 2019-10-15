@@ -1,0 +1,39 @@
+$page-background-color: #FFF;
+$item-border-color: #DDD;
+
+.idx-top-container {
+  background-color: $page-background-color;
+  font-size: 20px;
+  margin: 25px;
+}
+
+.idx-top-container-2 {
+}
+
+.idx-input-text-container {
+  display: flex;
+  flex-direction: colume;
+  flex-wrap: nowrap;
+  // border-bottom: 3px solid #8AC007;
+  border-bottom: 3px solid $item-border-color;
+}
+
+.idx-input-title {
+  flex-wrap: nowrap;
+  flex: 2;
+}
+
+.idx-input-text {
+  flex: 3;
+}
+
+.idx-input-text-disable {
+  background-color: $item-border-color;
+  flex: 3;
+}
+
+.idx-input-radio-container {
+  display: flex;
+  flex-direction: colume;
+  flex-wrap: wrap;
+}
