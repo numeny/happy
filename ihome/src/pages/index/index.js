@@ -271,7 +271,7 @@ export default class Index extends Component {
 
   render () {
     let classNameForInputDeedTaxManual = this.state.mWillInputDeedTaxManual ?
-            'idx-input-text' : 'idx-input-text-disable'
+            'idx-input-text idx-input-text-deedtax' : 'idx-input-text-disable idx-input-text-deedtax'
 
     return (
       <View className='idx-top-container'>
@@ -279,46 +279,44 @@ export default class Index extends Component {
           <Video width='150px' height='190px' src={namedVideo} />
           <Image src={namedPng} width='150px' height='300px' />
           <Text>Hello world!</Text>
-          <View className='idx-input-text-container'>
+          <View className='idx-input-item-container'>
             <Text className='idx-input-title'>房子名称</Text>
             <Input className='idx-input-text' type='text' placeholder='请输入房子位置' onInput={this.onInputHomeName} />
           </View>
-          <View className='idx-input-text-container'>
+          <View className='idx-input-item-container'>
             <Text className='idx-input-title'>总价（万元）</Text>
             <Input className='idx-input-text' type='digit' placeholder='请输入总价' maxLength='10' onInput={this.onInputTotalPrice} />
           </View>
-          <View className='idx-input-text-container'>
+          <View className='idx-input-item-container'>
             <Text className='idx-input-title'>原值（万元）</Text>
             <Input className='idx-input-text' type='digit' placeholder='请输入房子原购买价' maxLength='10' onInput={this.onInputOriginPrice} />
           </View>
-          <View className='idx-input-text-container'>
+          <View className='idx-input-item-container'>
             <Text className='idx-input-title'>网签价（万元）</Text>
             <Input className='idx-input-text' type='digit' placeholder='请输入网签价' maxLength='10' onInput={this.onInputWebSignPrice} />
           </View>
 
-          <View className='idx-input-text-container'>
-            <Text className='idx-input-title'>契税</Text>
+          <View className='idx-input-item-container'>
+            <Text className='idx-input-title'>契税（万元）</Text>
             <Input className={classNameForInputDeedTaxManual}
               disabled={!this.state.mWillInputDeedTaxManual} type='text'
-              placeholder='请输入契税' maxLength='10'
+              placeholder='0' maxLength='10'
               onInput={this.onInputDeedTaxManual} />
+            <CheckboxGroup>
+              <View className='idx-input-title'>
+                <Checkbox checked={this.state.mWillInputDeedTaxManual}
+                  onClick={this.clickInputDeedTaxManualCheckbox}>
+                      手动输入契税</Checkbox>
+              </View>
+            </CheckboxGroup>
           </View>
-          <CheckboxGroup>
-            <View>
-              <Checkbox checked={this.state.mWillInputDeedTaxManual}
-                onClick={this.clickInputDeedTaxManualCheckbox}>
-                    手动输入契税</Checkbox>
-            </View>
-          </CheckboxGroup>
 
           <RadioGroup>
-            <View className='idx-input-text-container'>
-              <View className='idx-input-title'>
-                买方是否首套：
-              </View>
+            <View className='idx-input-item-container'>
+              买方是否首套：
               {this.state.mIsFirstHomeRadioList.map((item, i) => {
                 return (
-                  <View className='idx-input-title' onClick={this.onClickFirstHomeRadio.bind(this, item.value)} >
+                  <View onClick={this.onClickFirstHomeRadio.bind(this, item.value)} >
                     <Radio value={item.value}
                       checked={item.value == this.state.mFirstHomeRadioValue}
                       style={{transform: 'scale(0.7)'}} color='#FF7464'>
@@ -329,13 +327,11 @@ export default class Index extends Component {
             </View>
           </RadioGroup>
           <RadioGroup>
-            <View className='idx-input-text-container'>
-              <View className='idx-input-title'>
-                是否满两年：
-              </View>
+            <View className='idx-input-item-container'>
+              是否满两年：
               {this.state.mIsAboveTwoYearsRadioList.map((item, i) => {
                 return (
-                  <View className='idx-input-title' onClick={this.onClickAboveTwoYearsRadio.bind(this, item.value)} >
+                  <View onClick={this.onClickAboveTwoYearsRadio.bind(this, item.value)} >
                     <Radio value={item.value}
                       checked={item.value == this.state.mAboveTwoYearsRadioValue}
                       style={{transform: 'scale(0.7)'}} color='#FF7464'>
@@ -346,13 +342,11 @@ export default class Index extends Component {
             </View>
           </RadioGroup>
           <RadioGroup>
-            <View className='idx-input-text-container'>
-              <View className='idx-input-title'>
-                是否卖方唯一住宅：
-              </View>
+            <View className='idx-input-item-container'>
+              是否卖方唯一住宅：
               {this.state.mIsOnlyHomeRadioList.map((item, i) => {
                 return (
-                  <View className='idx-input-title' onClick={this.onClickOnlyHomeRadio.bind(this, item.value)} >
+                  <View onClick={this.onClickOnlyHomeRadio.bind(this, item.value)} >
                     <Radio value={item.value}
                       checked={item.value == this.state.mOnlyHomeRadioValue}
                       style={{transform: 'scale(0.7)'}} color='#FF7464'>
@@ -364,15 +358,15 @@ export default class Index extends Component {
           </RadioGroup>
 
 
-          <View className='idx-input-text-container'>
+          <View className='idx-input-item-container'>
             <Text className='idx-input-title'>商贷（万元）</Text>
             <Input className='idx-input-text' type='digit' placeholder='请输入商贷总额' maxLength='10' onInput={this.onInputCommercialLoan} />
           </View>
-          <View className='idx-input-text-container'>
+          <View className='idx-input-item-container'>
             <Text className='idx-input-title'>公积金贷款（万元）</Text>
             <Input className='idx-input-text' type='digit' placeholder='请输入公积金贷款总额' maxLength='10' onInput={this.onInputProvidentFundLoan} />
           </View>
-          <View className='idx-input-text-container'>
+          <View className='idx-input-item-container'>
             <Text className='idx-input-title'>其他贷款（万元）</Text>
             <Input className='idx-input-text' type='digit' placeholder='请输入其他贷款总额' maxLength='10' onInput={this.onInputOtherLoan} />
           </View>

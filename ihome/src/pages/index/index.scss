@@ -3,37 +3,42 @@ $item-border-color: #DDD;
 
 .idx-top-container {
   background-color: $page-background-color;
-  font-size: 20px;
+  font-size: 30px;
   margin: 25px;
 }
 
 .idx-top-container-2 {
 }
 
-.idx-input-text-container {
+.idx-input-item-container {
   display: flex;
   flex-direction: colume;
   flex-wrap: nowrap;
   // border-bottom: 3px solid #8AC007;
   border-bottom: 3px solid $item-border-color;
+  padding: 20px 0px;
 }
 
 .idx-input-title {
   flex-wrap: nowrap;
-  flex: 2;
+  flex: 3;
 }
 
 .idx-input-text {
   flex: 3;
+  flex-wrap: nowrap;
+  text-align: right;
+  padding-right: 10px;
 }
 
 .idx-input-text-disable {
   background-color: $item-border-color;
   flex: 3;
+  flex-wrap: nowrap;
+  text-align: right;
+  padding-right: 10px;
 }
 
-.idx-input-radio-container {
-  display: flex;
-  flex-direction: colume;
-  flex-wrap: wrap;
+.idx-input-text-deedtax {
+  margin-right: 25px;
 }
