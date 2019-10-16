@@ -32,13 +32,17 @@ export default class Index extends Component {
       mTotalTax: 0,
 
       // input
+      mHouseName: '',
+      mHouseArea: '',
+
       mTotalPrice: 0,
       mOriginPrice: 0,
       mWebSignPrice: 0,
+      mLowestGuidePrice: 0,
 
       // Tax
       mDeedTax: 0,
-      mDeedTaxRate: 0,
+      mDeedTaxRate: 0.03, // FIXME
       mPersonalIncomeTax: 0,
       mBusinessTax: 0,
       mOtherTax: 0,
@@ -73,11 +77,11 @@ export default class Index extends Component {
       mInputDeedTaxManual: 0,
       mWillInputPersonalIncomeTaxManual: false,
 
-      mFirstHomeRadioValue: 1,
+      mFirstHouseRadioValue: 1,
       mAboveTwoYearsRadioValue: 1,
-      mOnlyHomeRadioValue: 1,
+      mOnlyHouseRadioValue: 1,
 
-      mIsFirstHomeRadioList: [
+      mIsFirstHouseRadioList: [
         { value: 1, text: '首套', checked: true, },
         { value: 2, text: '二套', checked: false, },
         { value: 3, text: '三套及以上', checked: false, },
@@ -87,7 +91,7 @@ export default class Index extends Component {
         { value: 2, text: '满两年', checked: false, },
         { value: 3, text: '满五年', checked: false, },
       ],
-      mIsOnlyHomeRadioList: [
+      mIsOnlyHouseRadioList: [
         { value: 1, text: '是', checked: true, },
         { value: 2, text: '否', checked: false, },
       ],
@@ -104,16 +108,19 @@ export default class Index extends Component {
 
   componentDidHide () { }
 
-  updateFirstPayment = (totalPrice, totalLoan, totalFee, totalTax) => {
+  updateFirstPayment = (totalPayment, totalLoan) => {
     this.setState({
-        mFirstPayment: totalPrice - totalLoan + totalFee + totalTax,
+        mFirstPayment: totalPayment - totalLoan,
     })
   }
 
   updateTotalPayment = (totalPrice, totalFee, totalTax) => {
+    let totalPayment = totalPrice + totalFee + totalTax
     this.setState({
-        mTotalPayment: totalPrice + totalFee + totalTax,
+        mTotalPayment: totalPayment,
     })
+    this.updateFirstPayment(totalPayment, this.state.mTotalLoan)
+    return totalPayment
   }
 
   updateTotalLoan = (commercialLoan, providentFundLoan, otherLoan) => {
@@ -121,8 +128,8 @@ export default class Index extends Component {
     this.setState({
         mTotalLoan: totalLoan,
     })
-    this.updateFirstPayment(this.state.mTotalPrice, totalLoan,
-            this.state.mTotalFee, this.state.mTotalTax)
+    this.updateFirstPayment(this.state.mTotalPayment, totalLoan)
+    return totalLoan
   }
 
   updateTotalFee = (agencyFee, loanServiceFee, evaluationFee,
@@ -132,10 +139,9 @@ export default class Index extends Component {
     this.setState({
         mTotalFee: totalFee,
     })
-    this.updateFirstPayment(this.state.mTotalPrice, this.state.mTotalLoan,
-            totalFee, this.state.mTotalTax)
     this.updateTotalPayment(this.state.mTotalPrice,
             totalFee, this.state.mTotalTax)
+    return totalFee
   }
 
   updateTotalTax = (deedTax, personalIncomeTax,
@@ -145,13 +151,14 @@ export default class Index extends Component {
     this.setState({
         mTotalTax: totalTax,
     })
-    this.updateFirstPayment(this.state.mTotalPrice,
-            this.state.mTotalLoan, this.state.mTotalFee, totalTax)
     this.updateTotalPayment(this.state.mTotalPrice,
             this.state.mTotalFee, totalTax)
+    return totalTax
   }
 
-  updatePersonalIncomeTax = (webSignPrice, originPrice) => {
+  updatePersonalIncomeTax2 = (webSignPrice, originPrice,
+      deedTax, businessTax, otherTax) => {
+    // FIXME, on other city
     let personalIncomeTax = (webSignPrice * 0.9 - originPrice) * 0.2
     if (personalIncomeTax <= 0) {
       personalIncomeTax = 0
@@ -160,98 +167,312 @@ export default class Index extends Component {
         mPersonalIncomeTax: personalIncomeTax,
     })
 
-    this.updateTotalTax(this.state.mDeedTax, personalIncomeTax,
-            this.state.mBusinessTax, this.state.mOtherTax)
+    this.updateTotalTax(deedTax, personalIncomeTax, businessTax, otherTax)
+    return personalIncomeTax
   }
 
-  updateDeedTax = (webSignPrice, deedTaxRate, inputDeedTaxManual) => {
+  updatePersonalIncomeTax = (webSignPrice, originPrice) => {
+    return this.updatePersonalIncomeTax2(webSignPrice, originPrice,
+        this.state.mDeedTax, this.state.mBusinessTax, this.state.mOtherTax)
   }
 
-  updateLetPersonalIncomeTaxEqualZero = (webSignPrice, originPrice) => {
+  updateDeedTax = (webSignPrice, deedTaxRate,
+      willInputDeedTaxManual, inputDeedTaxManual) => {
+    return this.updateDeedTax2(webSignPrice, deedTaxRate,
+        willInputDeedTaxManual, inputDeedTaxManual,
+        this.state.mPersonalIncomeTax,
+        this.state.mBusinessTax, this.state.mOtherTax)
   }
 
+  updateDeedTax2 = (webSignPrice, deedTaxRate,
+      willInputDeedTaxManual, inputDeedTaxManual,
+      personalIncomeTax, businessTax, otherTax) => {
+    // FIXME
+    let deedTax = 0
+    if (willInputDeedTaxManual) {
+      deedTax = inputDeedTaxManual
+    } else {
+      deedTax = webSignPrice * deedTaxRate
+    }
+    this.setState({
+        mDeedTax: deedTax,
+    })
+    console.error("updateDeedTax: ", deedTax);
+    console.error("updateDeedTax: personalIncomeTax: ",
+        personalIncomeTax);
+    this.updateTotalTax(deedTax, personalIncomeTax, businessTax, otherTax)
+    return deedTax
+  }
 
-  onInputHomeName = (e) => {
-    console.log('onInputHomeName, e.target.value:', e.target.value)
+  // FIXME
+  lowestPersonalIncomeTax = () => {
+    if (this.state.mLowestGuidePrice == 0) {
+      Taro.showToast({title: "请输入最低指导价！"})
+      return
+    }
+
+    if (this.state.mOriginPrice == 0) {
+      Taro.showToast({title: "请输入原值！"})
+      return
+    }
+    // let personalIncomeTax = (webSignPrice * 0.9 - originPrice) * 0.2
+    let webSignPrice = Math.max(this.state.mOriginPrice * 10 / 9,
+        this.state.mLowestGuidePrice)
+
+    console.error("lowestPersonalIncomeTax, webSignPrice: ", webSignPrice);
+    this.onWebSignPriceChanged(webSignPrice)
+  }
+
+  onInputHouseName = (e) => {
+    this.setState({
+        mHouseName: e.target.value,
+    })
+  }
+
+  onInputHouseArea = (e) => {
+    try {
+      let houseArea = Number(e.target.value)
+      this.setState({
+          mHouseArea: houseArea,
+      })
+
+
+    } catch(err) {
+      console.log("onInputHouseArea: ", err);
+      Taro.showToast({title: "请输入正确的面积！"})
+    }
   }
 
   onInputTotalPrice = (e) => {
-    console.log('onInputTotalPrice, e.target.value:', e.target.value)
     try {
       let totalPrice = Number(e.target.value)
-      this.updateFirstPayment(totalPrice, this.state.mTotalLoan,
-              this.state.mTotalFee, this.state.mTotalTax)
+      this.setState({
+          mTotalPrice: totalPrice,
+      })
+
       this.updateTotalPayment(totalPrice,
               this.state.mTotalFee, this.state.mTotalTax)
     } catch(err) {
       console.log("onInputTotalPrice: ", err);
-      Taro.showToast({title: "请输入正确的总价！"})
+      Taro.showToast({title: "请输入正确的金额！"})
     }
   }
 
   onInputOriginPrice = (e) => {
     try {
-      let originPrice = 0
+      let originPrice = Number(e.target.value)
+      /*
       if (e.target.value.length != 0) {
         originPrice = parseFloat(e.target.value)
       }
+      */
       // FIXME
       if (e.target.value.length != 0 && !Util.isNumber(originPrice)) {
         console.log("onInputOriginPrice-1-2: ", err);
-        Taro.showToast({title: "请输入正确的原值！"})
+        Taro.showToast({title: "请输入正确的金额！"})
         return
       }
-      console.log('onInputOriginPrice-1-1, originPrice:', originPrice)
+      this.setState({
+          mOriginPrice: originPrice,
+      })
+
       this.updatePersonalIncomeTax(this.state.mWebSignPrice, originPrice)
 
     } catch(err) {
       console.log("onInputOriginPrice: ", err);
-      Taro.showToast({title: "请输入正确的原值！"})
+      Taro.showToast({title: "请输入正确的金额！"})
     }
   }
 
+  onWebSignPriceChanged = (webSignPrice) => {
+    this.setState({
+        mWebSignPrice: webSignPrice,
+    })
+    let personalIncomeTax = this.updatePersonalIncomeTax2(webSignPrice, this.state.mOriginPrice)
+
+    this.updateDeedTax2(webSignPrice, this.state.mDeedTaxRate,
+          this.state.mWillInputDeedTaxManual, this.state.mInputDeedTaxManual,
+          personalIncomeTax, this.state.mBusinessTax,
+          this.state.mOtherTax)
+  }
 
   onInputWebSignPrice = (e) => {
-    console.log('onInputWebSignPrice, e.target.value:', e.target.value)
+    try {
+      let webSignPrice = Number(e.target.value)
+      this.onWebSignPriceChanged(webSignPrice)
+    } catch(err) {
+      console.log("onInputWebSignPrice: ", err);
+      Taro.showToast({title: "请输入正确的金额！"})
+    }
+  }
+
+  onInputLowestGuidePrice = (e) => {
+    console.log("onInputLowestGuidePrice: ", e.target.value);
+    try {
+      let lowestGuidePrice = Number(e.target.value)
+      this.setState({
+          mLowestGuidePrice: lowestGuidePrice,
+      })
+
+    } catch(err) {
+      console.log("onInputLowestGuidePrice: ", err);
+      Taro.showToast({title: "请输入正确的金额！"})
+    }
+  }
+
+  onInputAgencyFee = (e) => {
+    try {
+      let agencyFee = Number(e.target.value)
+      this.setState({
+          mAgencyFee: agencyFee,
+      })
+      this.updateTotalFee(agencyFee,
+          this.state.mLoanServiceFee, this.state.mEvaluationFee,
+          this.state.mMortgageRegistrationFee, this.state.mOtherFee)
+    } catch(err) {
+      console.log("onInputAgencyFee: ", err);
+      Taro.showToast({title: "请输入正确的金额！"})
+    }
+  }
+
+  onInputLoanServiceFee = (e) => {
+    try {
+      let loanServiceFee = Number(e.target.value)
+      this.setState({
+          mLoanServiceFee: loanServiceFee,
+      })
+      this.updateTotalFee(this.state.mAgencyFee,
+          loanServiceFee, this.state.mEvaluationFee,
+          this.state.mMortgageRegistrationFee, this.state.mOtherFee)
+    } catch(err) {
+      console.log("onInputLoanServiceFee: ", err);
+      Taro.showToast({title: "请输入正确的金额！"})
+    }
+  }
+
+  onInputEvaluationFee = (e) => {
+    try {
+      let evaluationFee = Number(e.target.value)
+      this.setState({
+          mEvaluationFee: evaluationFee,
+      })
+      this.updateTotalFee(this.state.mAgencyFee,
+          this.state.mLoanServiceFee, evaluationFee,
+          this.state.mMortgageRegistrationFee, this.state.mOtherFee)
+    } catch(err) {
+      console.log("onInputEvaluationFee: ", err);
+      Taro.showToast({title: "请输入正确的金额！"})
+    }
+  }
+
+  onInputMortgageRegistrationFee = (e) => {
+    try {
+      let mortgageRegistrationFee = Number(e.target.value)
+      this.setState({
+          mMortgageRegistrationFee: mortgageRegistrationFee,
+      })
+      this.updateTotalFee(this.state.mAgencyFee,
+          this.state.mLoanServiceFee, this.state.mEvaluationFee,
+          mortgageRegistrationFee, this.state.mOtherFee)
+    } catch(err) {
+      console.log("onInputMortgageRegistrationFee: ", err);
+      Taro.showToast({title: "请输入正确的金额！"})
+    }
+  }
+
+  onInputOtherFee = (e) => {
+    try {
+      let otherFee = Number(e.target.value)
+      this.setState({
+          mOtherFee: otherFee,
+      })
+      this.updateTotalFee(this.state.mAgencyFee,
+          this.state.mLoanServiceFee, this.state.mEvaluationFee,
+          this.state.mMortgageRegistrationFee, otherFee)
+    } catch(err) {
+      console.log("onInputOtherFee: ", err);
+      Taro.showToast({title: "请输入正确的金额！"})
+    }
   }
 
   onInputCommercialLoan = (e) => {
-    console.log('onInputCommercialLoan, e.target.value:', e.target.value)
+    try {
+      let commercialLoan = Number(e.target.value)
+      this.setState({
+          mCommercialLoan: commercialLoan,
+      })
+
+      this.updateTotalLoan(commercialLoan,
+          this.state.mProvidentFundLoan, this.state.mOtherLoan)
+    } catch(err) {
+      console.log("onInputCommercialLoan: ", err);
+      Taro.showToast({title: "请输入正确的金额！"})
+    }
   }
 
   onInputProvidentFundLoan = (e) => {
-    console.log('onInputProvidentFundLoan, e.target.value:', e.target.value)
+    try {
+      let providentFundLoan = Number(e.target.value)
+      this.setState({
+          mProvidentFundLoan: providentFundLoan,
+      })
+
+      this.updateTotalLoan(this.state.mCommercialLoan,
+          providentFundLoan, this.state.mOtherLoan)
+    } catch(err) {
+      console.log("onInputProvidentFundLoan: ", err);
+      Taro.showToast({title: "请输入正确的金额！"})
+    }
   }
 
   onInputOtherLoan = (e) => {
-    console.log('onInputOtherLoan, e.target.value:', e.target.value)
+    try {
+      let otherLoan = Number(e.target.value)
+      this.setState({
+          mOtherLoan: otherLoan,
+      })
+
+      this.updateTotalLoan(this.state.mCommercialLoan,
+          this.state.mProvidentFundLoan, otherLoan)
+    } catch(err) {
+      console.log("onInputOtherLoan: ", err);
+      Taro.showToast({title: "请输入正确的金额！"})
+    }
   }
 
   onInputDeedTaxManual = (e) => {
-    console.log('onInputDeedTaxManual, e.target.value:', e.target.value)
+    if (!this.state.mWillInputDeedTaxManual) {
+      console.error('Should not update deed tax manully, e.target.value:',
+          e.target.value)
+      return
+    }
     try {
-      let originPrice = Number(e.target.value)
+      let inputDeedTaxManual = Number(e.target.value)
+      this.setState({
+          mInputDeedTaxManual: inputDeedTaxManual,
+      })
 
-      this.updatePersonalIncomeTax(this.state.mWebSignPrice, originPrice)
+      this.updateDeedTax(this.state.mWebSignPrice, this.state.mDeedTaxRate,
+            this.state.mWillInputDeedTaxManual, inputDeedTaxManual)
 
     } catch(err) {
-      console.log("onInputOriginPrice: ", err);
-      Taro.showToast({title: "请输入正确的原值！"})
+      console.log("onInputDeedTaxManual: ", err);
+      Taro.showToast({title: "请输入正确的契税金额！"})
     }
-
   }
 
-  clickInputDeedTaxManualCheckbox = (e) => {
-    console.log('clickInputDeedTaxManualCheckbox, e.detail:', e.detail)
+  clickWillInputDeedTaxManualCheckbox = (e) => {
+    console.log('clickWillInputDeedTaxManualCheckbox, e.detail:', e.detail)
     this.setState({
         mWillInputDeedTaxManual: !this.state.mWillInputDeedTaxManual,
+        mInputDeedTaxManual: 0,
     })
   }
 
-  onClickFirstHomeRadio = (idx, e) => {
-    console.log('onClickFirstHomeRadio, idx:', idx)
+  onClickFirstHouseRadio = (idx, e) => {
+    console.log('onClickFirstHouseRadio, idx:', idx)
     this.setState({
-        mFirstHomeRadioValue: idx,
+        mFirstHouseRadioValue: idx,
     })
   }
 
@@ -262,10 +483,10 @@ export default class Index extends Component {
     })
   }
 
-  onClickOnlyHomeRadio = (idx, e) => {
-    console.log('onClickOnlyHomeRadio, value:', e.detail.value)
+  onClickOnlyHouseRadio = (idx, e) => {
+    console.log('onClickOnlyHouseRadio, value:', e.detail.value)
     this.setState({
-        mOnlyHomeRadioValue: idx,
+        mOnlyHouseRadioValue: idx,
     })
   }
 
@@ -281,7 +502,11 @@ export default class Index extends Component {
           <Text>Hello world!</Text>
           <View className='idx-input-item-container'>
             <Text className='idx-input-title'>房子名称</Text>
-            <Input className='idx-input-text' type='text' placeholder='请输入房子位置' onInput={this.onInputHomeName} />
+            <Input className='idx-input-text' type='text' placeholder='请输入房子位置' onInput={this.onInputHouseName} />
+          </View>
+          <View className='idx-input-item-container'>
+            <Text className='idx-input-title'>房子面积</Text>
+            <Input className='idx-input-text' type='digit' placeholder='请输入房子面积' maxLength='10' onInput={this.onInputHouseArea} />
           </View>
           <View className='idx-input-item-container'>
             <Text className='idx-input-title'>总价（万元）</Text>
@@ -295,6 +520,30 @@ export default class Index extends Component {
             <Text className='idx-input-title'>网签价（万元）</Text>
             <Input className='idx-input-text' type='digit' placeholder='请输入网签价' maxLength='10' onInput={this.onInputWebSignPrice} />
           </View>
+          <View className='idx-input-item-container'>
+            <Text className='idx-input-title'>最低指导价（万元）</Text>
+            <Input className='idx-input-text' type='digit' placeholder='请输入最低指导价' maxLength='10' onInput={this.onInputLowestGuidePrice} />
+          </View>
+          <View className='idx-input-item-container'>
+            <Text className='idx-input-title'>中介费（万元）</Text>
+            <Input className='idx-input-text' type='digit' placeholder='请输入中介费' maxLength='10' onInput={this.onInputAgencyFee} />
+          </View>
+          <View className='idx-input-item-container'>
+            <Text className='idx-input-title'>贷款服务费（万元）</Text>
+            <Input className='idx-input-text' type='digit' placeholder='请输入贷款服务费' maxLength='10' onInput={this.onInputLoanServiceFee} />
+          </View>
+          <View className='idx-input-item-container'>
+            <Text className='idx-input-title'>评估费（万元）</Text>
+            <Input className='idx-input-text' type='digit' placeholder='请输入评估费' maxLength='10' onInput={this.onInputEvaluationFee} />
+          </View>
+          <View className='idx-input-item-container'>
+            <Text className='idx-input-title'>抵押登记费（万元）</Text>
+            <Input className='idx-input-text' type='digit' placeholder='请输入抵押登记费' maxLength='10' onInput={this.onInputMortgageRegistrationFee} />
+          </View>
+          <View className='idx-input-item-container'>
+            <Text className='idx-input-title'>其他费用（万元）</Text>
+            <Input className='idx-input-text' type='digit' placeholder='请输入其他费用' maxLength='10' onInput={this.onInputOtherFee} />
+          </View>
 
           <View className='idx-input-item-container'>
             <Text className='idx-input-title'>契税（万元）</Text>
@@ -305,7 +554,7 @@ export default class Index extends Component {
             <CheckboxGroup>
               <View className='idx-input-title'>
                 <Checkbox checked={this.state.mWillInputDeedTaxManual}
-                  onClick={this.clickInputDeedTaxManualCheckbox}>
+                  onClick={this.clickWillInputDeedTaxManualCheckbox}>
                       手动输入契税</Checkbox>
               </View>
             </CheckboxGroup>
@@ -314,11 +563,11 @@ export default class Index extends Component {
           <RadioGroup>
             <View className='idx-input-item-container'>
               买方是否首套：
-              {this.state.mIsFirstHomeRadioList.map((item, i) => {
+              {this.state.mIsFirstHouseRadioList.map((item, i) => {
                 return (
-                  <View onClick={this.onClickFirstHomeRadio.bind(this, item.value)} >
+                  <View onClick={this.onClickFirstHouseRadio.bind(this, item.value)} >
                     <Radio value={item.value}
-                      checked={item.value == this.state.mFirstHomeRadioValue}
+                      checked={item.value == this.state.mFirstHouseRadioValue}
                       style={{transform: 'scale(0.7)'}} color='#FF7464'>
                       {item.text}
                     </Radio>
@@ -344,11 +593,11 @@ export default class Index extends Component {
           <RadioGroup>
             <View className='idx-input-item-container'>
               是否卖方唯一住宅：
-              {this.state.mIsOnlyHomeRadioList.map((item, i) => {
+              {this.state.mIsOnlyHouseRadioList.map((item, i) => {
                 return (
-                  <View onClick={this.onClickOnlyHomeRadio.bind(this, item.value)} >
+                  <View onClick={this.onClickOnlyHouseRadio.bind(this, item.value)} >
                     <Radio value={item.value}
-                      checked={item.value == this.state.mOnlyHomeRadioValue}
+                      checked={item.value == this.state.mOnlyHouseRadioValue}
                       style={{transform: 'scale(0.7)'}} color='#FF7464'>
                       {item.text}
                     </Radio>
@@ -371,16 +620,22 @@ export default class Index extends Component {
             <Input className='idx-input-text' type='digit' placeholder='请输入其他贷款总额' maxLength='10' onInput={this.onInputOtherLoan} />
           </View>
 
-          <View>首付：{this.state.mFirstPayment}</View>
-          <View>总支付：{this.state.mTotalPayment}</View>
-          <View>总费用：{this.state.mTotalFee}</View>
-          <View>总税款：{this.state.mTotalTax}</View>
-          <View>契税：{this.state.mDeedTax}</View>
-          <View>个人所得税：{this.state.mPersonalIncomeTax}</View>
-          <View>营业税：{this.state.mBusinessTax}</View>
-          <View>其他税：{this.state.mOtherTax}</View>
-          <View>中介费：{this.state.mAgencyFee}</View>
-          <View>贷款服务费：{this.state.mLoanServiceFee}</View>
+          <View>首付：{this.state.mFirstPayment.toFixed(2)}</View>
+          <View>总支付：{this.state.mTotalPayment.toFixed(2)}</View>
+          <View className='idx-input-item-container'>
+            <Text>总费用：{this.state.mTotalFee.toFixed(2)}</Text>
+            <Text>总税款：{this.state.mTotalTax.toFixed(2)}</Text>
+            <Text>总税费：{(this.state.mTotalTax + this.state.mTotalFee).toFixed(2)}</Text>
+          </View>
+          <View>契税：{this.state.mDeedTax.toFixed(2)}</View>
+          <View>个人所得税：{this.state.mPersonalIncomeTax.toFixed(2)}</View>
+          <View>营业税：{this.state.mBusinessTax.toFixed(2)}</View>
+          <View>其他税：{this.state.mOtherTax.toFixed(2)}</View>
+          <View>中介费：{this.state.mAgencyFee.toFixed(2)}</View>
+          <View>贷款服务费：{this.state.mLoanServiceFee.toFixed(2)}</View>
+          <View>实际网签价：{this.state.mWebSignPrice.toFixed(2)}</View>
+          <Button type='primary' onClick={this.lowestPersonalIncomeTax}>
+            个税为零计算</Button>
           <Button type='primary'>开始计算</Button>
         </View>
       </View>
