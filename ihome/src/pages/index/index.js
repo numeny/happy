@@ -497,48 +497,35 @@ export default class Index extends Component {
     return (
       <View className='idx-top-container'>
         <View className='idx-top-container-2'>
-          <Video width='150px' height='190px' src={namedVideo} />
-          <Image src={namedPng} width='150px' height='300px' />
-          <Text>Hello world!</Text>
           <View className='idx-input-item-container'>
             <Text className='idx-input-title'>房子名称</Text>
-            <Input className='idx-input-text' type='text' placeholder='请输入房子位置' onInput={this.onInputHouseName} />
+            <Input className='idx-input-text' type='text' placeholder='房子位置' onInput={this.onInputHouseName} />
+            <Text className='idx-input-title2'>房子面积</Text>
+            <Input className='idx-input-text' type='digit' placeholder='房子面积' maxLength='10' onInput={this.onInputHouseArea} />
           </View>
           <View className='idx-input-item-container'>
-            <Text className='idx-input-title'>房子面积</Text>
-            <Input className='idx-input-text' type='digit' placeholder='请输入房子面积' maxLength='10' onInput={this.onInputHouseArea} />
+            <Text className='idx-input-title'>总价</Text>
+            <Input className='idx-input-text' type='digit' placeholder='万元' maxLength='10' onInput={this.onInputTotalPrice} />
+            <Text className='idx-input-title2'>原值</Text>
+            <Input className='idx-input-text' type='digit' placeholder='万元' maxLength='10' onInput={this.onInputOriginPrice} />
           </View>
           <View className='idx-input-item-container'>
-            <Text className='idx-input-title'>总价（万元）</Text>
-            <Input className='idx-input-text' type='digit' placeholder='请输入总价' maxLength='10' onInput={this.onInputTotalPrice} />
+            <Text className='idx-input-title'>网签价</Text>
+            <Input className='idx-input-text' type='digit' placeholder='万元' maxLength='10' onInput={this.onInputWebSignPrice} />
+            <Text className='idx-input-title2'>最低指导价</Text>
+            <Input className='idx-input-text' type='digit' placeholder='万元' maxLength='10' onInput={this.onInputLowestGuidePrice} />
           </View>
           <View className='idx-input-item-container'>
-            <Text className='idx-input-title'>原值（万元）</Text>
-            <Input className='idx-input-text' type='digit' placeholder='请输入房子原购买价' maxLength='10' onInput={this.onInputOriginPrice} />
+            <Text className='idx-input-title'>中介费</Text>
+            <Input className='idx-input-text' type='digit' placeholder='万元' maxLength='10' onInput={this.onInputAgencyFee} />
+            <Text className='idx-input-title2'>贷款服务费</Text>
+            <Input className='idx-input-text' type='digit' placeholder='万元' maxLength='10' onInput={this.onInputLoanServiceFee} />
           </View>
           <View className='idx-input-item-container'>
-            <Text className='idx-input-title'>网签价（万元）</Text>
-            <Input className='idx-input-text' type='digit' placeholder='请输入网签价' maxLength='10' onInput={this.onInputWebSignPrice} />
-          </View>
-          <View className='idx-input-item-container'>
-            <Text className='idx-input-title'>最低指导价（万元）</Text>
-            <Input className='idx-input-text' type='digit' placeholder='请输入最低指导价' maxLength='10' onInput={this.onInputLowestGuidePrice} />
-          </View>
-          <View className='idx-input-item-container'>
-            <Text className='idx-input-title'>中介费（万元）</Text>
-            <Input className='idx-input-text' type='digit' placeholder='请输入中介费' maxLength='10' onInput={this.onInputAgencyFee} />
-          </View>
-          <View className='idx-input-item-container'>
-            <Text className='idx-input-title'>贷款服务费（万元）</Text>
-            <Input className='idx-input-text' type='digit' placeholder='请输入贷款服务费' maxLength='10' onInput={this.onInputLoanServiceFee} />
-          </View>
-          <View className='idx-input-item-container'>
-            <Text className='idx-input-title'>评估费（万元）</Text>
-            <Input className='idx-input-text' type='digit' placeholder='请输入评估费' maxLength='10' onInput={this.onInputEvaluationFee} />
-          </View>
-          <View className='idx-input-item-container'>
-            <Text className='idx-input-title'>抵押登记费（万元）</Text>
-            <Input className='idx-input-text' type='digit' placeholder='请输入抵押登记费' maxLength='10' onInput={this.onInputMortgageRegistrationFee} />
+            <Text className='idx-input-title'>评估费</Text>
+            <Input className='idx-input-text' type='digit' placeholder='万元' maxLength='10' onInput={this.onInputEvaluationFee} />
+            <Text className='idx-input-title2'>抵押登记费</Text>
+            <Input className='idx-input-text' type='digit' placeholder='万元' maxLength='10' onInput={this.onInputMortgageRegistrationFee} />
           </View>
           <View className='idx-input-item-container'>
             <Text className='idx-input-title'>其他费用（万元）</Text>
@@ -562,14 +549,14 @@ export default class Index extends Component {
 
           <RadioGroup>
             <View className='idx-input-item-container'>
-              买方是否首套：
+              <Text className='idx-radio-title'>买方是否首套：</Text>
               {this.state.mIsFirstHouseRadioList.map((item, i) => {
                 return (
                   <View onClick={this.onClickFirstHouseRadio.bind(this, item.value)} >
                     <Radio value={item.value}
                       checked={item.value == this.state.mFirstHouseRadioValue}
-                      style={{transform: 'scale(0.7)'}} color='#FF7464'>
-                      {item.text}
+                      style={{transform: 'scale(0.8)'}} color='#FF7464'>
+                      <Text className='idx-radio-text'>{item.text}</Text>
                     </Radio>
                   </View>)
               })}
@@ -577,14 +564,14 @@ export default class Index extends Component {
           </RadioGroup>
           <RadioGroup>
             <View className='idx-input-item-container'>
-              是否满两年：
+              <Text className='idx-radio-title'>是否满两年：</Text>
               {this.state.mIsAboveTwoYearsRadioList.map((item, i) => {
                 return (
                   <View onClick={this.onClickAboveTwoYearsRadio.bind(this, item.value)} >
                     <Radio value={item.value}
                       checked={item.value == this.state.mAboveTwoYearsRadioValue}
-                      style={{transform: 'scale(0.7)'}} color='#FF7464'>
-                      {item.text}
+                      style={{transform: 'scale(0.8)'}} color='#FF7464'>
+                      <Text className='idx-radio-text'>{item.text}</Text>
                     </Radio>
                   </View>)
               })}
@@ -592,14 +579,14 @@ export default class Index extends Component {
           </RadioGroup>
           <RadioGroup>
             <View className='idx-input-item-container'>
-              是否卖方唯一住宅：
+              <Text className='idx-radio-title'>是否卖方唯一住宅：</Text>
               {this.state.mIsOnlyHouseRadioList.map((item, i) => {
                 return (
                   <View onClick={this.onClickOnlyHouseRadio.bind(this, item.value)} >
                     <Radio value={item.value}
                       checked={item.value == this.state.mOnlyHouseRadioValue}
-                      style={{transform: 'scale(0.7)'}} color='#FF7464'>
-                      {item.text}
+                      style={{transform: 'scale(0.8)', padding: '0px 15px'}} color='#FF7464'>
+                      <Text className='idx-radio-text'>{item.text}</Text>
                     </Radio>
                   </View>)
               })}
@@ -608,31 +595,56 @@ export default class Index extends Component {
 
 
           <View className='idx-input-item-container'>
-            <Text className='idx-input-title'>商贷（万元）</Text>
-            <Input className='idx-input-text' type='digit' placeholder='请输入商贷总额' maxLength='10' onInput={this.onInputCommercialLoan} />
+            <Text className='idx-input-title'>商贷</Text>
+            <Input className='idx-input-text' type='digit' placeholder='万元' maxLength='10' onInput={this.onInputCommercialLoan} />
+            <Text className='idx-input-title2'>公积金贷款</Text>
+            <Input className='idx-input-text' type='digit' placeholder='万元' maxLength='10' onInput={this.onInputProvidentFundLoan} />
           </View>
           <View className='idx-input-item-container'>
-            <Text className='idx-input-title'>公积金贷款（万元）</Text>
-            <Input className='idx-input-text' type='digit' placeholder='请输入公积金贷款总额' maxLength='10' onInput={this.onInputProvidentFundLoan} />
-          </View>
-          <View className='idx-input-item-container'>
-            <Text className='idx-input-title'>其他贷款（万元）</Text>
-            <Input className='idx-input-text' type='digit' placeholder='请输入其他贷款总额' maxLength='10' onInput={this.onInputOtherLoan} />
+            <Text className='idx-input-title'>其他贷款</Text>
+            <Input className='idx-input-text' type='digit' placeholder='万元' maxLength='10' onInput={this.onInputOtherLoan} />
           </View>
 
-          <View>首付：{this.state.mFirstPayment.toFixed(2)}</View>
-          <View>总支付：{this.state.mTotalPayment.toFixed(2)}</View>
           <View className='idx-input-item-container'>
-            <Text>总费用：{this.state.mTotalFee.toFixed(2)}</Text>
-            <Text>总税款：{this.state.mTotalTax.toFixed(2)}</Text>
-            <Text>总税费：{(this.state.mTotalTax + this.state.mTotalFee).toFixed(2)}</Text>
+            <Text className='idx-input-title'>首付</Text>
+            <Text className='idx-input-text'>{this.state.mFirstPayment.toFixed(2)}</Text>
+            <Text className='idx-input-title2'>总支付</Text>
+            <Text className='idx-input-text'>{this.state.mTotalPayment.toFixed(2)}</Text>
           </View>
-          <View>契税：{this.state.mDeedTax.toFixed(2)}</View>
-          <View>个人所得税：{this.state.mPersonalIncomeTax.toFixed(2)}</View>
-          <View>营业税：{this.state.mBusinessTax.toFixed(2)}</View>
-          <View>其他税：{this.state.mOtherTax.toFixed(2)}</View>
-          <View>中介费：{this.state.mAgencyFee.toFixed(2)}</View>
-          <View>贷款服务费：{this.state.mLoanServiceFee.toFixed(2)}</View>
+
+          <View className='idx-input-item-container'>
+            <Text className='idx-input-title'>总费用</Text>
+            <Text className='idx-input-text'>{this.state.mTotalFee.toFixed(2)}</Text>
+            <Text className='idx-input-title2'>总税款</Text>
+            <Text className='idx-input-text'>{this.state.mTotalTax.toFixed(2)}</Text>
+          </View>
+
+          <View className='idx-input-item-container'>
+            <Text className='idx-input-title'>总税费</Text>
+            <Text className='idx-input-text'>{(this.state.mTotalTax + this.state.mTotalFee).toFixed(2)}</Text>
+          </View>
+
+          <View className='idx-input-item-container'>
+            <Text className='idx-input-title'>契税</Text>
+            <Text className='idx-input-text'>{this.state.mDeedTax.toFixed(2)}</Text>
+            <Text className='idx-input-title2'>个人所得税</Text>
+            <Text className='idx-input-text'>{this.state.mPersonalIncomeTax.toFixed(2)}</Text>
+          </View>
+
+          <View className='idx-input-item-container'>
+            <Text className='idx-input-title'>营业税</Text>
+            <Text className='idx-input-text'>{this.state.mBusinessTax.toFixed(2)}</Text>
+            <Text className='idx-input-title2'>其他税</Text>
+            <Text className='idx-input-text'>{this.state.mOtherTax.toFixed(2)}</Text>
+          </View>
+
+          <View className='idx-input-item-container'>
+            <Text className='idx-input-title'>中介费</Text>
+            <Text className='idx-input-text'>{this.state.mAgencyFee.toFixed(2)}</Text>
+            <Text className='idx-input-title2'>贷款服务费</Text>
+            <Text className='idx-input-text'>{this.state.mLoanServiceFee.toFixed(2)}</Text>
+          </View>
+
           <View>实际网签价：{this.state.mWebSignPrice.toFixed(2)}</View>
           <Button type='primary' onClick={this.lowestPersonalIncomeTax}>
             个税为零计算</Button>
