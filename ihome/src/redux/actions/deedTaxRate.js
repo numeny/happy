@@ -3,12 +3,10 @@ import {
 } from '../constants/deedTaxRate'
 
 
-export const calcDeepTaxRate = (isFirstHouse, houseArea) => {
-// export const calcDeepTaxRate = () => {
+export const calcDeedTaxRate = (isFirstHouse, houseArea) => {
   return {
     type: CALC_DEEP_TAX_RATE,
     isFirstHouse: isFirstHouse,
     houseArea: houseArea
-    // deedTaxRate: 0.8,
   }
 }
