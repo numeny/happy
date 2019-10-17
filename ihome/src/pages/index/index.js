@@ -9,7 +9,7 @@ import namedVideo from '@res/video/1.mp4'
 
 import { connect } from '@tarojs/redux'
 import { add, minus, asyncAdd } from '../../redux/actions/counter'
-import { calcDeepTaxRate } from '../../redux/actions/deedTaxRate'
+import { calcDeedTaxRate } from '../../redux/actions/deedTaxRate'
 
 @connect(({ counter, deedTaxRate }) => ({
   counter: counter,
@@ -26,8 +26,8 @@ import { calcDeepTaxRate } from '../../redux/actions/deedTaxRate'
   asyncAdd () {
     dispatch(asyncAdd())
   },
-  calcDeepTaxRate (isFirstHouse, houseArea) {
-    dispatch(calcDeepTaxRate(isFirstHouse, houseArea))
+  calcDeedTaxRate (isFirstHouse, houseArea) {
+    dispatch(calcDeedTaxRate(isFirstHouse, houseArea))
   }
 }))
 
@@ -132,7 +132,7 @@ export default class Index extends Component {
     console.error("componentDidMount: this.props.counter: ", this.props.counter);
     console.error("componentDidMount: this.props.deedTaxRate: ", this.props.deedTaxRate);
 
-    this.props.calcDeepTaxRate(
+    this.props.calcDeedTaxRate(
         this.state.mFirstHouseRadioValue == 1,
         this.state.mHouseArea)
 
@@ -285,7 +285,7 @@ export default class Index extends Component {
       this.setState({
           mHouseArea: houseArea,
       })
-      this.props.calcDeepTaxRate(
+      this.props.calcDeedTaxRate(
           this.state.mFirstHouseRadioValue == 1,
           houseArea)
 
@@ -526,7 +526,7 @@ export default class Index extends Component {
     this.setState({
         mFirstHouseRadioValue: idx,
     })
-    this.props.calcDeepTaxRate(
+    this.props.calcDeedTaxRate(
         idx == 1,
         this.state.mHouseArea)
   }
@@ -545,8 +545,8 @@ export default class Index extends Component {
     })
   }
 
-  calcDeepTaxRate = (e) => {
-    this.props.calcDeepTaxRate(
+  calcDeedTaxRate = (e) => {
+    this.props.calcDeedTaxRate(
         this.state.mFirstHouseRadioValue == 1,
         this.state.mHouseArea)
   }
@@ -732,7 +732,7 @@ export default class Index extends Component {
         <Button className='add_btn' onClick={this.props.add}>+</Button>
         <Button className='dec_btn' onClick={this.props.dec}>-</Button>
         <Button className='dec_btn' onClick={this.props.asyncAdd}>async</Button>
-        <Button className='dec_btn' onClick={this.calcDeepTaxRate.bind(this)}>calcDeepTaxRate</Button>
+        <Button className='dec_btn' onClick={this.calcDeedTaxRate.bind(this)}>calcDeedTaxRate</Button>
         <View>{this.props.counter.num}</View>
         <View>{this.props.counter.num}</View>
         </View>
