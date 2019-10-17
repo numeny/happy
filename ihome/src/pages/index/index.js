@@ -98,7 +98,9 @@ export default class Index extends Component {
     }
   }
 
-  componentWillMount () { }
+  componentWillMount () {
+    console.error("componentWillMount: ", this.$router.params.id);
+  }
 
   componentDidMount () { }
 
@@ -490,6 +492,16 @@ export default class Index extends Component {
     })
   }
 
+  onShareAppMessage = (share) => {
+    console.error('onShareAppMessage: from: ' + share.from
+        + ', target: ' + share.target
+        + ', webViewUrl: ' + share.webViewUrl);
+    return {
+      title: '自定义转发标题',
+      path: '/pages/index/index?id=123'
+    }
+  }
+
   render () {
     let classNameForInputDeedTaxManual = this.state.mWillInputDeedTaxManual ?
             'idx-input-text idx-input-text-deedtax' : 'idx-input-text-disable idx-input-text-deedtax'
@@ -646,9 +658,11 @@ export default class Index extends Component {
           </View>
 
           <View>实际网签价：{this.state.mWebSignPrice.toFixed(2)}</View>
+          <View>id：{this.$router.params.id}</View>
           <Button type='primary' onClick={this.lowestPersonalIncomeTax}>
             个税为零计算</Button>
           <Button type='primary'>开始计算</Button>
+          <Button type='primary' open-type='share'>转发给朋友</Button>
         </View>
       </View>
     )
