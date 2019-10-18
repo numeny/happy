@@ -23,7 +23,7 @@ export const Util = {
     const timeId = setInterval(() => {
         callback()
         clearInterval(timeId)
-    }, 1000);
+    }, 0);
   },
 
   isH5: function() {
