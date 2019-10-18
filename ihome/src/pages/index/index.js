@@ -7,23 +7,6 @@ import { Util } from '../../util/util'
 import namedPng from '@images/index/1.jpeg'
 import namedVideo from '@res/video/1.mp4'
 
-import { connect } from '@tarojs/redux'
-import { add, minus, asyncAdd } from '../../redux/actions/counter'
-
-@connect(({ counter }) => ({
-  counter
-}), (dispatch) => ({
-  add () {
-    dispatch(add())
-  },
-  dec () {
-    dispatch(minus())
-  },
-  asyncAdd () {
-    dispatch(asyncAdd())
-  }
-}))
-
 export default class Index extends Component {
 
   /**
@@ -525,10 +508,6 @@ export default class Index extends Component {
 
     return (
       <View className='idx-top-container'>
-        <Video width='150px' height='190px' src={namedVideo} />
-        <Image src={namedPng} width='150px' height='300px' />
-        <Text>Hello world!</Text>
-
         <View className='idx-top-container-2'>
           <View className='idx-input-item-container'>
             <Text className='idx-input-title'>房子名称</Text>
@@ -684,11 +663,6 @@ export default class Index extends Component {
             个税为零计算</Button>
           <Button type='primary'>开始计算</Button>
           <Button type='primary' open-type='share'>转发给朋友</Button>
-        <Button className='add_btn' onClick={this.props.add}>+</Button>
-        <Button className='dec_btn' onClick={this.props.dec}>-</Button>
-        <Button className='dec_btn' onClick={this.props.asyncAdd}>async</Button>
-        <View>{this.props.counter.num}</View>
-
         </View>
       </View>
     )
