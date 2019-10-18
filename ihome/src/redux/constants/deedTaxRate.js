@@ -1,1 +1,0 @@
-export const CALC_DEEP_TAX_RATE = 'CALC_DEEP_TAX_RATE'

@@ -9,14 +9,10 @@ import namedVideo from '@res/video/1.mp4'
 
 import { connect } from '@tarojs/redux'
 import { add, minus, asyncAdd } from '../../redux/actions/counter'
-import { calcDeepTaxRate } from '../../redux/actions/deedTaxRate'
 
-@connect(({ counter, deedTaxRate }) => ({
-  counter: counter,
-  deedTaxRate: deedTaxRate
+@connect(({ counter }) => ({
+  counter
 }), (dispatch) => ({
-  /*
-  */
   add () {
     dispatch(add())
   },
@@ -25,9 +21,6 @@ import { calcDeepTaxRate } from '../../redux/actions/deedTaxRate'
   },
   asyncAdd () {
     dispatch(asyncAdd())
-  },
-  calcDeepTaxRate (isFirstHouse, houseArea) {
-    dispatch(calcDeepTaxRate(isFirstHouse, houseArea))
   }
 }))
 
@@ -66,7 +59,7 @@ export default class Index extends Component {
 
       // Tax
       mDeedTax: 0,
-      // mDeedTaxRate: 0.03, // FIXME
+      mDeedTaxRate: 0.03, // FIXME
       mPersonalIncomeTax: 0,
       mBusinessTax: 0,
       mOtherTax: 0,
@@ -124,28 +117,13 @@ export default class Index extends Component {
 
   componentWillMount () {
     console.error("componentWillMount: ", this.$router.params.id);
-    console.error("componentWillMount: this.props: ", this.props);
-
   }
 
-  componentDidMount () {
-    console.error("componentDidMount: this.props.counter: ", this.props.counter);
-    console.error("componentDidMount: this.props.deedTaxRate: ", this.props.deedTaxRate);
-
-    this.props.calcDeepTaxRate(
-        this.state.mFirstHouseRadioValue == 1,
-        this.state.mHouseArea)
-
-  }
+  componentDidMount () { }
 
   componentWillUnmount () { }
 
   componentDidShow () { }
-
-  componentWillReceiveProps(nextProps) {
-    console.error("componentWillReceiveProps: this.props.deedTaxRate: ", nextProps.deedTaxRate.deedTaxRate);
-    this.updateDeedTax3()
-  }
 
   componentDidHide () { }
 
@@ -217,32 +195,23 @@ export default class Index extends Component {
         this.state.mDeedTax, this.state.mBusinessTax, this.state.mOtherTax)
   }
 
-  updateDeedTax3 = () => {
-    console.error("updateDeedTax3: ");
-    this.updateDeedTax(this.state.mWebSignPrice,
-      this.state.mWillInputDeedTaxManual, this.state.mInputDeedTaxManual)
-  }
-
-  updateDeedTax = (webSignPrice,
+  updateDeedTax = (webSignPrice, deedTaxRate,
       willInputDeedTaxManual, inputDeedTaxManual) => {
-    return this.updateDeedTax2(webSignPrice,
+    return this.updateDeedTax2(webSignPrice, deedTaxRate,
         willInputDeedTaxManual, inputDeedTaxManual,
         this.state.mPersonalIncomeTax,
         this.state.mBusinessTax, this.state.mOtherTax)
   }
 
-  updateDeedTax2 = (webSignPrice,
+  updateDeedTax2 = (webSignPrice, deedTaxRate,
       willInputDeedTaxManual, inputDeedTaxManual,
       personalIncomeTax, businessTax, otherTax) => {
     // FIXME
     let deedTax = 0
     if (willInputDeedTaxManual) {
-    console.error("updateDeedTax2-1 ");
       deedTax = inputDeedTaxManual
     } else {
-    console.error("updateDeedTax2-2: deedTaxRate: "
-        + this.props.deedTaxRate.deedTaxRate);
-      deedTax = webSignPrice * this.props.deedTaxRate.deedTaxRate
+      deedTax = webSignPrice * deedTaxRate
     }
     this.setState({
         mDeedTax: deedTax,
@@ -285,9 +254,7 @@ export default class Index extends Component {
       this.setState({
           mHouseArea: houseArea,
       })
-      this.props.calcDeepTaxRate(
-          this.state.mFirstHouseRadioValue == 1,
-          houseArea)
+
 
     } catch(err) {
       console.log("onInputHouseArea: ", err);
@@ -342,7 +309,7 @@ export default class Index extends Component {
     })
     let personalIncomeTax = this.updatePersonalIncomeTax2(webSignPrice, this.state.mOriginPrice)
 
-    this.updateDeedTax2(webSignPrice,
+    this.updateDeedTax2(webSignPrice, this.state.mDeedTaxRate,
           this.state.mWillInputDeedTaxManual, this.state.mInputDeedTaxManual,
           personalIncomeTax, this.state.mBusinessTax,
           this.state.mOtherTax)
@@ -504,7 +471,7 @@ export default class Index extends Component {
           mInputDeedTaxManual: inputDeedTaxManual,
       })
 
-      this.updateDeedTax(this.state.mWebSignPrice,
+      this.updateDeedTax(this.state.mWebSignPrice, this.state.mDeedTaxRate,
             this.state.mWillInputDeedTaxManual, inputDeedTaxManual)
 
     } catch(err) {
@@ -526,9 +493,6 @@ export default class Index extends Component {
     this.setState({
         mFirstHouseRadioValue: idx,
     })
-    this.props.calcDeepTaxRate(
-        idx == 1,
-        this.state.mHouseArea)
   }
 
   onClickAboveTwoYearsRadio = (idx, e) => {
@@ -545,12 +509,6 @@ export default class Index extends Component {
     })
   }
 
-  calcDeepTaxRate = (e) => {
-    this.props.calcDeepTaxRate(
-        this.state.mFirstHouseRadioValue == 1,
-        this.state.mHouseArea)
-  }
-
   onShareAppMessage = (share) => {
     console.error('onShareAppMessage: from: ' + share.from
         + ', target: ' + share.target
@@ -565,13 +523,11 @@ export default class Index extends Component {
     let classNameForInputDeedTaxManual = this.state.mWillInputDeedTaxManual ?
             'idx-input-text idx-input-text-deedtax' : 'idx-input-text-disable idx-input-text-deedtax'
 
-        /*
+    return (
+      <View className='idx-top-container'>
         <Video width='150px' height='190px' src={namedVideo} />
         <Image src={namedPng} width='150px' height='300px' />
         <Text>Hello world!</Text>
-        */
-    return (
-      <View className='idx-top-container'>
 
         <View className='idx-top-container-2'>
           <View className='idx-input-item-container'>
@@ -722,7 +678,6 @@ export default class Index extends Component {
             <Text className='idx-input-text'>{this.state.mLoanServiceFee.toFixed(2)}</Text>
           </View>
 
-          <View>契税税率：{this.props.deedTaxRate.deedTaxRate}</View>
           <View>实际网签价：{this.state.mWebSignPrice.toFixed(2)}</View>
           <View>id：{this.$router.params.id}</View>
           <Button type='primary' onClick={this.lowestPersonalIncomeTax}>
@@ -732,9 +687,8 @@ export default class Index extends Component {
         <Button className='add_btn' onClick={this.props.add}>+</Button>
         <Button className='dec_btn' onClick={this.props.dec}>-</Button>
         <Button className='dec_btn' onClick={this.props.asyncAdd}>async</Button>
-        <Button className='dec_btn' onClick={this.calcDeepTaxRate.bind(this)}>calcDeepTaxRate</Button>
         <View>{this.props.counter.num}</View>
-        <View>{this.props.counter.num}</View>
+
         </View>
       </View>
     )
