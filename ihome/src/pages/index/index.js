@@ -7,45 +7,74 @@ import { Util } from '../../util/util'
 import namedPng from '@images/index/1.jpeg'
 import namedVideo from '@res/video/1.mp4'
 
-function CalcClient(state) {
-  console.log('CalcClient')
+function FirstTierCitieCalcClient(state) {
+  console.log('FirstTierCitieCalcClient')
   this.mState = state
   this.setClientState = function(state) {
     this.mState = state
   }
-  // 北上广深圳，家庭首套住房90平米以下1%, 90平米以上1.5%, 二套房不管大小一律3%
-  // 其他城市，家庭首套住房90平米以下1%, 90平米以上2%, 二套房不管大小一律3%
-  // ，90平米以下1%, 90平米以上2%, 
+  // 北上广深圳: 普通住宅并且家庭首套住房90平米以下1%, 90平米以上1.5%, 140平米以上3%,
+  //             非普通住宅以及二套房不管大小一律3%
+  // FIXME 其他城市，家庭首套住房90平米以下1%, 90平米以上2%, 二套房不管大小一律3%
   this.getDeedTaxRate = function() {
     let deedTaxRate = 0
-    if (this.mState.mFirstHouseRadioValue == 1) {
-      deedTaxRate = (this.mState.mHouseArea <= 90) ? 0.01 : 0.015
+    if (this.mState.mOrdinaryHouseRadioValue
+        && this.mState.mFirstHouseRadioValue == 1) {
+      deedTaxRate = (this.mState.mHouseArea <= 90) ? 0.01
+        : ((this.mState.mHouseArea <= 140) ? 0.015 : 0.03)
     } else {
       deedTaxRate = 0.03
     }
-    console.log('getDeedTaxRate, deedTaxRate: ' + deedTaxRate)
+    // console.log('getDeedTaxRate, deedTaxRate: ' + deedTaxRate)
     return deedTaxRate
   }
 
   this.getDeedTax = function() {
     let deedTaxRate = this.getDeedTaxRate()
     let deedTax = this.mState.mWebSignPrice * deedTaxRate
+    if (deedTax <= 0) {
+      deedTax = 0
+    }
+    /*
     console.log('getDeedTax, deedTaxRate: ' + deedTaxRate
         + ", deedTax: " + deedTax)
+    */
     return deedTax
   }
 
   this.getPersonalIncomeTax = function() {
-    let personalIncomeTax =
-      (this.mState.mWebSignPrice * 0.9 - this.mState.mOriginPrice) * 0.2
+    let personalIncomeTax = 0
+    if (this.mState.mAboveTwoYearsRadioValue != 3 || !this.mState.mOnlyHouseRadioValue) {
+      personalIncomeTax = (this.mState.mWebSignPrice * 0.9 - this.mState.mOriginPrice) * 0.2
+    }
     if (personalIncomeTax <= 0) {
       personalIncomeTax = 0
     }
     return personalIncomeTax
   }
+
+  // 对于非一线城市，个人购买不足2年的住房对外销售，按照5%的征收率全额缴纳增值税;个人将购买2年以上(含2年)的住房对外销售的，免征增值税。
+  // 北、上、广、深四个一线城市，个人购买不足2年的住房对外销售的，按照5%的征收率全额缴纳增值税;个人将购买2年以上(含2年)的非普通住房对外销售的，以销售收入减去购买住房价款后的差额按照5%的征收率缴纳增值税;个人将购买2年以上(含2年)的普通住房对外销售的，免征增值税。
+  this.getValueAddedTax = function() {
+    const valueAddedTaxRate = 0.05 * 1.13 / 1.05
+    let valueAddedTax = 0
+    
+    if (this.mState.mAboveTwoYearsRadioValue == 1) { // 所有的普通住宅和非普通住宅，只要不满两年
+      valueAddedTax = this.mState.mWebSignPrice * valueAddedTaxRate
+    } else if (!this.mState.mOrdinaryHouseRadioValue) {
+      valueAddedTax = (this.mState.mWebSignPrice - this.mState.mOriginPrice) * valueAddedTaxRate
+    }
+    if (valueAddedTax <= 0) {
+      valueAddedTax = 0
+    }
+    console.log('getValueAddedTax, valueAddedTaxRate: ' + valueAddedTaxRate
+        + ', valueAddedTax: ' + valueAddedTax)
+    return valueAddedTax
+  }
 }
 
-let sCalcClient = new CalcClient()
+let sCalcClient = new FirstTierCitieCalcClient()
+
 export default class Index extends Component {
 
   /**
@@ -69,7 +98,7 @@ export default class Index extends Component {
         this.updateAll,
         this.updateDeedTax,
         this.updatePersonalIncomeTax,
-        this.updateBusinessTax,
+        this.updateValueAddedTax,
         this.updateOtherTax,
 
         this.updateAgencyFee,
@@ -108,7 +137,7 @@ export default class Index extends Component {
       // Tax
       mDeedTax: 0,
       mPersonalIncomeTax: 0,
-      mBusinessTax: 0,
+      mValueAddedTax: 0,
       mOtherTax: 0,
 
       // Fee
@@ -141,11 +170,14 @@ export default class Index extends Component {
       mInputDeedTaxManual: 0,
       mWillInputPersonalIncomeTaxManual: false,
       mInputPersonalIncomeTaxManual: 0,
+      mWillInputValueAddedTaxManual: false,
+      mInputValueAddedTaxManual: 0,
 
 
       mFirstHouseRadioValue: 1,
       mAboveTwoYearsRadioValue: 1,
-      mOnlyHouseRadioValue: 1,
+      mOnlyHouseRadioValue: true,
+      mOrdinaryHouseRadioValue: true,
 
       mIsFirstHouseRadioList: [
         { value: 1, text: '首套', checked: true, },
@@ -158,8 +190,12 @@ export default class Index extends Component {
         { value: 3, text: '满五年', checked: false, },
       ],
       mIsOnlyHouseRadioList: [
-        { value: 1, text: '是', checked: true, },
-        { value: 2, text: '否', checked: false, },
+        { value: true, text: '是', checked: true, },
+        { value: false, text: '否', checked: false, },
+      ],
+      mIsOrdinaryHouseRadioList: [
+        { value: true, text: '是', checked: true, },
+        { value: false, text: '否', checked: false, },
       ],
     }
 
@@ -178,8 +214,8 @@ export default class Index extends Component {
     }
     /*
     this.updateDeedTax.prototype.postCallback = this.updatePersonalIncomeTax
-    this.updatePersonalIncomeTax.prototype.postCallback = this.updateBusinessTax
-    this.updateBusinessTax.prototype.postCallback = this.updateOtherTax
+    this.updatePersonalIncomeTax.prototype.postCallback = this.updateValueAddedTax
+    this.updateValueAddedTax.prototype.postCallback = this.updateOtherTax
     */
   }
 
@@ -202,8 +238,6 @@ export default class Index extends Component {
   }
 
   updateFirstPayment = () => {
-    console.error('updateFirstPayment: mTotalPayment: '
-        + this.state.mTotalPayment + ", " + this.state.mTotalLoan)
     this.setState({
         mFirstPayment: this.state.mTotalPayment - this.state.mTotalLoan,
     }, () => {
@@ -214,11 +248,6 @@ export default class Index extends Component {
   }
 
   updateTotalPayment = () => {
-    console.log('updateTotalPayment-1: mTotalPrice: '
-        + this.state.mTotalPrice
-        + ", mTotalTax: " + this.state.mTotalTax
-        + ", mTotalFee: " + this.state.mTotalFee
-        )
     this.setState({
       mTotalPayment: this.state.mTotalPrice + this.state.mTotalFee
                       + this.state.mTotalTax,
@@ -230,7 +259,6 @@ export default class Index extends Component {
   }
 
   updateTotalLoan = () => {
-    console.log('updateTotalLoan')
     this.setState({
         mTotalLoan: this.state.mCommercialLoan + this.state.mProvidentFundLoan
                       + this.state.mOtherLoan,
@@ -242,7 +270,6 @@ export default class Index extends Component {
   }
 
   updateTotalFee = () => {
-    console.error('updateTotalFee')
     let totalFee = (this.state.mAgencyFee
         + this.state.mLoanServiceFee
         + this.state.mEvaluationFee
@@ -258,9 +285,8 @@ export default class Index extends Component {
   }
 
   updateTotalTax = () => {
-    console.error('updateTotalTax')
     const totalTax = (this.state.mDeedTax + this.state.mPersonalIncomeTax +
-                      + this.state.mBusinessTax + this.state.mOtherTax)
+                      + this.state.mValueAddedTax + this.state.mOtherTax)
     this.setState({
         mTotalTax: totalTax,
     }, () => {
@@ -271,96 +297,54 @@ export default class Index extends Component {
   }
 
   updateAgencyFee = () => {
-    console.log('updateAgencyFee')
     if (this.updateAgencyFee.prototype.postCallback != null) {
       this.updateAgencyFee.prototype.postCallback()
     }
   }
 
   updateLoanServiceFee = () => {
-    console.log('updateLoanServiceFee')
     if (this.updateLoanServiceFee.prototype.postCallback != null) {
       this.updateLoanServiceFee.prototype.postCallback()
     }
   }
 
   updateEvaluationFee = () => {
-    console.log('updateEvaluationFee')
     if (this.updateEvaluationFee.prototype.postCallback != null) {
       this.updateEvaluationFee.prototype.postCallback()
     }
   }
 
   updateMortgageRegistrationFee = () => {
-    console.log('updateMortgageRegistrationFee')
     if (this.updateMortgageRegistrationFee.prototype.postCallback != null) {
       this.updateMortgageRegistrationFee.prototype.postCallback()
     }
   }
 
   updateOtherFee = () => {
-    console.log('updateOtherFee')
     if (this.updateOtherFee.prototype.postCallback != null) {
       this.updateOtherFee.prototype.postCallback()
     }
   }
 
   updateCommercialLoan = () => {
-    console.log('updateCommercialLoan')
     if (this.updateCommercialLoan.prototype.postCallback != null) {
       this.updateCommercialLoan.prototype.postCallback()
     }
   }
 
   updateProvidentFundLoan = () => {
-    console.log('updateProvidentFundLoan')
     if (this.updateProvidentFundLoan.prototype.postCallback != null) {
       this.updateProvidentFundLoan.prototype.postCallback()
     }
   }
 
   updateOtherLoan = () => {
-    console.log('updateOtherLoan')
     if (this.updateOtherLoan.prototype.postCallback != null) {
       this.updateOtherLoan.prototype.postCallback()
     }
   }
 
-  updateOtherTax = () => {
-    console.log('updateOtherTax')
-    if (this.updateOtherTax.prototype.postCallback != null) {
-      this.updateOtherTax.prototype.postCallback()
-    }
-  }
-
-  updateBusinessTax = () => {
-    console.log('updateBusinessTax')
-    if (this.updateBusinessTax.prototype.postCallback != null) {
-      this.updateBusinessTax.prototype.postCallback()
-    }
-  }
-
-  updatePersonalIncomeTax = () => {
-    console.log('updatePersonalIncomeTax')
-    let personalIncomeTax = 0
-    if (this.state.mWillInputPersonalIncomeTaxManual) {
-      personalIncomeTax = this.state.mInputPersonalIncomeTaxManual
-    } else {
-      personalIncomeTax = sCalcClient.getPersonalIncomeTax()
-    }
-    this.setState({
-        mPersonalIncomeTax: personalIncomeTax,
-    }, () => {
-      if (this.updatePersonalIncomeTax.prototype.postCallback != null) {
-        this.updatePersonalIncomeTax.prototype.postCallback()
-      }
-    })
-    
-    return personalIncomeTax
-  }
-
   updateDeedTax = () => {
-    console.error("updateDeedTax");
     let deedTax = 0
     if (this.state.mWillInputDeedTaxManual) {
       deedTax = this.state.mInputDeedTaxManual
@@ -374,6 +358,44 @@ export default class Index extends Component {
         this.updateDeedTax.prototype.postCallback()
       }
     })
+  }
+
+  updatePersonalIncomeTax = () => {
+    let personalIncomeTax = 0
+    if (this.state.mWillInputPersonalIncomeTaxManual) {
+      personalIncomeTax = this.state.mInputPersonalIncomeTaxManual
+    } else {
+      personalIncomeTax = sCalcClient.getPersonalIncomeTax()
+    }
+    this.setState({
+        mPersonalIncomeTax: personalIncomeTax,
+    }, () => {
+      if (this.updatePersonalIncomeTax.prototype.postCallback != null) {
+        this.updatePersonalIncomeTax.prototype.postCallback()
+      }
+    })
+  }
+
+  updateValueAddedTax = () => {
+    let valueAddedTax = 0
+    if (this.state.mWillInputValueAddedTaxManual) {
+      valueAddedTax = this.state.mInputValueAddedTaxManual
+    } else {
+      valueAddedTax = sCalcClient.getValueAddedTax()
+    }
+    this.setState({
+        mValueAddedTax: valueAddedTax,
+    }, () => {
+      if (this.updateValueAddedTax.prototype.postCallback != null) {
+        this.updateValueAddedTax.prototype.postCallback()
+      }
+    })
+  }
+
+  updateOtherTax = () => {
+    if (this.updateOtherTax.prototype.postCallback != null) {
+      this.updateOtherTax.prototype.postCallback()
+    }
   }
 
   // FIXME
@@ -676,13 +698,35 @@ export default class Index extends Component {
     })
   }
 
+  onInputValueAddedTaxManual = (e) => {
+    if (!this.state.mWillInputValueAddedTaxManual) {
+      console.error('Should not update value added tax manully, e.target.value:',
+          e.target.value)
+      return
+    }
+    Util.setInterval(() => {
+      try {
+        let inputValueAddedTaxManual = Number(e.target.value)
+        console.log("onInputValueAddedTaxManual: " + inputValueAddedTaxManual
+            + " , e.target.value: " + e.target.value);
+        this.setState({
+            mInputValueAddedTaxManual: inputValueAddedTaxManual,
+        }, () => {
+            this.updateAll()
+        })
+      } catch(err) {
+        console.log("onInputValueAddedTaxManual: ", err);
+        Taro.showToast({title: "请输入正确的金额！"})
+      }
+    })
+  }
+
   clickWillInputDeedTaxManualCheckbox = (e) => {
     Util.setInterval(() => {
       console.log('clickWillInputDeedTaxManualCheckbox, e.detail:', e.detail)
       this.setState(
         prevState => ({
           mWillInputDeedTaxManual: !prevState.mWillInputDeedTaxManual,
-          mInputDeedTaxManual: 0,
         }), () => {
             this.updateAll()
         })
@@ -695,40 +739,62 @@ export default class Index extends Component {
       this.setState(
         prevState => ({
           mWillInputPersonalIncomeTaxManual: !prevState.mWillInputPersonalIncomeTaxManual,
-          mInputPersonalIncomeTaxManual: 0,
         }), () => {
             this.updateAll()
         })
     })
   }
 
-  onClickFirstHouseRadio = (idx, e) => {
+  clickWillInputValueAddedTaxManualCheckbox = (e) => {
     Util.setInterval(() => {
-      console.log('onClickFirstHouseRadio, idx:', idx)
+      console.log('clickWillInputValueAddedTaxManualCheckbox, e.detail:', e.detail)
+      this.setState(
+        prevState => ({
+          mWillInputValueAddedTaxManual: !prevState.mWillInputValueAddedTaxManual,
+        }), () => {
+            this.updateAll()
+        })
+    })
+  }
+
+  onClickFirstHouseRadio = (value, e) => {
+    Util.setInterval(() => {
+      console.log('onClickFirstHouseRadio, idx:', value)
       this.setState({
-          mFirstHouseRadioValue: idx,
+          mFirstHouseRadioValue: value,
       }, () => {
           this.updateAll()
       })
     })
   }
 
-  onClickAboveTwoYearsRadio = (idx, e) => {
+  onClickAboveTwoYearsRadio = (value, e) => {
     Util.setInterval(() => {
-      console.log('onClickAboveTwoYearsRadio, value:', e.detail.value)
+      console.log('onClickAboveTwoYearsRadio, value:', value)
       this.setState({
-          mAboveTwoYearsRadioValue: idx,
+          mAboveTwoYearsRadioValue: value,
       }, () => {
           this.updateAll()
       })
     })
   }
 
-  onClickOnlyHouseRadio = (idx, e) => {
+  onClickOnlyHouseRadio = (value, e) => {
     Util.setInterval(() => {
-      console.log('onClickOnlyHouseRadio, value:', e.detail.value)
+      console.log('onClickOnlyHouseRadio, value:', value)
       this.setState({
-          mOnlyHouseRadioValue: idx,
+          mOnlyHouseRadioValue: value,
+      }, () => {
+          this.updateAll()
+      })
+    })
+  }
+
+  onClickOrdinaryHouseRadio = (value, e) => {
+    Util.setInterval(() => {
+      console.log('onClickOrdinaryHouseRadio, value:', value)
+      this.setState({
+          mOrdinaryHouseRadioValue: value,
       }, () => {
           this.updateAll()
       })
@@ -750,6 +816,9 @@ export default class Index extends Component {
             'idx-input-text idx-input-text-deedtax' : 'idx-input-text-disable idx-input-text-deedtax'
 
     let classNameForInputPersonalIncomeTaxManual = this.state.mWillInputPersonalIncomeTaxManual ?
+            'idx-input-text idx-input-text-deedtax' : 'idx-input-text-disable idx-input-text-deedtax'
+
+    let classNameForInputValueAddedTaxManual = this.state.mWillInputValueAddedTaxManual ?
             'idx-input-text idx-input-text-deedtax' : 'idx-input-text-disable idx-input-text-deedtax'
 
     return (
@@ -821,6 +890,21 @@ export default class Index extends Component {
             </CheckboxGroup>
           </View>
 
+          <View className='idx-input-item-container'>
+            <Text className='idx-input-title'>增值税</Text>
+            <Input className={classNameForInputValueAddedTaxManual}
+              disabled={!this.state.mWillInputValueAddedTaxManual} type='text'
+              placeholder='（万元）' maxLength='10'
+              onInput={this.onInputValueAddedTaxManual} />
+            <CheckboxGroup>
+              <View className='idx-input-title'>
+                <Checkbox checked={this.state.mWillInputValueAddedTaxManual}
+                  onClick={this.clickWillInputValueAddedTaxManualCheckbox}>
+                      手动输入增值税</Checkbox>
+              </View>
+            </CheckboxGroup>
+          </View>
+
           <RadioGroup>
             <View className='idx-input-item-container'>
               <Text className='idx-radio-title'>买方是否首套：</Text>
@@ -841,8 +925,9 @@ export default class Index extends Component {
               <Text className='idx-radio-title'>是否满两年：</Text>
               {this.state.mIsAboveTwoYearsRadioList.map((item, i) => {
                 return (
-                  <View onClick={this.onClickAboveTwoYearsRadio.bind(this, item.value)} >
+                  <View>
                     <Radio value={item.value}
+                      onClick={this.onClickAboveTwoYearsRadio.bind(this, item.value)} 
                       checked={item.value == this.state.mAboveTwoYearsRadioValue}
                       style={{transform: 'scale(0.8)'}} color='#FF7464'>
                       <Text className='idx-radio-text'>{item.text}</Text>
@@ -859,6 +944,21 @@ export default class Index extends Component {
                   <View onClick={this.onClickOnlyHouseRadio.bind(this, item.value)} >
                     <Radio value={item.value}
                       checked={item.value == this.state.mOnlyHouseRadioValue}
+                      style={{transform: 'scale(0.8)', padding: '0px 15px'}} color='#FF7464'>
+                      <Text className='idx-radio-text'>{item.text}</Text>
+                    </Radio>
+                  </View>)
+              })}
+            </View>
+          </RadioGroup>
+          <RadioGroup>
+            <View className='idx-input-item-container'>
+              <Text className='idx-radio-title'>是否普通住宅：</Text>
+              {this.state.mIsOrdinaryHouseRadioList.map((item, i) => {
+                return (
+                  <View onClick={this.onClickOrdinaryHouseRadio.bind(this, item.value)} >
+                    <Radio value={item.value}
+                      checked={item.value == this.state.mOrdinaryHouseRadioValue}
                       style={{transform: 'scale(0.8)', padding: '0px 15px'}} color='#FF7464'>
                       <Text className='idx-radio-text'>{item.text}</Text>
                     </Radio>
@@ -906,8 +1006,8 @@ export default class Index extends Component {
           </View>
 
           <View className='idx-input-item-container'>
-            <Text className='idx-input-title'>营业税</Text>
-            <Text className='idx-input-text'>{this.state.mBusinessTax.toFixed(2)}</Text>
+            <Text className='idx-input-title'>增值税</Text>
+            <Text className='idx-input-text'>{this.state.mValueAddedTax.toFixed(2)}</Text>
             <Text className='idx-input-title2'>其他税</Text>
             <Text className='idx-input-text'>{this.state.mOtherTax.toFixed(2)}</Text>
           </View>
