@@ -1,0 +1,61 @@
+$page-background-color: #FFF;
+$item-border-color: #DDD;
+$item-lr-padding: 15px;
+
+.idx-top-container {
+  background-color: $page-background-color;
+  font-size: 30px;
+  margin: 25px;
+}
+
+.idx-top-container-2 {
+}
+
+.idx-input-item-container {
+  display: flex;
+  flex-direction: colume;
+  flex-wrap: nowrap;
+  // border-bottom: 3px solid #8AC007;
+  border-bottom: 3px solid $item-border-color;
+  padding: 20px 0px;
+}
+
+.idx-input-title {
+  flex-wrap: nowrap;
+  flex: 3;
+  padding-left: $item-lr-padding;
+}
+
+.idx-input-title2 {
+  flex-wrap: nowrap;
+  flex: 3;
+  padding-left: $item-lr-padding;
+  border-left: 3px solid $item-border-color;
+}
+
+.idx-input-text {
+  flex: 3;
+  flex-wrap: nowrap;
+  text-align: right;
+  padding-right: $item-lr-padding;
+}
+
+.idx-input-text-disable {
+  background-color: $item-border-color;
+  flex: 3;
+  flex-wrap: nowrap;
+  text-align: right;
+  padding-right: $item-lr-padding;
+}
+
+.idx-radio-title {
+  padding: 0px $item-lr-padding;
+}
+
+.idx-radio-text {
+  font-size: 32px;
+}
+
+.idx-input-text-deedtax {
+  margin-right: 25px;
+}

@@ -1,6 +1,6 @@
 import Taro, { Component, Config } from '@tarojs/taro'
 import { View, Text, Image, Input, Video, Button, RadioGroup, Radio, Checkbox, CheckboxGroup } from '@tarojs/components'
-import './index.scss'
+import '../index/index.scss'
 
 import { Util } from '../../util/util'
 
@@ -75,7 +75,7 @@ function FirstTierCitieCalcClient(state) {
 
 let sCalcClient = new FirstTierCitieCalcClient()
 
-export default class Index extends Component {
+export default class Report extends Component {
 
   /**
    * 指定config的类型声明为: Taro.Config
@@ -91,6 +91,10 @@ export default class Index extends Component {
   constructor(props) {
     super(props)
 
+    console.error("constructor, this.$router.params.fp: "
+        + this.$router.params.fp);
+    console.error("constructor, this.$router.params: "
+        + this.$router.params);
     this.state = {
       sCalcClient: null,
 
@@ -119,64 +123,43 @@ export default class Index extends Component {
         this.updateFirstPayment,
       ],
 
-      mFirstPayment: 0,
-      mTotalPayment: 0,
-      mTotalLoan: 0,
-      mTotalFee: 0,
-      mTotalTax: 0,
+      mFirstPayment: Number(this.$router.params.fp),
+      mTotalPayment: Number(this.$router.params.tp),
+      mTotalLoan: Number(this.$router.params.tl),
+      mTotalFee: Number(this.$router.params.tf),
+      mTotalTax: Number(this.$router.params.tt),
 
       // input
-      mHouseName: '',
-      mHouseArea: 0,
+      mHouseName: this.$router.params.hn,
+      mHouseArea: Number(this.$router.params.ha),
 
-      mTotalPrice: 0,
-      mOriginPrice: 0,
-      mWebSignPrice: 0,
-      mLowestGuidePrice: 0,
+      mTotalPrice: Number(this.$router.params.tpr),
+      mOriginPrice: Number(this.$router.params.opr),
+      mWebSignPrice: Number(this.$router.params.wspr),
+      mLowestGuidePrice: Number(this.$router.params.lgpr),
 
       // Tax
-      mDeedTax: 0,
-      mPersonalIncomeTax: 0,
-      mValueAddedTax: 0,
-      mOtherTax: 0,
+      mDeedTax: Number(this.$router.params.dt),
+      mPersonalIncomeTax: Number(this.$router.params.pit),
+      mValueAddedTax: Number(this.$router.params.vat),
+      mOtherTax: Number(this.$router.params.ot),
 
       // Fee
-      mAgencyFee: 0,
-      mLoanServiceFee: 0,
-      mEvaluationFee: 0,
-      mMortgageRegistrationFee: 0,
-      mOtherFee: 0,
+      mAgencyFee: Number(this.$router.params.af),
+      mLoanServiceFee: Number(this.$router.params.lsf),
+      mEvaluationFee: Number(this.$router.params.ef),
+      mMortgageRegistrationFee: Number(this.$router.params.mrf),
+      mOtherFee: Number(this.$router.params.of),
 
-      // input
       // Loan
-      mCommercialLoan: 0,
-      mCommercialLoanYears: 0,
-      mCommercialLoanInterestRate: 0,
-      mCommercialLoanMonthlySupply: 0,
+      mCommercialLoan: Number(this.$router.params.cl),
+      mProvidentFundLoan: Number(this.$router.params.pfl),
+      mOtherLoan: Number(this.$router.params.ol),
 
-
-      mProvidentFundLoan: 0,
-      mProvidentFundLoanYears: 0,
-      mProvidentFundLoanInterestRate: 0,
-      mProvidentFundLoanMonthlySupply: 0,
-
-      mOtherLoan: 0,
-      mOtherLoanYears: 0,
-      mOtherLoanInterestRate: 0,
-      mOtherLoanMonthlySupply: 0,
-
-      mWillInputDeedTaxManual: false,
-      mInputDeedTaxManual: 0,
-      mWillInputPersonalIncomeTaxManual: false,
-      mInputPersonalIncomeTaxManual: 0,
-      mWillInputValueAddedTaxManual: false,
-      mInputValueAddedTaxManual: 0,
-
-
-      mFirstHouseRadioValue: 1,
-      mAboveTwoYearsRadioValue: 1,
-      mOnlyHouseRadioValue: true,
-      mOrdinaryHouseRadioValue: true,
+      mFirstHouseRadioValue: Number(this.$router.params.fhrv),
+      mAboveTwoYearsRadioValue: Number(this.$router.params.atyrv),
+      mOnlyHouseRadioValue: Boolean(this.$router.params.onhrv),
+      mOrdinaryHouseRadioValue: Boolean(this.$router.params.orhrv),
 
       mIsFirstHouseRadioList: [
         { value: 1, text: '首套', checked: true, },
@@ -203,6 +186,8 @@ export default class Index extends Component {
   }
 
   componentWillMount () {
+    console.error("componentWillMount, mOnlyHouseRadioValue: ", this.$router.params.onhrv);
+
   }
 
   initCallLink = () => {
@@ -414,45 +399,6 @@ export default class Index extends Component {
 
     console.error("lowestPersonalIncomeTax, webSignPrice: ", webSignPrice);
     this.onWebSignPriceChanged(webSignPrice)
-  }
-
-  generateParamForReport = (e) => {
-    let param = 'fp=' + this.state.mFirstPayment
-      + '&tp=' + this.state.mTotalPayment
-      + '&tl=' + this.state.mTotalLoan
-      + '&tf=' + this.state.mTotalFee
-      + '&tt=' + this.state.mTotalTax
-      + '&hn=' + this.state.mHouseName
-      + '&ha=' + this.state.mHouseArea
-      + '&tpr=' + this.state.mTotalPrice
-      + '&opr=' + this.state.mOriginPrice
-      + '&wspr=' + this.state.mWebSignPrice
-      + '&lgpr=' + this.state.mLowestGuidePrice
-      + '&dt=' + this.state.mDeedTax
-      + '&pit=' + this.state.mPersonalIncomeTax
-      + '&vat=' + this.state.mValueAddedTax
-      + '&ot=' + this.state.mOtherTax
-      + '&af=' + this.state.mAgencyFee
-      + '&lsf=' + this.state.mLoanServiceFee
-      + '&ef=' + this.state.mEvaluationFee
-      + '&mrf=' + this.state.mMortgageRegistrationFee
-      + '&of=' + this.state.mOtherFee
-      + '&cl=' + this.state.mCommercialLoan
-      + '&pfl=' + this.state.mProvidentFundLoan
-      + '&ol=' + this.state.mOtherLoan
-      + '&fhrv=' + this.state.mFirstHouseRadioValue
-      + '&atyrv=' + this.state.mAboveTwoYearsRadioValue
-      + '&onhrv=' + this.state.mOnlyHouseRadioValue
-      + '&orhrv=' + this.state.mOrdinaryHouseRadioValue
-    return param
-  }
-
-  generateReport = (e) => {
-    let param = this.generateParamForReport();
-    console.log('generateReport, param: ' + param);
-    Taro.navigateTo({
-      url: '/pages/report/report?' + param
-    })
   }
 
   onInputHouseName = (e) => {
@@ -865,82 +811,21 @@ export default class Index extends Component {
         <View className='idx-top-container-2'>
           <View className='idx-input-item-container'>
             <Text className='idx-input-title'>房子名称</Text>
-            <Input className='idx-input-text' type='text' placeholder='房子位置' onInput={this.onInputHouseName} />
+            <Text className='idx-input-text'>{this.state.mHouseName}</Text>
             <Text className='idx-input-title2'>房子面积</Text>
-            <Input className='idx-input-text' type='digit' placeholder='m2' maxLength='10' onInput={this.onInputHouseArea} />
+            <Text className='idx-input-text'>{this.state.mHouseArea}</Text>
           </View>
           <View className='idx-input-item-container'>
-            <Text className='idx-input-title'>价格</Text>
-            <Input className='idx-input-text' type='digit' placeholder='万元' maxLength='10' onInput={this.onInputTotalPrice} />
+            <Text className='idx-input-title'>总价</Text>
+            <Text className='idx-input-text'>{this.state.mTotalPrice}</Text>
             <Text className='idx-input-title2'>原值</Text>
-            <Input className='idx-input-text' type='digit' placeholder='万元' maxLength='10' onInput={this.onInputOriginPrice} />
+            <Text className='idx-input-text'>{this.state.mOriginPrice}</Text>
           </View>
           <View className='idx-input-item-container'>
             <Text className='idx-input-title'>网签价</Text>
-            <Input className='idx-input-text' type='digit' placeholder='万元' maxLength='10' onInput={this.onInputWebSignPrice} />
+            <Text className='idx-input-text'>{this.state.mWebSignPrice}</Text>
             <Text className='idx-input-title2'>最低指导价</Text>
-            <Input className='idx-input-text' type='digit' placeholder='万元' maxLength='10' onInput={this.onInputLowestGuidePrice} />
-          </View>
-          <View className='idx-input-item-container'>
-            <Text className='idx-input-title'>中介费</Text>
-            <Input className='idx-input-text' type='digit' placeholder='万元' maxLength='10' onInput={this.onInputAgencyFee} />
-            <Text className='idx-input-title2'>贷款服务费</Text>
-            <Input className='idx-input-text' type='digit' placeholder='万元' maxLength='10' onInput={this.onInputLoanServiceFee} />
-          </View>
-          <View className='idx-input-item-container'>
-            <Text className='idx-input-title'>评估费</Text>
-            <Input className='idx-input-text' type='digit' placeholder='万元' maxLength='10' onInput={this.onInputEvaluationFee} />
-            <Text className='idx-input-title2'>抵押登记费</Text>
-            <Input className='idx-input-text' type='digit' placeholder='万元' maxLength='10' onInput={this.onInputMortgageRegistrationFee} />
-          </View>
-          <View className='idx-input-item-container'>
-            <Text className='idx-input-title'>其他费用</Text>
-            <Input className='idx-input-text' type='digit' placeholder='万元' maxLength='10' onInput={this.onInputOtherFee} />
-          </View>
-
-          <View className='idx-input-item-container'>
-            <Text className='idx-input-title'>契税</Text>
-            <Input className={classNameForInputDeedTaxManual}
-              disabled={!this.state.mWillInputDeedTaxManual} type='text'
-              placeholder='（万元）' maxLength='10'
-              onInput={this.onInputDeedTaxManual} />
-            <CheckboxGroup>
-              <View className='idx-input-title'>
-                <Checkbox checked={this.state.mWillInputDeedTaxManual}
-                  onClick={this.clickWillInputDeedTaxManualCheckbox}>
-                      手动输入契税</Checkbox>
-              </View>
-            </CheckboxGroup>
-          </View>
-
-          <View className='idx-input-item-container'>
-            <Text className='idx-input-title'>个税</Text>
-            <Input className={classNameForInputPersonalIncomeTaxManual}
-              disabled={!this.state.mWillInputPersonalIncomeTaxManual} type='text'
-              placeholder='（万元）' maxLength='10'
-              onInput={this.onInputPersonalIncomeTaxManual} />
-            <CheckboxGroup>
-              <View className='idx-input-title'>
-                <Checkbox checked={this.state.mWillInputPersonalIncomeTaxManual}
-                  onClick={this.clickWillInputPersonalIncomeTaxManualCheckbox}>
-                      手动输入个税</Checkbox>
-              </View>
-            </CheckboxGroup>
-          </View>
-
-          <View className='idx-input-item-container'>
-            <Text className='idx-input-title'>增值税</Text>
-            <Input className={classNameForInputValueAddedTaxManual}
-              disabled={!this.state.mWillInputValueAddedTaxManual} type='text'
-              placeholder='（万元）' maxLength='10'
-              onInput={this.onInputValueAddedTaxManual} />
-            <CheckboxGroup>
-              <View className='idx-input-title'>
-                <Checkbox checked={this.state.mWillInputValueAddedTaxManual}
-                  onClick={this.clickWillInputValueAddedTaxManualCheckbox}>
-                      手动输入增值税</Checkbox>
-              </View>
-            </CheckboxGroup>
+            <Text className='idx-input-text'>{this.state.mLowestGuidePrice}</Text>
           </View>
 
           <RadioGroup>
@@ -949,7 +834,7 @@ export default class Index extends Component {
               {this.state.mIsFirstHouseRadioList.map((item, i) => {
                 return (
                   <View onClick={this.onClickFirstHouseRadio.bind(this, item.value)} >
-                    <Radio value={item.value}
+                    <Radio value={item.value} disabled={true}
                       checked={item.value == this.state.mFirstHouseRadioValue}
                       style={{transform: 'scale(0.8)'}} color='#FF7464'>
                       <Text className='idx-radio-text'>{item.text}</Text>
@@ -964,7 +849,7 @@ export default class Index extends Component {
               {this.state.mIsAboveTwoYearsRadioList.map((item, i) => {
                 return (
                   <View>
-                    <Radio value={item.value}
+                    <Radio value={item.value} disabled={true}
                       onClick={this.onClickAboveTwoYearsRadio.bind(this, item.value)} 
                       checked={item.value == this.state.mAboveTwoYearsRadioValue}
                       style={{transform: 'scale(0.8)'}} color='#FF7464'>
@@ -980,7 +865,7 @@ export default class Index extends Component {
               {this.state.mIsOnlyHouseRadioList.map((item, i) => {
                 return (
                   <View onClick={this.onClickOnlyHouseRadio.bind(this, item.value)} >
-                    <Radio value={item.value}
+                    <Radio value={item.value} disabled={true}
                       checked={item.value == this.state.mOnlyHouseRadioValue}
                       style={{transform: 'scale(0.8)', padding: '0px 15px'}} color='#FF7464'>
                       <Text className='idx-radio-text'>{item.text}</Text>
@@ -995,7 +880,7 @@ export default class Index extends Component {
               {this.state.mIsOrdinaryHouseRadioList.map((item, i) => {
                 return (
                   <View onClick={this.onClickOrdinaryHouseRadio.bind(this, item.value)} >
-                    <Radio value={item.value}
+                    <Radio value={item.value} disabled={true}
                       checked={item.value == this.state.mOrdinaryHouseRadioValue}
                       style={{transform: 'scale(0.8)', padding: '0px 15px'}} color='#FF7464'>
                       <Text className='idx-radio-text'>{item.text}</Text>
@@ -1032,7 +917,7 @@ export default class Index extends Component {
           </View>
 
           <View className='idx-input-item-container'>
-            <Text className='idx-input-title'>总税费(总费用+总税款)</Text>
+            <Text className='idx-input-title'>总税费</Text>
             <Text className='idx-input-text'>{(this.state.mTotalTax + this.state.mTotalFee).toFixed(2)}</Text>
           </View>
 
@@ -1057,13 +942,21 @@ export default class Index extends Component {
             <Text className='idx-input-text'>{this.state.mLoanServiceFee.toFixed(2)}</Text>
           </View>
 
+          <View className='idx-input-item-container'>
+            <Text className='idx-input-title'>评估费</Text>
+            <Text className='idx-input-text'>{this.state.mEvaluationFee}</Text>
+            <Text className='idx-input-title2'>抵押登记费</Text>
+            <Text className='idx-input-text'>{this.state.mMortgageRegistrationFee}</Text>
+          </View>
+
+          <View className='idx-input-item-container'>
+            <Text className='idx-input-title'>其他费用（万元）</Text>
+            <Text className='idx-input-text'>{this.state.mOtherFee}</Text>
+          </View>
+
           <View>实际网签价：{this.state.mWebSignPrice.toFixed(2)}</View>
           <View>实际契税税率：{sCalcClient.getDeedTaxRate()}</View>
           <View>id：{this.$router.params.id}</View>
-          <Button type='primary' onClick={this.lowestPersonalIncomeTax}>
-            个税为零计算</Button>
-          <Button type='primary' onClick={this.generateReport}>生成报告</Button>
-          <Button type='primary' open-type='share'>转发给朋友</Button>
         </View>
       </View>
     )
