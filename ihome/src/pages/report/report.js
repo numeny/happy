@@ -791,7 +791,7 @@ export default class Report extends Component {
         + ', webViewUrl: ' + share.webViewUrl);
     let param = Util.getParamForGenerateReport(this.state);
     return {
-      title: '茜茜猫首付计算器',
+      title: Util.appTitle,
       path: '/pages/report/report?' + param 
     }
   }

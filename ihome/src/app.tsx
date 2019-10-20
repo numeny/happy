@@ -22,6 +22,7 @@ class App extends Component {
     pages: [
       'pages/index/index'
       'pages/report/report'
+      'pages/tipbox/tipbox'
     ],
     window: {
       backgroundTextStyle: 'light',

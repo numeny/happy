@@ -2,6 +2,16 @@ import Taro from '@tarojs/taro';
 
 export const Util = {
 
+  appTitle: '茜茜猫首付计算器',
+  mTipBoxMessages : {
+    DeedTax: 1,
+    PersonalIncomeTax: 2,
+    ValueAddedTax: 3,
+    TotalFee: 4,
+    TotalTax: 5,
+    TotalTaxAndFee: 6,
+  },
+
   isInstanceOf: function(thisVar, varType) {
     return Object.prototype.toString.call(thisVar)
             === "[object " + varType + "]"
