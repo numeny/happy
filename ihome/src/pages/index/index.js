@@ -3,6 +3,7 @@ import { View, Text, Image, Input, Video, Button, RadioGroup, Radio, Checkbox, C
 import './index.scss'
 
 import { Util } from '../../util/util'
+import "../../../node_modules/taro-ui/dist/style/components/icon.scss";
 
 import namedPng from '@images/index/1.jpeg'
 import namedVideo from '@res/video/1.mp4'
@@ -154,7 +155,6 @@ export default class Index extends Component {
       mCommercialLoanInterestRate: 0,
       mCommercialLoanMonthlySupply: 0,
 
-
       mProvidentFundLoan: 0,
       mProvidentFundLoanYears: 0,
       mProvidentFundLoanInterestRate: 0,
@@ -196,6 +196,54 @@ export default class Index extends Component {
         { value: true, text: '是', checked: true, },
         { value: false, text: '否', checked: false, },
       ],
+
+      mIsShowingTipBox: false,
+      mIsShowingTipBoxIdx: 1,
+      mTipBoxMessages : {
+        DeedTax: 1,
+        PersonalIncomeTax: 2,
+        ValueAddedTax: 3,
+        TotalFee: 4,
+        TotalTax: 5,
+        TotalTaxAndFee: 6,
+        properties: {
+          1: {title: '关于契税',
+              contents: [
+                '本计算器按照下列方式计算契税，如果不是此计算方法，请计算并手动输入契税额。',
+                '普通住宅并且家庭首套住房，90平米以下1%，90平米以上1.5%，140平米以上3%，非普通住宅以及二套房不管大小一律3%。',
+          ]},
+          2: {title: '关于个人所得税',
+              contents: [
+                '本计算器按照下列方式计算个人所得税，如果不是此计算方法，请计算并手动输入个人所得税额。',
+                '卖方家庭首套住房，并且购买时间超过5年，免征个人所得税。其他情况，征收个人所得税。个人所得税 =（网签价格 - 网签价格 x 10% - 住房原值）x 20%',
+          ]},
+          3: {title: '关于增值税',
+              contents: [
+                '本计算器按照下列方式计算增值税，如果不是此计算方法，请计算并手动输入增值税额。',
+                '使用的增值税税率 = 0.05 x 1.13 / 1.05',
+                '1. 购买不足2年的住房，增值税 = 网签价格 x 增值税税率；',
+                '2. 购买2年以上（含2年）的非普通住房，增值税 = （网签价格 - 原值）x 增值税税率；',
+                '3. 购买2年以上（含2年）的非普通住房，增值税 = 0。',
+          ]},
+          4: {title: '关于总费用',
+              contents: [
+                '本计算器按以下公式计算总费用：',
+                '总费用 = 中介费 + 贷款费用 + 评估费 + 抵押登记费 + 其他费用',
+          ]},
+          5: {title: '关于总税款',
+              contents: [
+                '本计算器按以下公式计算总税款：',
+                '总税款 = 契税 + 个人所得税 + 增值税 + 其他税',
+          ]},
+          6: {title: '关于总税费',
+              contents: [
+                '本计算器按以下公式计算总税费：',
+                '总税费 = 总费用 + 总税款',
+                '总费用 = 中介费 + 贷款费用 + 评估费 + 抵押登记费 + 其他费用',
+                '总税款 = 契税 + 个人所得税 + 增值税 + 其他税',
+          ]},
+        },
+      },
     }
 
     this.initCallLink()
@@ -839,6 +887,24 @@ export default class Index extends Component {
     })
   }
 
+  onClickTipBox = (e) => {
+    console.log('onClickTipBox')
+  }
+
+  onClickOpenTipBoxIcon = (idx, e) => {
+    console.log('onClickOpenTipBoxIcon, idx: ' + idx)
+    this.setState({
+        mIsShowingTipBox: true,
+        mIsShowingTipBoxIdx: idx,
+    })
+  }
+
+  onClickCloseTipBoxIcon = (e) => {
+    this.setState({
+        mIsShowingTipBox: false,
+    })
+  }
+
   onShareAppMessage = (share) => {
     console.error('onShareAppMessage: from: ' + share.from
         + ', target: ' + share.target
@@ -861,7 +927,27 @@ export default class Index extends Component {
 
     return (
       <View className='idx-top-container'>
-
+        {this.state.mIsShowingTipBox &&
+        <View className='idx-top-container-1' onClick={this.onClickTipBox}>
+          <View className='at-icon at-icon-close idx-tip-box-icon-close' onClick={this.onClickCloseTipBoxIcon}></View>
+          <View className='idx-tip-box'>
+            <View className='idx-tip-box-title'>
+              {this.state.mTipBoxMessages.properties[
+                        this.state.mIsShowingTipBoxIdx].title}
+            </View>
+            <View className='idx-tip-box-content'>
+              {this.state.mTipBoxMessages.properties[
+                this.state.mIsShowingTipBoxIdx].contents.map(
+                    (item, i) => {
+                return (
+                  <View className='idx-tip-box-content'>
+                    {item}
+                  </View>)
+              })}
+            </View>
+          </View>
+        </View>}
+        {!this.state.mIsShowingTipBox &&
         <View className='idx-top-container-2'>
           <View className='idx-input-item-container'>
             <Text className='idx-input-title'>房子名称</Text>
@@ -899,7 +985,7 @@ export default class Index extends Component {
           </View>
 
           <View className='idx-input-item-container'>
-            <Text className='idx-input-title'>契税</Text>
+            <View className='idx-input-title'>契税<View className='at-icon at-icon-help idx-tip-box-icon-open' onClick={this.onClickOpenTipBoxIcon.bind(this, mTipBoxMessages.DeedTax)}></View></View>
             <Input className={classNameForInputDeedTaxManual}
               disabled={!this.state.mWillInputDeedTaxManual} type='text'
               placeholder='（万元）' maxLength='10'
@@ -914,7 +1000,7 @@ export default class Index extends Component {
           </View>
 
           <View className='idx-input-item-container'>
-            <Text className='idx-input-title'>个税</Text>
+            <View className='idx-input-title'>个税<View className='at-icon at-icon-help idx-tip-box-icon-open' onClick={this.onClickOpenTipBoxIcon.bind(this, mTipBoxMessages.PersonalIncomeTax)}></View></View>
             <Input className={classNameForInputPersonalIncomeTaxManual}
               disabled={!this.state.mWillInputPersonalIncomeTaxManual} type='text'
               placeholder='（万元）' maxLength='10'
@@ -929,7 +1015,7 @@ export default class Index extends Component {
           </View>
 
           <View className='idx-input-item-container'>
-            <Text className='idx-input-title'>增值税</Text>
+            <View className='idx-input-title'>增值税<View className='at-icon at-icon-help idx-tip-box-icon-open' onClick={this.onClickOpenTipBoxIcon.bind(this, mTipBoxMessages.ValueAddedTax)}></View></View>
             <Input className={classNameForInputValueAddedTaxManual}
               disabled={!this.state.mWillInputValueAddedTaxManual} type='text'
               placeholder='（万元）' maxLength='10'
@@ -1025,14 +1111,14 @@ export default class Index extends Component {
           </View>
 
           <View className='idx-input-item-container'>
-            <Text className='idx-input-title'>总费用</Text>
+            <View className='idx-input-title'>总费用<View className='at-icon at-icon-help idx-tip-box-icon-open' onClick={this.onClickOpenTipBoxIcon.bind(this, mTipBoxMessages.TotalFee)}></View></View>
             <Text className='idx-input-text'>{this.state.mTotalFee.toFixed(2)}</Text>
-            <Text className='idx-input-title2'>总税款</Text>
+            <View className='idx-input-title2'>总税款<View className='at-icon at-icon-help idx-tip-box-icon-open' onClick={this.onClickOpenTipBoxIcon.bind(this, mTipBoxMessages.TotalTax)}></View></View>
             <Text className='idx-input-text'>{this.state.mTotalTax.toFixed(2)}</Text>
           </View>
 
           <View className='idx-input-item-container'>
-            <Text className='idx-input-title'>总税费(总费用+总税款)</Text>
+            <View className='idx-input-title'>总税费<View className='at-icon at-icon-help idx-tip-box-icon-open' onClick={this.onClickOpenTipBoxIcon.bind(this, mTipBoxMessages.TotalTaxAndFee)}></View></View>
             <Text className='idx-input-text'>{(this.state.mTotalTax + this.state.mTotalFee).toFixed(2)}</Text>
           </View>
 
@@ -1057,14 +1143,9 @@ export default class Index extends Component {
             <Text className='idx-input-text'>{this.state.mLoanServiceFee.toFixed(2)}</Text>
           </View>
 
-          <View>实际网签价：{this.state.mWebSignPrice.toFixed(2)}</View>
-          <View>实际契税税率：{sCalcClient.getDeedTaxRate()}</View>
-          <View>id：{this.$router.params.id}</View>
-          <Button type='primary' onClick={this.lowestPersonalIncomeTax}>
-            个税为零计算</Button>
           <Button type='primary' onClick={this.generateReport}>生成报告</Button>
           <Button type='primary' open-type='share'>转发给朋友</Button>
-        </View>
+        </View>}
       </View>
     )
   }
