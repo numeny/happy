@@ -789,10 +789,17 @@ export default class Report extends Component {
     console.error('onShareAppMessage: from: ' + share.from
         + ', target: ' + share.target
         + ', webViewUrl: ' + share.webViewUrl);
+    let param = Util.getParamForGenerateReport(this.state);
     return {
-      title: '自定义转发标题',
-      path: '/pages/index/index?id=123'
+      title: '茜茜猫首付计算器',
+      path: '/pages/report/report?' + param 
     }
+  }
+
+  navigateToMainPage = (e) => {
+    Taro.navigateTo({
+      url: '/pages/index/index',
+    })
   }
 
   render () {
@@ -893,13 +900,13 @@ export default class Report extends Component {
 
           <View className='idx-input-item-container'>
             <Text className='idx-input-title'>商贷</Text>
-            <Input className='idx-input-text' type='digit' placeholder='万元' maxLength='10' onInput={this.onInputCommercialLoan} />
+            <Text className='idx-input-text'>{this.state.mCommercialLoan.toFixed(2)}</Text>
             <Text className='idx-input-title2'>公积金贷款</Text>
-            <Input className='idx-input-text' type='digit' placeholder='万元' maxLength='10' onInput={this.onInputProvidentFundLoan} />
+            <Text className='idx-input-text'>{this.state.mProvidentFundLoan.toFixed(2)}</Text>
           </View>
           <View className='idx-input-item-container'>
             <Text className='idx-input-title'>其他贷款</Text>
-            <Input className='idx-input-text' type='digit' placeholder='万元' maxLength='10' onInput={this.onInputOtherLoan} />
+            <Text className='idx-input-text'>{this.state.mOtherLoan.toFixed(2)}</Text>
           </View>
 
           <View className='idx-input-item-container'>
@@ -954,9 +961,10 @@ export default class Report extends Component {
             <Text className='idx-input-text'>{this.state.mOtherFee}</Text>
           </View>
 
-          <View>实际网签价：{this.state.mWebSignPrice.toFixed(2)}</View>
-          <View>实际契税税率：{sCalcClient.getDeedTaxRate()}</View>
-          <View>id：{this.$router.params.id}</View>
+          <View className='idx-button-container'>
+            <Button type='primary' onClick={this.navigateToMainPage}>重新计算</Button>
+            <Button type='primary' open-type='share'>转发给朋友</Button>
+          </View>
         </View>
       </View>
     )

@@ -464,39 +464,8 @@ export default class Index extends Component {
     this.onWebSignPriceChanged(webSignPrice)
   }
 
-  generateParamForReport = (e) => {
-    let param = 'fp=' + this.state.mFirstPayment
-      + '&tp=' + this.state.mTotalPayment
-      + '&tl=' + this.state.mTotalLoan
-      + '&tf=' + this.state.mTotalFee
-      + '&tt=' + this.state.mTotalTax
-      + '&hn=' + this.state.mHouseName
-      + '&ha=' + this.state.mHouseArea
-      + '&tpr=' + this.state.mTotalPrice
-      + '&opr=' + this.state.mOriginPrice
-      + '&wspr=' + this.state.mWebSignPrice
-      + '&lgpr=' + this.state.mLowestGuidePrice
-      + '&dt=' + this.state.mDeedTax
-      + '&pit=' + this.state.mPersonalIncomeTax
-      + '&vat=' + this.state.mValueAddedTax
-      + '&ot=' + this.state.mOtherTax
-      + '&af=' + this.state.mAgencyFee
-      + '&lsf=' + this.state.mLoanServiceFee
-      + '&ef=' + this.state.mEvaluationFee
-      + '&mrf=' + this.state.mMortgageRegistrationFee
-      + '&of=' + this.state.mOtherFee
-      + '&cl=' + this.state.mCommercialLoan
-      + '&pfl=' + this.state.mProvidentFundLoan
-      + '&ol=' + this.state.mOtherLoan
-      + '&fhrv=' + this.state.mFirstHouseRadioValue
-      + '&atyrv=' + this.state.mAboveTwoYearsRadioValue
-      + '&onhrv=' + this.state.mOnlyHouseRadioValue
-      + '&orhrv=' + this.state.mOrdinaryHouseRadioValue
-    return param
-  }
-
   generateReport = (e) => {
-    let param = this.generateParamForReport();
+    let param = Util.getParamForGenerateReport(this.state);
     console.log('generateReport, param: ' + param);
     Taro.navigateTo({
       url: '/pages/report/report?' + param
@@ -1091,7 +1060,6 @@ export default class Index extends Component {
             </View>
           </RadioGroup>
 
-
           <View className='idx-input-item-container'>
             <Text className='idx-input-title'>商贷</Text>
             <Input className='idx-input-text' type='digit' placeholder='万元' maxLength='10' onInput={this.onInputCommercialLoan} />
@@ -1143,8 +1111,10 @@ export default class Index extends Component {
             <Text className='idx-input-text'>{this.state.mLoanServiceFee.toFixed(2)}</Text>
           </View>
 
-          <Button type='primary' onClick={this.generateReport}>生成报告</Button>
-          <Button type='primary' open-type='share'>转发给朋友</Button>
+          <View className='idx-button-container'>
+            <Button type='primary' onClick={this.generateReport}>生成报告</Button>
+            <Button type='primary' open-type='share'>转发给朋友</Button>
+          </View>
         </View>}
       </View>
     )

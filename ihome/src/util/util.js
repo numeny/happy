@@ -42,4 +42,35 @@ export const Util = {
     return process.env.TARO_ENV
     // return 'weapp'
   },
+
+  getParamForGenerateReport: function(state) {
+    let param = 'fp=' + state.mFirstPayment
+      + '&tp=' + state.mTotalPayment
+      + '&tl=' + state.mTotalLoan
+      + '&tf=' + state.mTotalFee
+      + '&tt=' + state.mTotalTax
+      + '&hn=' + state.mHouseName
+      + '&ha=' + state.mHouseArea
+      + '&tpr=' + state.mTotalPrice
+      + '&opr=' + state.mOriginPrice
+      + '&wspr=' + state.mWebSignPrice
+      + '&lgpr=' + state.mLowestGuidePrice
+      + '&dt=' + state.mDeedTax
+      + '&pit=' + state.mPersonalIncomeTax
+      + '&vat=' + state.mValueAddedTax
+      + '&ot=' + state.mOtherTax
+      + '&af=' + state.mAgencyFee
+      + '&lsf=' + state.mLoanServiceFee
+      + '&ef=' + state.mEvaluationFee
+      + '&mrf=' + state.mMortgageRegistrationFee
+      + '&of=' + state.mOtherFee
+      + '&cl=' + state.mCommercialLoan
+      + '&pfl=' + state.mProvidentFundLoan
+      + '&ol=' + state.mOtherLoan
+      + '&fhrv=' + state.mFirstHouseRadioValue
+      + '&atyrv=' + state.mAboveTwoYearsRadioValue
+      + '&onhrv=' + state.mOnlyHouseRadioValue
+      + '&orhrv=' + state.mOrdinaryHouseRadioValue
+    return param
+  },
 }
