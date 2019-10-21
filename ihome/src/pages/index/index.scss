@@ -4,13 +4,15 @@ $item-lr-padding: 15px;
 $item-border-color-bold: #8AC007;
 
 .idx-top-container {
-  font-size: 30px;
-}
-
-.idx-top-container-2 {
   background-color: $page-background-color;
   font-size: 30px;
   margin: 25px;
+}
+
+.idx-top-title {
+  text-align: right;
+  font-size: 25px;
+  border-bottom: 5px solid $item-border-color-bold;
 }
 
 .idx-input-item-container {
@@ -103,4 +105,10 @@ $item-border-color-bold: #8AC007;
   align-items: center;
   margin: 25px;
   padding: 0px 25px 20px 25px;
+}
+
+.idx-bottom-cont {
+  color: $item-border-color;
+  text-align: center;
+  padding: 20px;
 }

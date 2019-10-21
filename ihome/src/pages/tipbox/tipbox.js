@@ -114,7 +114,6 @@ export default class Tipbox extends Component {
   componentDidHide () { }
 
   onClickCloseTipBoxIcon = (e) => {
-    console.log('onClickCloseTipBoxIcon')
     Taro.navigateBack();
   }
 
