@@ -39,7 +39,7 @@ $item-border-color-bold: #8AC007;
 }
 
 @mixin idx_input_title(){
-  flex: 3;
+  flex: 4;
   flex-wrap: nowrap;
   padding-left: $item-lr-padding;
 }

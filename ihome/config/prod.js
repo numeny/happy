@@ -3,6 +3,7 @@ module.exports = {
     NODE_ENV: '"production"'
   },
   defineConstants: {
+    DEBUG: false,
   },
   weapp: {},
   h5: {

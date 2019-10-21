@@ -58,6 +58,23 @@ export const Util = {
     // return 'weapp'
   },
 
+  getNumber: function(v, defValue) {
+    return v != null ? Number(v) : ((defValue != null) ? defValue : 0)
+  },
+
+  getString: function(v, defValue) {
+    return v != null ? String(v) : ((defValue != null) ? String(defValue) : '')
+  },
+
+  getBoolean: function(v, defValue) {
+    if (Util.isString(v))
+      return (v === 'true')
+    if (defValue != null && v == undefined)
+      return Boolean(defValue)
+    else
+      return Boolean(v)
+  },
+
   getParamForGenerateReport: function(state) {
     let param = 'fp=' + state.mFirstPayment
       + '&tp=' + state.mTotalPayment
@@ -86,6 +103,10 @@ export const Util = {
       + '&atyrv=' + state.mAboveTwoYearsRadioValue
       + '&onhrv=' + state.mOnlyHouseRadioValue
       + '&orhrv=' + state.mOrdinaryHouseRadioValue
+      + '&widtm=' + state.mWillInputDeedTaxManual
+      + '&wipitm=' + state.mWillInputPersonalIncomeTaxManual
+      + '&wivatm=' + state.mEditable
+      + '&editable=' + state.mWillInputValueAddedTaxManual
     return param
   },
 }

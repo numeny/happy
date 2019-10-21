@@ -9,7 +9,6 @@ import namedPng from '@images/index/1.jpeg'
 import namedVideo from '@res/video/1.mp4'
 
 function FirstTierCitieCalcClient(state) {
-  console.log('FirstTierCitieCalcClient')
   this.mState = state
   this.setClientState = function(state) {
     this.mState = state
@@ -20,7 +19,7 @@ function FirstTierCitieCalcClient(state) {
   this.getDeedTaxRate = function() {
     let deedTaxRate = 0
     if (this.mState.mOrdinaryHouseRadioValue
-        && this.mState.mFirstHouseRadioValue == 1) {
+        && this.mState.mFirstHouseRadioValue == 0) {
       deedTaxRate = (this.mState.mHouseArea <= 90) ? 0.01
         : ((this.mState.mHouseArea <= 140) ? 0.015 : 0.03)
     } else {
@@ -37,7 +36,8 @@ function FirstTierCitieCalcClient(state) {
       deedTax = 0
     }
     /*
-    console.log('getDeedTax, deedTaxRate: ' + deedTaxRate
+    if (DEBUG)
+      console.log('getDeedTax, deedTaxRate: ' + deedTaxRate
         + ", deedTax: " + deedTax)
     */
     return deedTax
@@ -45,8 +45,8 @@ function FirstTierCitieCalcClient(state) {
 
   this.getPersonalIncomeTax = function() {
     let personalIncomeTax = 0
-    if (this.mState.mAboveTwoYearsRadioValue != 3 || !this.mState.mOnlyHouseRadioValue) {
-      personalIncomeTax = (this.mState.mWebSignPrice * 0.9 - this.mState.mOriginPrice) * 0.2
+    if (this.mState.mAboveTwoYearsRadioValue != 2 || !this.mState.mOnlyHouseRadioValue) {
+      personalIncomeTax = (this.mState.mWebSignPrice * 0.9 - this.mState.mOriginPrice - this.mState.mOriginTaxSum) * 0.2
     }
     if (personalIncomeTax <= 0) {
       personalIncomeTax = 0
@@ -60,7 +60,7 @@ function FirstTierCitieCalcClient(state) {
     const valueAddedTaxRate = 0.05 * 1.13 / 1.05
     let valueAddedTax = 0
     
-    if (this.mState.mAboveTwoYearsRadioValue == 1) { // 所有的普通住宅和非普通住宅，只要不满两年
+    if (this.mState.mAboveTwoYearsRadioValue == 0) { // 所有的普通住宅和非普通住宅，只要不满两年
       valueAddedTax = this.mState.mWebSignPrice * valueAddedTaxRate
     } else if (!this.mState.mOrdinaryHouseRadioValue) {
       valueAddedTax = (this.mState.mWebSignPrice - this.mState.mOriginPrice) * valueAddedTaxRate
@@ -68,8 +68,11 @@ function FirstTierCitieCalcClient(state) {
     if (valueAddedTax <= 0) {
       valueAddedTax = 0
     }
-    console.log('getValueAddedTax, valueAddedTaxRate: ' + valueAddedTaxRate
+    /*
+    if (DEBUG)
+      console.log('getValueAddedTax, valueAddedTaxRate: ' + valueAddedTaxRate
         + ', valueAddedTax: ' + valueAddedTax)
+    */
     return valueAddedTax
   }
 }
@@ -120,75 +123,59 @@ export default class Index extends Component {
         this.updateFirstPayment,
       ],
 
-      mFirstPayment: 0,
-      mTotalPayment: 0,
-      mTotalLoan: 0,
-      mTotalFee: 0,
-      mTotalTax: 0,
+      mEditable: Util.getBoolean(this.$router.params.editable),
+
+      mFirstPayment: Util.getNumber(this.$router.params.fp),
+      mTotalPayment: Util.getNumber(this.$router.params.tp),
+      mTotalLoan: Util.getNumber(this.$router.params.tl),
+      mTotalFee: Util.getNumber(this.$router.params.tf),
+      mTotalTax: Util.getNumber(this.$router.params.tt),
 
       // input
-      mHouseName: '',
-      mHouseArea: 0,
+      mHouseName: Util.getString(this.$router.params.hn),
+      mHouseArea: Util.getNumber(this.$router.params.ha),
 
-      mTotalPrice: 0,
-      mOriginPrice: 0,
-      mWebSignPrice: 0,
-      mLowestGuidePrice: 0,
+      mTotalPrice: Util.getNumber(this.$router.params.tpr),
+      mOriginPrice: Util.getNumber(this.$router.params.opr),
+      mWebSignPrice: Util.getNumber(this.$router.params.wspr),
+      mOriginTaxSum: Util.getNumber(this.$router.params.ots),
 
       // Tax
-      mDeedTax: 0,
-      mPersonalIncomeTax: 0,
-      mValueAddedTax: 0,
-      mOtherTax: 0,
+      mDeedTax: Util.getNumber(this.$router.params.dt),
+      mPersonalIncomeTax: Util.getNumber(this.$router.params.pit),
+      mValueAddedTax: Util.getNumber(this.$router.params.vat),
+      mOtherTax: Util.getNumber(this.$router.params.ot),
 
       // Fee
-      mAgencyFee: 0,
-      mLoanServiceFee: 0,
-      mEvaluationFee: 0,
-      mMortgageRegistrationFee: 0,
-      mOtherFee: 0,
+      mAgencyFee: Util.getNumber(this.$router.params.af),
+      mLoanServiceFee: Util.getNumber(this.$router.params.lsf),
+      mEvaluationFee: Util.getNumber(this.$router.params.ef),
+      mMortgageRegistrationFee: Util.getNumber(this.$router.params.mrf),
+      mOtherFee: Util.getNumber(this.$router.params.of),
 
-      // input
       // Loan
-      mCommercialLoan: 0,
-      mCommercialLoanYears: 0,
-      mCommercialLoanInterestRate: 0,
-      mCommercialLoanMonthlySupply: 0,
+      mCommercialLoan: Util.getNumber(this.$router.params.cl),
+      mProvidentFundLoan: Util.getNumber(this.$router.params.pfl),
+      mOtherLoan: Util.getNumber(this.$router.params.ol),
 
-      mProvidentFundLoan: 0,
-      mProvidentFundLoanYears: 0,
-      mProvidentFundLoanInterestRate: 0,
-      mProvidentFundLoanMonthlySupply: 0,
+      mFirstHouseRadioValue: Util.getNumber(this.$router.params.fhrv),
+      mAboveTwoYearsRadioValue: Util.getNumber(this.$router.params.atyrv),
+      mOnlyHouseRadioValue: Util.getBoolean(this.$router.params.onhrv, true),
+      mOrdinaryHouseRadioValue: Util.getBoolean(this.$router.params.orhrv, true),
 
-      mOtherLoan: 0,
-      mOtherLoanYears: 0,
-      mOtherLoanInterestRate: 0,
-      mOtherLoanMonthlySupply: 0,
-
-      mWillInputDeedTaxManual: false,
-      mInputDeedTaxManual: 0,
-      mWillInputPersonalIncomeTaxManual: false,
-      mInputPersonalIncomeTaxManual: 0,
-      mWillInputValueAddedTaxManual: false,
-      mInputValueAddedTaxManual: 0,
-      mWillInputOtherTaxManual: false,
-      mInputOtherTaxManual: 0,
-
-
-      mFirstHouseRadioValue: 1,
-      mAboveTwoYearsRadioValue: 1,
-      mOnlyHouseRadioValue: true,
-      mOrdinaryHouseRadioValue: true,
+      mWillInputDeedTaxManual: Util.getBoolean(this.$router.params.widtm),
+      mWillInputPersonalIncomeTaxManual: Util.getBoolean(this.$router.params.wipitm),
+      mWillInputValueAddedTaxManual: Util.getBoolean(this.$router.params.wivatm),
 
       mIsFirstHouseRadioList: [
-        { value: 1, text: '首套', checked: true, },
-        { value: 2, text: '二套', checked: false, },
-        { value: 3, text: '三套及以上', checked: false, },
+        { value: 0, text: '首套', checked: true, },
+        { value: 1, text: '二套', checked: false, },
+        { value: 2, text: '三套及以上', checked: false, },
       ],
       mIsAboveTwoYearsRadioList: [
-        { value: 1, text: '不满两年', checked: true, },
-        { value: 2, text: '满两年', checked: false, },
-        { value: 3, text: '满五年', checked: false, },
+        { value: 0, text: '不满两年', checked: true, },
+        { value: 1, text: '满两年', checked: false, },
+        { value: 2, text: '满五年', checked: false, },
       ],
       mIsOnlyHouseRadioList: [
         { value: true, text: '是', checked: true, },
@@ -205,6 +192,12 @@ export default class Index extends Component {
   }
 
   componentWillMount () {
+    console.log('componentWillMount, Util.getBoolean(this.$router.params.editable):'
+        + Util.getBoolean(this.$router.params.editable))
+    console.log('componentWillMount, this.$router.params.editable:'
+        + this.$router.params.editable)
+    console.log('componentWillMount, mEditable:'
+        + this.state.mEditable)
   }
 
   initCallLink = () => {
@@ -346,12 +339,13 @@ export default class Index extends Component {
   }
 
   updateDeedTax = () => {
-    let deedTax = 0
     if (this.state.mWillInputDeedTaxManual) {
-      deedTax = this.state.mInputDeedTaxManual
-    } else {
-      deedTax = sCalcClient.getDeedTax()
+      if (this.updateDeedTax.prototype.postCallback != null) {
+        this.updateDeedTax.prototype.postCallback()
+      }
+      return
     }
+    let deedTax = sCalcClient.getDeedTax()
     this.setState({
         mDeedTax: deedTax,
     }, () => {
@@ -362,12 +356,13 @@ export default class Index extends Component {
   }
 
   updatePersonalIncomeTax = () => {
-    let personalIncomeTax = 0
     if (this.state.mWillInputPersonalIncomeTaxManual) {
-      personalIncomeTax = this.state.mInputPersonalIncomeTaxManual
-    } else {
-      personalIncomeTax = sCalcClient.getPersonalIncomeTax()
+      if (this.updatePersonalIncomeTax.prototype.postCallback != null) {
+        this.updatePersonalIncomeTax.prototype.postCallback()
+      }
+      return
     }
+    let personalIncomeTax = sCalcClient.getPersonalIncomeTax()
     this.setState({
         mPersonalIncomeTax: personalIncomeTax,
     }, () => {
@@ -378,12 +373,13 @@ export default class Index extends Component {
   }
 
   updateValueAddedTax = () => {
-    let valueAddedTax = 0
     if (this.state.mWillInputValueAddedTaxManual) {
-      valueAddedTax = this.state.mInputValueAddedTaxManual
-    } else {
-      valueAddedTax = sCalcClient.getValueAddedTax()
+      if (this.updateValueAddedTax.prototype.postCallback != null) {
+        this.updateValueAddedTax.prototype.postCallback()
+      }
+      return
     }
+    let valueAddedTax = sCalcClient.getValueAddedTax()
     this.setState({
         mValueAddedTax: valueAddedTax,
     }, () => {
@@ -401,7 +397,7 @@ export default class Index extends Component {
 
   // FIXME
   lowestPersonalIncomeTax = () => {
-    if (this.state.mLowestGuidePrice == 0) {
+    if (this.state.mOriginTaxSum == 0) {
       Taro.showToast({title: "请输入最低指导价！"})
       return
     }
@@ -412,19 +408,71 @@ export default class Index extends Component {
     }
     // let personalIncomeTax = (webSignPrice * 0.9 - originPrice) * 0.2
     let webSignPrice = Math.max(this.state.mOriginPrice * 10 / 9,
-        this.state.mLowestGuidePrice)
+        this.state.mOriginTaxSum)
 
-    console.error("lowestPersonalIncomeTax, webSignPrice: ", webSignPrice);
     this.onWebSignPriceChanged(webSignPrice)
   }
 
   generateReport = (e) => {
-    let param = Util.getParamForGenerateReport(this.state);
-    console.log('generateReport, param: ' + param);
-    param = param + '&from=main'
-    Taro.navigateTo({
-      url: '/pages/report/report?' + param
+    this.setState(
+      prevState => ({
+        mEditable: false,
+      })
+    )
+  }
+
+  clearData = (e) => {
+    this.setState({
+      mFirstPayment: 0,
+      mTotalPayment: 0,
+      mTotalLoan: 0,
+      mTotalFee: 0,
+      mTotalTax: 0,
+
+      // input
+      mHouseName: '',
+      mHouseArea: 0,
+
+      mTotalPrice: 0,
+      mOriginPrice: 0,
+      mWebSignPrice: 0,
+      mOriginTaxSum: 0,
+
+      // Tax
+      mDeedTax: 0,
+      mPersonalIncomeTax: 0,
+      mValueAddedTax: 0,
+      mOtherTax: 0,
+
+      // Fee
+      mAgencyFee: 0,
+      mLoanServiceFee: 0,
+      mEvaluationFee: 0,
+      mMortgageRegistrationFee: 0,
+      mOtherFee: 0,
+
+      // Loan
+      mCommercialLoan: 0,
+      mProvidentFundLoan: 0,
+      mOtherLoan: 0,
+
+      mFirstHouseRadioValue: 0,
+      mAboveTwoYearsRadioValue: 0,
+      mOnlyHouseRadioValue: true,
+      mOrdinaryHouseRadioValue: true,
+
+      mWillInputDeedTaxManual: false,
+      mWillInputPersonalIncomeTaxManual: false,
+      mWillInputValueAddedTaxManual: false,
     })
+  }
+
+  recaculate = (e) => {
+    this.setState(
+      prevState => ({
+        mEditable: true,
+      })
+    )
   }
 
   onInputHouseName = (e) => {
@@ -462,7 +510,7 @@ export default class Index extends Component {
         })
     
       } catch(err) {
-        console.log("onInputTotalPrice: ", err);
+        console.error("onInputTotalPrice: ", err);
         Taro.showToast({title: "请输入正确的金额！"})
       }
     })
@@ -472,14 +520,9 @@ export default class Index extends Component {
     Util.setInterval(() => {
       try {
         let originPrice = Number(e.target.value)
-        /*
-        if (e.target.value.length != 0) {
-          originPrice = parseFloat(e.target.value)
-        }
-        */
         // FIXME
         if (e.target.value.length != 0 && !Util.isNumber(originPrice)) {
-          console.log("onInputOriginPrice-1-2: ", err);
+          console.error("onInputOriginPrice: ", err);
           Taro.showToast({title: "请输入正确的金额！"})
           return
         }
@@ -490,7 +533,7 @@ export default class Index extends Component {
         })
     
       } catch(err) {
-        console.log("onInputOriginPrice: ", err);
+        console.error("onInputOriginPrice: ", err);
         Taro.showToast({title: "请输入正确的金额！"})
       }
     })
@@ -512,25 +555,24 @@ export default class Index extends Component {
         let webSignPrice = Number(e.target.value)
         this.onWebSignPriceChanged(webSignPrice)
       } catch(err) {
-        console.log("onInputWebSignPrice: ", err);
+        console.error("onInputWebSignPrice: ", err);
         Taro.showToast({title: "请输入正确的金额！"})
       }
     })
   }
 
-  onInputLowestGuidePrice = (e) => {
-    console.log("onInputLowestGuidePrice: ", e.target.value);
+  onInputOriginTaxSum = (e) => {
     Util.setInterval(() => {
       try {
-        let lowestGuidePrice = Number(e.target.value)
+        let originTaxSum = Number(e.target.value)
         this.setState({
-            mLowestGuidePrice: lowestGuidePrice,
+            mOriginTaxSum: originTaxSum,
         }, () => {
           this.updateAll()
         })
     
       } catch(err) {
-        console.log("onInputLowestGuidePrice: ", err);
+        console.error("onInputOriginTaxSum: ", err);
         Taro.showToast({title: "请输入正确的金额！"})
       }
     })
@@ -546,7 +588,7 @@ export default class Index extends Component {
           this.updateAll()
         })
       } catch(err) {
-        console.log("onInputAgencyFee: ", err);
+        console.error("onInputAgencyFee: ", err);
         Taro.showToast({title: "请输入正确的金额！"})
       }
     })
@@ -562,7 +604,7 @@ export default class Index extends Component {
           this.updateAll()
         })
       } catch(err) {
-        console.log("onInputLoanServiceFee: ", err);
+        console.error("onInputLoanServiceFee: ", err);
         Taro.showToast({title: "请输入正确的金额！"})
       }
     })
@@ -578,7 +620,7 @@ export default class Index extends Component {
           this.updateAll()
         })
       } catch(err) {
-        console.log("onInputEvaluationFee: ", err);
+        console.error("onInputEvaluationFee: ", err);
         Taro.showToast({title: "请输入正确的金额！"})
       }
     })
@@ -594,7 +636,7 @@ export default class Index extends Component {
             this.updateAll()
         })
       } catch(err) {
-        console.log("onInputMortgageRegistrationFee: ", err);
+        console.error("onInputMortgageRegistrationFee: ", err);
         Taro.showToast({title: "请输入正确的金额！"})
       }
     })
@@ -610,7 +652,7 @@ export default class Index extends Component {
             this.updateAll()
         })
       } catch(err) {
-        console.log("onInputOtherFee: ", err);
+        console.error("onInputOtherFee: ", err);
         Taro.showToast({title: "请输入正确的金额！"})
       }
     })
@@ -626,7 +668,7 @@ export default class Index extends Component {
             this.updateAll()
         })
       } catch(err) {
-        console.log("onInputCommercialLoan: ", err);
+        console.error("onInputCommercialLoan: ", err);
         Taro.showToast({title: "请输入正确的金额！"})
       }
     })
@@ -642,7 +684,7 @@ export default class Index extends Component {
             this.updateAll()
         })
       } catch(err) {
-        console.log("onInputProvidentFundLoan: ", err);
+        console.error("onInputProvidentFundLoan: ", err);
         Taro.showToast({title: "请输入正确的金额！"})
       }
     })
@@ -658,7 +700,7 @@ export default class Index extends Component {
             this.updateAll()
         })
       } catch(err) {
-        console.log("onInputOtherLoan: ", err);
+        console.error("onInputOtherLoan: ", err);
         Taro.showToast({title: "请输入正确的金额！"})
       }
     })
@@ -674,13 +716,13 @@ export default class Index extends Component {
       try {
         let inputDeedTaxManual = Number(e.target.value)
         this.setState({
-            mInputDeedTaxManual: inputDeedTaxManual,
+            mDeedTax: inputDeedTaxManual,
         }, () => {
             this.updateAll()
         })
     
       } catch(err) {
-        console.log("onInputDeedTaxManual: ", err);
+        console.error("onInputDeedTaxManual: ", err);
         Taro.showToast({title: "请输入正确的契税金额！"})
       }
     })
@@ -696,13 +738,13 @@ export default class Index extends Component {
       try {
         let inputPersonalIncomeTaxManual = Number(e.target.value)
         this.setState({
-            mInputPersonalIncomeTaxManual: inputPersonalIncomeTaxManual,
+            mPersonalIncomeTax: inputPersonalIncomeTaxManual,
         }, () => {
             this.updateAll()
         })
     
       } catch(err) {
-        console.log("onInputPersonalIncomeTaxManual: ", err);
+        console.error("onInputPersonalIncomeTaxManual: ", err);
         Taro.showToast({title: "请输入正确的金额！"})
       }
     })
@@ -717,15 +759,13 @@ export default class Index extends Component {
     Util.setInterval(() => {
       try {
         let inputValueAddedTaxManual = Number(e.target.value)
-        console.log("onInputValueAddedTaxManual: " + inputValueAddedTaxManual
-            + " , e.target.value: " + e.target.value);
         this.setState({
-            mInputValueAddedTaxManual: inputValueAddedTaxManual,
+            mValueAddedTax: inputValueAddedTaxManual,
         }, () => {
             this.updateAll()
         })
       } catch(err) {
-        console.log("onInputValueAddedTaxManual: ", err);
+        console.error("onInputValueAddedTaxManual: ", err);
         Taro.showToast({title: "请输入正确的金额！"})
       }
     })
@@ -741,7 +781,7 @@ export default class Index extends Component {
             this.updateAll()
         })
       } catch(err) {
-        console.log("onInputOtherTax: ", err);
+        console.error("onInputOtherTax: ", err);
         Taro.showToast({title: "请输入正确的金额！"})
       }
     })
@@ -749,7 +789,6 @@ export default class Index extends Component {
 
   clickWillInputDeedTaxManualCheckbox = (e) => {
     Util.setInterval(() => {
-      console.log('clickWillInputDeedTaxManualCheckbox, e.detail:', e.detail)
       this.setState(
         prevState => ({
           mWillInputDeedTaxManual: !prevState.mWillInputDeedTaxManual,
@@ -761,7 +800,6 @@ export default class Index extends Component {
 
   clickWillInputPersonalIncomeTaxManualCheckbox = (e) => {
     Util.setInterval(() => {
-      console.log('clickWillInputPersonalIncomeTaxManualCheckbox, e.detail:', e.detail)
       this.setState(
         prevState => ({
           mWillInputPersonalIncomeTaxManual: !prevState.mWillInputPersonalIncomeTaxManual,
@@ -773,7 +811,6 @@ export default class Index extends Component {
 
   clickWillInputValueAddedTaxManualCheckbox = (e) => {
     Util.setInterval(() => {
-      console.log('clickWillInputValueAddedTaxManualCheckbox, e.detail:', e.detail)
       this.setState(
         prevState => ({
           mWillInputValueAddedTaxManual: !prevState.mWillInputValueAddedTaxManual,
@@ -785,7 +822,6 @@ export default class Index extends Component {
 
   onClickFirstHouseRadio = (value, e) => {
     Util.setInterval(() => {
-      console.log('onClickFirstHouseRadio, idx:', value)
       this.setState({
           mFirstHouseRadioValue: value,
       }, () => {
@@ -796,7 +832,6 @@ export default class Index extends Component {
 
   onClickAboveTwoYearsRadio = (value, e) => {
     Util.setInterval(() => {
-      console.log('onClickAboveTwoYearsRadio, value:', value)
       this.setState({
           mAboveTwoYearsRadioValue: value,
       }, () => {
@@ -807,7 +842,6 @@ export default class Index extends Component {
 
   onClickOnlyHouseRadio = (value, e) => {
     Util.setInterval(() => {
-      console.log('onClickOnlyHouseRadio, value:', value)
       this.setState({
           mOnlyHouseRadioValue: value,
       }, () => {
@@ -818,7 +852,6 @@ export default class Index extends Component {
 
   onClickOrdinaryHouseRadio = (value, e) => {
     Util.setInterval(() => {
-      console.log('onClickOrdinaryHouseRadio, value:', value)
       this.setState({
           mOrdinaryHouseRadioValue: value,
       }, () => {
@@ -828,25 +861,25 @@ export default class Index extends Component {
   }
 
   onClickTipBox = (e) => {
-    console.log('onClickTipBox')
     e.stopPropagation()
-    console.log('onClickTipBox-1')
   }
 
   onClickOpenTipBoxIcon = (idx, e) => {
-    console.log('onClickOpenTipBoxIcon, idx: ' + idx)
     Taro.navigateTo({
       url: '/pages/tipbox/tipbox?idx=' + idx
     })
   }
 
   onShareAppMessage = (share) => {
-    console.error('onShareAppMessage: from: ' + share.from
-        + ', target: ' + share.target
-        + ', webViewUrl: ' + share.webViewUrl);
+    let param = Util.getParamForGenerateReport(this.state);
+    /*
+    if (DEBUG)
+      console.log('onShareAppMessage, param: ' + param);
+    */
+
     return {
       title: Util.appTitle,
-      path: '/pages/index/index'
+      path: '/pages/index/index?' + param
     }
   }
 
@@ -864,30 +897,36 @@ export default class Index extends Component {
         <View className='idx-top-container-2'>
           <View className='idx-input-item-container'>
             <Text className='idx-input-title'>房屋名称</Text>
-            <Input className='idx-input-text' type='text' placeholder='房子位置' onInput={this.onInputHouseName} />
+            <Input className='idx-input-text' type='text' placeholder='房子位置'
+                disabled={!this.state.mEditable} value={this.state.mHouseName} onInput={this.onInputHouseName} />
             <Text className='idx-input-title2'>面积</Text>
-            <Input className='idx-input-text' type='digit' placeholder='m2' maxLength='10' onInput={this.onInputHouseArea} />
+            <Input className='idx-input-text' type='digit' placeholder='m2'
+                disabled={!this.state.mEditable} value={this.state.mHouseArea} maxLength='10' onInput={this.onInputHouseArea} />
           </View>
           <View className='idx-input-item-container'>
             <Text className='idx-input-title'>价格</Text>
-            <Input className='idx-input-text' type='digit' placeholder='万元' maxLength='10' onInput={this.onInputTotalPrice} />
+            <Input className='idx-input-text' type='digit' placeholder='万元'
+                disabled={!this.state.mEditable} value={this.state.mTotalPrice} maxLength='10' onInput={this.onInputTotalPrice} />
             <Text className='idx-input-title2'>原值</Text>
-            <Input className='idx-input-text' type='digit' placeholder='万元' maxLength='10' onInput={this.onInputOriginPrice} />
+            <Input className='idx-input-text' type='digit' placeholder='万元'
+                disabled={!this.state.mEditable} value={this.state.mOriginPrice} maxLength='10' onInput={this.onInputOriginPrice} />
           </View>
           <View className='idx-input-item-container-bold'>
             <Text className='idx-input-title'>网签价</Text>
-            <Input className='idx-input-text' type='digit' placeholder='万元' maxLength='10' onInput={this.onInputWebSignPrice} />
-            <Text className='idx-input-title2'>最低指导价</Text>
-            <Input className='idx-input-text' type='digit' placeholder='万元' maxLength='10' onInput={this.onInputLowestGuidePrice} />
+            <Input className='idx-input-text' type='digit' placeholder='万元'
+                disabled={!this.state.mEditable} value={this.state.mWebSignPrice} maxLength='10' onInput={this.onInputWebSignPrice} />
+            <Text className='idx-input-title2'>原税费合计</Text>
+            <Input className='idx-input-text' type='digit' placeholder='万元'
+                disabled={!this.state.mEditable} value={this.state.mOriginTaxSum} maxLength='10' onInput={this.onInputOriginTaxSum} />
           </View>
 
           <RadioGroup>
             <View className='idx-input-item-container'>
-              <Text className='idx-radio-title'>买方是否首套：</Text>
+              <Text className='idx-radio-title'>买方是否首套</Text>
               {this.state.mIsFirstHouseRadioList.map((item, i) => {
                 return (
                   <View onClick={this.onClickFirstHouseRadio.bind(this, item.value)} >
-                    <Radio value={item.value}
+                    <Radio value={item.value} disabled={!this.state.mEditable}
                       checked={item.value == this.state.mFirstHouseRadioValue}
                       style={{transform: 'scale(0.8)'}} color='#FF7464'>
                       <Text className='idx-radio-text'>{item.text}</Text>
@@ -898,11 +937,11 @@ export default class Index extends Component {
           </RadioGroup>
           <RadioGroup>
             <View className='idx-input-item-container'>
-              <Text className='idx-radio-title'>房本年限：</Text>
+              <Text className='idx-radio-title'>房本年限</Text>
               {this.state.mIsAboveTwoYearsRadioList.map((item, i) => {
                 return (
                   <View>
-                    <Radio value={item.value}
+                    <Radio value={item.value} disabled={!this.state.mEditable}
                       onClick={this.onClickAboveTwoYearsRadio.bind(this, item.value)} 
                       checked={item.value == this.state.mAboveTwoYearsRadioValue}
                       style={{transform: 'scale(0.8)'}} color='#FF7464'>
@@ -914,11 +953,11 @@ export default class Index extends Component {
           </RadioGroup>
           <RadioGroup>
             <View className='idx-input-item-container'>
-              <Text className='idx-radio-title'>卖方是否唯一住宅：</Text>
+              <Text className='idx-radio-title'>卖方是否唯一住宅</Text>
               {this.state.mIsOnlyHouseRadioList.map((item, i) => {
                 return (
                   <View onClick={this.onClickOnlyHouseRadio.bind(this, item.value)} >
-                    <Radio value={item.value}
+                    <Radio value={item.value} disabled={!this.state.mEditable}
                       checked={item.value == this.state.mOnlyHouseRadioValue}
                       style={{transform: 'scale(0.8)', padding: '0px 15px'}} color='#FF7464'>
                       <Text className='idx-radio-text'>{item.text}</Text>
@@ -929,11 +968,11 @@ export default class Index extends Component {
           </RadioGroup>
           <RadioGroup>
             <View className='idx-input-item-container-bold'>
-              <Text className='idx-radio-title'>是否普通住宅：</Text>
+              <Text className='idx-radio-title'>是否普通住宅</Text>
               {this.state.mIsOrdinaryHouseRadioList.map((item, i) => {
                 return (
                   <View onClick={this.onClickOrdinaryHouseRadio.bind(this, item.value)} >
-                    <Radio value={item.value}
+                    <Radio value={item.value} disabled={!this.state.mEditable}
                       checked={item.value == this.state.mOrdinaryHouseRadioValue}
                       style={{transform: 'scale(0.8)', padding: '0px 15px'}} color='#FF7464'>
                       <Text className='idx-radio-text'>{item.text}</Text>
@@ -945,36 +984,38 @@ export default class Index extends Component {
 
           <View className='idx-input-item-container'>
             <Text className='idx-input-title'>中介费</Text>
-            <Input className='idx-input-text' type='digit' placeholder='万元' maxLength='10' onInput={this.onInputAgencyFee} />
+            <Input className='idx-input-text' type='digit' placeholder='万元'
+                disabled={!this.state.mEditable} value={this.state.mAgencyFee} maxLength='10' onInput={this.onInputAgencyFee} />
             <Text className='idx-input-title2'>贷款服务费</Text>
-            <Input className='idx-input-text' type='digit' placeholder='万元' maxLength='10' onInput={this.onInputLoanServiceFee} />
+            <Input className='idx-input-text' type='digit' placeholder='万元'
+                disabled={!this.state.mEditable} value={this.state.mLoanServiceFee} maxLength='10' onInput={this.onInputLoanServiceFee} />
           </View>
           <View className='idx-input-item-container'>
             <Text className='idx-input-title'>评估费</Text>
-            <Input className='idx-input-text' type='digit' placeholder='万元' maxLength='10' onInput={this.onInputEvaluationFee} />
-            <Text className='idx-input-title2'>抵押登记费</Text>
-            <Input className='idx-input-text' type='digit' placeholder='万元' maxLength='10' onInput={this.onInputMortgageRegistrationFee} />
+            <Input className='idx-input-text' type='digit' placeholder='万元'
+                disabled={!this.state.mEditable} value={this.state.mEvaluationFee} maxLength='10' onInput={this.onInputEvaluationFee} />
+            <Text className='idx-input-title2'>其他费用</Text>
+            <Input className='idx-input-text' type='digit' placeholder='万元'
+                disabled={!this.state.mEditable} value={this.state.mOtherFee} maxLength='10' onInput={this.onInputOtherFee} />
           </View>
           <View className='idx-input-item-container-bold2'>
-            <Text className='idx-input-title'>其他费用</Text>
-            <Input className='idx-input-text' type='digit' placeholder='万元' maxLength='10' onInput={this.onInputOtherFee} />
-            <View className='idx-input-title2-bold'>总费用<View className='at-icon at-icon-help' onClick={this.onClickOpenTipBoxIcon.bind(this, Util.mTipBoxMessages.TotalFee)}></View></View>
+            <Text className='idx-input-title'></Text>
+            <Text className='idx-input-text'></Text>
+            <View className='idx-input-title-bold'>总费用<View className='at-icon at-icon-help' onClick={this.onClickOpenTipBoxIcon.bind(this, Util.mTipBoxMessages.TotalFee)}></View></View>
             <Text className='idx-input-text-bold'>{this.state.mTotalFee.toFixed(2)}</Text>
           </View>
 
           <View className='idx-input-item-container'>
             <View className='idx-input-title'>契税<View className='at-icon at-icon-help' onClick={this.onClickOpenTipBoxIcon.bind(this, Util.mTipBoxMessages.DeedTax)}></View></View>
-            {!this.state.mWillInputDeedTaxManual ? (
-              <Text className='idx-input-text'>
-                {this.state.mDeedTax.toFixed(2)}
-              </Text>) :
-              (<Input className={classNameForInputDeedTaxManual}
-              disabled={!this.state.mWillInputDeedTaxManual} type='text'
-              placeholder='（万元）' maxLength='10'
-              onInput={this.onInputDeedTaxManual} />)}
+            <Input className={classNameForInputDeedTaxManual}
+                  value={this.state.mDeedTax} type='text'
+                  disabled={!this.state.mEditable || !this.state.mWillInputDeedTaxManual}
+                  placeholder='（万元）' maxLength='6'
+                  onInput={this.onInputDeedTaxManual} />
             <CheckboxGroup>
               <View className='idx-input-title'>
                 <Checkbox checked={this.state.mWillInputDeedTaxManual}
+                  disabled={!this.state.mEditable}
                   onClick={this.clickWillInputDeedTaxManualCheckbox}>
                       手动输入契税</Checkbox>
               </View>
@@ -983,58 +1024,58 @@ export default class Index extends Component {
 
           <View className='idx-input-item-container'>
             <View className='idx-input-title'>个人所得税<View className='at-icon at-icon-help' onClick={this.onClickOpenTipBoxIcon.bind(this, Util.mTipBoxMessages.PersonalIncomeTax)}></View></View>
-            {!this.state.mWillInputPersonalIncomeTaxManual ? (
-              <Text className='idx-input-text'>
-                {this.state.mPersonalIncomeTax.toFixed(2)}
-              </Text>) :
-              (<Input className={classNameForInputPersonalIncomeTaxManual}
-              disabled={!this.state.mWillInputPersonalIncomeTaxManual} type='text'
-              placeholder='（万元）' maxLength='10'
-              onInput={this.onInputPersonalIncomeTaxManual} />)}
-            <CheckboxGroup>
-              <View className='idx-input-title'>
-                <Checkbox checked={this.state.mWillInputPersonalIncomeTaxManual}
-                  onClick={this.clickWillInputPersonalIncomeTaxManualCheckbox}>
+              <Input className={classNameForInputPersonalIncomeTaxManual}
+                  value={this.state.mPersonalIncomeTax} type='text'
+                  disabled={!this.state.mEditable || !this.state.mWillInputPersonalIncomeTaxManual}
+                  placeholder='（万元）' maxLength='6'
+                  onInput={this.onInputPersonalIncomeTaxManual} />
+              <CheckboxGroup>
+                <View className='idx-input-title'>
+                  <Checkbox checked={this.state.mWillInputPersonalIncomeTaxManual}
+                    disabled={!this.state.mEditable}
+                    onClick={this.clickWillInputPersonalIncomeTaxManualCheckbox}>
                       手动输入个税</Checkbox>
-              </View>
-            </CheckboxGroup>
+                </View>
+              </CheckboxGroup>
           </View>
 
           <View className='idx-input-item-container'>
             <View className='idx-input-title'>增值税<View className='at-icon at-icon-help' onClick={this.onClickOpenTipBoxIcon.bind(this, Util.mTipBoxMessages.ValueAddedTax)}></View></View>
-            {!this.state.mWillInputValueAddedTaxManual ? (
-              <Text className='idx-input-text'>
-                {this.state.mValueAddedTax.toFixed(2)}
-              </Text>) :
-              (<Input className={classNameForInputValueAddedTaxManual}
-              disabled={!this.state.mWillInputValueAddedTaxManual} type='text'
-              placeholder='（万元）' maxLength='10'
-              onInput={this.onInputValueAddedTaxManual} />)}
-            <CheckboxGroup>
-              <View className='idx-input-title'>
-                <Checkbox checked={this.state.mWillInputValueAddedTaxManual}
-                  onClick={this.clickWillInputValueAddedTaxManualCheckbox}>
+              <Input className={classNameForInputValueAddedTaxManual}
+                  value={this.state.mValueAddedTax} type='text'
+                  disabled={!this.state.mEditable || !this.state.mWillInputValueAddedTaxManual}
+                  placeholder='（万元）' maxLength='6'
+                  onInput={this.onInputValueAddedTaxManual} />
+              <CheckboxGroup>
+                <View className='idx-input-title'>
+                  <Checkbox checked={this.state.mWillInputValueAddedTaxManual}
+                    disabled={!this.state.mEditable}
+                    onClick={this.clickWillInputValueAddedTaxManualCheckbox}>
                       手动输入增值税</Checkbox>
-              </View>
-            </CheckboxGroup>
+                </View>
+              </CheckboxGroup>
           </View>
 
           <View className='idx-input-item-container-bold2'>
             <Text className='idx-input-title'>其他税</Text>
-            <Input className='idx-input-text' type='digit' placeholder='万元' maxLength='10' onInput={this.onInputOtherTax} />
+            <Input className='idx-input-text' type='digit' placeholder='万元'
+                disabled={!this.state.mEditable} value={this.state.mOtherTax} maxLength='10' onInput={this.onInputOtherTax} />
             <View className='idx-input-title2-bold'>总税款<View className='at-icon at-icon-help' onClick={this.onClickOpenTipBoxIcon.bind(this, Util.mTipBoxMessages.TotalTax)}></View></View>
             <Text className='idx-input-text-bold'>{this.state.mTotalTax.toFixed(2)}</Text>
           </View>
 
           <View className='idx-input-item-container'>
             <Text className='idx-input-title'>商贷</Text>
-            <Input className='idx-input-text' type='digit' placeholder='万元' maxLength='10' onInput={this.onInputCommercialLoan} />
+            <Input className='idx-input-text' type='digit' placeholder='万元'
+                disabled={!this.state.mEditable} value={this.state.mCommercialLoan} maxLength='10' onInput={this.onInputCommercialLoan} />
             <Text className='idx-input-title2'>公积金贷款</Text>
-            <Input className='idx-input-text' type='digit' placeholder='万元' maxLength='10' onInput={this.onInputProvidentFundLoan} />
+            <Input className='idx-input-text' type='digit' placeholder='万元'
+                disabled={!this.state.mEditable} value={this.state.mProvidentFundLoan} maxLength='10' onInput={this.onInputProvidentFundLoan} />
           </View>
           <View className='idx-input-item-container-bold'>
             <Text className='idx-input-title'>其他贷款</Text>
-            <Input className='idx-input-text' type='digit' placeholder='万元' maxLength='10' onInput={this.onInputOtherLoan} />
+            <Input className='idx-input-text' type='digit' placeholder='万元'
+                disabled={!this.state.mEditable} value={this.state.mOtherLoan} maxLength='10' onInput={this.onInputOtherLoan} />
             <View className='idx-input-title2-bold'>总贷款<View className='at-icon at-icon-help' onClick={this.onClickOpenTipBoxIcon.bind(this, Util.mTipBoxMessages.TotalLoan)}></View></View>
             <Text className='idx-input-text-bold'>{this.state.mTotalLoan.toFixed(2)}</Text>
           </View>
@@ -1042,7 +1083,7 @@ export default class Index extends Component {
           <View className='idx-input-item-container'>
             <View className='idx-input-title-bold'>总首付<View className='at-icon at-icon-help' onClick={this.onClickOpenTipBoxIcon.bind(this, Util.mTipBoxMessages.FirstPayment)}></View></View>
             <Text className='idx-input-text-bold'>{this.state.mFirstPayment.toFixed(2)}</Text>
-            <View className='idx-input-title2-bold'>总成本<View className='at-icon at-icon-help' onClick={this.onClickOpenTipBoxIcon.bind(this, Util.mTipBoxMessages.TotalPayment)}></View></View>
+            <View className='idx-input-title2-bold'>总房款<View className='at-icon at-icon-help' onClick={this.onClickOpenTipBoxIcon.bind(this, Util.mTipBoxMessages.TotalPayment)}></View></View>
             <Text className='idx-input-text-bold'>{this.state.mTotalPayment.toFixed(2)}</Text>
           </View>
 
@@ -1052,10 +1093,16 @@ export default class Index extends Component {
             <View className='idx-input-title2-bold'>平均单价<View className='at-icon at-icon-help' onClick={this.onClickOpenTipBoxIcon.bind(this, Util.mTipBoxMessages.AverageUnitPrice)}></View></View>
             <Text className='idx-input-text-bold'>{(this.state.mHouseArea != 0 ? (this.state.mTotalPayment/this.state.mHouseArea) : 0).toFixed(4)}</Text>
           </View>
-
-          <View className='idx-button-container'>
-            <Button type='primary' onClick={this.generateReport}>生成报告</Button>
-          </View>
+          {this.state.mEditable ?
+             (<View className='idx-button-container'>
+                <Button type='primary' onClick={this.generateReport}>生成报告</Button>
+                <Button type='primary' onClick={this.clearData}>清空数据</Button>
+                <Button type='primary' open-type='share'>分享结果</Button>
+              </View>)
+                : (<View className='idx-button-container'>
+                      <Button type='primary' onClick={this.recaculate}>重新计算</Button>
+                      <Button type='primary' open-type='share'>分享结果</Button>
+                    </View>)}
         </View>
       </View>
     )
