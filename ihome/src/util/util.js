@@ -3,13 +3,18 @@ import Taro from '@tarojs/taro';
 export const Util = {
 
   appTitle: '茜茜猫首付计算器',
+
   mTipBoxMessages : {
     DeedTax: 1,
     PersonalIncomeTax: 2,
     ValueAddedTax: 3,
-    TotalFee: 4,
-    TotalTax: 5,
-    TotalTaxAndFee: 6,
+    FirstPayment: 4,
+    TotalPayment: 5,
+    TotalFee: 6,
+    TotalTax: 7,
+    TotalLoan: 8,
+    TotalTaxAndFee: 9,
+    AverageUnitPrice: 10,
   },
 
   isInstanceOf: function(thisVar, varType) {

@@ -1,12 +1,10 @@
 $page-background-color: #FFF;
 $item-border-color: #DDD;
 $item-lr-padding: 15px;
+$item-border-color-bold: #8AC007;
 
 .idx-top-container {
   font-size: 30px;
-}
-
-.idx-tip-box-icon-open {
 }
 
 .idx-top-container-2 {
@@ -14,6 +12,7 @@ $item-lr-padding: 15px;
   font-size: 30px;
   margin: 25px;
 }
+
 .idx-input-item-container {
   display: flex;
   flex-direction: colume;
@@ -23,32 +22,67 @@ $item-lr-padding: 15px;
   padding: 20px 0px;
 }
 
-.idx-input-title {
+.idx-input-item-container-bold {
+  display: flex;
+  flex-direction: colume;
+  flex-wrap: nowrap;
+  border-bottom: 5px solid $item-border-color-bold;
+  padding: 20px 0px;
+}
+
+.idx-input-item-container-bold2 {
+  display: flex;
+  flex-direction: colume;
+  flex-wrap: nowrap;
+  border-bottom: 5px solid $item-border-color;
+  padding: 20px 0px;
+}
+
+@mixin idx_input_title(){
   flex: 3;
   flex-wrap: nowrap;
   padding-left: $item-lr-padding;
+}
+
+.idx-input-title {
+  @include idx_input_title();
+}
+
+.idx-input-title-bold {
+  @include idx_input_title();
+  font-weight: bold;
 }
 
 .idx-input-title2 {
-  flex: 3;
-  flex-wrap: nowrap;
-  padding-left: $item-lr-padding;
+  @include idx_input_title();
   border-left: 3px solid $item-border-color;
 }
 
-.idx-input-text {
+.idx-input-title2-bold {
+  @include idx_input_title();
+  border-left: 3px solid $item-border-color;
+  font-weight: bold;
+}
+
+@mixin idx_input_text(){
   flex: 3;
   flex-wrap: nowrap;
   text-align: right;
   padding-right: $item-lr-padding;
 }
 
+.idx-input-text {
+  @include idx_input_text();
+}
+
+.idx-input-text-bold {
+  @include idx_input_text();
+  font-weight: bold;
+}
+
 .idx-input-text-disable {
+  @include idx_input_text();
   background-color: $item-border-color;
-  flex: 3;
-  flex-wrap: nowrap;
-  text-align: right;
-  padding-right: $item-lr-padding;
 }
 
 .idx-radio-title {
@@ -68,4 +102,5 @@ $item-lr-padding: 15px;
   flex-flow: row nowrap;
   align-items: center;
   margin: 25px;
+  padding: 0px 25px 20px 25px;
 }

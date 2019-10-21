@@ -20,9 +20,9 @@ class App extends Component {
    */
   config: Config = {
     pages: [
-      'pages/index/index'
-      'pages/report/report'
-      'pages/tipbox/tipbox'
+      'pages/index/index',
+      'pages/report/report',
+      'pages/tipbox/tipbox',
     ],
     window: {
       backgroundTextStyle: 'light',

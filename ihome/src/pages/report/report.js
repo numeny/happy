@@ -1,79 +1,12 @@
 import Taro, { Component, Config } from '@tarojs/taro'
 import { View, Text, Image, Input, Video, Button, RadioGroup, Radio, Checkbox, CheckboxGroup } from '@tarojs/components'
-import '../index/index.scss'
+import './report.scss'
 
 import { Util } from '../../util/util'
+import "../../../node_modules/taro-ui/dist/style/components/icon.scss";
 
 import namedPng from '@images/index/1.jpeg'
 import namedVideo from '@res/video/1.mp4'
-
-function FirstTierCitieCalcClient(state) {
-  console.log('FirstTierCitieCalcClient')
-  this.mState = state
-  this.setClientState = function(state) {
-    this.mState = state
-  }
-  // 北上广深圳: 普通住宅并且家庭首套住房90平米以下1%, 90平米以上1.5%, 140平米以上3%,
-  //             非普通住宅以及二套房不管大小一律3%
-  // FIXME 其他城市，家庭首套住房90平米以下1%, 90平米以上2%, 二套房不管大小一律3%
-  this.getDeedTaxRate = function() {
-    let deedTaxRate = 0
-    if (this.mState.mOrdinaryHouseRadioValue
-        && this.mState.mFirstHouseRadioValue == 1) {
-      deedTaxRate = (this.mState.mHouseArea <= 90) ? 0.01
-        : ((this.mState.mHouseArea <= 140) ? 0.015 : 0.03)
-    } else {
-      deedTaxRate = 0.03
-    }
-    // console.log('getDeedTaxRate, deedTaxRate: ' + deedTaxRate)
-    return deedTaxRate
-  }
-
-  this.getDeedTax = function() {
-    let deedTaxRate = this.getDeedTaxRate()
-    let deedTax = this.mState.mWebSignPrice * deedTaxRate
-    if (deedTax <= 0) {
-      deedTax = 0
-    }
-    /*
-    console.log('getDeedTax, deedTaxRate: ' + deedTaxRate
-        + ", deedTax: " + deedTax)
-    */
-    return deedTax
-  }
-
-  this.getPersonalIncomeTax = function() {
-    let personalIncomeTax = 0
-    if (this.mState.mAboveTwoYearsRadioValue != 3 || !this.mState.mOnlyHouseRadioValue) {
-      personalIncomeTax = (this.mState.mWebSignPrice * 0.9 - this.mState.mOriginPrice) * 0.2
-    }
-    if (personalIncomeTax <= 0) {
-      personalIncomeTax = 0
-    }
-    return personalIncomeTax
-  }
-
-  // 对于非一线城市，个人购买不足2年的住房对外销售，按照5%的征收率全额缴纳增值税;个人将购买2年以上(含2年)的住房对外销售的，免征增值税。
-  // 北、上、广、深四个一线城市，个人购买不足2年的住房对外销售的，按照5%的征收率全额缴纳增值税;个人将购买2年以上(含2年)的非普通住房对外销售的，以销售收入减去购买住房价款后的差额按照5%的征收率缴纳增值税;个人将购买2年以上(含2年)的普通住房对外销售的，免征增值税。
-  this.getValueAddedTax = function() {
-    const valueAddedTaxRate = 0.05 * 1.13 / 1.05
-    let valueAddedTax = 0
-    
-    if (this.mState.mAboveTwoYearsRadioValue == 1) { // 所有的普通住宅和非普通住宅，只要不满两年
-      valueAddedTax = this.mState.mWebSignPrice * valueAddedTaxRate
-    } else if (!this.mState.mOrdinaryHouseRadioValue) {
-      valueAddedTax = (this.mState.mWebSignPrice - this.mState.mOriginPrice) * valueAddedTaxRate
-    }
-    if (valueAddedTax <= 0) {
-      valueAddedTax = 0
-    }
-    console.log('getValueAddedTax, valueAddedTaxRate: ' + valueAddedTaxRate
-        + ', valueAddedTax: ' + valueAddedTax)
-    return valueAddedTax
-  }
-}
-
-let sCalcClient = new FirstTierCitieCalcClient()
 
 export default class Report extends Component {
 
@@ -85,43 +18,14 @@ export default class Report extends Component {
    * 提示和声明 navigationBarTextStyle: 'black' | 'white' 类型冲突, 需要显示声明类型
    */
   config: Config = {
-    navigationBarTitleText: '首页'
+    navigationBarTitleText: '茜茜猫首付计算器',
   }
 
   constructor(props) {
     super(props)
 
-    console.error("constructor, this.$router.params.fp: "
-        + this.$router.params.fp);
-    console.error("constructor, this.$router.params: "
-        + this.$router.params);
     this.state = {
-      sCalcClient: null,
-
-      callLinkForUpdateAll : [
-        this.updateAll,
-        this.updateDeedTax,
-        this.updatePersonalIncomeTax,
-        this.updateValueAddedTax,
-        this.updateOtherTax,
-
-        this.updateAgencyFee,
-        this.updateLoanServiceFee,
-        this.updateEvaluationFee,
-        this.updateMortgageRegistrationFee,
-        this.updateOtherFee,
-
-        this.updateCommercialLoan,
-        this.updateProvidentFundLoan,
-        this.updateOtherLoan,
-
-        this.updateTotalLoan,
-        this.updateTotalFee,
-        this.updateTotalTax,
-
-        this.updateTotalPayment,
-        this.updateFirstPayment,
-      ],
+      mOpenFromMain: (this.$router.params.from != null & this.$router.params.from == 'main') ? true : false,
 
       mFirstPayment: Number(this.$router.params.fp),
       mTotalPayment: Number(this.$router.params.tp),
@@ -181,27 +85,9 @@ export default class Report extends Component {
       ],
     }
 
-    this.initCallLink()
-    sCalcClient.setClientState(this.state)
   }
 
-  componentWillMount () {
-    console.error("componentWillMount, mOnlyHouseRadioValue: ", this.$router.params.onhrv);
-
-  }
-
-  initCallLink = () => {
-    for (var idx = 0; idx < this.state.callLinkForUpdateAll.length - 1; idx++) {
-      let func = this.state.callLinkForUpdateAll[idx]
-      let nextFunc = this.state.callLinkForUpdateAll[idx+1]
-      func.prototype.postCallback = nextFunc
-    }
-    /*
-    this.updateDeedTax.prototype.postCallback = this.updatePersonalIncomeTax
-    this.updatePersonalIncomeTax.prototype.postCallback = this.updateValueAddedTax
-    this.updateValueAddedTax.prototype.postCallback = this.updateOtherTax
-    */
-  }
+  componentWillMount () { }
 
   componentDidMount () { }
 
@@ -211,584 +97,7 @@ export default class Report extends Component {
 
   componentDidHide () { }
 
-  updateTaxRate = () => {
-  }
-
-  updateAll = () => {
-    sCalcClient.setClientState(this.state)
-    if (this.updateAll.prototype.postCallback != null) {
-      this.updateAll.prototype.postCallback()
-    }
-  }
-
-  updateFirstPayment = () => {
-    this.setState({
-        mFirstPayment: this.state.mTotalPayment - this.state.mTotalLoan,
-    }, () => {
-      if (this.updateFirstPayment.prototype.postCallback != null) {
-        this.updateFirstPayment.prototype.postCallback()
-      }
-    })
-  }
-
-  updateTotalPayment = () => {
-    this.setState({
-      mTotalPayment: this.state.mTotalPrice + this.state.mTotalFee
-                      + this.state.mTotalTax,
-    }, () => {
-      if (this.updateTotalPayment.prototype.postCallback != null) {
-        this.updateTotalPayment.prototype.postCallback()
-      }
-    })
-  }
-
-  updateTotalLoan = () => {
-    this.setState({
-        mTotalLoan: this.state.mCommercialLoan + this.state.mProvidentFundLoan
-                      + this.state.mOtherLoan,
-    }, () => {
-      if (this.updateTotalLoan.prototype.postCallback != null) {
-        this.updateTotalLoan.prototype.postCallback()
-      }
-    })
-  }
-
-  updateTotalFee = () => {
-    let totalFee = (this.state.mAgencyFee
-        + this.state.mLoanServiceFee
-        + this.state.mEvaluationFee
-        + this.state.mMortgageRegistrationFee
-        + this.state.mOtherFee)
-    this.setState({
-        mTotalFee: totalFee,
-    }, () => {
-      if (this.updateTotalFee.prototype.postCallback != null) {
-        this.updateTotalFee.prototype.postCallback()
-      }
-    })
-  }
-
-  updateTotalTax = () => {
-    const totalTax = (this.state.mDeedTax + this.state.mPersonalIncomeTax +
-                      + this.state.mValueAddedTax + this.state.mOtherTax)
-    this.setState({
-        mTotalTax: totalTax,
-    }, () => {
-      if (this.updateTotalTax.prototype.postCallback != null) {
-        this.updateTotalTax.prototype.postCallback()
-      }
-    })
-  }
-
-  updateAgencyFee = () => {
-    if (this.updateAgencyFee.prototype.postCallback != null) {
-      this.updateAgencyFee.prototype.postCallback()
-    }
-  }
-
-  updateLoanServiceFee = () => {
-    if (this.updateLoanServiceFee.prototype.postCallback != null) {
-      this.updateLoanServiceFee.prototype.postCallback()
-    }
-  }
-
-  updateEvaluationFee = () => {
-    if (this.updateEvaluationFee.prototype.postCallback != null) {
-      this.updateEvaluationFee.prototype.postCallback()
-    }
-  }
-
-  updateMortgageRegistrationFee = () => {
-    if (this.updateMortgageRegistrationFee.prototype.postCallback != null) {
-      this.updateMortgageRegistrationFee.prototype.postCallback()
-    }
-  }
-
-  updateOtherFee = () => {
-    if (this.updateOtherFee.prototype.postCallback != null) {
-      this.updateOtherFee.prototype.postCallback()
-    }
-  }
-
-  updateCommercialLoan = () => {
-    if (this.updateCommercialLoan.prototype.postCallback != null) {
-      this.updateCommercialLoan.prototype.postCallback()
-    }
-  }
-
-  updateProvidentFundLoan = () => {
-    if (this.updateProvidentFundLoan.prototype.postCallback != null) {
-      this.updateProvidentFundLoan.prototype.postCallback()
-    }
-  }
-
-  updateOtherLoan = () => {
-    if (this.updateOtherLoan.prototype.postCallback != null) {
-      this.updateOtherLoan.prototype.postCallback()
-    }
-  }
-
-  updateDeedTax = () => {
-    let deedTax = 0
-    if (this.state.mWillInputDeedTaxManual) {
-      deedTax = this.state.mInputDeedTaxManual
-    } else {
-      deedTax = sCalcClient.getDeedTax()
-    }
-    this.setState({
-        mDeedTax: deedTax,
-    }, () => {
-      if (this.updateDeedTax.prototype.postCallback != null) {
-        this.updateDeedTax.prototype.postCallback()
-      }
-    })
-  }
-
-  updatePersonalIncomeTax = () => {
-    let personalIncomeTax = 0
-    if (this.state.mWillInputPersonalIncomeTaxManual) {
-      personalIncomeTax = this.state.mInputPersonalIncomeTaxManual
-    } else {
-      personalIncomeTax = sCalcClient.getPersonalIncomeTax()
-    }
-    this.setState({
-        mPersonalIncomeTax: personalIncomeTax,
-    }, () => {
-      if (this.updatePersonalIncomeTax.prototype.postCallback != null) {
-        this.updatePersonalIncomeTax.prototype.postCallback()
-      }
-    })
-  }
-
-  updateValueAddedTax = () => {
-    let valueAddedTax = 0
-    if (this.state.mWillInputValueAddedTaxManual) {
-      valueAddedTax = this.state.mInputValueAddedTaxManual
-    } else {
-      valueAddedTax = sCalcClient.getValueAddedTax()
-    }
-    this.setState({
-        mValueAddedTax: valueAddedTax,
-    }, () => {
-      if (this.updateValueAddedTax.prototype.postCallback != null) {
-        this.updateValueAddedTax.prototype.postCallback()
-      }
-    })
-  }
-
-  updateOtherTax = () => {
-    if (this.updateOtherTax.prototype.postCallback != null) {
-      this.updateOtherTax.prototype.postCallback()
-    }
-  }
-
-  // FIXME
-  lowestPersonalIncomeTax = () => {
-    if (this.state.mLowestGuidePrice == 0) {
-      Taro.showToast({title: "请输入最低指导价！"})
-      return
-    }
-
-    if (this.state.mOriginPrice == 0) {
-      Taro.showToast({title: "请输入原值！"})
-      return
-    }
-    // let personalIncomeTax = (webSignPrice * 0.9 - originPrice) * 0.2
-    let webSignPrice = Math.max(this.state.mOriginPrice * 10 / 9,
-        this.state.mLowestGuidePrice)
-
-    console.error("lowestPersonalIncomeTax, webSignPrice: ", webSignPrice);
-    this.onWebSignPriceChanged(webSignPrice)
-  }
-
-  onInputHouseName = (e) => {
-    Util.setInterval(() => {
-      this.setState({
-          mHouseName: e.target.value,
-      })
-    })
-  }
-
-  onInputHouseArea = (e) => {
-    Util.setInterval(() => {
-      try {
-        let houseArea = Number(e.target.value)
-        this.setState({
-            mHouseArea: houseArea,
-        }, () => {
-          this.updateAll()
-        })
-      } catch(err) {
-        console.log("onInputHouseArea: ", err);
-        Taro.showToast({title: "请输入正确的面积！"})
-      }
-    })
-  }
-
-  onInputTotalPrice = (e) => {
-    Util.setInterval(() => {
-      try {
-        let totalPrice = Number(e.target.value)
-        this.setState({
-            mTotalPrice: totalPrice,
-        }, () => {
-          this.updateAll()
-        })
-    
-      } catch(err) {
-        console.log("onInputTotalPrice: ", err);
-        Taro.showToast({title: "请输入正确的金额！"})
-      }
-    })
-  }
-
-  onInputOriginPrice = (e) => {
-    Util.setInterval(() => {
-      try {
-        let originPrice = Number(e.target.value)
-        /*
-        if (e.target.value.length != 0) {
-          originPrice = parseFloat(e.target.value)
-        }
-        */
-        // FIXME
-        if (e.target.value.length != 0 && !Util.isNumber(originPrice)) {
-          console.log("onInputOriginPrice-1-2: ", err);
-          Taro.showToast({title: "请输入正确的金额！"})
-          return
-        }
-        this.setState({
-            mOriginPrice: originPrice,
-        }, () => {
-          this.updateAll()
-        })
-    
-      } catch(err) {
-        console.log("onInputOriginPrice: ", err);
-        Taro.showToast({title: "请输入正确的金额！"})
-      }
-    })
-  }
-
-  onWebSignPriceChanged = (webSignPrice) => {
-    Util.setInterval(() => {
-      this.setState({
-          mWebSignPrice: webSignPrice,
-      }, () => {
-        this.updateAll()
-      })
-    })
-  }
-
-  onInputWebSignPrice = (e) => {
-    Util.setInterval(() => {
-      try {
-        let webSignPrice = Number(e.target.value)
-        this.onWebSignPriceChanged(webSignPrice)
-      } catch(err) {
-        console.log("onInputWebSignPrice: ", err);
-        Taro.showToast({title: "请输入正确的金额！"})
-      }
-    })
-  }
-
-  onInputLowestGuidePrice = (e) => {
-    console.log("onInputLowestGuidePrice: ", e.target.value);
-    Util.setInterval(() => {
-      try {
-        let lowestGuidePrice = Number(e.target.value)
-        this.setState({
-            mLowestGuidePrice: lowestGuidePrice,
-        }, () => {
-          this.updateAll()
-        })
-    
-      } catch(err) {
-        console.log("onInputLowestGuidePrice: ", err);
-        Taro.showToast({title: "请输入正确的金额！"})
-      }
-    })
-  }
-
-  onInputAgencyFee = (e) => {
-    Util.setInterval(() => {
-      try {
-        let agencyFee = Number(e.target.value)
-        this.setState({
-            mAgencyFee: agencyFee,
-        }, () => {
-          this.updateAll()
-        })
-      } catch(err) {
-        console.log("onInputAgencyFee: ", err);
-        Taro.showToast({title: "请输入正确的金额！"})
-      }
-    })
-  }
-
-  onInputLoanServiceFee = (e) => {
-    Util.setInterval(() => {
-      try {
-        let loanServiceFee = Number(e.target.value)
-        this.setState({
-            mLoanServiceFee: loanServiceFee,
-        }, () => {
-          this.updateAll()
-        })
-      } catch(err) {
-        console.log("onInputLoanServiceFee: ", err);
-        Taro.showToast({title: "请输入正确的金额！"})
-      }
-    })
-  }
-
-  onInputEvaluationFee = (e) => {
-    Util.setInterval(() => {
-      try {
-        let evaluationFee = Number(e.target.value)
-        this.setState({
-            mEvaluationFee: evaluationFee,
-        }, () => {
-          this.updateAll()
-        })
-      } catch(err) {
-        console.log("onInputEvaluationFee: ", err);
-        Taro.showToast({title: "请输入正确的金额！"})
-      }
-    })
-  }
-
-  onInputMortgageRegistrationFee = (e) => {
-    Util.setInterval(() => {
-      try {
-        let mortgageRegistrationFee = Number(e.target.value)
-        this.setState({
-            mMortgageRegistrationFee: mortgageRegistrationFee,
-        }, () => {
-            this.updateAll()
-        })
-      } catch(err) {
-        console.log("onInputMortgageRegistrationFee: ", err);
-        Taro.showToast({title: "请输入正确的金额！"})
-      }
-    })
-  }
-
-  onInputOtherFee = (e) => {
-    Util.setInterval(() => {
-      try {
-        let otherFee = Number(e.target.value)
-        this.setState({
-            mOtherFee: otherFee,
-        }, () => {
-            this.updateAll()
-        })
-      } catch(err) {
-        console.log("onInputOtherFee: ", err);
-        Taro.showToast({title: "请输入正确的金额！"})
-      }
-    })
-  }
-
-  onInputCommercialLoan = (e) => {
-    Util.setInterval(() => {
-      try {
-        let commercialLoan = Number(e.target.value)
-        this.setState({
-            mCommercialLoan: commercialLoan,
-        }, () => {
-            this.updateAll()
-        })
-      } catch(err) {
-        console.log("onInputCommercialLoan: ", err);
-        Taro.showToast({title: "请输入正确的金额！"})
-      }
-    })
-  }
-
-  onInputProvidentFundLoan = (e) => {
-    Util.setInterval(() => {
-      try {
-        let providentFundLoan = Number(e.target.value)
-        this.setState({
-            mProvidentFundLoan: providentFundLoan,
-        }, () => {
-            this.updateAll()
-        })
-      } catch(err) {
-        console.log("onInputProvidentFundLoan: ", err);
-        Taro.showToast({title: "请输入正确的金额！"})
-      }
-    })
-  }
-
-  onInputOtherLoan = (e) => {
-    Util.setInterval(() => {
-      try {
-        let otherLoan = Number(e.target.value)
-        this.setState({
-            mOtherLoan: otherLoan,
-        }, () => {
-            this.updateAll()
-        })
-      } catch(err) {
-        console.log("onInputOtherLoan: ", err);
-        Taro.showToast({title: "请输入正确的金额！"})
-      }
-    })
-  }
-
-  onInputDeedTaxManual = (e) => {
-    if (!this.state.mWillInputDeedTaxManual) {
-      console.error('Should not update deed tax manully, e.target.value:',
-          e.target.value)
-      return
-    }
-    Util.setInterval(() => {
-      try {
-        let inputDeedTaxManual = Number(e.target.value)
-        this.setState({
-            mInputDeedTaxManual: inputDeedTaxManual,
-        }, () => {
-            this.updateAll()
-        })
-    
-      } catch(err) {
-        console.log("onInputDeedTaxManual: ", err);
-        Taro.showToast({title: "请输入正确的契税金额！"})
-      }
-    })
-  }
-
-  onInputPersonalIncomeTaxManual = (e) => {
-    if (!this.state.mWillInputPersonalIncomeTaxManual) {
-      console.error('Should not update person income tax manully, e.target.value:',
-          e.target.value)
-      return
-    }
-    Util.setInterval(() => {
-      try {
-        let inputPersonalIncomeTaxManual = Number(e.target.value)
-        this.setState({
-            mInputPersonalIncomeTaxManual: inputPersonalIncomeTaxManual,
-        }, () => {
-            this.updateAll()
-        })
-    
-      } catch(err) {
-        console.log("onInputPersonalIncomeTaxManual: ", err);
-        Taro.showToast({title: "请输入正确的金额！"})
-      }
-    })
-  }
-
-  onInputValueAddedTaxManual = (e) => {
-    if (!this.state.mWillInputValueAddedTaxManual) {
-      console.error('Should not update value added tax manully, e.target.value:',
-          e.target.value)
-      return
-    }
-    Util.setInterval(() => {
-      try {
-        let inputValueAddedTaxManual = Number(e.target.value)
-        console.log("onInputValueAddedTaxManual: " + inputValueAddedTaxManual
-            + " , e.target.value: " + e.target.value);
-        this.setState({
-            mInputValueAddedTaxManual: inputValueAddedTaxManual,
-        }, () => {
-            this.updateAll()
-        })
-      } catch(err) {
-        console.log("onInputValueAddedTaxManual: ", err);
-        Taro.showToast({title: "请输入正确的金额！"})
-      }
-    })
-  }
-
-  clickWillInputDeedTaxManualCheckbox = (e) => {
-    Util.setInterval(() => {
-      console.log('clickWillInputDeedTaxManualCheckbox, e.detail:', e.detail)
-      this.setState(
-        prevState => ({
-          mWillInputDeedTaxManual: !prevState.mWillInputDeedTaxManual,
-        }), () => {
-            this.updateAll()
-        })
-    })
-  }
-
-  clickWillInputPersonalIncomeTaxManualCheckbox = (e) => {
-    Util.setInterval(() => {
-      console.log('clickWillInputPersonalIncomeTaxManualCheckbox, e.detail:', e.detail)
-      this.setState(
-        prevState => ({
-          mWillInputPersonalIncomeTaxManual: !prevState.mWillInputPersonalIncomeTaxManual,
-        }), () => {
-            this.updateAll()
-        })
-    })
-  }
-
-  clickWillInputValueAddedTaxManualCheckbox = (e) => {
-    Util.setInterval(() => {
-      console.log('clickWillInputValueAddedTaxManualCheckbox, e.detail:', e.detail)
-      this.setState(
-        prevState => ({
-          mWillInputValueAddedTaxManual: !prevState.mWillInputValueAddedTaxManual,
-        }), () => {
-            this.updateAll()
-        })
-    })
-  }
-
-  onClickFirstHouseRadio = (value, e) => {
-    Util.setInterval(() => {
-      console.log('onClickFirstHouseRadio, idx:', value)
-      this.setState({
-          mFirstHouseRadioValue: value,
-      }, () => {
-          this.updateAll()
-      })
-    })
-  }
-
-  onClickAboveTwoYearsRadio = (value, e) => {
-    Util.setInterval(() => {
-      console.log('onClickAboveTwoYearsRadio, value:', value)
-      this.setState({
-          mAboveTwoYearsRadioValue: value,
-      }, () => {
-          this.updateAll()
-      })
-    })
-  }
-
-  onClickOnlyHouseRadio = (value, e) => {
-    Util.setInterval(() => {
-      console.log('onClickOnlyHouseRadio, value:', value)
-      this.setState({
-          mOnlyHouseRadioValue: value,
-      }, () => {
-          this.updateAll()
-      })
-    })
-  }
-
-  onClickOrdinaryHouseRadio = (value, e) => {
-    Util.setInterval(() => {
-      console.log('onClickOrdinaryHouseRadio, value:', value)
-      this.setState({
-          mOrdinaryHouseRadioValue: value,
-      }, () => {
-          this.updateAll()
-      })
-    })
-  }
-
   onShareAppMessage = (share) => {
-    console.error('onShareAppMessage: from: ' + share.from
-        + ', target: ' + share.target
-        + ', webViewUrl: ' + share.webViewUrl);
     let param = Util.getParamForGenerateReport(this.state);
     return {
       title: Util.appTitle,
@@ -802,16 +111,14 @@ export default class Report extends Component {
     })
   }
 
+  onClickOpenTipBoxIcon = (idx, e) => {
+    console.log('onClickOpenTipBoxIcon, idx: ' + idx)
+    Taro.navigateTo({
+      url: '/pages/tipbox/tipbox?idx=' + idx
+    })
+  }
+
   render () {
-    let classNameForInputDeedTaxManual = this.state.mWillInputDeedTaxManual ?
-            'idx-input-text idx-input-text-deedtax' : 'idx-input-text-disable idx-input-text-deedtax'
-
-    let classNameForInputPersonalIncomeTaxManual = this.state.mWillInputPersonalIncomeTaxManual ?
-            'idx-input-text idx-input-text-deedtax' : 'idx-input-text-disable idx-input-text-deedtax'
-
-    let classNameForInputValueAddedTaxManual = this.state.mWillInputValueAddedTaxManual ?
-            'idx-input-text idx-input-text-deedtax' : 'idx-input-text-disable idx-input-text-deedtax'
-
     return (
       <View className='idx-top-container'>
 
@@ -823,7 +130,7 @@ export default class Report extends Component {
             <Text className='idx-input-text'>{this.state.mHouseArea}</Text>
           </View>
           <View className='idx-input-item-container'>
-            <Text className='idx-input-title'>总价</Text>
+            <Text className='idx-input-title'>价格</Text>
             <Text className='idx-input-text'>{this.state.mTotalPrice}</Text>
             <Text className='idx-input-title2'>原值</Text>
             <Text className='idx-input-text'>{this.state.mOriginPrice}</Text>
@@ -910,16 +217,16 @@ export default class Report extends Component {
           </View>
 
           <View className='idx-input-item-container'>
-            <Text className='idx-input-title'>首付</Text>
+            <View className='idx-input-title'>总首付<View className='at-icon at-icon-help' onClick={this.onClickOpenTipBoxIcon.bind(this, Util.mTipBoxMessages.FirstPayment)}></View></View>
             <Text className='idx-input-text'>{this.state.mFirstPayment.toFixed(2)}</Text>
-            <Text className='idx-input-title2'>总支付</Text>
+            <View className='idx-input-title2'>总支付<View className='at-icon at-icon-help' onClick={this.onClickOpenTipBoxIcon.bind(this, Util.mTipBoxMessages.TotalPayment)}></View></View>
             <Text className='idx-input-text'>{this.state.mTotalPayment.toFixed(2)}</Text>
           </View>
 
           <View className='idx-input-item-container'>
-            <Text className='idx-input-title'>总费用</Text>
+            <View className='idx-input-title'>总费用<View className='at-icon at-icon-help' onClick={this.onClickOpenTipBoxIcon.bind(this, Util.mTipBoxMessages.TotalFee)}></View></View>
             <Text className='idx-input-text'>{this.state.mTotalFee.toFixed(2)}</Text>
-            <Text className='idx-input-title2'>总税款</Text>
+            <View className='idx-input-title2'>总税款<View className='at-icon at-icon-help' onClick={this.onClickOpenTipBoxIcon.bind(this, Util.mTipBoxMessages.TotalTax)}></View></View>
             <Text className='idx-input-text'>{this.state.mTotalTax.toFixed(2)}</Text>
           </View>
 
@@ -962,8 +269,9 @@ export default class Report extends Component {
           </View>
 
           <View className='idx-button-container'>
-            <Button type='primary' onClick={this.navigateToMainPage}>重新计算</Button>
-            <Button type='primary' open-type='share'>转发给朋友</Button>
+            {!this.state.mOpenFromMain &&
+              <Button type='primary' onClick={this.navigateToMainPage}>重新计算</Button>}
+            <Button type='primary' open-type='share'>结果转发给朋友</Button>
           </View>
         </View>
       </View>
