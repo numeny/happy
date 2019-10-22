@@ -780,18 +780,20 @@ export default class Index extends Component {
     })
   }
 
-  clickWillInputDeedTaxManualCheckbox = (e) => {
+  changeWillInputDeedTaxManualCheckbox = (e) => {
     Util.setInterval(() => {
       this.setState(
         prevState => ({
           mWillInputDeedTaxManual: !prevState.mWillInputDeedTaxManual,
         }), () => {
             this.updateAll()
+            console.error("changeWillInputDeedTaxManualCheckbox: ",
+                this.state.mWillInputDeedTaxManual);
         })
     })
   }
 
-  clickWillInputPersonalIncomeTaxManualCheckbox = (e) => {
+  changeWillInputPersonalIncomeTaxManualCheckbox = (e) => {
     Util.setInterval(() => {
       this.setState(
         prevState => ({
@@ -802,7 +804,7 @@ export default class Index extends Component {
     })
   }
 
-  clickWillInputValueAddedTaxManualCheckbox = (e) => {
+  changeWillInputValueAddedTaxManualCheckbox = (e) => {
     Util.setInterval(() => {
       this.setState(
         prevState => ({
@@ -892,7 +894,7 @@ export default class Index extends Component {
         </View>
         <View className='idx-input-item-container'>
           <Text className='idx-input-title'>房屋名称</Text>
-          <Input className='idx-input-text' type='text' placeholder='房子位置'
+          <Input className='idx-input-text' type='text' placeholder='名称'
               disabled={!this.state.mEditable} value={this.state.mHouseName} onInput={this.onInputHouseName} />
           <Text className='idx-input-title2'>面积</Text>
           <Input className='idx-input-text' type='digit' placeholder='m2'
@@ -924,8 +926,8 @@ export default class Index extends Component {
                   <Radio value={item.value} disabled={!this.state.mEditable}
                     checked={item.value == this.state.mFirstHouseRadioValue}
                     style={{transform: 'scale(0.8)'}} color='#FF7464'>
-                    <Text className='idx-radio-text'>{item.text}</Text>
                   </Radio>
+                  <Text className='idx-radio-text'>{item.text}</Text>
                 </View>)
             })}
           </View>
@@ -940,8 +942,8 @@ export default class Index extends Component {
                     onClick={this.onClickAboveTwoYearsRadio.bind(this, item.value)} 
                     checked={item.value == this.state.mAboveTwoYearsRadioValue}
                     style={{transform: 'scale(0.8)'}} color='#FF7464'>
-                    <Text className='idx-radio-text'>{item.text}</Text>
                   </Radio>
+                  <Text className='idx-radio-text'>{item.text}</Text>
                 </View>)
             })}
           </View>
@@ -955,8 +957,8 @@ export default class Index extends Component {
                   <Radio value={item.value} disabled={!this.state.mEditable}
                     checked={item.value == this.state.mOnlyHouseRadioValue}
                     style={{transform: 'scale(0.8)', padding: '0px 15px'}} color='#FF7464'>
-                    <Text className='idx-radio-text'>{item.text}</Text>
                   </Radio>
+                  <Text className='idx-radio-text'>{item.text}</Text>
                 </View>)
             })}
           </View>
@@ -970,8 +972,8 @@ export default class Index extends Component {
                   <Radio value={item.value} disabled={!this.state.mEditable}
                     checked={item.value == this.state.mOrdinaryHouseRadioValue}
                     style={{transform: 'scale(0.8)', padding: '0px 15px'}} color='#FF7464'>
-                    <Text className='idx-radio-text'>{item.text}</Text>
                   </Radio>
+                  <Text className='idx-radio-text'>{item.text}</Text>
                 </View>)
             })}
           </View>
@@ -1007,12 +1009,12 @@ export default class Index extends Component {
                 disabled={!this.state.mEditable || !this.state.mWillInputDeedTaxManual}
                 placeholder='（万元）' maxLength='6'
                 onInput={this.onInputDeedTaxManual} />
-          <CheckboxGroup>
+          <CheckboxGroup
+              onChange={this.changeWillInputDeedTaxManualCheckbox}>
             <View className='idx-input-title'>
               <Checkbox checked={this.state.mWillInputDeedTaxManual}
-                disabled={!this.state.mEditable}
-                onClick={this.clickWillInputDeedTaxManualCheckbox}>
-                    手动输入</Checkbox>
+                disabled={!this.state.mEditable} />
+                <Text>手动输入</Text>
             </View>
           </CheckboxGroup>
         </View>
@@ -1024,12 +1026,11 @@ export default class Index extends Component {
                 disabled={!this.state.mEditable || !this.state.mWillInputPersonalIncomeTaxManual}
                 placeholder='（万元）' maxLength='6'
                 onInput={this.onInputPersonalIncomeTaxManual} />
-            <CheckboxGroup>
+            <CheckboxGroup onChange={this.changeWillInputPersonalIncomeTaxManualCheckbox}>
               <View className='idx-input-title'>
                 <Checkbox checked={this.state.mWillInputPersonalIncomeTaxManual}
-                  disabled={!this.state.mEditable}
-                  onClick={this.clickWillInputPersonalIncomeTaxManualCheckbox}>
-                    手动输入</Checkbox>
+                  disabled={!this.state.mEditable} />
+                <Text>手动输入</Text>
               </View>
             </CheckboxGroup>
         </View>
@@ -1041,12 +1042,11 @@ export default class Index extends Component {
                 disabled={!this.state.mEditable || !this.state.mWillInputValueAddedTaxManual}
                 placeholder='（万元）' maxLength='6'
                 onInput={this.onInputValueAddedTaxManual} />
-            <CheckboxGroup>
+            <CheckboxGroup onChange={this.changeWillInputValueAddedTaxManualCheckbox}>
               <View className='idx-input-title'>
                 <Checkbox checked={this.state.mWillInputValueAddedTaxManual}
-                  disabled={!this.state.mEditable}
-                  onClick={this.clickWillInputValueAddedTaxManualCheckbox}>
-                    手动输入</Checkbox>
+                  disabled={!this.state.mEditable} />
+                <Text>手动输入</Text>
               </View>
             </CheckboxGroup>
         </View>
@@ -1090,12 +1090,12 @@ export default class Index extends Component {
         </View>
         {this.state.mEditable ?
            (<View className='idx-button-container'>
-              <Button type='primary' onClick={this.clearData}>清空数据</Button>
-              <Button type='primary' open-type='share'>分享结果</Button>
+              <Button className='idx-button-item' type='primary' onClick={this.clearData}>清空数据</Button>
+              <Button className='idx-button-item' type='primary' open-type='share'>分享结果</Button>
             </View>)
               : (<View className='idx-button-container'>
-                    <Button type='primary' onClick={this.recaculate}>重新计算</Button>
-                    <Button type='primary' open-type='share'>分享结果</Button>
+                    <Button className='idx-button-item' type='primary' onClick={this.recaculate}>重新计算</Button>
+                    <Button className='idx-button-item' type='primary' open-type='share'>分享结果</Button>
                   </View>)}
       <View className='idx-bottom-cont'>
         谢谢使用，吐槽@1280496054@qq.com
