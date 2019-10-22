@@ -24,19 +24,13 @@ export default class Tipbox extends Component {
     this.state = {
       mIsShowingTipBoxIdx: Number(this.$router.params.idx),
       mTipBoxMessages : {
-        /*
-        DeedTax: 1,
-        PersonalIncomeTax: 2,
-        ValueAddedTax: 3,
-        TotalFee: 4,
-        TotalTax: 5,
-        TotalTaxAndFee: 6,
-        */
         properties: {
           1: {title: '关于契税',
               contents: [
                 '本计算器按照下列方式计算契税，如果不是此计算方法，请计算并手动输入契税额。',
-                '普通住宅并且家庭首套住房，90平米以下1%，90平米以上1.5%，140平米以上3%，非普通住宅以及二套房不管大小一律3%。',
+                '1. 契税率：普通住宅并且家庭首套住房，90平米以下1%，90平米以上1.5%，140平米以上3%；',
+                '           非普通住宅以及二套房一律为3%。',
+                '2. 契税 = 网签价 x 契税率。',
           ]},
           2: {title: '关于个人所得税',
               contents: [
@@ -48,10 +42,10 @@ export default class Tipbox extends Component {
           3: {title: '关于增值税',
               contents: [
                 '本计算器按照下列方式计算增值税，如果不是此计算方法，请计算并手动输入增值税额。',
-                '使用的增值税税率 = 0.05 x 1.13 / 1.05',
+                '使用的增值税税率 = 5% x 1.13 / 1.05 = 5.28%',
                 '1. 购买不足2年的住房，增值税 = 网签价格 x 增值税税率；',
                 '2. 购买2年以上（含2年）的非普通住房，增值税 = （网签价格 - 原值）x 增值税税率；',
-                '3. 购买2年以上（含2年）的非普通住房，增值税 = 0。',
+                '3. 购买2年以上（含2年）的普通住房，增值税 = 0。',
           ]},
           4: {title: '关于总首付',
               contents: [
@@ -85,7 +79,7 @@ export default class Tipbox extends Component {
           ]},
           9: {title: '关于税+费',
               contents: [
-                '本计算器按以下公式计算税+费：',
+                '本计算器按以下公式计算 税+费：',
                 '税+费 = 总费用 + 总税款',
                 '总费用 = 中介费 + 贷款费用 + 评估费 + 其他费用',
                 '总税款 = 契税 + 个人所得税 + 增值税 + 其他税',
@@ -97,6 +91,10 @@ export default class Tipbox extends Component {
                 '总房款 = 价格 + 总费用 + 总税款',
                 '总费用 = 中介费 + 贷款费用 + 评估费 + 其他费用',
                 '总税款 = 契税 + 个人所得税 + 增值税 + 其他税',
+          ]},
+          11: {title: '关于原税费合计',
+              contents: [
+                '原税费合计为卖方原购房时的各种税费，可以用于抵扣个人所得税。默认为零。',
           ]},
         },
       },

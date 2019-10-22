@@ -469,234 +469,203 @@ export default class Index extends Component {
   }
 
   onInputHouseName = (e) => {
-    Util.setInterval(() => {
-      this.setState({
-          mHouseName: e.target.value,
-      })
+    this.setState({
+        mHouseName: e.target.value,
     })
   }
 
   onInputHouseArea = (e) => {
-    Util.setInterval(() => {
-      try {
-        let houseArea = Number(e.target.value)
-        this.setState({
-            mHouseArea: houseArea,
-        }, () => {
-          this.updateAll()
-        })
-      } catch(err) {
-        console.log("onInputHouseArea: ", err);
-        Taro.showToast({title: "请输入正确的面积！"})
-      }
-    })
-  }
-
-  onInputTotalPrice = (e) => {
-    Util.setInterval(() => {
-      try {
-        let totalPrice = Number(e.target.value)
-        this.setState({
-            mTotalPrice: totalPrice,
-        }, () => {
-          this.updateAll()
-        })
-    
-      } catch(err) {
-        console.error("onInputTotalPrice: ", err);
-        Taro.showToast({title: "请输入正确的金额！"})
-      }
-    })
-  }
-
-  onInputOriginPrice = (e) => {
-    Util.setInterval(() => {
-      try {
-        let originPrice = Number(e.target.value)
-        // FIXME
-        if (e.target.value.length != 0 && !Util.isNumber(originPrice)) {
-          console.error("onInputOriginPrice: ", err);
-          Taro.showToast({title: "请输入正确的金额！"})
-          return
-        }
-        this.setState({
-            mOriginPrice: originPrice,
-        }, () => {
-          this.updateAll()
-        })
-    
-      } catch(err) {
-        console.error("onInputOriginPrice: ", err);
-        Taro.showToast({title: "请输入正确的金额！"})
-      }
-    })
-  }
-
-  onWebSignPriceChanged = (webSignPrice) => {
-    Util.setInterval(() => {
+    try {
+      let houseArea = Number(e.target.value)
       this.setState({
-          mWebSignPrice: webSignPrice,
+          mHouseArea: houseArea,
       }, () => {
         this.updateAll()
       })
+    } catch(err) {
+      console.error("onInputHouseArea: ", err);
+      Taro.showToast({title: "请输入正确的面积！"})
+    }
+  }
+
+  onInputTotalPrice = (e) => {
+    try {
+      let totalPrice = Number(e.target.value)
+      this.setState({
+          mTotalPrice: totalPrice,
+      }, () => {
+        this.updateAll()
+      })
+  
+    } catch(err) {
+      console.error("onInputTotalPrice: ", err);
+      Taro.showToast({title: "请输入正确的金额！"})
+    }
+  }
+
+  onInputOriginPrice = (e) => {
+    try {
+      let originPrice = Number(e.target.value)
+      // FIXME
+      if (e.target.value.length != 0 && !Util.isNumber(originPrice)) {
+        console.error("onInputOriginPrice: ", err);
+        Taro.showToast({title: "请输入正确的金额！"})
+        return
+      }
+      this.setState({
+          mOriginPrice: originPrice,
+      }, () => {
+        this.updateAll()
+      })
+    } catch(err) {
+      console.error("onInputOriginPrice: ", err);
+      Taro.showToast({title: "请输入正确的金额！"})
+    }
+  }
+
+  onWebSignPriceChanged = (webSignPrice) => {
+    this.setState({
+        mWebSignPrice: webSignPrice,
+    }, () => {
+      this.updateAll()
     })
   }
 
   onInputWebSignPrice = (e) => {
-    Util.setInterval(() => {
-      try {
-        let webSignPrice = Number(e.target.value)
-        this.onWebSignPriceChanged(webSignPrice)
-      } catch(err) {
-        console.error("onInputWebSignPrice: ", err);
-        Taro.showToast({title: "请输入正确的金额！"})
-      }
-    })
+    try {
+      let webSignPrice = Number(e.target.value)
+      this.onWebSignPriceChanged(webSignPrice)
+    } catch(err) {
+      console.error("onInputWebSignPrice: ", err);
+      Taro.showToast({title: "请输入正确的金额！"})
+    }
   }
 
   onInputOriginTaxSum = (e) => {
-    Util.setInterval(() => {
-      try {
-        let originTaxSum = Number(e.target.value)
-        this.setState({
-            mOriginTaxSum: originTaxSum,
-        }, () => {
-          this.updateAll()
-        })
-    
-      } catch(err) {
-        console.error("onInputOriginTaxSum: ", err);
-        Taro.showToast({title: "请输入正确的金额！"})
-      }
-    })
+    try {
+      let originTaxSum = Number(e.target.value)
+      this.setState({
+          mOriginTaxSum: originTaxSum,
+      }, () => {
+        this.updateAll()
+      })
+
+    } catch(err) {
+      console.error("onInputOriginTaxSum: ", err);
+      Taro.showToast({title: "请输入正确的金额！"})
+    }
   }
 
   onInputAgencyFee = (e) => {
-    Util.setInterval(() => {
-      try {
-        let agencyFee = Number(e.target.value)
-        this.setState({
-            mAgencyFee: agencyFee,
-        }, () => {
-          this.updateAll()
-        })
-      } catch(err) {
-        console.error("onInputAgencyFee: ", err);
-        Taro.showToast({title: "请输入正确的金额！"})
-      }
-    })
+    try {
+      let agencyFee = Number(e.target.value)
+      this.setState({
+          mAgencyFee: agencyFee,
+      }, () => {
+        this.updateAll()
+      })
+    } catch(err) {
+      console.error("onInputAgencyFee: ", err);
+      Taro.showToast({title: "请输入正确的金额！"})
+    }
   }
 
   onInputLoanServiceFee = (e) => {
-    Util.setInterval(() => {
-      try {
-        let loanServiceFee = Number(e.target.value)
-        this.setState({
-            mLoanServiceFee: loanServiceFee,
-        }, () => {
-          this.updateAll()
-        })
-      } catch(err) {
-        console.error("onInputLoanServiceFee: ", err);
-        Taro.showToast({title: "请输入正确的金额！"})
-      }
-    })
+    try {
+      let loanServiceFee = Number(e.target.value)
+      this.setState({
+          mLoanServiceFee: loanServiceFee,
+      }, () => {
+        this.updateAll()
+      })
+    } catch(err) {
+      console.error("onInputLoanServiceFee: ", err);
+      Taro.showToast({title: "请输入正确的金额！"})
+    }
   }
 
   onInputEvaluationFee = (e) => {
-    Util.setInterval(() => {
-      try {
-        let evaluationFee = Number(e.target.value)
-        this.setState({
-            mEvaluationFee: evaluationFee,
-        }, () => {
-          this.updateAll()
-        })
-      } catch(err) {
-        console.error("onInputEvaluationFee: ", err);
-        Taro.showToast({title: "请输入正确的金额！"})
-      }
-    })
+    try {
+      let evaluationFee = Number(e.target.value)
+      this.setState({
+          mEvaluationFee: evaluationFee,
+      }, () => {
+        this.updateAll()
+      })
+    } catch(err) {
+      console.error("onInputEvaluationFee: ", err);
+      Taro.showToast({title: "请输入正确的金额！"})
+    }
   }
 
   onInputMortgageRegistrationFee = (e) => {
-    Util.setInterval(() => {
-      try {
-        let mortgageRegistrationFee = Number(e.target.value)
-        this.setState({
-            mMortgageRegistrationFee: mortgageRegistrationFee,
-        }, () => {
-            this.updateAll()
-        })
-      } catch(err) {
-        console.error("onInputMortgageRegistrationFee: ", err);
-        Taro.showToast({title: "请输入正确的金额！"})
-      }
-    })
+    try {
+      let mortgageRegistrationFee = Number(e.target.value)
+      this.setState({
+          mMortgageRegistrationFee: mortgageRegistrationFee,
+      }, () => {
+          this.updateAll()
+      })
+    } catch(err) {
+      console.error("onInputMortgageRegistrationFee: ", err);
+      Taro.showToast({title: "请输入正确的金额！"})
+    }
   }
 
   onInputOtherFee = (e) => {
-    Util.setInterval(() => {
-      try {
-        let otherFee = Number(e.target.value)
-        this.setState({
-            mOtherFee: otherFee,
-        }, () => {
-            this.updateAll()
-        })
-      } catch(err) {
-        console.error("onInputOtherFee: ", err);
-        Taro.showToast({title: "请输入正确的金额！"})
-      }
-    })
+    try {
+      let otherFee = Number(e.target.value)
+      this.setState({
+          mOtherFee: otherFee,
+      }, () => {
+          this.updateAll()
+      })
+    } catch(err) {
+      console.error("onInputOtherFee: ", err);
+      Taro.showToast({title: "请输入正确的金额！"})
+    }
   }
 
   onInputCommercialLoan = (e) => {
-    Util.setInterval(() => {
-      try {
-        let commercialLoan = Number(e.target.value)
-        this.setState({
-            mCommercialLoan: commercialLoan,
-        }, () => {
-            this.updateAll()
-        })
-      } catch(err) {
-        console.error("onInputCommercialLoan: ", err);
-        Taro.showToast({title: "请输入正确的金额！"})
-      }
-    })
+    try {
+      let commercialLoan = Number(e.target.value)
+      this.setState({
+          mCommercialLoan: commercialLoan,
+      }, () => {
+          this.updateAll()
+      })
+    } catch(err) {
+      console.error("onInputCommercialLoan: ", err);
+      Taro.showToast({title: "请输入正确的金额！"})
+    }
   }
 
   onInputProvidentFundLoan = (e) => {
-    Util.setInterval(() => {
-      try {
-        let providentFundLoan = Number(e.target.value)
-        this.setState({
-            mProvidentFundLoan: providentFundLoan,
-        }, () => {
-            this.updateAll()
-        })
-      } catch(err) {
-        console.error("onInputProvidentFundLoan: ", err);
-        Taro.showToast({title: "请输入正确的金额！"})
-      }
-    })
+    try {
+      let providentFundLoan = Number(e.target.value)
+      this.setState({
+          mProvidentFundLoan: providentFundLoan,
+      }, () => {
+          this.updateAll()
+      })
+    } catch(err) {
+      console.error("onInputProvidentFundLoan: ", err);
+      Taro.showToast({title: "请输入正确的金额！"})
+    }
   }
 
   onInputOtherLoan = (e) => {
-    Util.setInterval(() => {
-      try {
-        let otherLoan = Number(e.target.value)
-        this.setState({
-            mOtherLoan: otherLoan,
-        }, () => {
-            this.updateAll()
-        })
-      } catch(err) {
-        console.error("onInputOtherLoan: ", err);
-        Taro.showToast({title: "请输入正确的金额！"})
-      }
-    })
+    try {
+      let otherLoan = Number(e.target.value)
+      this.setState({
+          mOtherLoan: otherLoan,
+      }, () => {
+          this.updateAll()
+      })
+    } catch(err) {
+      console.error("onInputOtherLoan: ", err);
+      Taro.showToast({title: "请输入正确的金额！"})
+    }
   }
 
   onInputDeedTaxManual = (e) => {
@@ -705,20 +674,18 @@ export default class Index extends Component {
           e.target.value)
       return
     }
-    Util.setInterval(() => {
-      try {
-        let inputDeedTaxManual = Number(e.target.value)
-        this.setState({
-            mDeedTax: inputDeedTaxManual,
-        }, () => {
-            this.updateAll()
-        })
+    try {
+      let inputDeedTaxManual = Number(e.target.value)
+      this.setState({
+          mDeedTax: inputDeedTaxManual,
+      }, () => {
+          this.updateAll()
+      })
     
-      } catch(err) {
-        console.error("onInputDeedTaxManual: ", err);
-        Taro.showToast({title: "请输入正确的契税金额！"})
-      }
-    })
+    } catch(err) {
+      console.error("onInputDeedTaxManual: ", err);
+      Taro.showToast({title: "请输入正确的契税金额！"})
+    }
   }
 
   onInputPersonalIncomeTaxManual = (e) => {
@@ -727,20 +694,18 @@ export default class Index extends Component {
           e.target.value)
       return
     }
-    Util.setInterval(() => {
-      try {
-        let inputPersonalIncomeTaxManual = Number(e.target.value)
-        this.setState({
-            mPersonalIncomeTax: inputPersonalIncomeTaxManual,
-        }, () => {
-            this.updateAll()
-        })
+    try {
+      let inputPersonalIncomeTaxManual = Number(e.target.value)
+      this.setState({
+          mPersonalIncomeTax: inputPersonalIncomeTaxManual,
+      }, () => {
+          this.updateAll()
+      })
     
-      } catch(err) {
-        console.error("onInputPersonalIncomeTaxManual: ", err);
-        Taro.showToast({title: "请输入正确的金额！"})
-      }
-    })
+    } catch(err) {
+      console.error("onInputPersonalIncomeTaxManual: ", err);
+      Taro.showToast({title: "请输入正确的金额！"})
+    }
   }
 
   onInputValueAddedTaxManual = (e) => {
@@ -749,109 +714,91 @@ export default class Index extends Component {
           e.target.value)
       return
     }
-    Util.setInterval(() => {
-      try {
-        let inputValueAddedTaxManual = Number(e.target.value)
-        this.setState({
-            mValueAddedTax: inputValueAddedTaxManual,
-        }, () => {
-            this.updateAll()
-        })
-      } catch(err) {
-        console.error("onInputValueAddedTaxManual: ", err);
-        Taro.showToast({title: "请输入正确的金额！"})
-      }
-    })
-  }
-
-  onInputOtherTax = (e) => {
-    Util.setInterval(() => {
-      try {
-        let otherTax = Number(e.target.value)
-        this.setState({
-            mOtherTax: otherTax,
-        }, () => {
-            this.updateAll()
-        })
-      } catch(err) {
-        console.error("onInputOtherTax: ", err);
-        Taro.showToast({title: "请输入正确的金额！"})
-      }
-    })
-  }
-
-  changeWillInputDeedTaxManualCheckbox = (e) => {
-    Util.setInterval(() => {
-      this.setState(
-        prevState => ({
-          mWillInputDeedTaxManual: !prevState.mWillInputDeedTaxManual,
-        }), () => {
-            this.updateAll()
-            console.error("changeWillInputDeedTaxManualCheckbox: ",
-                this.state.mWillInputDeedTaxManual);
-        })
-    })
-  }
-
-  changeWillInputPersonalIncomeTaxManualCheckbox = (e) => {
-    Util.setInterval(() => {
-      this.setState(
-        prevState => ({
-          mWillInputPersonalIncomeTaxManual: !prevState.mWillInputPersonalIncomeTaxManual,
-        }), () => {
-            this.updateAll()
-        })
-    })
-  }
-
-  changeWillInputValueAddedTaxManualCheckbox = (e) => {
-    Util.setInterval(() => {
-      this.setState(
-        prevState => ({
-          mWillInputValueAddedTaxManual: !prevState.mWillInputValueAddedTaxManual,
-        }), () => {
-            this.updateAll()
-        })
-    })
-  }
-
-  onClickFirstHouseRadio = (value, e) => {
-    Util.setInterval(() => {
+    try {
+      let inputValueAddedTaxManual = Number(e.target.value)
       this.setState({
-          mFirstHouseRadioValue: value,
+          mValueAddedTax: inputValueAddedTaxManual,
       }, () => {
           this.updateAll()
       })
+    } catch(err) {
+      console.error("onInputValueAddedTaxManual: ", err);
+      Taro.showToast({title: "请输入正确的金额！"})
+    }
+  }
+
+  onInputOtherTax = (e) => {
+    try {
+      let otherTax = Number(e.target.value)
+      this.setState({
+          mOtherTax: otherTax,
+      }, () => {
+          this.updateAll()
+      })
+    } catch(err) {
+      console.error("onInputOtherTax: ", err);
+      Taro.showToast({title: "请输入正确的金额！"})
+    }
+  }
+
+  changeWillInputDeedTaxManualCheckbox = (e) => {
+    this.setState(
+      prevState => ({
+        mWillInputDeedTaxManual: !prevState.mWillInputDeedTaxManual,
+      }), () => {
+          this.updateAll()
+          console.error("changeWillInputDeedTaxManualCheckbox: ",
+              this.state.mWillInputDeedTaxManual);
+      })
+  }
+
+  changeWillInputPersonalIncomeTaxManualCheckbox = (e) => {
+    this.setState(
+      prevState => ({
+        mWillInputPersonalIncomeTaxManual: !prevState.mWillInputPersonalIncomeTaxManual,
+      }), () => {
+          this.updateAll()
+      })
+  }
+
+  changeWillInputValueAddedTaxManualCheckbox = (e) => {
+    this.setState(
+      prevState => ({
+        mWillInputValueAddedTaxManual: !prevState.mWillInputValueAddedTaxManual,
+      }), () => {
+          this.updateAll()
+      })
+  }
+
+  onClickFirstHouseRadio = (value, e) => {
+    this.setState({
+        mFirstHouseRadioValue: value,
+    }, () => {
+        this.updateAll()
     })
   }
 
   onClickAboveTwoYearsRadio = (value, e) => {
-    Util.setInterval(() => {
-      this.setState({
-          mAboveTwoYearsRadioValue: value,
-      }, () => {
-          this.updateAll()
-      })
+    this.setState({
+        mAboveTwoYearsRadioValue: value,
+    }, () => {
+        this.updateAll()
     })
   }
 
   onClickOnlyHouseRadio = (value, e) => {
-    Util.setInterval(() => {
-      this.setState({
-          mOnlyHouseRadioValue: value,
-      }, () => {
-          this.updateAll()
-      })
+    this.setState({
+        mOnlyHouseRadioValue: value,
+    }, () => {
+        this.updateAll()
     })
   }
 
   onClickOrdinaryHouseRadio = (value, e) => {
-    Util.setInterval(() => {
-      this.setState({
-          mOrdinaryHouseRadioValue: value,
-      }, () => {
-          this.updateAll()
-      })
+    this.setState({
+        mOrdinaryHouseRadioValue: value,
+    }, () => {
+        this.updateAll()
     })
   }
 
@@ -912,7 +859,7 @@ export default class Index extends Component {
           <Text className='idx-input-title'>网签价</Text>
           <Input className='idx-input-text' type='digit' placeholder='万元'
               disabled={!this.state.mEditable} value={this.state.mWebSignPrice} maxLength='10' onInput={this.onInputWebSignPrice} />
-          <Text className='idx-input-title2'>原税费合计</Text>
+          <View className='idx-input-title2'>原税费合计<View className='at-icon at-icon-help' onClick={this.onClickOpenTipBoxIcon.bind(this, Util.mTipBoxMessages.OriginTaxSum)}></View></View>
           <Input className='idx-input-text' type='digit' placeholder='万元'
               disabled={!this.state.mEditable} value={this.state.mOriginTaxSum} maxLength='10' onInput={this.onInputOriginTaxSum} />
         </View>

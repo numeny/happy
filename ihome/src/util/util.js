@@ -15,6 +15,7 @@ export const Util = {
     TotalLoan: 8,
     TotalTaxAndFee: 9,
     AverageUnitPrice: 10,
+    OriginTaxSum: 11,
   },
 
   isInstanceOf: function(thisVar, varType) {

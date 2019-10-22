@@ -4,6 +4,7 @@ $item-lr-padding: 15px;
 $item-border-color-bold: #8AC007;
 
 .idx-top-container {
+  user-select: text;
   background-color: $page-background-color;
   font-size: 30px;
   margin: 25px;
@@ -42,7 +43,7 @@ $item-border-color-bold: #8AC007;
 }
 
 @mixin idx_input_title(){
-  flex: 4;
+  flex: 6;
   flex-wrap: nowrap;
   padding-left: $item-lr-padding;
 }
