@@ -2,7 +2,7 @@ import Taro from '@tarojs/taro';
 
 export const Util = {
 
-  appTitle: '茜茜猫首付计算器',
+  appTitle: '茜茜猫首付计算神器',
 
   mTipBoxMessages : {
     DeedTax: 1,

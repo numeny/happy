@@ -20,7 +20,7 @@ export default class Index extends Component {
    * 提示和声明 navigationBarTextStyle: 'black' | 'white' 类型冲突, 需要显示声明类型
    */
   config: Config = {
-    navigationBarTitleText: '茜茜猫首付计算器',
+    navigationBarTitleText: '茜茜猫首付计算神器',
   }
 
   constructor(props) {
@@ -829,9 +829,8 @@ export default class Index extends Component {
             <Text className='idx-radio-title'>房本年限</Text>
             {this.state.mIsAboveTwoYearsRadioList.map((item, i) => {
               return (
-                <View>
+                <View onClick={this.onClickAboveTwoYearsRadio.bind(this, item.value)}>
                   <Radio value={item.value} disabled={!this.state.mEditable}
-                    onClick={this.onClickAboveTwoYearsRadio.bind(this, item.value)} 
                     checked={item.value == this.state.mAboveTwoYearsRadioValue}
                     style={{transform: 'scale(0.8)'}} color='#FF7464'>
                   </Radio>
@@ -848,22 +847,23 @@ export default class Index extends Component {
                 <View onClick={this.onClickOnlyHouseRadio.bind(this, item.value)} >
                   <Radio value={item.value} disabled={!this.state.mEditable}
                     checked={item.value == this.state.mOnlyHouseRadioValue}
-                    style={{transform: 'scale(0.8)', padding: '0px 15px'}} color='#FF7464'>
+                    style={{transform: 'scale(0.8)'}} color='#FF7464'>
                   </Radio>
                   <Text className='idx-radio-text'>{item.text}</Text>
                 </View>)
             })}
           </View>
         </RadioGroup>
+
         <RadioGroup>
-          <View className='idx-input-item-container-bold'>
+          <View className='idx-input-item-container'>
             <Text className='idx-radio-title'>是否普通住宅</Text>
             {this.state.mIsOrdinaryHouseRadioList.map((item, i) => {
               return (
-                <View onClick={this.onClickOrdinaryHouseRadio.bind(this, item.value)} >
+                <View onClick={this.onClickOrdinaryHouseRadio.bind(this, item.value)}>
                   <Radio value={item.value} disabled={!this.state.mEditable}
                     checked={item.value == this.state.mOrdinaryHouseRadioValue}
-                    style={{transform: 'scale(0.8)', padding: '0px 15px'}} color='#FF7464'>
+                    style={{transform: 'scale(0.8)'}} color='#FF7464'>
                   </Radio>
                   <Text className='idx-radio-text'>{item.text}</Text>
                 </View>)
@@ -889,7 +889,7 @@ export default class Index extends Component {
         </View>
         <View className='idx-input-item-container-bold2'>
           <Text className='idx-input-title'></Text>
-          <Text className='idx-input-text'></Text>
+          <View className='idx-input-text'></View>
           <View className='idx-input-title-bold'>总费用<View className='at-icon at-icon-help' onClick={this.onClickOpenTipBoxIcon.bind(this, Util.mTipBoxMessages.TotalFee)}></View></View>
           <Text className='idx-input-text-bold'>{this.state.mTotalFee.toFixed(2)}</Text>
         </View>

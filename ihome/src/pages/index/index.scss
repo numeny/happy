@@ -16,30 +16,28 @@ $item-border-color-bold: #8AC007;
   border-bottom: 5px solid $item-border-color-bold;
 }
 
-.idx-input-item-container {
+@mixin idx_input_item_container(){
   display: flex;
   flex-direction: colume;
   flex-wrap: nowrap;
   // border-bottom: 3px solid #8AC007;
-  border-bottom: 3px solid $item-border-color;
   padding: 20px 0px;
   align-items: center;
 }
 
+.idx-input-item-container {
+  @include idx_input_item_container();
+  border-bottom: 3px solid $item-border-color;
+}
+
 .idx-input-item-container-bold {
-  display: flex;
-  flex-direction: colume;
-  flex-wrap: nowrap;
+  @include idx_input_item_container();
   border-bottom: 5px solid $item-border-color-bold;
-  padding: 20px 0px;
 }
 
 .idx-input-item-container-bold2 {
-  display: flex;
-  flex-direction: colume;
-  flex-wrap: nowrap;
+  @include idx_input_item_container();
   border-bottom: 5px solid $item-border-color;
-  padding: 20px 0px;
 }
 
 @mixin idx_input_title(){
@@ -91,10 +89,6 @@ $item-border-color-bold: #8AC007;
 
 .idx-radio-title {
   padding: 0px $item-lr-padding;
-}
-
-.idx-radio-text {
-  font-size: 32px;
 }
 
 .idx-input-text-deedtax {
