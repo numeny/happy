@@ -3,81 +3,12 @@ import { View, Text, Image, Input, Video, Button, RadioGroup, Radio, Checkbox, C
 import './index.scss'
 
 import { Util } from '../../util/util'
+import { sCalcClient } from './cityclient/cityclient'
+
 import "../../../node_modules/taro-ui/dist/style/components/icon.scss";
 
 import namedPng from '@images/index/1.jpeg'
 import namedVideo from '@res/video/1.mp4'
-
-function FirstTierCitieCalcClient(state) {
-  this.mState = state
-  this.setClientState = function(state) {
-    this.mState = state
-  }
-  // 北上广深圳: 普通住宅并且家庭首套住房90平米以下1%, 90平米以上1.5%, 140平米以上3%,
-  //             非普通住宅以及二套房不管大小一律3%
-  // FIXME 其他城市，家庭首套住房90平米以下1%, 90平米以上2%, 二套房不管大小一律3%
-  this.getDeedTaxRate = function() {
-    let deedTaxRate = 0
-    if (this.mState.mOrdinaryHouseRadioValue
-        && this.mState.mFirstHouseRadioValue == 0) {
-      deedTaxRate = (this.mState.mHouseArea <= 90) ? 0.01
-        : ((this.mState.mHouseArea <= 140) ? 0.015 : 0.03)
-    } else {
-      deedTaxRate = 0.03
-    }
-    // console.log('getDeedTaxRate, deedTaxRate: ' + deedTaxRate)
-    return deedTaxRate
-  }
-
-  this.getDeedTax = function() {
-    let deedTaxRate = this.getDeedTaxRate()
-    let deedTax = this.mState.mWebSignPrice * deedTaxRate
-    if (deedTax <= 0) {
-      deedTax = 0
-    }
-    /*
-    if (DEBUG)
-      console.log('getDeedTax, deedTaxRate: ' + deedTaxRate
-        + ", deedTax: " + deedTax)
-    */
-    return deedTax
-  }
-
-  this.getPersonalIncomeTax = function() {
-    let personalIncomeTax = 0
-    if (this.mState.mAboveTwoYearsRadioValue != 2 || !this.mState.mOnlyHouseRadioValue) {
-      personalIncomeTax = (this.mState.mWebSignPrice * 0.9 - this.mState.mOriginPrice - this.mState.mOriginTaxSum) * 0.2
-    }
-    if (personalIncomeTax <= 0) {
-      personalIncomeTax = 0
-    }
-    return personalIncomeTax
-  }
-
-  // 对于非一线城市，个人购买不足2年的住房对外销售，按照5%的征收率全额缴纳增值税;个人将购买2年以上(含2年)的住房对外销售的，免征增值税。
-  // 北、上、广、深四个一线城市，个人购买不足2年的住房对外销售的，按照5%的征收率全额缴纳增值税;个人将购买2年以上(含2年)的非普通住房对外销售的，以销售收入减去购买住房价款后的差额按照5%的征收率缴纳增值税;个人将购买2年以上(含2年)的普通住房对外销售的，免征增值税。
-  this.getValueAddedTax = function() {
-    const valueAddedTaxRate = 0.05 * 1.13 / 1.05
-    let valueAddedTax = 0
-    
-    if (this.mState.mAboveTwoYearsRadioValue == 0) { // 所有的普通住宅和非普通住宅，只要不满两年
-      valueAddedTax = this.mState.mWebSignPrice * valueAddedTaxRate
-    } else if (!this.mState.mOrdinaryHouseRadioValue) {
-      valueAddedTax = (this.mState.mWebSignPrice - this.mState.mOriginPrice) * valueAddedTaxRate
-    }
-    if (valueAddedTax <= 0) {
-      valueAddedTax = 0
-    }
-    /*
-    if (DEBUG)
-      console.log('getValueAddedTax, valueAddedTaxRate: ' + valueAddedTaxRate
-        + ', valueAddedTax: ' + valueAddedTax)
-    */
-    return valueAddedTax
-  }
-}
-
-let sCalcClient = new FirstTierCitieCalcClient()
 
 export default class Index extends Component {
 
@@ -96,13 +27,13 @@ export default class Index extends Component {
     super(props)
 
     this.state = {
-      sCalcClient: null,
+      // sCalcClient: null,
 
       callLinkForUpdateAll : [
         this.updateAll,
+        this.updateValueAddedTax, // 增值税可能影响个税计算
         this.updateDeedTax,
         this.updatePersonalIncomeTax,
-        this.updateValueAddedTax,
         this.updateOtherTax,
 
         this.updateAgencyFee,
@@ -188,6 +119,7 @@ export default class Index extends Component {
     }
 
     this.initCallLink()
+
     sCalcClient.setClientState(this.state)
   }
 
@@ -218,6 +150,7 @@ export default class Index extends Component {
   }
 
   updateAll = () => {
+    // FIXME, set every time?
     sCalcClient.setClientState(this.state)
     if (this.updateAll.prototype.postCallback != null) {
       this.updateAll.prototype.postCallback()
@@ -825,6 +758,18 @@ export default class Index extends Component {
     }
   }
 
+  onInputCityName = (e) => {
+    this.setState({
+        mCurrCity: e.target.value,
+    })
+  }
+
+  onChangedCity = (e) => {
+    console.error("onChangedCity, this.state.mCurrCity: "
+        + this.state.mCurrCity);
+    sCalcClient.setCityClient(this.state.mCurrCity)
+  }
+
   render () {
     let classNameForInputDeedTaxManual = this.state.mWillInputDeedTaxManual ?
             'idx-input-text' : 'idx-input-text-disable'
@@ -1047,6 +992,9 @@ export default class Index extends Component {
       <View className='idx-bottom-cont'>
         谢谢使用，吐槽@1280496054@qq.com
       </View>
+      <Input className='idx-input-text' type='text' placeholder='城市'
+          onInput={this.onInputCityName}
+          onConfirm={this.onChangedCity} />
       </View>
     )
   }
