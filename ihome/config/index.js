@@ -30,6 +30,7 @@ const config = {
   alias: {
     '@res': path.resolve(__dirname, '..', 'res'),
     '@images': path.resolve(__dirname, '..', 'res/images'),
+    '@util': path.resolve(__dirname, '..', 'src/util'),
   },
   copy: {
     patterns: [

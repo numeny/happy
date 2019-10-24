@@ -16,6 +16,11 @@ export const Util = {
     TotalTaxAndFee: 9,
     AverageUnitPrice: 10,
     OriginTaxSum: 11,
+    ValueAddedTax_ForShenzhen: 12,
+    DeedTax_NonFirstTierCityClient: 13,
+    ValueAddedTax_NonFirstTierCityClient: 14,
+    DeedTax_ForTianjin: 15,
+    PersonalIncomeTax_Chengdu: 16,
   },
 
   isInstanceOf: function(thisVar, varType) {

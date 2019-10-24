@@ -3,12 +3,14 @@ import { View, Text, Image, Input, Video, Button, RadioGroup, Radio, Checkbox, C
 import './index.scss'
 
 import { Util } from '../../util/util'
-import { sCalcClient } from './cityclient/cityclient'
+import { sCalcClientDecider } from './cityclient/city_client_decider'
 
 import "../../../node_modules/taro-ui/dist/style/components/icon.scss";
 
 import namedPng from '@images/index/1.jpeg'
 import namedVideo from '@res/video/1.mp4'
+
+let sCalcClient = null
 
 export default class Index extends Component {
 
@@ -120,7 +122,8 @@ export default class Index extends Component {
 
     this.initCallLink()
 
-    sCalcClient.setClientState(this.state)
+    // FIXME, default CityClient
+    sCalcClient = sCalcClientDecider.changeCityClient(this.state)
   }
 
   componentWillMount () { }
@@ -740,6 +743,18 @@ export default class Index extends Component {
   }
 
   onClickOpenTipBoxIcon = (idx, e) => {
+    if (idx == Util.mTipBoxMessages.DeedTax
+        || idx == Util.mTipBoxMessages.PersonalIncomeTax
+        || idx == Util.mTipBoxMessages.ValueAddedTax) {
+      if (idx == Util.mTipBoxMessages.DeedTax) {
+        idx = sCalcClient.getDeedTaxHelpIndex()
+      } else if (idx == Util.mTipBoxMessages.PersonalIncomeTax) {
+        idx = sCalcClient.getPersonalIncomeTaxHelpIndex()
+      } else if (idx == Util.mTipBoxMessages.ValueAddedTax) {
+        idx = sCalcClient.getValueAddedTaxHelpIndex()
+      }
+    }
+
     Taro.navigateTo({
       url: '/pages/tipbox/tipbox?idx=' + idx
     })
@@ -765,9 +780,12 @@ export default class Index extends Component {
   }
 
   onChangedCity = (e) => {
-    console.error("onChangedCity, this.state.mCurrCity: "
+    console.error("onChangedCity-0, this.state.mCurrCity: "
         + this.state.mCurrCity);
-    sCalcClient.setCityClient(this.state.mCurrCity)
+    sCalcClient = sCalcClientDecider.changeCityClient(this.state)
+    console.error("onChangedCity-1, sCalcClient: "
+        + sCalcClient);
+    this.updateAll();
   }
 
   render () {
@@ -781,6 +799,9 @@ export default class Index extends Component {
             'idx-input-text' : 'idx-input-text-disable'
     return (
       <View className='idx-top-container'>
+        <Video src={namedVideo} />
+        <Image src={namedPng} />
+
         <View className='idx-top-title'>
         计算单位：万元
         </View>
