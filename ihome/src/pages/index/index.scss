@@ -13,8 +13,9 @@ $item-border-color-bold: #8AC007;
 .idx-top-title-container {
   display: flex;
   flex-flow: row nowrap;
-  // border-bottom: 3px solid #8AC007;
+  border-bottom: 5px solid $item-border-color-bold;
   align-items: center;
+  padding-bottom: 15px;
 }
 
 .idx-title-container {
@@ -28,15 +29,13 @@ $item-border-color-bold: #8AC007;
 .idx-top-title-city {
   flex: 6;
   text-align: left;
-  border-bottom: 5px solid $item-border-color-bold;
-  padding: 0px;
-  margin: 0px;
+  padding-left: 15px;
 }
 
 .idx-top-title-unit {
   flex: 6;
   text-align: right;
-  border-bottom: 5px solid $item-border-color-bold;
+  padding-right: 15px;
 }
 
 @mixin idx_input_item_container(){

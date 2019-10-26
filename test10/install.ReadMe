@@ -1,4 +1,5 @@
-cnpm install @tarojs/cli taro-ui
+cnpm install @tarojs/cli
+cnpm install taro-ui
 cnpm install redux @tarojs/redux @tarojs/redux-h5 redux-thunk redux-logger
 cnpm install babel-plugin-transform-decorators-legacy babel-plugin-transform-object-rest-spread babel-preset-env babel-plugin-transform-class-properties
 
@@ -8,7 +9,7 @@ cnpm install @tarojs/taro-weapp
 cnpm install @tarojs/taro-alipay
 cnpm install @tarojs/taro
 
-# cnpm install @tarojs/components
+cnpm install @tarojs/components
 
 1. ReferenceError: Unknown plugin "transform-decorators-legacy" specified
 npm install babel-plugin-transform-decorators-legacy
