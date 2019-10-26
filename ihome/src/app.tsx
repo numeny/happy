@@ -22,6 +22,7 @@ class App extends Component {
     pages: [
       'pages/index/index',
       'pages/tipbox/tipbox',
+      'pages/citylist/citylist',
     ],
     window: {
       backgroundTextStyle: 'light',

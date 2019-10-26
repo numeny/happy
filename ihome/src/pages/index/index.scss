@@ -10,16 +10,38 @@ $item-border-color-bold: #8AC007;
   margin: 25px;
 }
 
-.idx-top-title {
+.idx-top-title-container {
+  display: flex;
+  flex-flow: row nowrap;
+  // border-bottom: 3px solid #8AC007;
+  align-items: center;
+}
+
+.idx-title-container {
+  display: flex;
+  flex-flow: row nowrap;
+  // border-bottom: 3px solid #8AC007;
+  padding: 20px 0px;
+  align-items: center;
+}
+
+.idx-top-title-city {
+  flex: 6;
+  text-align: left;
+  border-bottom: 5px solid $item-border-color-bold;
+  padding: 0px;
+  margin: 0px;
+}
+
+.idx-top-title-unit {
+  flex: 6;
   text-align: right;
-  font-size: 25px;
   border-bottom: 5px solid $item-border-color-bold;
 }
 
 @mixin idx_input_item_container(){
   display: flex;
-  flex-direction: colume;
-  flex-wrap: nowrap;
+  flex-flow: colume nowrap;
   // border-bottom: 3px solid #8AC007;
   padding: 20px 0px;
   align-items: center;

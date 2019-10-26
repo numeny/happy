@@ -1,9 +1,10 @@
 import Taro, { Component, Config } from '@tarojs/taro'
-import { View, Text, Image, Input, Video, Button, RadioGroup, Radio, Checkbox, CheckboxGroup } from '@tarojs/components'
+import { View, Text, Image, Input, Video, Button, RadioGroup, Radio, Checkbox, CheckboxGroup, Picker } from '@tarojs/components'
 import './index.scss'
 
 import { Util } from '../../util/util'
 import { sCalcClientDecider } from './cityclient/city_client_decider'
+import TaroRegionPicker from '../../components/taro-region-picker/index'
 
 import "../../../node_modules/taro-ui/dist/style/components/icon.scss";
 
@@ -57,6 +58,8 @@ export default class Index extends Component {
       ],
 
       mEditable: true,
+      mCurrProvince: '北京市',
+      mCurrCity: '北京市',
 
       mFirstPayment: Util.getNumber(this.$router.params.fp),
       mTotalPayment: Util.getNumber(this.$router.params.tp),
@@ -757,6 +760,7 @@ export default class Index extends Component {
 
     Taro.navigateTo({
       url: '/pages/tipbox/tipbox?idx=' + idx
+              + '&city=' + this.state.mCurrCity
     })
   }
 
@@ -779,6 +783,19 @@ export default class Index extends Component {
     })
   }
 
+  onSelectCity = (e) => {
+    Taro.navigateTo({
+      url: '/pages/citylist/citylist?prov='
+          + this.state.mCurrProvince
+          + '&' + 'city=' + this.state.mCurrCity
+    })
+  }
+
+  componentDidShow = () => {
+    console.error('index-componentDidShow')
+    Util.setInterval(() =>this.onChangedCity())
+  }
+
   onChangedCity = (e) => {
     console.error("onChangedCity-0, this.state.mCurrCity: "
         + this.state.mCurrCity);
@@ -786,6 +803,11 @@ export default class Index extends Component {
     console.error("onChangedCity-1, sCalcClient: "
         + sCalcClient);
     this.updateAll();
+  }
+
+  onGetRegion (region) {
+    // 参数region为选择的省市区
+    console.log(region);
   }
 
   render () {
@@ -797,13 +819,14 @@ export default class Index extends Component {
 
     let classNameForInputValueAddedTaxManual = this.state.mWillInputValueAddedTaxManual ?
             'idx-input-text' : 'idx-input-text-disable'
+
     return (
       <View className='idx-top-container'>
-        <Video src={namedVideo} />
-        <Image src={namedPng} />
-
-        <View className='idx-top-title'>
-        计算单位：万元
+        <View className='idx-top-title-container' onClick={this.onSelectCity}>
+          <View className='idx-top-title-city' onClick={this.onSelectCity}>{this.state.mCurrCity}
+          <View className='at-icon at-icon-map-pin'></View>
+          </View>
+          <View className='idx-top-title-unit'>计算单位：万元</View>
         </View>
         <View className='idx-input-item-container'>
           <Text className='idx-input-title'>房屋名称</Text>
@@ -825,7 +848,7 @@ export default class Index extends Component {
           <Text className='idx-input-title'>网签价</Text>
           <Input className='idx-input-text' type='digit' placeholder='万元'
               disabled={!this.state.mEditable} value={this.state.mWebSignPrice} maxLength='10' onInput={this.onInputWebSignPrice} />
-          <View className='idx-input-title2'>原税费合计<View className='at-icon at-icon-help' onClick={this.onClickOpenTipBoxIcon.bind(this, Util.mTipBoxMessages.OriginTaxSum)}></View></View>
+          <View className='idx-input-title2'>原契税<View className='at-icon at-icon-help' onClick={this.onClickOpenTipBoxIcon.bind(this, Util.mTipBoxMessages.OriginTaxSum)}></View></View>
           <Input className='idx-input-text' type='digit' placeholder='万元'
               disabled={!this.state.mEditable} value={this.state.mOriginTaxSum} maxLength='10' onInput={this.onInputOriginTaxSum} />
         </View>

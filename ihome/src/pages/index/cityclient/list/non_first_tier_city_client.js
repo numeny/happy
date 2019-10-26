@@ -37,7 +37,7 @@ export function NonFirstTierCityClient(state) {
   NonFirstTierCityClient.prototype.getDeedTax = function() {
     console.log('NonFirstTierCityClient.getDeedTax')
     let deedTaxRate = this.getDeedTaxRate()
-    // (过户价(网签价) - 增值税) / 税率
+    // 过户价(网签价) / 税率
     let deedTax = this.mState.mWebSignPrice * deedTaxRate
     if (deedTax <= 0) {
       deedTax = 0

@@ -21,6 +21,8 @@ export const Util = {
     ValueAddedTax_NonFirstTierCityClient: 14,
     DeedTax_ForTianjin: 15,
     PersonalIncomeTax_Chengdu: 16,
+    PersonalIncomeTax_Beijing: 17,
+    PersonalIncomeTax_Shanghai: 18,
   },
 
   isInstanceOf: function(thisVar, varType) {
@@ -79,6 +81,13 @@ export const Util = {
       return Boolean(defValue)
     else
       return Boolean(v)
+  },
+  printObj: function(obj) {
+    var str="";
+    for (var item in obj){
+      str += item + ":" +obj[item] + "\n";
+    }
+    console.log(str);
   },
 
   getParamForGenerateReport: function(state) {

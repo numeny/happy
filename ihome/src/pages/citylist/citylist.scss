@@ -1,0 +1,76 @@
+$city-item-top-bottom-padding: 20px;
+$city-item-left-right-padding: 40px;
+$city-item-background-color: #FFF;
+$city-item-margin: 10px;
+$selected-item-color: #00F;
+
+.top-view {
+  font-size: 34px;
+  background-color: #EEE;
+}
+
+.hot-city-container, .curr-city-container {
+  margin-top: 20px;
+}
+
+.city-container {
+  padding-top: 20px;
+  margin: 80px 20px 20px 20px;
+}
+
+.curr-city {
+  background-color: $city-item-background-color;
+  margin: $city-item-margin;
+
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+}
+
+.curr-city-text {
+  flex: 4 4 auto;
+  padding: $city-item-top-bottom-padding $city-item-left-right-padding;
+}
+
+.hot-city-row-container {
+  display: flex;
+  flex-direction: row;
+}
+
+@mixin hot_city_item(){
+  padding: $city-item-top-bottom-padding $city-item-left-right-padding;
+  flex: 1;
+  justify-content: center;
+  text-align: center;
+  margin: $city-item-margin;
+  overflow: hidden;
+  white-space: nowrap;
+}
+
+.hot-city-item {
+  @include hot_city_item();
+  background-color: $city-item-background-color;
+}
+
+.icon-city-location {
+  @include hot_city_item();
+}
+
+.selected-area {
+  font-size: 40px;
+  margin: 20px 0px;
+  text-decoration: underline;
+  font-color: $selected-item-color;
+  color: $selected-item-color;
+  padding: 20px 20px;
+}
+
+.cl-button-container {
+  display: flex;
+  flex-flow: row nowrap;
+  align-items: center;
+}
+
+.cl-button-item {
+  flex: 3;
+}

@@ -25,7 +25,6 @@ export function CityClientBase(state) {
   CityClientBase.prototype.getDeedTax = function() {
     console.log('CityClientBase.getDeedTax')
     let deedTaxRate = this.getDeedTaxRate()
-    // (过户价(网签价) - 增值税) / 税率
     let deedTax = (this.mState.mWebSignPrice - this.getValueAddedTax()) * deedTaxRate
     if (deedTax <= 0) {
       deedTax = 0
@@ -62,7 +61,7 @@ export function CityClientBase(state) {
 
   CityClientBase.prototype.getValueAddedTax = function() {
     console.log('CityClientBase.getValueAddedTax')
-    const valueAddedTaxRate = 0.05 * 1.13 / 1.05
+    const valueAddedTaxRate = 0.056 / 1.05
     let valueAddedTax = 0
 
     if (this.mState.mAboveTwoYearsRadioValue == 0) { // 所有的普通住宅和非普通住宅，只要不满两年
