@@ -5,6 +5,8 @@ import { sCityClientBase } from './city_client_base'
 
 export function BeijingCityClient(state) {
   BeijingCityClient.prototype.getPersonalIncomeTaxHelpIndex = function() {
+    console.log('BeijingCityClient.getPersonalIncomeTaxHelpIndex: '
+        + Util.mTipBoxMessages.PersonalIncomeTax_Beijing)
     return Util.mTipBoxMessages.PersonalIncomeTax_Beijing;
   }
 

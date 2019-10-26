@@ -780,6 +780,8 @@ export default class Index extends Component {
   onInputCityName = (e) => {
     this.setState({
         mCurrCity: e.target.value,
+    }, () => {
+      this.onChangedCity()
     })
   }
 
@@ -793,7 +795,15 @@ export default class Index extends Component {
 
   componentDidShow = () => {
     console.error('index-componentDidShow')
-    Util.setInterval(() =>this.onChangedCity())
+    let pages = getCurrentPages();
+    let currPage = pages[pages.length-1];
+    console.error('index-componentDidShow, '
+        + currPage.data.mCurrCity)
+    this.setState({
+        mCurrCity: currPage.data.mCurrCity,
+    }, () => {
+      this.onChangedCity()
+    })
   }
 
   onChangedCity = (e) => {
@@ -1033,12 +1043,9 @@ export default class Index extends Component {
                     <Button className='idx-button-item' type='primary' onClick={this.recaculate}>重新计算</Button>
                     <Button className='idx-button-item' type='primary' open-type='share'>分享结果</Button>
                   </View>)}
-      <View className='idx-bottom-cont'>
-        谢谢使用，吐槽@1280496054@qq.com
-      </View>
-      <Input className='idx-input-text' type='text' placeholder='城市'
-          onInput={this.onInputCityName}
-          onConfirm={this.onChangedCity} />
+        <View className='idx-bottom-cont'>
+          谢谢使用，吐槽@1280496054@qq.com
+        </View>
       </View>
     )
   }
