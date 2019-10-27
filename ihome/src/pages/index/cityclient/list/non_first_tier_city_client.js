@@ -28,9 +28,7 @@ export function NonFirstTierCityClient(state) {
     // https://news.lianjia.com/cd/baike/012148.html
     // https://nj.lianjia.com/wenda/xiangqing/264651.html
     // deedTaxRate = deedTaxRate / 1.05
-    console.log('NonFirstTierCityClient.getDeedTaxRate, deedTaxRate: ' + deedTaxRate
-      + ', mFirstHouseRadioValue: ' + this.mState.mFirstHouseRadioValue
-      + ', this.mState: ' + this.mState)
+    console.log('NonFirstTierCityClient.getDeedTaxRate, deedTaxRate: ' + deedTaxRate)
     return deedTaxRate
   }
 

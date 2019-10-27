@@ -3,6 +3,7 @@ import { Util } from '@util/util'
 
 import { sCityClientBase } from './city_client_base'
 
+// https://m.lianjia.com/bj/wenda/xiangqing/297493.html?utm_source=office
 export function BeijingCityClient(state) {
   BeijingCityClient.prototype.getPersonalIncomeTaxHelpIndex = function() {
     console.log('BeijingCityClient.getPersonalIncomeTaxHelpIndex: '
@@ -17,9 +18,9 @@ export function BeijingCityClient(state) {
     }
     let personalIncomeTax = 0;
     if (this.mState.mOriginPrice != 0) {
-      personalIncomeTax = (this.mState.mWebSignPrice - this.mState.mWebSignPrice * 0.1- this.getValueAddedTax() - this.mState.mOriginPrice - this.mState.mOriginTaxSum) * 0.2
+      personalIncomeTax = (this.mState.mWebSignPrice - this.mState.mWebSignPrice * 0.1- this.mState.mValueAddedTax - this.mState.mOriginPrice - this.mState.mOriginTaxSum) * 0.2
     } else {
-      personalIncomeTax = (this.mState.mWebSignPrice - this.getValueAddedTax()) * 0.01
+      personalIncomeTax = (this.mState.mWebSignPrice - this.mState.mValueAddedTax) * 0.01
     }
     if (personalIncomeTax <= 0) {
       personalIncomeTax = 0

@@ -16,13 +16,19 @@ export const Util = {
     TotalTaxAndFee: 9,
     AverageUnitPrice: 10,
     OriginTaxSum: 11,
-    ValueAddedTax_ForShenzhen: 12,
+    ValueAddedTax_Shenzhen: 12,
     DeedTax_NonFirstTierCityClient: 13,
     ValueAddedTax_NonFirstTierCityClient: 14,
     DeedTax_ForTianjin: 15,
     PersonalIncomeTax_Chengdu: 16,
     PersonalIncomeTax_Beijing: 17,
     PersonalIncomeTax_Shanghai: 18,
+    PersonalIncomeTax_Shenzhen: 19,
+    DeedTax_Guangzhou: 20,
+    PersonalIncomeTax_Guangzhou: 21,
+    ValueAddedTax_Guangzhou: 22,
+    ValueAddedTax_Tianjin: 23,
+    PersonalIncomeTax_Tianjin: 24,
   },
 
   isInstanceOf: function(thisVar, varType) {
@@ -47,6 +53,13 @@ export const Util = {
         callback()
         clearInterval(timeId)
     }, 0);
+  },
+
+  setInterval2: function(callback, time) {
+    const timeId = setInterval(() => {
+        callback()
+        clearInterval(timeId)
+    }, time);
   },
 
   isH5: function() {
@@ -91,7 +104,9 @@ export const Util = {
   },
 
   getParamForGenerateReport: function(state) {
-    let param = 'fp=' + state.mFirstPayment
+    let param = 'currCity=' + state.mCurrCity
+      + '&currProv=' + state.mCurrProvince
+      + '&fp=' + state.mFirstPayment
       + '&tp=' + state.mTotalPayment
       + '&tl=' + state.mTotalLoan
       + '&tf=' + state.mTotalFee

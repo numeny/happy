@@ -5,8 +5,29 @@ import { sCityClientBase } from './city_client_base'
 
 function ShenzhenCityClient(state) {
 
+  ShenzhenCityClient.prototype.getPersonalIncomeTaxHelpIndex = function() {
+    return Util.mTipBoxMessages.PersonalIncomeTax_Shenzhen;
+  }
+
+  ShenzhenCityClient.prototype.getPersonalIncomeTax = function() {
+    console.log('ShenzhenCityClient.getPersonalIncomeTax')
+    if (this.mState.mAboveTwoYearsRadioValue == 2 && this.mState.mOnlyHouseRadioValue) {
+      return 0;
+    }
+    let personalIncomeTax1 = (this.mState.mWebSignPrice - this.mState.mValueAddedTax - this.mState.mOriginPrice) * 0.2
+    let personalIncomeTax2 = (this.mState.mWebSignPrice
+          - this.mState.mValueAddedTax) *
+          (this.mState.mOrdinaryHouseRadioValue ? 0.01 : 0.015)
+    let personalIncomeTax =
+        Math.min(personalIncomeTax1, personalIncomeTax2)
+    if (personalIncomeTax <= 0) {
+      personalIncomeTax = 0
+    }
+    return personalIncomeTax
+  }
+
   ShenzhenCityClient.prototype.getValueAddedTaxHelpIndex = function() {
-    return Util.mTipBoxMessages.ValueAddedTax_ForShenzhen;
+    return Util.mTipBoxMessages.ValueAddedTax_Shenzhen;
   }
 
   ShenzhenCityClient.prototype.getValueAddedTax = function() {

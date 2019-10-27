@@ -5,6 +5,8 @@ import { sCityClientBase } from './list/city_client_base'
 import { sBeijingCityClient } from './list/beijing'
 import { sShanghaiCityClient } from './list/shanghai'
 import { sShenzhenCityClient } from './list/shenzhen'
+import { sGuangzhouCityClient } from './list/guangzhou'
+
 import { sTianjinCityClient } from './list/tianjin'
 import { sChengduCityClient } from './list/chengdu'
 import { sNonFirstTierCityClient } from './list/non_first_tier_city_client'
@@ -16,6 +18,10 @@ export let sCalcClientDecider =  {
     const cityClientMap = {
       '北京市' : sBeijingCityClient,
       '上海市' : sShanghaiCityClient,
+      '深圳市' : sShenzhenCityClient,
+      '广州市' : sGuangzhouCityClient,
+      '天津市' : sTianjinCityClient,
+      '重庆市' : sNonFirstTierCityClient,
     }
 
     currCityClient = cityClientMap[state.mCurrCity]

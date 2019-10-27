@@ -58,8 +58,8 @@ export default class Index extends Component {
       ],
 
       mEditable: true,
-      mCurrProvince: '北京市',
-      mCurrCity: '北京市',
+      mCurrProvince: (this.$router.params.currCity != null && this.$router.params.currCity != undefined) ? Util.getString(this.$router.params.currCity) : '北京市',
+      mCurrCity: (this.$router.params.currCity != null && this.$router.params.currCity != undefined) ? Util.getString(this.$router.params.currCity) : '北京市',
 
       mFirstPayment: Util.getNumber(this.$router.params.fp),
       mTotalPayment: Util.getNumber(this.$router.params.tp),
@@ -315,6 +315,8 @@ export default class Index extends Component {
     this.setState({
         mValueAddedTax: valueAddedTax,
     }, () => {
+      // mValueAddedTax may influent the calc of other tax
+      sCalcClient.setClientState(this.state)
       if (this.updateValueAddedTax.prototype.postCallback != null) {
         this.updateValueAddedTax.prototype.postCallback()
       }
@@ -832,9 +834,9 @@ export default class Index extends Component {
 
     return (
       <View className='idx-top-container'>
-        <View className='idx-top-title-container' onClick={this.onSelectCity}>
+        <View className='idx-top-title-container'>
           <View className='idx-top-title-city' onClick={this.onSelectCity}>{this.state.mCurrCity}
-          <View className='at-icon at-icon-map-pin'></View>
+          <View className='at-icon at-icon-map-pin' onClick={this.onSelectCity}></View>
           </View>
           <View className='idx-top-title-unit'>计算单位：万元</View>
         </View>

@@ -25,7 +25,7 @@ export function CityClientBase(state) {
   CityClientBase.prototype.getDeedTax = function() {
     console.log('CityClientBase.getDeedTax')
     let deedTaxRate = this.getDeedTaxRate()
-    let deedTax = (this.mState.mWebSignPrice - this.getValueAddedTax()) * deedTaxRate
+    let deedTax = (this.mState.mWebSignPrice - this.mState.mValueAddedTax) * deedTaxRate
     if (deedTax <= 0) {
       deedTax = 0
     }
@@ -45,9 +45,9 @@ export function CityClientBase(state) {
     }
     let personalIncomeTax = 0;
     if (this.mState.mOriginPrice != 0) {
-      personalIncomeTax = (this.mState.mWebSignPrice - this.getValueAddedTax() - this.mState.mOriginPrice - this.mState.mOriginTaxSum) * 0.2
+      personalIncomeTax = (this.mState.mWebSignPrice - this.mState.mValueAddedTax - this.mState.mOriginPrice - this.mState.mOriginTaxSum) * 0.2
     } else {
-      personalIncomeTax = (this.mState.mWebSignPrice - this.getValueAddedTax()) * 0.01
+      personalIncomeTax = (this.mState.mWebSignPrice - this.mState.mValueAddedTax) * 0.01
     }
     if (personalIncomeTax <= 0) {
       personalIncomeTax = 0
