@@ -167,7 +167,7 @@ export default class Tipbox extends Component {
                 sPersonalIncomeInfo,
                 sPersonalIncomeInfo2,
                 '   (1) 不能提供原值的（原值输入为零），个人所得税 = （网签价-增值税）x 税率；税率的为普通住宅1%，非普住宅为2%。',
-                 '  (2) 能提供原值的，个人所得税 = （网签价  - 网签价 x 10% - 增值税及附加 - 原值 - 原契税）x 20%。',
+                 '  (2) 能提供原值的，个人所得税 = （网签价 - 增值税及附加 - 原值 - 原契税）x 20%。',
           ]},
           // PersonalIncomeTax_Shenzhen
           19: {title: '关于个人所得税',

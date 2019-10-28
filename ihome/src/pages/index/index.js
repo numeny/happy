@@ -279,7 +279,7 @@ export default class Index extends Component {
     }
     let deedTax = sCalcClient.getDeedTax()
     this.setState({
-        mDeedTax: deedTax,
+        mDeedTax: Number(deedTax.toFixed(4)),
     }, () => {
       if (this.updateDeedTax.prototype.postCallback != null) {
         this.updateDeedTax.prototype.postCallback()
@@ -296,7 +296,7 @@ export default class Index extends Component {
     }
     let personalIncomeTax = sCalcClient.getPersonalIncomeTax()
     this.setState({
-        mPersonalIncomeTax: personalIncomeTax,
+        mPersonalIncomeTax: Number(personalIncomeTax.toFixed(4)),
     }, () => {
       if (this.updatePersonalIncomeTax.prototype.postCallback != null) {
         this.updatePersonalIncomeTax.prototype.postCallback()
@@ -313,7 +313,7 @@ export default class Index extends Component {
     }
     let valueAddedTax = sCalcClient.getValueAddedTax()
     this.setState({
-        mValueAddedTax: valueAddedTax,
+        mValueAddedTax: Number(valueAddedTax.toFixed(4)),
     }, () => {
       // mValueAddedTax may influent the calc of other tax
       sCalcClient.setClientState(this.state)
@@ -947,7 +947,7 @@ export default class Index extends Component {
           <Text className='idx-input-title'></Text>
           <View className='idx-input-text'></View>
           <View className='idx-input-title-bold'>总费用<View className='at-icon at-icon-help' onClick={this.onClickOpenTipBoxIcon.bind(this, Util.mTipBoxMessages.TotalFee)}></View></View>
-          <Text className='idx-input-text-bold'>{this.state.mTotalFee.toFixed(2)}</Text>
+          <Text className='idx-input-text-bold'>{this.state.mTotalFee.toFixed(4)}</Text>
         </View>
 
         <View className='idx-input-item-container'>
@@ -1004,7 +1004,7 @@ export default class Index extends Component {
           <Input className='idx-input-text' type='digit' placeholder='万元'
               disabled={!this.state.mEditable} value={this.state.mOtherTax} maxLength='10' onInput={this.onInputOtherTax} />
           <View className='idx-input-title2-bold'>总税款<View className='at-icon at-icon-help' onClick={this.onClickOpenTipBoxIcon.bind(this, Util.mTipBoxMessages.TotalTax)}></View></View>
-          <Text className='idx-input-text-bold'>{this.state.mTotalTax.toFixed(2)}</Text>
+          <Text className='idx-input-text-bold'>{this.state.mTotalTax.toFixed(4)}</Text>
         </View>
 
         <View className='idx-input-item-container'>
@@ -1020,19 +1020,19 @@ export default class Index extends Component {
           <Input className='idx-input-text' type='digit' placeholder='万元'
               disabled={!this.state.mEditable} value={this.state.mOtherLoan} maxLength='10' onInput={this.onInputOtherLoan} />
           <View className='idx-input-title2-bold'>总贷款<View className='at-icon at-icon-help' onClick={this.onClickOpenTipBoxIcon.bind(this, Util.mTipBoxMessages.TotalLoan)}></View></View>
-          <Text className='idx-input-text-bold'>{this.state.mTotalLoan.toFixed(2)}</Text>
+          <Text className='idx-input-text-bold'>{this.state.mTotalLoan.toFixed(4)}</Text>
         </View>
 
         <View className='idx-input-item-container'>
           <View className='idx-input-title-bold'>总首付<View className='at-icon at-icon-help' onClick={this.onClickOpenTipBoxIcon.bind(this, Util.mTipBoxMessages.FirstPayment)}></View></View>
-          <Text className='idx-input-text-bold'>{this.state.mFirstPayment.toFixed(2)}</Text>
+          <Text className='idx-input-text-bold'>{this.state.mFirstPayment.toFixed(4)}</Text>
           <View className='idx-input-title2-bold'>总房款<View className='at-icon at-icon-help' onClick={this.onClickOpenTipBoxIcon.bind(this, Util.mTipBoxMessages.TotalPayment)}></View></View>
-          <Text className='idx-input-text-bold'>{this.state.mTotalPayment.toFixed(2)}</Text>
+          <Text className='idx-input-text-bold'>{this.state.mTotalPayment.toFixed(4)}</Text>
         </View>
 
         <View className='idx-input-item-container-bold'>
           <View className='idx-input-title-bold'>税 + 费<View className='at-icon at-icon-help' onClick={this.onClickOpenTipBoxIcon.bind(this, Util.mTipBoxMessages.TotalTaxAndFee)}></View></View>
-          <Text className='idx-input-text-bold'>{(this.state.mTotalTax + this.state.mTotalFee).toFixed(2)}</Text>
+          <Text className='idx-input-text-bold'>{(this.state.mTotalTax + this.state.mTotalFee).toFixed(4)}</Text>
           <View className='idx-input-title2-bold'>平均单价<View className='at-icon at-icon-help' onClick={this.onClickOpenTipBoxIcon.bind(this, Util.mTipBoxMessages.AverageUnitPrice)}></View></View>
           <Text className='idx-input-text-bold'>{(this.state.mHouseArea != 0 ? (this.state.mTotalPayment/this.state.mHouseArea) : 0).toFixed(4)}</Text>
         </View>
