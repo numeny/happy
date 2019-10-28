@@ -27,7 +27,7 @@ export let sCalcClientDecider =  {
     currCityClient = cityClientMap[state.mCurrCity]
     if (currCityClient == null
           || currCityClient == undefined) {
-      currCityClient = sBeijingCityClient
+      currCityClient = sNonFirstTierCityClient
     }
     console.log('set CityClient : currCityClient: '
         + currCityClient

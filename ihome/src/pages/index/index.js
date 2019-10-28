@@ -1045,9 +1045,6 @@ export default class Index extends Component {
                     <Button className='idx-button-item' type='primary' onClick={this.recaculate}>重新计算</Button>
                     <Button className='idx-button-item' type='primary' open-type='share'>分享结果</Button>
                   </View>)}
-        <View className='idx-bottom-cont'>
-          谢谢使用，吐槽@1280496054@qq.com
-        </View>
       </View>
     )
   }

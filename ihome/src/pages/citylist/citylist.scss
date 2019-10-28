@@ -4,9 +4,12 @@ $city-item-background-color: #FFF;
 $city-item-margin: 10px;
 $selected-item-color: #00F;
 
+page {
+  background-color: #eee;
+}
+
 .top-view {
   font-size: 34px;
-  background-color: #EEE;
 }
 
 .hot-city-container, .curr-city-container {
@@ -39,7 +42,7 @@ $selected-item-color: #00F;
 
 @mixin hot_city_item(){
   padding: $city-item-top-bottom-padding $city-item-left-right-padding;
-  flex: 1;
+  flex: 2;
   justify-content: center;
   text-align: center;
   margin: $city-item-margin;
@@ -50,6 +53,12 @@ $selected-item-color: #00F;
 .hot-city-item {
   @include hot_city_item();
   background-color: $city-item-background-color;
+}
+
+.city-picker {
+  @include hot_city_item();
+  background-color: $city-item-background-color;
+  flex: 1;
 }
 
 .icon-city-location {
@@ -73,4 +82,5 @@ $selected-item-color: #00F;
 
 .cl-button-item {
   flex: 3;
+  margin: 25px;
 }

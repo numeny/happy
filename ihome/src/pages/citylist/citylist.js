@@ -37,15 +37,15 @@ export default class Citylist extends Component {
         && this.$router.params.city.length > 0) {
       currProv = this.$router.params.prov
       currCity = this.$router.params.city
-      this.setState({
-        currProv: currProv,
-        currCity: currCity,
-      })
     }
+    this.setState({
+      currProv: currProv,
+      currCity: currCity,
+    })
   }
 
+  /*
   getGeolocationCity = (e) => {
-    /*
     CommonFunc.getCurrCity(true)
       .then(res => {
         if (res.data.province.length <= 0
@@ -62,8 +62,8 @@ export default class Citylist extends Component {
       }).catch(error => {
         console.error(error)
       })
-    */
   }
+  */
 
   onButtonClicked = (idx, e) => {
     if (idx == 1) {
@@ -153,15 +153,16 @@ export default class Citylist extends Component {
             当前城市
             <View className='hot-city-row-container'>
               <Text className='hot-city-item' onClick={this.selectHotCity} style={selectedStyle}>{this.state.currCity}</Text>
+              <Picker mode='region' className='city-picker' onChange={this.onCityChanged}>点击选择</Picker> 
             </View>
           </View>
           <View className='hot-city-container'>
-            支持的城市
+            热点城市
             {hotCityItems}
           </View>
           <View className="cl-button-container">
-              <Button type='default' onClick={this.onButtonClicked.bind(this, 1)}>取 消</Button>
-              <Button type='primary' onClick={this.onButtonClicked.bind(this, 2)}>确 定</Button>
+              <Button className="cl-button-item" type='default' onClick={this.onButtonClicked.bind(this, 1)}>取 消</Button>
+              <Button className="cl-button-item" type='primary' onClick={this.onButtonClicked.bind(this, 2)}>确 定</Button>
           </View>
         </View>
       </View>
