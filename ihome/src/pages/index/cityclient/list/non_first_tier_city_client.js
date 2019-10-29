@@ -1,5 +1,6 @@
 import Taro from '@tarojs/taro'
 import { Util } from '@util/util'
+import { Log } from '@util/log'
 
 import { sCityClientBase } from './city_client_base'
 
@@ -28,19 +29,19 @@ export function NonFirstTierCityClient(state) {
     // https://news.lianjia.com/cd/baike/012148.html
     // https://nj.lianjia.com/wenda/xiangqing/264651.html
     // deedTaxRate = deedTaxRate / 1.05
-    console.log('NonFirstTierCityClient.getDeedTaxRate, deedTaxRate: ' + deedTaxRate)
+    Log.log('NonFirstTierCityClient.getDeedTaxRate, deedTaxRate: ' + deedTaxRate)
     return deedTaxRate
   }
 
   NonFirstTierCityClient.prototype.getDeedTax = function() {
-    console.log('NonFirstTierCityClient.getDeedTax')
+    Log.log('NonFirstTierCityClient.getDeedTax')
     let deedTaxRate = this.getDeedTaxRate()
     // 过户价(网签价) / 税率
     let deedTax = this.mState.mWebSignPrice * deedTaxRate
     if (deedTax <= 0) {
       deedTax = 0
     }
-    console.log('getDeedTax, deedTaxRate: ' + deedTaxRate
+    Log.log('getDeedTax, deedTaxRate: ' + deedTaxRate
         + ", deedTax: " + deedTax)
     return deedTax
   }
@@ -51,7 +52,7 @@ export function NonFirstTierCityClient(state) {
   }
 
   NonFirstTierCityClient.prototype.getValueAddedTax = function() {
-    console.log('NonFirstTierCityClient.getValueAddedTax')
+    Log.log('NonFirstTierCityClient.getValueAddedTax')
     if (this.mState.mAboveTwoYearsRadioValue != 0) {
       // 所有的普通住宅和非普通住宅，只要不满两年
       return 0
@@ -62,11 +63,8 @@ export function NonFirstTierCityClient(state) {
     if (valueAddedTax <= 0) {
       valueAddedTax = 0
     }
-    /*
-    if (DEBUG)
-      console.log('getValueAddedTax, valueAddedTaxRate: ' + valueAddedTaxRate
+    Log.log('getValueAddedTax, valueAddedTaxRate: ' + valueAddedTaxRate
         + ', valueAddedTax: ' + valueAddedTax)
-    */
     return valueAddedTax
   }
 

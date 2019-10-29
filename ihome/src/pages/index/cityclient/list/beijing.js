@@ -1,4 +1,5 @@
 import Taro from '@tarojs/taro'
+import { Log } from '@util/log'
 import { Util } from '@util/util'
 
 import { sCityClientBase } from './city_client_base'
@@ -6,13 +7,13 @@ import { sCityClientBase } from './city_client_base'
 // https://m.lianjia.com/bj/wenda/xiangqing/297493.html?utm_source=office
 export function BeijingCityClient(state) {
   BeijingCityClient.prototype.getPersonalIncomeTaxHelpIndex = function() {
-    console.log('BeijingCityClient.getPersonalIncomeTaxHelpIndex: '
+    Log.log('BeijingCityClient.getPersonalIncomeTaxHelpIndex: '
         + Util.mTipBoxMessages.PersonalIncomeTax_Beijing)
     return Util.mTipBoxMessages.PersonalIncomeTax_Beijing;
   }
 
   BeijingCityClient.prototype.getPersonalIncomeTax = function() {
-    console.log('BeijingCityClient.getPersonalIncomeTax')
+    Log.log('BeijingCityClient.getPersonalIncomeTax')
     if (this.mState.mAboveTwoYearsRadioValue == 2 && this.mState.mOnlyHouseRadioValue) {
       return 0;
     }

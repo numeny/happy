@@ -1,5 +1,6 @@
 import Taro from '@tarojs/taro'
 import { Util } from '@util/util'
+import { Log } from '@util/log'
 
 import { sCityClientBase } from '../city_client_base'
 
@@ -10,7 +11,7 @@ export function ChongqingCityClient(state) {
   }
 
   ChongqingCityClient.prototype.getValueAddedTax = function() {
-    console.log('ChongqingCityClient.getValueAddedTax')
+    Log.log('ChongqingCityClient.getValueAddedTax')
     const valueAddedTaxRate = 0.056 / 1.05
     let valueAddedTax = 0
 
@@ -22,11 +23,8 @@ export function ChongqingCityClient(state) {
     if (valueAddedTax <= 0) {
       valueAddedTax = 0
     }
-    /*
-    if (DEBUG)
-      console.log('getValueAddedTax, valueAddedTaxRate: ' + valueAddedTaxRate
+    Log.log('getValueAddedTax, valueAddedTaxRate: ' + valueAddedTaxRate
         + ', valueAddedTax: ' + valueAddedTax)
-    */
     return valueAddedTax
   }
 

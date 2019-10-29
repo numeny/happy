@@ -1,5 +1,6 @@
 import Taro from '@tarojs/taro'
 import { Util } from '@util/util'
+import { Log } from '@util/log'
 
 import { sCityClientBase } from './city_client_base'
 
@@ -10,21 +11,21 @@ export function GuangzhouCityClient(state) {
   }
 
   GuangzhouCityClient.prototype.getDeedTaxRate = function() {
-    console.log('GuangzhouCityClient.getDeedTaxRate')
+    Log.log('GuangzhouCityClient.getDeedTaxRate')
     let deedTaxRate = 0
     if (this.mState.mFirstHouseRadioValue == 0) {
       deedTaxRate = (this.mState.mHouseArea <= 90) ? 0.01 : 0.015
     } else {
       deedTaxRate = 0.03
     }
-    console.log('getDeedTaxRate, deedTaxRate: ' + deedTaxRate
+    Log.log('getDeedTaxRate, deedTaxRate: ' + deedTaxRate
       + ', mFirstHouseRadioValue: ' + this.mState.mFirstHouseRadioValue
       + ', this.mState: ' + this.mState)
     return deedTaxRate
   }
 
   GuangzhouCityClient.prototype.getDeedTax = function() {
-    console.log('GuangzhouCityClient.getDeedTax')
+    Log.log('GuangzhouCityClient.getDeedTax')
     let deedTaxRate = this.getDeedTaxRate()
     let deedTax = 0
     if (this.mState.mOrdinaryHouseRadioValue) {
@@ -37,7 +38,7 @@ export function GuangzhouCityClient(state) {
     if (deedTax <= 0) {
       deedTax = 0
     }
-    console.log('getDeedTax, deedTaxRate: ' + deedTaxRate
+    Log.log('getDeedTax, deedTaxRate: ' + deedTaxRate
         + ", deedTax: " + deedTax)
     return deedTax
   }
@@ -47,7 +48,7 @@ export function GuangzhouCityClient(state) {
   }
 
   GuangzhouCityClient.prototype.getPersonalIncomeTax = function() {
-    console.log('GuangzhouCityClient.getPersonalIncomeTax')
+    Log.log('GuangzhouCityClient.getPersonalIncomeTax')
     if (this.mState.mAboveTwoYearsRadioValue == 2 && this.mState.mOnlyHouseRadioValue) {
       return 0;
     }
@@ -83,7 +84,7 @@ export function GuangzhouCityClient(state) {
   }
 
   GuangzhouCityClient.prototype.getValueAddedTax = function() {
-    console.log('GuangzhouCityClient.getValueAddedTax')
+    Log.log('GuangzhouCityClient.getValueAddedTax')
     // http://www.sohu.com/a/300409590_804952
     // rate : 5.6% -> 5.3%
     const valueAddedTaxRate = 0.053 / 1.05
@@ -97,8 +98,7 @@ export function GuangzhouCityClient(state) {
     if (valueAddedTax <= 0) {
       valueAddedTax = 0
     }
-    // if (DEBUG)
-      console.log('getValueAddedTax, valueAddedTaxRate: ' + valueAddedTaxRate
+    Log.log('getValueAddedTax, valueAddedTaxRate: ' + valueAddedTaxRate
         + ', valueAddedTax: ' + valueAddedTax)
     return valueAddedTax
   }

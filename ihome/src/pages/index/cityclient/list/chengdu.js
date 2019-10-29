@@ -1,5 +1,6 @@
 import Taro from '@tarojs/taro'
 import { Util } from '@util/util'
+import { Log } from '@util/log'
 
 import { sNonFirstTierCityClient } from './non_first_tier_city_client'
 
@@ -10,7 +11,7 @@ export function ChengduCityClient(state) {
   }
 
   ChengduCityClient.prototype.getPersonalIncomeTax = function() {
-    console.log('ChengduCityClient.getPersonalIncomeTax')
+    Log.log('ChengduCityClient.getPersonalIncomeTax')
     if (this.mState.mAboveTwoYearsRadioValue == 2 && this.mState.mOnlyHouseRadioValue) {
       return 0;
     }

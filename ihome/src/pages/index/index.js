@@ -2,6 +2,7 @@ import Taro, { Component, Config } from '@tarojs/taro'
 import { View, Text, Image, Input, Video, Button, RadioGroup, Radio, Checkbox, CheckboxGroup, Picker } from '@tarojs/components'
 import './index.scss'
 
+import { Log } from '@util/log'
 import { Util } from '../../util/util'
 import { sCalcClientDecider } from './cityclient/city_client_decider'
 import TaroRegionPicker from '../../components/taro-region-picker/index'
@@ -424,7 +425,7 @@ export default class Index extends Component {
         this.updateAll()
       })
     } catch(err) {
-      console.error("onInputHouseArea: ", err);
+      Log.error("onInputHouseArea: ", err);
       Taro.showToast({title: "请输入正确的面积！"})
     }
   }
@@ -439,7 +440,7 @@ export default class Index extends Component {
       })
   
     } catch(err) {
-      console.error("onInputTotalPrice: ", err);
+      Log.error("onInputTotalPrice: ", err);
       Taro.showToast({title: "请输入正确的金额！"})
     }
   }
@@ -449,7 +450,7 @@ export default class Index extends Component {
       let originPrice = Number(e.target.value)
       // FIXME
       if (e.target.value.length != 0 && !Util.isNumber(originPrice)) {
-        console.error("onInputOriginPrice: ", err);
+        Log.error("onInputOriginPrice: ", err);
         Taro.showToast({title: "请输入正确的金额！"})
         return
       }
@@ -459,7 +460,7 @@ export default class Index extends Component {
         this.updateAll()
       })
     } catch(err) {
-      console.error("onInputOriginPrice: ", err);
+      Log.error("onInputOriginPrice: ", err);
       Taro.showToast({title: "请输入正确的金额！"})
     }
   }
@@ -477,7 +478,7 @@ export default class Index extends Component {
       let webSignPrice = Number(e.target.value)
       this.onWebSignPriceChanged(webSignPrice)
     } catch(err) {
-      console.error("onInputWebSignPrice: ", err);
+      Log.error("onInputWebSignPrice: ", err);
       Taro.showToast({title: "请输入正确的金额！"})
     }
   }
@@ -492,7 +493,7 @@ export default class Index extends Component {
       })
 
     } catch(err) {
-      console.error("onInputOriginTaxSum: ", err);
+      Log.error("onInputOriginTaxSum: ", err);
       Taro.showToast({title: "请输入正确的金额！"})
     }
   }
@@ -506,7 +507,7 @@ export default class Index extends Component {
         this.updateAll()
       })
     } catch(err) {
-      console.error("onInputAgencyFee: ", err);
+      Log.error("onInputAgencyFee: ", err);
       Taro.showToast({title: "请输入正确的金额！"})
     }
   }
@@ -520,7 +521,7 @@ export default class Index extends Component {
         this.updateAll()
       })
     } catch(err) {
-      console.error("onInputLoanServiceFee: ", err);
+      Log.error("onInputLoanServiceFee: ", err);
       Taro.showToast({title: "请输入正确的金额！"})
     }
   }
@@ -534,7 +535,7 @@ export default class Index extends Component {
         this.updateAll()
       })
     } catch(err) {
-      console.error("onInputEvaluationFee: ", err);
+      Log.error("onInputEvaluationFee: ", err);
       Taro.showToast({title: "请输入正确的金额！"})
     }
   }
@@ -548,7 +549,7 @@ export default class Index extends Component {
           this.updateAll()
       })
     } catch(err) {
-      console.error("onInputMortgageRegistrationFee: ", err);
+      Log.error("onInputMortgageRegistrationFee: ", err);
       Taro.showToast({title: "请输入正确的金额！"})
     }
   }
@@ -562,7 +563,7 @@ export default class Index extends Component {
           this.updateAll()
       })
     } catch(err) {
-      console.error("onInputOtherFee: ", err);
+      Log.error("onInputOtherFee: ", err);
       Taro.showToast({title: "请输入正确的金额！"})
     }
   }
@@ -576,7 +577,7 @@ export default class Index extends Component {
           this.updateAll()
       })
     } catch(err) {
-      console.error("onInputCommercialLoan: ", err);
+      Log.error("onInputCommercialLoan: ", err);
       Taro.showToast({title: "请输入正确的金额！"})
     }
   }
@@ -590,7 +591,7 @@ export default class Index extends Component {
           this.updateAll()
       })
     } catch(err) {
-      console.error("onInputProvidentFundLoan: ", err);
+      Log.error("onInputProvidentFundLoan: ", err);
       Taro.showToast({title: "请输入正确的金额！"})
     }
   }
@@ -604,14 +605,14 @@ export default class Index extends Component {
           this.updateAll()
       })
     } catch(err) {
-      console.error("onInputOtherLoan: ", err);
+      Log.error("onInputOtherLoan: ", err);
       Taro.showToast({title: "请输入正确的金额！"})
     }
   }
 
   onInputDeedTaxManual = (e) => {
     if (!this.state.mWillInputDeedTaxManual) {
-      console.error('Should not update deed tax manully, e.target.value:',
+      Log.error('Should not update deed tax manully, e.target.value:',
           e.target.value)
       return
     }
@@ -624,14 +625,14 @@ export default class Index extends Component {
       })
     
     } catch(err) {
-      console.error("onInputDeedTaxManual: ", err);
+      Log.error("onInputDeedTaxManual: ", err);
       Taro.showToast({title: "请输入正确的契税金额！"})
     }
   }
 
   onInputPersonalIncomeTaxManual = (e) => {
     if (!this.state.mWillInputPersonalIncomeTaxManual) {
-      console.error('Should not update person income tax manully, e.target.value:',
+      Log.error('Should not update person income tax manully, e.target.value:',
           e.target.value)
       return
     }
@@ -644,14 +645,14 @@ export default class Index extends Component {
       })
     
     } catch(err) {
-      console.error("onInputPersonalIncomeTaxManual: ", err);
+      Log.error("onInputPersonalIncomeTaxManual: ", err);
       Taro.showToast({title: "请输入正确的金额！"})
     }
   }
 
   onInputValueAddedTaxManual = (e) => {
     if (!this.state.mWillInputValueAddedTaxManual) {
-      console.error('Should not update value added tax manully, e.target.value:',
+      Log.error('Should not update value added tax manully, e.target.value:',
           e.target.value)
       return
     }
@@ -663,7 +664,7 @@ export default class Index extends Component {
           this.updateAll()
       })
     } catch(err) {
-      console.error("onInputValueAddedTaxManual: ", err);
+      Log.error("onInputValueAddedTaxManual: ", err);
       Taro.showToast({title: "请输入正确的金额！"})
     }
   }
@@ -677,7 +678,7 @@ export default class Index extends Component {
           this.updateAll()
       })
     } catch(err) {
-      console.error("onInputOtherTax: ", err);
+      Log.error("onInputOtherTax: ", err);
       Taro.showToast({title: "请输入正确的金额！"})
     }
   }
@@ -688,7 +689,7 @@ export default class Index extends Component {
         mWillInputDeedTaxManual: !prevState.mWillInputDeedTaxManual,
       }), () => {
           this.updateAll()
-          console.error("changeWillInputDeedTaxManualCheckbox: ",
+          Log.error("changeWillInputDeedTaxManualCheckbox: ",
               this.state.mWillInputDeedTaxManual);
       })
   }
@@ -770,7 +771,7 @@ export default class Index extends Component {
     let param = Util.getParamForGenerateReport(this.state);
     /*
     if (DEBUG)
-      console.log('onShareAppMessage, param: ' + param);
+      Log.log('onShareAppMessage, param: ' + param);
     */
 
     return {
@@ -796,10 +797,10 @@ export default class Index extends Component {
   }
 
   componentDidShow = () => {
-    console.error('index-componentDidShow')
+    Log.error('index-componentDidShow')
     let pages = getCurrentPages();
     let currPage = pages[pages.length-1];
-    console.error('index-componentDidShow, '
+    Log.error('index-componentDidShow, '
         + currPage.data.mCurrCity)
     this.setState({
         mCurrCity: currPage.data.mCurrCity,
@@ -809,17 +810,17 @@ export default class Index extends Component {
   }
 
   onChangedCity = (e) => {
-    console.error("onChangedCity-0, this.state.mCurrCity: "
+    Log.error("onChangedCity-0, this.state.mCurrCity: "
         + this.state.mCurrCity);
     sCalcClient = sCalcClientDecider.changeCityClient(this.state)
-    console.error("onChangedCity-1, sCalcClient: "
+    Log.error("onChangedCity-1, sCalcClient: "
         + sCalcClient);
     this.updateAll();
   }
 
   onGetRegion (region) {
     // 参数region为选择的省市区
-    console.log(region);
+    Log.log(region);
   }
 
   render () {

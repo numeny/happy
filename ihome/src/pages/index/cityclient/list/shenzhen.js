@@ -1,5 +1,6 @@
 import Taro from '@tarojs/taro'
 import { Util } from '@util/util'
+import { Log } from '@util/log'
 
 import { sCityClientBase } from './city_client_base'
 
@@ -10,7 +11,7 @@ function ShenzhenCityClient(state) {
   }
 
   ShenzhenCityClient.prototype.getPersonalIncomeTax = function() {
-    console.log('ShenzhenCityClient.getPersonalIncomeTax')
+    Log.log('ShenzhenCityClient.getPersonalIncomeTax')
     if (this.mState.mAboveTwoYearsRadioValue == 2 && this.mState.mOnlyHouseRadioValue) {
       return 0;
     }
@@ -31,7 +32,7 @@ function ShenzhenCityClient(state) {
   }
 
   ShenzhenCityClient.prototype.getValueAddedTax = function() {
-    console.log('ShenzhenCityClient.getValueAddedTax')
+    Log.log('ShenzhenCityClient.getValueAddedTax')
     // tax rate do not equal base's
     const valueAddedTaxRate = 0.05 / 1.05
     let valueAddedTax = 0
@@ -44,11 +45,8 @@ function ShenzhenCityClient(state) {
     if (valueAddedTax <= 0) {
       valueAddedTax = 0
     }
-    /*
-    if (DEBUG)
-      console.log('getValueAddedTax, valueAddedTaxRate: ' + valueAddedTaxRate
+    Log.log('getValueAddedTax, valueAddedTaxRate: ' + valueAddedTaxRate
         + ', valueAddedTax: ' + valueAddedTax)
-    */
     return valueAddedTax
   }
   ShenzhenCityClient.prototype.__proto__ = sCityClientBase.__proto__

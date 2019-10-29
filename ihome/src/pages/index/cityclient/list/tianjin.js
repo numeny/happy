@@ -1,5 +1,6 @@
 import Taro from '@tarojs/taro'
 import { Util } from '@util/util'
+import { Log } from '@util/log'
 
 import { sCityClientBase } from './city_client_base'
 
@@ -27,7 +28,7 @@ export function TianjinCityClient(state) {
         }
       }
     }
-    console.log('TianjinCityClient.getDeedTaxRate, deedTaxRate: ' + deedTaxRate)
+    Log.log('TianjinCityClient.getDeedTaxRate, deedTaxRate: ' + deedTaxRate)
     return deedTaxRate
   }
 
@@ -36,14 +37,14 @@ export function TianjinCityClient(state) {
   }
 
   TianjinCityClient.prototype.getDeedTax = function() {
-    console.log('TianjinCityClient.getDeedTax')
+    Log.log('TianjinCityClient.getDeedTax')
     const deedTaxRate = this.getDeedTaxRate()
     const webSignPriceNoTaxRate = this.getWebSignPriceNoTaxRate()
     let deedTax = this.mState.mWebSignPrice * deedTaxRate / webSignPriceNoTaxRate
     if (deedTax <= 0) {
       deedTax = 0
     }
-    console.log('getDeedTax, deedTaxRate: ' + deedTaxRate
+    Log.log('getDeedTax, deedTaxRate: ' + deedTaxRate
         + ", deedTax: " + deedTax)
     return deedTax
   }
@@ -53,7 +54,7 @@ export function TianjinCityClient(state) {
   }
 
   TianjinCityClient.prototype.getPersonalIncomeTax = function() {
-    console.log('TianjinCityClient.getPersonalIncomeTax')
+    Log.log('TianjinCityClient.getPersonalIncomeTax')
     if (this.mState.mAboveTwoYearsRadioValue == 2 && this.mState.mOnlyHouseRadioValue) {
       return 0;
     }
@@ -70,7 +71,7 @@ export function TianjinCityClient(state) {
   }
 
   TianjinCityClient.prototype.getValueAddedTax = function() {
-    console.log('TianjinCityClient.getValueAddedTax')
+    Log.log('TianjinCityClient.getValueAddedTax')
     const webSignPriceNoTaxRate = this.getWebSignPriceNoTaxRate()
     const valueAddedTaxRate = 0.05 / webSignPriceNoTaxRate
     let valueAddedTax = 0
@@ -83,11 +84,8 @@ export function TianjinCityClient(state) {
     if (valueAddedTax <= 0) {
       valueAddedTax = 0
     }
-    /*
-    if (DEBUG)
-      console.log('getValueAddedTax, valueAddedTaxRate: ' + valueAddedTaxRate
+    Log.log('getValueAddedTax, valueAddedTaxRate: ' + valueAddedTaxRate
         + ', valueAddedTax: ' + valueAddedTax)
-    */
     return valueAddedTax
   }
 

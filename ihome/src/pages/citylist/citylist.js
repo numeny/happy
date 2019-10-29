@@ -9,6 +9,7 @@ import './citylist.scss'
 // import FixedTitle from '../common/fixedtitle'
 import PageFooter from '../common/pagefooter'
 // import { CommonFunc } from '../../util/common_func'
+import { Log } from '@util/log'
 import { Util } from '../../util/util'
 
 import namedVideo from '@res/video/1.mp4'
@@ -52,7 +53,7 @@ export default class Citylist extends Component {
             || res.data.city.length <= 0) {
           return Promise.reject(res)
         }
-        console.log("CommonFunc.getCurrCity, province: "
+        Log.log("CommonFunc.getCurrCity, province: "
             + res.data.province + ", city: " + res.data.city)
         this.setState({
             currProv: res.data.province,
@@ -60,7 +61,7 @@ export default class Citylist extends Component {
         })
         this.selectHotCity(res.data.province, res.data.city)
       }).catch(error => {
-        console.error(error)
+        Log.error(error)
       })
   }
   */
