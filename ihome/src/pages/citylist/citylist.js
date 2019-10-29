@@ -154,7 +154,9 @@ export default class Citylist extends Component {
             当前城市
             <View className='hot-city-row-container'>
               <Text className='hot-city-item' onClick={this.selectHotCity} style={selectedStyle}>{this.state.currCity}</Text>
-              <Picker mode='region' className='city-picker' onChange={this.onCityChanged}>点击选择</Picker> 
+              {!Util.isAlipay() &&
+                <Picker mode='region' className='city-picker' onChange={this.onCityChanged}>点击选择</Picker> 
+              }
             </View>
           </View>
           <View className='hot-city-container'>
