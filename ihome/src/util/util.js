@@ -29,6 +29,16 @@ export const Util = {
     ValueAddedTax_Guangzhou: 22,
     ValueAddedTax_Tianjin: 23,
     PersonalIncomeTax_Tianjin: 24,
+    DeedTax_Wuhan: 25,
+    PersonalIncomeTax_Wuhan: 26,
+    ValueAddedTax_Wuhan: 27,
+    PersonalIncomeTax_Qingdao: 28,
+    ValueAddedTax_Qingdao: 29,
+    DeedTax_Suzhou: 30,
+    PersonalIncomeTax_Suzhou: 31,
+    ValueAddedTax_Suzhou: 32,
+    DeedTax_Chengdu: 33,
+    ValueAddedTax_Chengdu: 34,
   },
 
   isInstanceOf: function(thisVar, varType) {

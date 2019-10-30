@@ -54,7 +54,7 @@ export function NonFirstTierCityClient(state) {
   NonFirstTierCityClient.prototype.getValueAddedTax = function() {
     Log.log('NonFirstTierCityClient.getValueAddedTax')
     if (this.mState.mAboveTwoYearsRadioValue != 0) {
-      // 所有的普通住宅和非普通住宅，只要不满两年
+      // 所有的普通住宅和非普通住宅，只要满两年
       return 0
     }
 

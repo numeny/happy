@@ -797,10 +797,9 @@ export default class Index extends Component {
   }
 
   componentDidShow = () => {
-    Log.error('index-componentDidShow')
     let pages = getCurrentPages();
     let currPage = pages[pages.length-1];
-    Log.error('index-componentDidShow, '
+    Log.log('index-componentDidShow, '
         + currPage.data.mCurrCity)
     this.setState({
         mCurrCity: currPage.data.mCurrCity,
@@ -810,11 +809,9 @@ export default class Index extends Component {
   }
 
   onChangedCity = (e) => {
-    Log.error("onChangedCity-0, this.state.mCurrCity: "
+    Log.log("onChangedCity-0, this.state.mCurrCity: "
         + this.state.mCurrCity);
     sCalcClient = sCalcClientDecider.changeCityClient(this.state)
-    Log.error("onChangedCity-1, sCalcClient: "
-        + sCalcClient);
     this.updateAll();
   }
 
