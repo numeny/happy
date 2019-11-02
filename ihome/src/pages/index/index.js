@@ -5,7 +5,10 @@ import './index.scss'
 import { Log } from '@util/log'
 import { Util } from '../../util/util'
 import { sCalcClientDecider } from './cityclient/city_client_decider'
-import TaroRegionPicker from '../../components/taro-region-picker/index'
+// FIXIME
+// import TaroRegionPicker from '../../components/taro-region-picker/index'
+
+import { Toolbar } from '../common/mytoolbar'
 
 import "../../../node_modules/taro-ui/dist/style/components/icon.scss";
 
@@ -59,6 +62,8 @@ export default class Index extends Component {
       ],
 
       mEditable: true,
+      mCurrPage: 1,
+
       mCurrProvince: (this.$router.params.currCity != null && this.$router.params.currCity != undefined) ? Util.getString(this.$router.params.currCity) : '北京市',
       mCurrCity: (this.$router.params.currCity != null && this.$router.params.currCity != undefined) ? Util.getString(this.$router.params.currCity) : '北京市',
 
@@ -820,6 +825,14 @@ export default class Index extends Component {
     Log.log(region);
   }
 
+  onToolBarItemChanged = (idx) => {
+    Log.log('onToolBarItemChanged, idx: ' + idx);
+    
+    this.setState({
+        mCurrPage: idx,
+    })
+  }
+
   render () {
     let classNameForInputDeedTaxManual = this.state.mWillInputDeedTaxManual ?
             'idx-input-text' : 'idx-input-text-disable'
@@ -832,6 +845,8 @@ export default class Index extends Component {
 
     return (
       <View className='idx-top-container'>
+        {this.state.mCurrPage == 0 &&
+        <View>
         <View className='idx-top-title-container'>
           <View className='idx-top-title-city' onClick={this.onSelectCity}>{this.state.mCurrCity}
           <View className='at-icon at-icon-map-pin' onClick={this.onSelectCity}></View>
@@ -1043,6 +1058,11 @@ export default class Index extends Component {
                     <Button className='idx-button-item' type='primary' onClick={this.recaculate}>重新计算</Button>
                     <Button className='idx-button-item' type='primary' open-type='share'>分享结果</Button>
                   </View>)}
+        </View>}
+        {this.state.mCurrPage == 1 &&
+          <View> mmm </View>
+        }
+        <Toolbar onItemChanged={this.onToolBarItemChanged} />
       </View>
     )
   }
