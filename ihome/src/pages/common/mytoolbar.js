@@ -17,7 +17,7 @@ export default class Toolbar extends Component {
   constructor(props) {
     super(props)
     this.state = {
-      mCurrIdx: ToolbarItem.CalcFirstPayment,
+      mCurrIdx: this.props.initPage != null ? this.props.initPage : ToolbarItem.CalcFirstPayment,
       mItems: [
         // CalcFirstPayment
         {text: '计算首付', icon: 'home'},

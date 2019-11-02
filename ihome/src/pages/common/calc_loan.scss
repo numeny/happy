@@ -1,0 +1,149 @@
+@import "../common/common.scss";
+
+$item-lr-padding: 15px;
+
+.cl-top-container {
+  user-select: text;
+  background-color: $page-background-color;
+  font-size: 30px;
+  // margin: 25px;
+}
+
+.cl-top-title-container {
+  display: flex;
+  flex-flow: row nowrap;
+  border-bottom: 5px solid $item-border-color-bold;
+  align-items: center;
+  padding-bottom: 15px;
+}
+
+.cl-title-container {
+  display: flex;
+  flex-flow: row nowrap;
+  // border-bottom: 3px solid #8AC007;
+  padding: 20px 0px;
+  align-items: center;
+}
+
+.cl-item-title {
+  border-bottom: $item-bold-border solid $item-border-color;
+  padding: $item-top-bottom-padding $item-left-right-padding;
+}
+
+.cl-top-title-unit {
+  flex: 6;
+  text-align: right;
+  padding-right: 15px;
+}
+
+@mixin cl_input_item_container() {
+  display: flex;
+  flex-flow: colume nowrap;
+  // border-bottom: 3px solid #8AC007;
+  padding: 20px 0px;
+  align-items: center;
+}
+
+.cl-input-item-container {
+  @include cl_input_item_container();
+  border-bottom: $item-border solid $item-border-color;
+}
+
+.cl-input-item-container-bold {
+  @include cl_input_item_container();
+  border-bottom: 5px solid $item-border-color-bold;
+}
+
+.cl-input-item-container-bold2 {
+  @include cl_input_item_container();
+  border-bottom: 5px solid $item-border-color;
+}
+
+@mixin cl_input_title(){
+  flex: 4;
+  flex-wrap: nowrap;
+  padding-left: $item-lr-padding;
+}
+
+.cl-input-title {
+  @include cl_input_title();
+}
+
+.cl-input-title-bold {
+  @include cl_input_title();
+  font-weight: bold;
+}
+
+.cl-input-title2 {
+  @include cl_input_title();
+  border-left: $item-border solid $item-border-color;
+}
+
+.cl-input-title2-bold {
+  @include cl_input_title();
+  border-left: $item-border solid $item-border-color;
+  font-weight: bold;
+}
+
+@mixin cl_input_text(){
+  flex: 4;
+  flex-wrap: nowrap;
+  text-align: right;
+  padding-right: $item-lr-padding;
+}
+
+.cl-input-text {
+  @include cl_input_text();
+  // border: 3px solid $item-border-color;
+}
+
+.cl-input-text-rate {
+  @include cl_input_text();
+  display: flex;
+  flex-flow: row nowrap;
+  align-items: center;
+}
+
+.cl-input-text-bold {
+  @include cl_input_text();
+  font-weight: bold;
+}
+
+.cl-input-text-disable {
+  @include cl_input_text();
+  background-color: $item-border-color;
+}
+
+.cl-radio-title {
+  padding: 0px $item-lr-padding;
+}
+
+.cl-duration-picker {
+  margin-right: 20px;
+}
+
+.cl-rate-discount-placehold {
+  @include cl_input_text();
+  color: #888;
+}
+
+.cl-input-text-deedtax {
+  margin-right: 25px;
+}
+
+.cl-button-container {
+  display: flex;
+  flex-flow: row nowrap;
+  align-items: center;
+}
+
+.cl-button-item {
+  flex: 3;
+  margin: 25px;
+}
+
+.cl-bottom-cont {
+  color: $item-border-color;
+  text-align: center;
+  padding: 20px;
+}

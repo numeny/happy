@@ -1,4 +1,6 @@
-$item-selected-color: #F00;
+@import "./common.scss";
+
+$item-selected-color: $item-border-color-bold;
 $item-unselected-color: #000;
 
 .mtb-top-view {
@@ -12,7 +14,7 @@ $item-unselected-color: #000;
   z-index: 101;
   background-color: #FFF;
   width: 100%;
-  height: 100px;
+  height: $toobar-height;
   font-size: 25px;
 }
 

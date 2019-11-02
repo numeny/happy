@@ -1,13 +1,14 @@
-$page-background-color: #FFF;
-$item-border-color: #DDD;
-$item-lr-padding: 15px;
-$item-border-color-bold: #8AC007;
+@import "../common/common.scss";
 
 .idx-top-container {
   user-select: text;
   background-color: $page-background-color;
   font-size: 30px;
   margin: 25px;
+}
+
+.idx-top-item-container {
+  margin-bottom: $toobar-height;
 }
 
 .idx-top-title-container {
@@ -42,7 +43,7 @@ $item-border-color-bold: #8AC007;
   display: flex;
   flex-flow: colume nowrap;
   // border-bottom: 3px solid #8AC007;
-  padding: 20px 0px;
+  padding: $item-top-bottom-padding 0px;
   align-items: center;
 }
 
@@ -64,7 +65,7 @@ $item-border-color-bold: #8AC007;
 @mixin idx_input_title(){
   flex: 6;
   flex-wrap: nowrap;
-  padding-left: $item-lr-padding;
+  padding-left: $item-left-right-padding;
 }
 
 .idx-input-title {
@@ -91,7 +92,7 @@ $item-border-color-bold: #8AC007;
   flex: 3;
   flex-wrap: nowrap;
   text-align: right;
-  padding-right: $item-lr-padding;
+  padding-right: $item-left-right-padding;
 }
 
 .idx-input-text {
@@ -109,7 +110,7 @@ $item-border-color-bold: #8AC007;
 }
 
 .idx-radio-title {
-  padding: 0px $item-lr-padding;
+  padding: 0px $item-left-right-padding;
 }
 
 .idx-input-text-deedtax {
