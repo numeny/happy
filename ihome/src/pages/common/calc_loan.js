@@ -60,9 +60,13 @@ export default class CalcLoan extends Component {
 
       mTitleArray: ['商业贷款', '公积金贷款', '其他贷款'],
 
-      mTotalCommercialLoan: 0,
-      mTotalProvidentFundLoan: 0,
-      mTotalOtherLoan: 0,
+      mIsShowingLoanViewCommercialLoan: false,
+      mIsShowingLoanViewProvidentFundLoan: false,
+      mIsShowingLoanViewOtherLoan: false,
+
+      mTotalCommercialLoan: this.props.commercialLoan,
+      mTotalProvidentFundLoan: this.props.providentFundLoan,
+      mTotalOtherLoan: this.props.otherLoan,
 
       mDurationIdxCommercialLoan: 24,
       mDurationIdxProvidentFundLoan: 24,
@@ -83,6 +87,8 @@ export default class CalcLoan extends Component {
       mMonthlyRepaymentCommercialLoan: 0,
       mMonthlyRepaymentProvidentFundLoan: 0,
       mMonthlyRepaymentOtherLoan: 0,
+
+      mMonthlyRepaymentTotalLoan: 0,
 
       mRadioValueCommercialLoanPaymentMethod: RepaymentType.CapitalAndInterest,
       mRadioValueProvidentFundLoanPaymentMethod: RepaymentType.CapitalAndInterest,
@@ -123,6 +129,22 @@ export default class CalcLoan extends Component {
 
   componentWillMount () { }
 
+  componentWillReceiveProps(nextProps) {
+    Log.log('componentWillReceiveProps--------: ')
+    if (nextProps.commercialLoan == this.state.mTotalCommercialLoan
+        && nextProps.providentFundLoan == this.state.mTotalProvidentFundLoan
+        && nextProps.otherLoan == this.state.mTotalOtherLoan) {
+      return
+    }
+    this.setState({
+      mTotalCommercialLoan: nextProps.commercialLoan,
+      mTotalProvidentFundLoan: nextProps.providentFundLoan,
+      mTotalOtherLoan: nextProps.otherLoan,
+    }, () => {
+      this.updateAllLoanResult()
+    })
+  }
+
   onShareAppMessage = (share) => {
     return {
       title: Util.appTitle,
@@ -130,12 +152,16 @@ export default class CalcLoan extends Component {
     }
   }
 
-  componentDidShow = () => {
+  updateLoanTotalResult = () => {
+      this.setState({
+        mMonthlyRepaymentTotalLoan:
+            mMonthlyRepaymentCommercialLoan
+          + mMonthlyRepaymentProvidentFundLoan
+          + mMonthlyRepaymentOtherLoan,
+      }, => this.updateParentViewData())
   }
 
-  // Start
   updateLoanResult = (loanType) => {
-      // this.updateCommercialLoanResult()
     let radioValuePaymentMethod =
           this.getRadioValuePaymentMethod(loanType)
     let loan = this.getLoan(loanType)
@@ -147,20 +173,42 @@ export default class CalcLoan extends Component {
     if (LoanType.CommercialLoan == loanType) {
       this.setState({
         mMonthlyRepaymentCommercialLoan: monthlyPayment,
-      })
+      }, this.updateLoanTotalResult())
     } else if (LoanType.ProvidentFundLoan == loanType) {
       this.setState({
         mMonthlyRepaymentProvidentFundLoan: monthlyPayment,
-      })
+      }, this.updateLoanTotalResult())
     } else if (LoanType.OtherLoan == loanType) {
       this.setState({
         mMonthlyRepaymentOtherLoan: monthlyPayment,
-      })
+      }, this.updateLoanTotalResult())
     }
   }
 
+  updateParentViewData = () => {
+    if (this.props.onUpdateData == undefined
+          && this.props.onUpdateData == null) {
+      return
+    }
+    this.props.onUpdateData({
+      totalCommercialLoan: this.state.mTotalCommercialLoan,
+      totalProvidentFundLoan: this.state.mTotalProvidentFundLoan,
+      totalOtherLoan: this.state.mTotalOtherLoan,
+      monthlyRepaymentCommercialLoan: this.state.mMonthlyRepaymentCommercialLoan,
+      monthlyRepaymentProvidentFundLoan: this.state.mMonthlyRepaymentProvidentFundLoan,
+      monthlyRepaymentOtherLoan: this.state.mMonthlyRepaymentOtherLoan,
+    })
+  }
+
+  updateAllLoanResult = () => {
+    Log.log('updateAllLoanResult------------')
+    this.updateLoanResult(LoanType.CommercialLoan)
+    this.updateLoanResult(LoanType.ProvidentFundLoan)
+    this.updateLoanResult(LoanType.OtherLoan)
+  }
+
   onClickPaymentMethodRadio = (value, loanType, e) => {
-    console.error('onClickPaymentMethodRadio, value: '
+    Log.log('onClickPaymentMethodRadio, value: '
         + value + ', loanType: ' + loanType)
     if (LoanType.CommercialLoan == loanType) {
       this.setState({
@@ -186,7 +234,7 @@ export default class CalcLoan extends Component {
   onInputLoan = (loanType, e) => {
     try {
       let totalLoan = Number(e.target.value)
-      console.error('onInputLoan, totalLoan: '
+      Log.log('onInputLoan, totalLoan: '
             + totalLoan + ', loanType: ' + loanType)
       if (LoanType.CommercialLoan == loanType) {
         this.setState({
@@ -216,7 +264,7 @@ export default class CalcLoan extends Component {
   onInputLoanRate = (loanType, e) => {
     try {
       let interestRate = Number(e.target.value)
-      console.error('onInputLoanRate, interestRate: '
+      Log.log('onInputLoanRate, interestRate: '
             + interestRate + ', loanType: ' + loanType)
       if (LoanType.CommercialLoan == loanType) {
         this.setState({
@@ -328,7 +376,10 @@ export default class CalcLoan extends Component {
     for (let i = 0; i < (12 * years); i++) {
       maxRate = maxRate * (1 + monthlyRate)
     }
-    let monthlyPayment = (totalLoan * monthlyRate * maxRate) / (maxRate - 1)
+    let monthlyPayment = 0
+    if ((maxRate - 1) != 0) {
+      monthlyPayment = (totalLoan * monthlyRate * maxRate) / (maxRate - 1)
+    }
     console.error('calcMonthlyRepayment()'
         + ', monthlyRate: ' + monthlyRate
         + ', maxRate: ' + maxRate
@@ -337,8 +388,43 @@ export default class CalcLoan extends Component {
     return monthlyPayment 
   }
 
+  startCalc = (e) => {
+    this.updateAllLoanResult()
+  }
+
   clearData = (e) => {
     this.setState({
+      mIsShowingLoanViewCommercialLoan: false,
+      mIsShowingLoanViewProvidentFundLoan: false,
+      mIsShowingLoanViewOtherLoan: false,
+
+      mTotalCommercialLoan: 0,
+      mTotalProvidentFundLoan: 0,
+      mTotalOtherLoan: 0,
+
+      mDurationIdxCommercialLoan: 24,
+      mDurationIdxProvidentFundLoan: 24,
+      mDurationIdxOtherLoan: 24,
+
+      mDurationCommercialLoan: 25,
+      mDurationProvidentFundLoan: 25,
+      mDurationOtherLoan: 25,
+
+      mRateCommercialLoan: BaseInterestRateCommercialLoan,
+      mRateProvidentFundLoan: BaseInterestRateProvidentFundLoan,
+      mRateOtherLoan: BaseInterestRateCommercialLoan,
+
+      mRateDiscountIdxCommercialLoan: Number(DefaultRateDiscountIdx.CommercialLoan),
+      mRateDiscountIdxProvidentFundLoan: Number(DefaultRateDiscountIdx.ProvidentFundLoan),
+      mRateDiscountIdxOtherLoan: Number(DefaultRateDiscountIdx.OtherLoan),
+
+      mMonthlyRepaymentCommercialLoan: 0,
+      mMonthlyRepaymentProvidentFundLoan: 0,
+      mMonthlyRepaymentOtherLoan: 0,
+
+      mRadioValueCommercialLoanPaymentMethod: RepaymentType.CapitalAndInterest,
+      mRadioValueProvidentFundLoanPaymentMethod: RepaymentType.CapitalAndInterest,
+      mRadioValueOtherLoanPaymentMethod: RepaymentType.CapitalAndInterest,
     })
   }
 
@@ -348,6 +434,45 @@ export default class CalcLoan extends Component {
         mEditable: true,
       })
     )
+  }
+
+  showLoanView = (loanType) => {
+    if (loanType == LoanType.CommercialLoan) {
+      this.setState(
+        prevState => ({
+          mIsShowingLoanViewCommercialLoan: !this.state.mIsShowingLoanViewCommercialLoan,
+        })
+      )
+      this.updateLoanResult(loanType)
+    } else if (loanType == LoanType.ProvidentFundLoan) {
+      this.setState(
+        prevState => ({
+          mIsShowingLoanViewProvidentFundLoan: !this.state.mIsShowingLoanViewProvidentFundLoan,
+        })
+      )
+      this.updateLoanResult(loanType)
+    } else if (loanType == LoanType.OtherLoan) {
+      this.setState(
+        prevState => ({
+          mIsShowingLoanViewOtherLoan: !this.state.mIsShowingLoanViewOtherLoan,
+        })
+      )
+      this.updateLoanResult(loanType)
+    } else {
+      return true
+    }
+  }
+
+  isShowingLoanView = (loanType) => {
+    if (loanType == LoanType.CommercialLoan) {
+      return this.state.mIsShowingLoanViewCommercialLoan
+    } else if (loanType == LoanType.ProvidentFundLoan) {
+      return this.state.mIsShowingLoanViewProvidentFundLoan
+    } else if (loanType == LoanType.OtherLoan) {
+      return this.state.mIsShowingLoanViewOtherLoan
+    } else {
+      return true
+    }
   }
 
   getLoan = (loanType) => {
@@ -394,13 +519,15 @@ export default class CalcLoan extends Component {
   }
 
   getMonthlyRepayment = (loanType) => {
+    let loan = 0
     if (loanType == LoanType.CommercialLoan) {
-      return this.state.mMonthlyRepaymentCommercialLoan
+      loan = this.state.mMonthlyRepaymentCommercialLoan
     } else if (loanType == LoanType.ProvidentFundLoan) {
-      return this.state.mMonthlyRepaymentProvidentFundLoan
+      loan = this.state.mMonthlyRepaymentProvidentFundLoan
     } else if (loanType == LoanType.OtherLoan) {
-      return this.state.mMonthlyRepaymentOtherLoan
+      loan = this.state.mMonthlyRepaymentOtherLoan
     }
+    return loan * 10000
   }
 
   getRadioValuePaymentMethod = (loanType) => {
@@ -448,17 +575,8 @@ export default class CalcLoan extends Component {
     return this.state.mDurationSelector[
             this.getLoanDurationIdx(loanType)]
   }
-  // END
 
   render () {
-    let classNameForInputDeedTaxManual = this.state.mWillInputDeedTaxManual ?
-            'cl-input-text' : 'cl-input-text-disable'
-
-    let classNameForInputPersonalIncomeTaxManual = this.state.mWillInputPersonalIncomeTaxManual ?
-            'cl-input-text' : 'cl-input-text-disable'
-
-    let classNameForInputValueAddedTaxManual = this.state.mWillInputValueAddedTaxManual ?
-            'cl-input-text' : 'cl-input-text-disable'
     const {mPaymentMethodRadioList} = this.state
     return (
       <View className='cl-top-container'>
@@ -470,7 +588,14 @@ export default class CalcLoan extends Component {
         {this.state.mTitleArray.map((item0, loanType) => {
           return (
           <View>
-            <View className='cl-item-title'>{item0}</View>
+            <View className='cl-item-title'
+              onClick={this.showLoanView.bind(this, loanType)}>{item0}
+              {this.isShowingLoanView(loanType) ?
+                <View className='at-icon at-icon-chevron-up'></View>
+                : <View className='at-icon at-icon-chevron-down'></View>}
+            </View>
+            {this.isShowingLoanView(loanType) &&
+            <View>
             <RadioGroup>
               <View className='cl-input-item-container'>
                 <Text className='cl-radio-title'>还款方式：</Text>
@@ -488,8 +613,10 @@ export default class CalcLoan extends Component {
             </RadioGroup>
             <View className='cl-input-item-container'>
               <Text className='cl-input-title'>贷款额</Text>
-              <Input className='cl-input-text' type='digit' placeholder='输入贷款额'
-                  disabled={!this.state.mEditable} maxLength='10' onInput={this.onInputLoan.bind(this, loanType)} />
+              <Input className='cl-input-text' type='digit' placeholder='万元'
+                  disabled={!this.state.mEditable} maxLength='10'
+                  value={this.getLoan(loanType)}
+                  onInput={this.onInputLoan.bind(this, loanType)} />
               <Text className='cl-input-title2'>贷款年限</Text>
               <View className='cl-input-text'>
                 <Picker mode='selector' range={this.state.mDurationSelector} value='24'
@@ -501,12 +628,12 @@ export default class CalcLoan extends Component {
             </View>
           
             <View className='cl-input-item-container'>
-              <Text className='cl-input-title'>商贷利率</Text>
+              <Text className='cl-input-title'>利率</Text>
               <Text className='cl-rate-discount-placehold'>
                 {this.getRateDiscountText(loanType)}
               </Text>
-              <View className='cl-input-text-rate'>
-                <Input className='cl-input-text-rate' type='digit' placeholder='输入贷款利率' value={this.getInterestRate(loanType)}
+              <View className='cl-input-text-rate-container'>
+                <Input className='cl-input-text-rate' type='digit' placeholder='贷款利率' value={this.getInterestRate(loanType)}
                     disabled={!this.state.mEditable} maxLength='6' onInput={this.onInputLoanRate.bind(this, loanType)} />
                 <Picker mode='selector' value={this.getDefaultRateDiscountIdx(loanType)}
                     range={(loanType == LoanType.ProvidentFundLoan) ?
@@ -518,30 +645,19 @@ export default class CalcLoan extends Component {
               </View>
             </View>
             <View className='cl-input-item-container-bold'>
-              <Text className='cl-input-title'>每月还款</Text>
-              <Text className='cl-input-title'>
-              {this.getMonthlyRepayment(loanType)}
+              <Text className='cl-input-title-bold'>每月还款(元)</Text>
+              <Text className='cl-input-title-bold'>
+              {this.getMonthlyRepayment(loanType).toFixed(0)}
               </Text>
             </View>
+            </View>}
           </View>
         )})}
-
-
-
-
-
-
-
-
-
-
-
-
 
         {this.state.mEditable ?
            (<View className='cl-button-container'>
               <Button className='cl-button-item' type='primary' onClick={this.clearData}>清空数据</Button>
-              <Button className='cl-button-item' type='primary' open-type='share'>分享结果</Button>
+              <Button className='cl-button-item' type='primary' onClick={this.startCalc}>开始计算</Button>
             </View>)
               : (<View className='cl-button-container'>
                     <Button className='cl-button-item' type='primary' onClick={this.recaculate}>重新计算</Button>

@@ -125,10 +125,15 @@ $item-lr-padding: 15px;
 .cl-rate-discount-placehold {
   @include cl_input_text();
   color: #888;
+  flex: 5;
 }
 
-.cl-input-text-deedtax {
-  margin-right: 25px;
+.cl-input-text-rate-container {
+  @include cl_input_text();
+  display: flex;
+  flex-flow: row nowrap;
+  align-items: center;
+  flex: 5;
 }
 
 .cl-button-container {

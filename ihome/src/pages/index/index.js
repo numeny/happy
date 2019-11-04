@@ -34,6 +34,9 @@ export default class Index extends Component {
   constructor(props) {
     super(props)
 
+    // transfer loan data to CalcLoan
+    this.calcLoan = Taro.createRef()
+
     this.state = {
       // sCalcClient: null,
 
@@ -100,6 +103,10 @@ export default class Index extends Component {
       mCommercialLoan: Util.getNumber(this.$router.params.cl),
       mProvidentFundLoan: Util.getNumber(this.$router.params.pfl),
       mOtherLoan: Util.getNumber(this.$router.params.ol),
+
+      mMonthlyRepaymentCommercialLoan: 0,
+      mMonthlyRepaymentProvidentFundLoan: 0,
+      mMonthlyRepaymentOtherLoan: 0,
 
       mFirstHouseRadioValue: Util.getNumber(this.$router.params.fhrv),
       mAboveTwoYearsRadioValue: Util.getNumber(this.$router.params.atyrv),
@@ -180,6 +187,12 @@ export default class Index extends Component {
     })
   }
 
+  updateComponentsData = () => {
+    Log.log('updateComponentsData------------')
+    // FIXME
+    // this.calcLoan.current.updateAllLoanResult()
+  }
+  
   updateTotalPayment = () => {
     this.setState({
       mTotalPayment: this.state.mTotalPrice + this.state.mTotalFee
@@ -581,6 +594,7 @@ export default class Index extends Component {
           mCommercialLoan: commercialLoan,
       }, () => {
           this.updateAll()
+          this.updateComponentsData()
       })
     } catch(err) {
       Log.error("onInputCommercialLoan: ", err);
@@ -595,6 +609,7 @@ export default class Index extends Component {
           mProvidentFundLoan: providentFundLoan,
       }, () => {
           this.updateAll()
+          this.updateComponentsData()
       })
     } catch(err) {
       Log.error("onInputProvidentFundLoan: ", err);
@@ -609,6 +624,7 @@ export default class Index extends Component {
           mOtherLoan: otherLoan,
       }, () => {
           this.updateAll()
+          this.updateComponentsData()
       })
     } catch(err) {
       Log.error("onInputOtherLoan: ", err);
@@ -835,6 +851,14 @@ export default class Index extends Component {
     
     this.setState({
         mCurrPage: idx,
+    })
+  }
+
+  updateLoanCalcData = (data) => {
+    this.setState({
+        mCommercialLoan: data.totalCommercialLoan,
+        mProvidentFundLoan: data.totalProvidentFundLoan,
+        mOtherLoan: data.totalOtherLoan,
     })
   }
 
@@ -1066,9 +1090,16 @@ export default class Index extends Component {
         </View>}
         {this.state.mCurrPage == 1 &&
           <View className='idx-top-item-container'>
-            <CalcLoan></CalcLoan>
+            <CalcLoan commercialLoan={this.state.mCommercialLoan}
+              providentFundLoan={this.state.mProvidentFundLoan}
+              otherLoan={this.state.mOtherLoan}
+              onUpdateData={this.updateLoanCalcData}
+              ref={this.calcLoan} />
           </View>}
-        <Toolbar onItemChanged={this.onToolBarItemChanged} initPage={this.state.mCurrPage} />
+        <Toolbar onItemChanged={this.onToolBarItemChanged} initPage={this.state.mCurrPage}
+          commercialLoan={this.state.mCommercialLoan}
+          providentFundLoan={this.state.mProvidentFundLoan}
+          otherLoan={this.state.mOtherLoan} />
       </View>
     )
   }
