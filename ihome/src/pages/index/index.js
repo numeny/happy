@@ -8,8 +8,8 @@ import { sCalcClientDecider } from './cityclient/city_client_decider'
 // FIXIME
 // import TaroRegionPicker from '../../components/taro-region-picker/index'
 
-import { Toolbar } from '../common/mytoolbar'
-import { CalcLoan } from '../common/calc_loan'
+import Toolbar from '../common/mytoolbar'
+import CalcLoan from '../common/calc_loan'
 
 import "../../../node_modules/taro-ui/dist/style/components/icon.scss";
 
@@ -803,15 +803,19 @@ export default class Index extends Component {
   }
 
   componentDidShow = () => {
-    let pages = getCurrentPages();
-    let currPage = pages[pages.length-1];
-    Log.log('index-componentDidShow, '
-        + currPage.data.mCurrCity)
-    this.setState({
-        mCurrCity: currPage.data.mCurrCity,
-    }, () => {
-      this.onChangedCity()
-    })
+    if (!Util.isH5()) {
+      let pages = getCurrentPages();
+      let currPage = pages[pages.length-1];
+      Log.log('index-componentDidShow, '
+          + currPage.data.mCurrCity)
+      this.setState({
+          mCurrCity: currPage.data.mCurrCity,
+      }, () => {
+        this.onChangedCity()
+      })
+    } else {
+      // TODO
+    }
   }
 
   onChangedCity = (e) => {
