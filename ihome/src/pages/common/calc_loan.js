@@ -87,8 +87,17 @@ export default class CalcLoan extends Component {
       mMonthlyRepaymentCommercialLoan: 0,
       mMonthlyRepaymentProvidentFundLoan: 0,
       mMonthlyRepaymentOtherLoan: 0,
+      mTotalMonthlyRepaymentAllLoan: 0,
 
-      mMonthlyRepaymentTotalLoan: 0,
+      mTotalRepaymentCommercialLoan: 0,
+      mTotalRepaymentProvidentFundLoan: 0,
+      mTotalRepaymentOtherLoan: 0,
+      mTotalRepaymentAllLoan: 0,
+
+      mTotalInterestCommercialLoan: 0,
+      mTotalInterestProvidentFundLoan: 0,
+      mTotalInterestOtherLoan: 0,
+      mTotalInterestAllLoan: 0,
 
       mRadioValueCommercialLoanPaymentMethod: RepaymentType.CapitalAndInterest,
       mRadioValueProvidentFundLoanPaymentMethod: RepaymentType.CapitalAndInterest,
@@ -154,11 +163,19 @@ export default class CalcLoan extends Component {
 
   updateLoanTotalResult = () => {
       this.setState({
-        mMonthlyRepaymentTotalLoan:
-            mMonthlyRepaymentCommercialLoan
-          + mMonthlyRepaymentProvidentFundLoan
-          + mMonthlyRepaymentOtherLoan,
-      }, => this.updateParentViewData())
+        mTotalMonthlyRepaymentAllLoan:
+            this.state.mMonthlyRepaymentCommercialLoan
+          + this.state.mMonthlyRepaymentProvidentFundLoan
+          + this.state.mMonthlyRepaymentOtherLoan,
+        mTotalRepaymentAllLoan:
+            this.state.mTotalRepaymentCommercialLoan
+          + this.state.mTotalRepaymentProvidentFundLoan
+          + this.state.mTotalRepaymentOtherLoan,
+        mTotalInterestAllLoan:
+            this.state.mTotalInterestCommercialLoan
+          + this.state.mTotalInterestProvidentFundLoan
+          + this.state.mTotalInterestOtherLoan,
+      }, () => this.updateParentViewData())
   }
 
   updateLoanResult = (loanType) => {
@@ -170,17 +187,25 @@ export default class CalcLoan extends Component {
     let monthlyPayment = this.calcMonthlyRepayment(
                             radioValuePaymentMethod, loan,
                             interestRate, loanDuration)
+    let totalPayment = this.calcTotalRepayment(
+                            radioValuePaymentMethod, loan,
+                            interestRate, loanDuration,
+                            monthlyPayment)
+
     if (LoanType.CommercialLoan == loanType) {
       this.setState({
         mMonthlyRepaymentCommercialLoan: monthlyPayment,
+        mTotalRepaymentCommercialLoan: totalPayment,
       }, this.updateLoanTotalResult())
     } else if (LoanType.ProvidentFundLoan == loanType) {
       this.setState({
         mMonthlyRepaymentProvidentFundLoan: monthlyPayment,
+        mTotalRepaymentProvidentFundLoan: totalPayment,
       }, this.updateLoanTotalResult())
     } else if (LoanType.OtherLoan == loanType) {
       this.setState({
         mMonthlyRepaymentOtherLoan: monthlyPayment,
+        mTotalRepaymentOtherLoan: totalPayment,
       }, this.updateLoanTotalResult())
     }
   }
@@ -354,23 +379,25 @@ export default class CalcLoan extends Component {
         + ', interestRate: ' + interestRate)
   }
 
+  // interestRate 是4.9%百分号表示的数值。
   calcMonthlyRepayment = (repaymentType, totalLoan,
       interestRate, years) => {
-    console.error('calcMonthlyRepayment()'
+    Log.log('calcMonthlyRepayment()'
         + ', repaymentType: ' + repaymentType
         + ', totalLoan: ' + totalLoan
         + ', interestRate: ' + interestRate
         + ', years: ' + years)
-    // 等额本金：
-    //（贷款本金/ 还款月数）+（本金 — 已归还本金累计额）×每月利率
+    // interestRate 是4.9%百分号表示的数值。
+    let monthlyRate = interestRate / 1200
+    // 等额本金: 首月还款
+    //（贷款本金 * 月利率）+ 贷款本金 / 贷款期数
     if (repaymentType == RepaymentType.Capital) {
-      let firstMonthlyPayment = (totalLoan * interestRate) / 1200
+      let firstMonthlyPayment = totalLoan * monthlyRate
           + totalLoan / (years * 12)
       return firstMonthlyPayment
     }
     // 等额本息：
     // [贷款本金×月利率×（1+月利率）^还款月数]÷[（1+月利率）^还款月数－1]
-    let monthlyRate = interestRate / 1200
     let maxRate = 1.0
     // maxRate =（1+月利率）^还款月数
     for (let i = 0; i < (12 * years); i++) {
@@ -380,12 +407,34 @@ export default class CalcLoan extends Component {
     if ((maxRate - 1) != 0) {
       monthlyPayment = (totalLoan * monthlyRate * maxRate) / (maxRate - 1)
     }
-    console.error('calcMonthlyRepayment()'
+    Log.log('calcMonthlyRepayment()'
         + ', monthlyRate: ' + monthlyRate
         + ', maxRate: ' + maxRate
         + ', 12 * years: ' + (12 * years)
         + ', monthlyPayment: ' + monthlyPayment)
-    return monthlyPayment 
+    return monthlyPayment
+  }
+
+  // interestRate 是4.9%百分号表示的数值。
+  calcTotalRepayment = (repaymentType, totalLoan,
+      interestRate, years, monthlyPayment) => {
+    Log.log('calcTotalRepayment()'
+        + ', repaymentType: ' + repaymentType
+        + ', totalLoan: ' + totalLoan
+        + ', interestRate: ' + interestRate
+        + ', years: ' + years
+        + ', monthlyPayment: ' + monthlyPayment)
+    // interestRate 是4.9%百分号表示的数值。
+    let monthlyRate = interestRate / 1200
+    // 等额本金：
+    // 贷款本金×月利率×（还款次数＋1）÷2 + 贷款本金
+    if (repaymentType == RepaymentType.Capital) {
+      let totalRepayment = totalLoan * monthlyRate * (years * 12 + 1) / 2
+      return totalRepayment
+    }
+    // 等额本息：
+    // 每月还款额 x 还款月数
+    return monthlyPayment * (years * 12)
   }
 
   startCalc = (e) => {
@@ -402,6 +451,7 @@ export default class CalcLoan extends Component {
       mTotalProvidentFundLoan: 0,
       mTotalOtherLoan: 0,
 
+      // 25 yeas's index
       mDurationIdxCommercialLoan: 24,
       mDurationIdxProvidentFundLoan: 24,
       mDurationIdxOtherLoan: 24,
@@ -421,6 +471,17 @@ export default class CalcLoan extends Component {
       mMonthlyRepaymentCommercialLoan: 0,
       mMonthlyRepaymentProvidentFundLoan: 0,
       mMonthlyRepaymentOtherLoan: 0,
+      mTotalMonthlyRepaymentAllLoan: 0,
+
+      mTotalRepaymentCommercialLoan: 0,
+      mTotalRepaymentProvidentFundLoan: 0,
+      mTotalRepaymentOtherLoan: 0,
+      mTotalRepaymentAllLoan: 0,
+
+      mTotalInterestCommercialLoan: 0,
+      mTotalInterestProvidentFundLoan: 0,
+      mTotalInterestOtherLoan: 0,
+      mTotalInterestAllLoan: 0,
 
       mRadioValueCommercialLoanPaymentMethod: RepaymentType.CapitalAndInterest,
       mRadioValueProvidentFundLoanPaymentMethod: RepaymentType.CapitalAndInterest,
@@ -530,6 +591,18 @@ export default class CalcLoan extends Component {
     return loan * 10000
   }
 
+  getMonthlyIncreasement = (loanType) => {
+    let loan = 0
+    if (loanType == LoanType.CommercialLoan) {
+      loan = this.state.mTotalCommercialLoan * mRateCommercialLoan / (mDurationCommercialLoan * 1200)
+    } else if (loanType == LoanType.ProvidentFundLoan) {
+      loan = this.state.mTotalProvidentFundLoan * mRateProvidentFundLoan / (mDurationProvidentFundLoan * 1200)
+    } else if (loanType == LoanType.OtherLoan) {
+      loan = this.state.mTotalOtherLoan * mRateOtherLoan / (mDurationOtherLoan * 1200)
+    }
+    return loan * 10000
+  }
+
   getRadioValuePaymentMethod = (loanType) => {
     if (loanType == LoanType.CommercialLoan) {
       return this.state.mRadioValueCommercialLoanPaymentMethod
@@ -578,6 +651,7 @@ export default class CalcLoan extends Component {
 
   render () {
     const {mPaymentMethodRadioList} = this.state
+
     return (
       <View className='cl-top-container'>
         <View>
@@ -645,9 +719,16 @@ export default class CalcLoan extends Component {
               </View>
             </View>
             <View className='cl-input-item-container-bold'>
-              <Text className='cl-input-title-bold'>每月还款(元)</Text>
               <Text className='cl-input-title-bold'>
-              {this.getMonthlyRepayment(loanType).toFixed(0)}
+                {this.state.mRadioValueCommercialLoanPaymentMethod == RepaymentType.CapitalAndInterest ? '每月还款(元)'
+                  : '首月还款(元)'}
+              </Text>
+              <Text className='cl-input-title-bold'>
+                {this.getMonthlyRepayment(loanType).toFixed(0)}
+              </Text>
+              <Text className='cl-input-title-bold'>
+                {(this.state.mRadioValueCommercialLoanPaymentMethod == RepaymentType.Capital) &&
+                  ('每月递增' + this.getMonthlyIncreasement(loanType).toFixed(0) + '(元)')}
               </Text>
             </View>
             </View>}
