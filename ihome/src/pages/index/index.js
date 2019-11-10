@@ -11,12 +11,29 @@ import { sCalcClientDecider } from './cityclient/city_client_decider'
 import Toolbar from '../common/mytoolbar'
 import CalcLoan from '../common/calc_loan'
 
+import { connect } from '@tarojs/redux'
+import { add, minus, asyncAdd } from '../../actions/counter'
+
 import "../../../node_modules/taro-ui/dist/style/components/icon.scss";
 
 import namedPng from '@images/index/1.jpeg'
 import namedVideo from '@res/video/1.mp4'
 
 let sCalcClient = null
+
+@connect(({ counter }) => ({
+  counter
+}), (dispatch) => ({
+  add () {
+    dispatch(add())
+  },
+  dec () {
+    dispatch(minus())
+  },
+  asyncAdd () {
+    dispatch(asyncAdd())
+  }
+}))
 
 export default class Index extends Component {
 
@@ -66,7 +83,7 @@ export default class Index extends Component {
       ],
 
       mEditable: true,
-      mCurrPage: 1,
+      mCurrPage: 0,
 
       mCurrProvince: (this.$router.params.currCity != null && this.$router.params.currCity != undefined) ? Util.getString(this.$router.params.currCity) : '北京市',
       mCurrCity: (this.$router.params.currCity != null && this.$router.params.currCity != undefined) ? Util.getString(this.$router.params.currCity) : '北京市',
@@ -1088,6 +1105,16 @@ export default class Index extends Component {
                     <Button className='idx-button-item' type='primary' open-type='share'>分享结果</Button>
                   </View>)}
         </View>}
+
+      <Button className='add_btn' onClick={this.props.add}>+</Button>
+      <Button className='dec_btn' onClick={this.props.dec}>-</Button>
+      <Button className='dec_btn' onClick={this.props.asyncAdd}>async</Button>
+      <View>{this.props.counter.num}</View>
+      <View>{this.props.counter.num}</View>
+      <View>{this.props.counter.num}</View>
+      <View>{this.props.counter.num}</View>
+      <View>{this.props.counter.num}</View>
+
         {this.state.mCurrPage == 1 &&
           <View className='idx-top-item-container'>
             <CalcLoan commercialLoan={this.state.mCommercialLoan}
