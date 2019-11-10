@@ -28,6 +28,12 @@ const RepaymentType = {
   Capital: 1,
 }
 
+const ClickShowingLoanView = {
+  ClickShowingLoanViewFalse: false,
+  ClickShowingLoanViewTrue: true,
+  NotClickShowingLoanView: 3,
+}
+
 const DefaultRateDiscountIdx = {
   CommercialLoan: '3',
   ProvidentFundLoan: '0',
@@ -59,6 +65,10 @@ export default class CalcLoan extends Component {
       mEditable: true,
 
       mTitleArray: ['商业贷款', '公积金贷款', '其他贷款'],
+
+      mHasClickedShowingLoanViewCommercialLoan: false,
+      mHasClickedShowingLoanViewProvidentFundLoan: false,
+      mHasClickedShowingLoanViewOtherLoan: false,
 
       mIsShowingLoanViewCommercialLoan: false,
       mIsShowingLoanViewProvidentFundLoan: false,
@@ -150,7 +160,7 @@ export default class CalcLoan extends Component {
       mTotalProvidentFundLoan: nextProps.providentFundLoan,
       mTotalOtherLoan: nextProps.otherLoan,
     }, () => {
-      this.updateAllLoanResult()
+      // this.updateAllLoanResult()
     })
   }
 
@@ -178,12 +188,13 @@ export default class CalcLoan extends Component {
       }, () => this.updateParentViewData())
   }
 
-  updateLoanResult = (loanType) => {
+  calcLoanResult = (loanType) => {
     let radioValuePaymentMethod =
           this.getRadioValuePaymentMethod(loanType)
     let loan = this.getLoan(loanType)
     let interestRate = this.getInterestRate(loanType)
     let loanDuration = this.getLoanDuration(loanType)
+
     let monthlyPayment = this.calcMonthlyRepayment(
                             radioValuePaymentMethod, loan,
                             interestRate, loanDuration)
@@ -191,21 +202,30 @@ export default class CalcLoan extends Component {
                             radioValuePaymentMethod, loan,
                             interestRate, loanDuration,
                             monthlyPayment)
+    return {
+      loanType: loanType,
+      monthlyPayment: monthlyPayment,
+      totalPayment: totalPayment,
+    }
+  }
+
+  updateLoanResult = (loanType) => {
+    let result = this.calcLoanResult(loanType)
 
     if (LoanType.CommercialLoan == loanType) {
       this.setState({
-        mMonthlyRepaymentCommercialLoan: monthlyPayment,
-        mTotalRepaymentCommercialLoan: totalPayment,
+        mMonthlyRepaymentCommercialLoan: result.monthlyPayment,
+        mTotalRepaymentCommercialLoan: result.totalPayment,
       }, this.updateLoanTotalResult())
     } else if (LoanType.ProvidentFundLoan == loanType) {
       this.setState({
-        mMonthlyRepaymentProvidentFundLoan: monthlyPayment,
-        mTotalRepaymentProvidentFundLoan: totalPayment,
+        mMonthlyRepaymentProvidentFundLoan: result.monthlyPayment,
+        mTotalRepaymentProvidentFundLoan: result.totalPayment,
       }, this.updateLoanTotalResult())
     } else if (LoanType.OtherLoan == loanType) {
       this.setState({
-        mMonthlyRepaymentOtherLoan: monthlyPayment,
-        mTotalRepaymentOtherLoan: totalPayment,
+        mMonthlyRepaymentOtherLoan: result.monthlyPayment,
+        mTotalRepaymentOtherLoan: result.totalPayment,
       }, this.updateLoanTotalResult())
     }
   }
@@ -239,19 +259,19 @@ export default class CalcLoan extends Component {
       this.setState({
           mRadioValueCommercialLoanPaymentMethod: value,
       }, () => {
-          this.updateLoanResult(loanType)
+          // this.updateLoanResult(loanType)
       })
     } else if (LoanType.ProvidentFundLoan == loanType) {
       this.setState({
           mRadioValueProvidentFundLoanPaymentMethod: value,
       }, () => {
-          this.updateLoanResult(loanType)
+          // this.updateLoanResult(loanType)
       })
     } else if (LoanType.OtherLoan == loanType) {
       this.setState({
           mRadioValueOtherLoanPaymentMethod: value,
       }, () => {
-          this.updateLoanResult(loanType)
+          // this.updateLoanResult(loanType)
       })
     }
   }
@@ -265,19 +285,19 @@ export default class CalcLoan extends Component {
         this.setState({
             mTotalCommercialLoan: totalLoan,
         }, () => {
-            this.updateLoanResult(loanType)
+            // this.updateLoanResult(loanType)
         })
       } else if (LoanType.ProvidentFundLoan == loanType) {
         this.setState({
             mTotalProvidentFundLoan: totalLoan,
         }, () => {
-            this.updateLoanResult(loanType)
+            // this.updateLoanResult(loanType)
         })
       } else if (LoanType.OtherLoan == loanType) {
         this.setState({
             mTotalOtherLoan: totalLoan,
         }, () => {
-            this.updateLoanResult(loanType)
+            // this.updateLoanResult(loanType)
         })
       }
     } catch(err) {
@@ -295,19 +315,19 @@ export default class CalcLoan extends Component {
         this.setState({
             mRateCommercialLoan: interestRate,
         }, () => {
-            this.updateLoanResult(loanType)
+            // this.updateLoanResult(loanType)
         })
       } else if (LoanType.ProvidentFundLoan == loanType) {
         this.setState({
             mRateProvidentFundLoan: interestRate,
         }, () => {
-            this.updateLoanResult(loanType)
+            // this.updateLoanResult(loanType)
         })
       } else if (LoanType.OtherLoan == loanType) {
         this.setState({
             mRateOtherLoan: interestRate,
         }, () => {
-            this.updateLoanResult(loanType)
+            // this.updateLoanResult(loanType)
         })
       }
     } catch(err) {
@@ -323,19 +343,19 @@ export default class CalcLoan extends Component {
       this.setState({
           mDurationIdxCommercialLoan: durationIdx,
       }, () => {
-          this.updateLoanResult(loanType)
+          // this.updateLoanResult(loanType)
       })
     } else if (LoanType.ProvidentFundLoan == loanType) {
       this.setState({
           mDurationIdxProvidentFundLoan: durationIdx,
       }, () => {
-          this.updateLoanResult(loanType)
+          // this.updateLoanResult(loanType)
       })
     } else if (LoanType.OtherLoan == loanType) {
       this.setState({
           mDurationIdxOtherLoan: durationIdx,
       }, () => {
-          this.updateLoanResult(loanType)
+          // this.updateLoanResult(loanType)
       })
     }
   }
@@ -351,7 +371,7 @@ export default class CalcLoan extends Component {
           mRateCommercialLoan: interestRate,
           mRateDiscountIdxCommercialLoan: index,
       }, () => {
-          this.updateLoanResult(loanType)
+          // this.updateLoanResult(loanType)
       })
     } else if (LoanType.ProvidentFundLoan == loanType) {
       rateDiscount = this.state.mProvidentFundLoanRateSelectorValueArray[index]
@@ -360,7 +380,7 @@ export default class CalcLoan extends Component {
           mRateProvidentFundLoan: interestRate,
           mRateDiscountIdxProvidentFundLoan: index,
       }, () => {
-          this.updateLoanResult(loanType)
+          // this.updateLoanResult(loanType)
       })
     } else if (LoanType.OtherLoan == loanType) {
       rateDiscount = this.state.mCommercialLoanRateSelectorValueArray[index]
@@ -369,7 +389,7 @@ export default class CalcLoan extends Component {
           mRateOtherLoan: interestRate,
           mRateDiscountIdxOtherLoan: index,
       }, () => {
-          this.updateLoanResult(loanType)
+          // this.updateLoanResult(loanType)
       })
     } else {
       console.error('[Error] No this loan type!')
@@ -443,10 +463,6 @@ export default class CalcLoan extends Component {
 
   clearData = (e) => {
     this.setState({
-      mIsShowingLoanViewCommercialLoan: false,
-      mIsShowingLoanViewProvidentFundLoan: false,
-      mIsShowingLoanViewOtherLoan: false,
-
       mTotalCommercialLoan: 0,
       mTotalProvidentFundLoan: 0,
       mTotalOtherLoan: 0,
@@ -499,38 +515,57 @@ export default class CalcLoan extends Component {
 
   showLoanView = (loanType) => {
     if (loanType == LoanType.CommercialLoan) {
-      this.setState(
-        prevState => ({
-          mIsShowingLoanViewCommercialLoan: !this.state.mIsShowingLoanViewCommercialLoan,
+      this.setState({
+        mHasClickedShowingLoanViewCommercialLoan: true,
+      }, () => {
+        this.setState({
+          mIsShowingLoanViewCommercialLoan: !this.isShowingLoanView(loanType),
         })
-      )
-      this.updateLoanResult(loanType)
+      })
     } else if (loanType == LoanType.ProvidentFundLoan) {
-      this.setState(
-        prevState => ({
-          mIsShowingLoanViewProvidentFundLoan: !this.state.mIsShowingLoanViewProvidentFundLoan,
+      this.setState({
+        mHasClickedShowingLoanViewProvidentFundLoan: true,
+      }, () => {
+        this.setState({
+          mIsShowingLoanViewProvidentFundLoan: !this.isShowingLoanView(loanType),
         })
-      )
-      this.updateLoanResult(loanType)
+      })
     } else if (loanType == LoanType.OtherLoan) {
-      this.setState(
-        prevState => ({
-          mIsShowingLoanViewOtherLoan: !this.state.mIsShowingLoanViewOtherLoan,
+      this.setState({
+        mHasClickedShowingLoanViewOtherLoan: true,
+      }, () => {
+        this.setState({
+          mIsShowingLoanViewOtherLoan: !this.isShowingLoanView(loanType),
         })
-      )
-      this.updateLoanResult(loanType)
+      })
     } else {
       return true
     }
+    // this.updateLoanResult(loanType)
   }
 
   isShowingLoanView = (loanType) => {
     if (loanType == LoanType.CommercialLoan) {
-      return this.state.mIsShowingLoanViewCommercialLoan
+      return this.state.mHasClickedShowingLoanViewCommercialLoan
+            ? this.state.mIsShowingLoanViewCommercialLoan
+              : (this.state.mIsShowingLoanViewCommercialLoan
+                  || (this.state.mTotalCommercialLoan != undefined
+                      && this.state.mTotalCommercialLoan != null 
+                      && this.state.mTotalCommercialLoan != 0))
     } else if (loanType == LoanType.ProvidentFundLoan) {
-      return this.state.mIsShowingLoanViewProvidentFundLoan
+      return this.state.mHasClickedShowingLoanViewProvidentFundLoan
+            ? this.state.mIsShowingLoanViewProvidentFundLoan
+              : (this.state.mIsShowingLoanViewProvidentFundLoan
+                  || (this.state.mTotalProvidentFundLoan != undefined
+                      && this.state.mTotalProvidentFundLoan != null 
+                      && this.state.mTotalProvidentFundLoan != 0))
     } else if (loanType == LoanType.OtherLoan) {
-      return this.state.mIsShowingLoanViewOtherLoan
+      return this.state.mHasClickedShowingLoanViewOtherLoan
+            ? this.state.mIsShowingLoanViewOtherLoan
+              : (this.state.mIsShowingLoanViewOtherLoan
+                  || (this.state.mTotalOtherLoan != undefined
+                      && this.state.mTotalOtherLoan != null 
+                      && this.state.mTotalOtherLoan != 0))
     } else {
       return true
     }
