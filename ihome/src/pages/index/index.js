@@ -3,7 +3,7 @@ import { View, Text, Image, Input, Video, Button, RadioGroup, Radio, Checkbox, C
 import './index.scss'
 
 import { Log } from '@util/log'
-import { Util } from '../../util/util'
+import { Util, LoanType } from '../../util/util'
 import { sCalcClientDecider } from './cityclient/city_client_decider'
 // FIXIME
 // import TaroRegionPicker from '../../components/taro-region-picker/index'
@@ -13,6 +13,7 @@ import CalcLoan from '../common/calc_loan'
 
 import { connect } from '@tarojs/redux'
 import { add, minus, asyncAdd } from '../../actions/counter'
+import { setCommercialLoanTotal, setCommercialLoanMonthlyPayment, setProvidentFundLoanTotal, setProvidentFundLoanMonthlyPayment, setOtherLoanTotal, setOtherLoanMonthlyPayment, setAllLoanTotal, setAllLoanMonthlyPayment } from '../../actions/loan'
 
 import "../../../node_modules/taro-ui/dist/style/components/icon.scss";
 
@@ -20,6 +21,35 @@ import namedPng from '@images/index/1.jpeg'
 import namedVideo from '@res/video/1.mp4'
 
 let sCalcClient = null
+
+@connect(({ loan }) => ({
+  loan
+}), (dispatch) => ({
+  setCommercialLoanTotal (loan) {
+    dispatch(setCommercialLoanTotal(loan))
+  },
+  setCommercialLoanMonthlyPayment (loan) {
+    dispatch(setCommercialLoanMonthlyPayment(loan))
+  },
+  setProvidentFundLoanTotal (loan) {
+    dispatch(setProvidentFundLoanTotal(loan))
+  },
+  setProvidentFundLoanMonthlyPayment (loan) {
+    dispatch(setProvidentFundLoanMonthlyPayment(loan))
+  },
+  setOtherLoanTotal (loan) {
+    dispatch(setOtherLoanTotal(loan))
+  },
+  setOtherLoanMonthlyPayment (loan) {
+    dispatch(setOtherLoanMonthlyPayment(loan))
+  },
+  setAllLoanTotal (loan) {
+    dispatch(setAllLoanTotal(loan))
+  },
+  setAllLoanMonthlyPayment (loan) {
+    dispatch(setAllLoanMonthlyPayment(loan))
+  }
+}))
 
 @connect(({ counter }) => ({
   counter
@@ -51,9 +81,6 @@ export default class Index extends Component {
   constructor(props) {
     super(props)
 
-    // transfer loan data to CalcLoan
-    this.calcLoan = Taro.createRef()
-
     this.state = {
       // sCalcClient: null,
 
@@ -83,7 +110,7 @@ export default class Index extends Component {
       ],
 
       mEditable: true,
-      mCurrPage: 0,
+      mCurrPage: 1,
 
       mCurrProvince: (this.$router.params.currCity != null && this.$router.params.currCity != undefined) ? Util.getString(this.$router.params.currCity) : '北京市',
       mCurrCity: (this.$router.params.currCity != null && this.$router.params.currCity != undefined) ? Util.getString(this.$router.params.currCity) : '北京市',
@@ -115,11 +142,6 @@ export default class Index extends Component {
       mEvaluationFee: Util.getNumber(this.$router.params.ef),
       mMortgageRegistrationFee: Util.getNumber(this.$router.params.mrf),
       mOtherFee: Util.getNumber(this.$router.params.of),
-
-      // Loan
-      mCommercialLoan: Util.getNumber(this.$router.params.cl),
-      mProvidentFundLoan: Util.getNumber(this.$router.params.pfl),
-      mOtherLoan: Util.getNumber(this.$router.params.ol),
 
       mMonthlyRepaymentCommercialLoan: 0,
       mMonthlyRepaymentProvidentFundLoan: 0,
@@ -153,6 +175,13 @@ export default class Index extends Component {
         { value: false, text: '否', checked: false, },
       ],
     }
+
+    this.props.setCommercialLoanTotal(
+        Util.getNumber(this.$router.params.cl))
+    this.props.setProvidentFundLoanTotal(
+        Util.getNumber(this.$router.params.pfl))
+    this.props.setOtherLoanTotal(
+        Util.getNumber(this.$router.params.ol))
 
     this.initCallLink()
 
@@ -204,12 +233,6 @@ export default class Index extends Component {
     })
   }
 
-  updateComponentsData = () => {
-    Log.log('updateComponentsData------------')
-    // FIXME
-    // this.calcLoan.current.updateAllLoanResult()
-  }
-  
   updateTotalPayment = () => {
     this.setState({
       mTotalPayment: this.state.mTotalPrice + this.state.mTotalFee
@@ -222,6 +245,18 @@ export default class Index extends Component {
   }
 
   updateTotalLoan = () => {
+    Log.log("-------------updateTotalLoan-"
+        + ", " + this.props.loan.mCommercialLoanTotal
+        + ", " + this.props.loan.mProvidentFundLoanTotal
+        + ", " + this.props.loan.mOtherLoanTotal
+        )
+    let totalLoan = this.props.loan.mCommercialLoanTotal
+          + this.props.loan.mProvidentFundLoanTotal
+          + this.props.loan.mOtherLoanTotal
+
+    this.props.setAllLoanTotal(totalLoan)
+
+    /*
     this.setState({
         mTotalLoan: this.state.mCommercialLoan + this.state.mProvidentFundLoan
                       + this.state.mOtherLoan,
@@ -230,6 +265,10 @@ export default class Index extends Component {
         this.updateTotalLoan.prototype.postCallback()
       }
     })
+    */
+    if (this.updateTotalLoan.prototype.postCallback != null) {
+      this.updateTotalLoan.prototype.postCallback()
+    }
   }
 
   updateTotalFee = () => {
@@ -422,11 +461,6 @@ export default class Index extends Component {
       mMortgageRegistrationFee: 0,
       mOtherFee: 0,
 
-      // Loan
-      mCommercialLoan: 0,
-      mProvidentFundLoan: 0,
-      mOtherLoan: 0,
-
       mFirstHouseRadioValue: 0,
       mAboveTwoYearsRadioValue: 0,
       mOnlyHouseRadioValue: true,
@@ -604,49 +638,23 @@ export default class Index extends Component {
     }
   }
 
-  onInputCommercialLoan = (e) => {
+  onInputLoan = (loanType, e) => {
     try {
-      let commercialLoan = Number(e.target.value)
-      this.setState({
-          mCommercialLoan: commercialLoan,
-      }, () => {
-          this.updateAll()
-          this.updateComponentsData()
-      })
+      let loan = Number(e.target.value)
+      Log.log('onInputLoan, loan: '
+            + loan + ', loanType: ' + loanType)
+      if (LoanType.CommercialLoan == loanType) {
+        this.props.setCommercialLoanTotal(loan)
+      } else if (LoanType.ProvidentFundLoan == loanType) {
+        this.props.setProvidentFundLoanTotal(loan)
+      } else if (LoanType.OtherLoan == loanType) {
+        this.props.setOtherLoanTotal(loan)
+      }
     } catch(err) {
-      Log.error("onInputCommercialLoan: ", err);
+      Log.error("onInputLoan: ", err);
       Taro.showToast({title: "请输入正确的金额！"})
     }
-  }
-
-  onInputProvidentFundLoan = (e) => {
-    try {
-      let providentFundLoan = Number(e.target.value)
-      this.setState({
-          mProvidentFundLoan: providentFundLoan,
-      }, () => {
-          this.updateAll()
-          this.updateComponentsData()
-      })
-    } catch(err) {
-      Log.error("onInputProvidentFundLoan: ", err);
-      Taro.showToast({title: "请输入正确的金额！"})
-    }
-  }
-
-  onInputOtherLoan = (e) => {
-    try {
-      let otherLoan = Number(e.target.value)
-      this.setState({
-          mOtherLoan: otherLoan,
-      }, () => {
-          this.updateAll()
-          this.updateComponentsData()
-      })
-    } catch(err) {
-      Log.error("onInputOtherLoan: ", err);
-      Taro.showToast({title: "请输入正确的金额！"})
-    }
+    this.updateAll()
   }
 
   onInputDeedTaxManual = (e) => {
@@ -871,14 +879,6 @@ export default class Index extends Component {
     })
   }
 
-  updateLoanCalcData = (data) => {
-    this.setState({
-        mCommercialLoan: data.totalCommercialLoan,
-        mProvidentFundLoan: data.totalProvidentFundLoan,
-        mOtherLoan: data.totalOtherLoan,
-    })
-  }
-
   render () {
     let classNameForInputDeedTaxManual = this.state.mWillInputDeedTaxManual ?
             'idx-input-text' : 'idx-input-text-disable'
@@ -1069,17 +1069,17 @@ export default class Index extends Component {
         <View className='idx-input-item-container'>
           <Text className='idx-input-title'>商贷</Text>
           <Input className='idx-input-text' type='digit' placeholder='万元'
-              disabled={!this.state.mEditable} value={this.state.mCommercialLoan} maxLength='10' onInput={this.onInputCommercialLoan} />
+              disabled={!this.state.mEditable} value={this.props.loan.mCommercialLoanTotal} maxLength='10' onInput={this.onInputLoan.bind(this, LoanType.CommercialLoan)} />
           <Text className='idx-input-title2'>公积金贷款</Text>
           <Input className='idx-input-text' type='digit' placeholder='万元'
-              disabled={!this.state.mEditable} value={this.state.mProvidentFundLoan} maxLength='10' onInput={this.onInputProvidentFundLoan} />
+              disabled={!this.state.mEditable} value={this.props.loan.mProvidentFundLoanTotal} maxLength='10' onInput={this.onInputLoan.bind(this, LoanType.ProvidentFundLoan)} />
         </View>
         <View className='idx-input-item-container-bold'>
           <Text className='idx-input-title'>其他贷款</Text>
           <Input className='idx-input-text' type='digit' placeholder='万元'
-              disabled={!this.state.mEditable} value={this.state.mOtherLoan} maxLength='10' onInput={this.onInputOtherLoan} />
+              disabled={!this.state.mEditable} value={this.props.loan.mOtherLoanTotal} maxLength='10' onInput={this.onInputLoan.bind(this, LoanType.OtherLoan)} />
           <View className='idx-input-title2-bold'>总贷款<View className='at-icon at-icon-help' onClick={this.onClickOpenTipBoxIcon.bind(this, Util.mTipBoxMessages.TotalLoan)}></View></View>
-          <Text className='idx-input-text-bold'>{this.state.mTotalLoan.toFixed(4)}</Text>
+          <Text className='idx-input-text-bold'>{this.props.loan.mAllLoanTotal.toFixed(4)}</Text>
         </View>
 
         <View className='idx-input-item-container'>
@@ -1106,27 +1106,12 @@ export default class Index extends Component {
                   </View>)}
         </View>}
 
-      <Button className='add_btn' onClick={this.props.add}>+</Button>
-      <Button className='dec_btn' onClick={this.props.dec}>-</Button>
-      <Button className='dec_btn' onClick={this.props.asyncAdd}>async</Button>
-      <View>{this.props.counter.num}</View>
-      <View>{this.props.counter.num}</View>
-      <View>{this.props.counter.num}</View>
-      <View>{this.props.counter.num}</View>
-      <View>{this.props.counter.num}</View>
-
         {this.state.mCurrPage == 1 &&
           <View className='idx-top-item-container'>
-            <CalcLoan commercialLoan={this.state.mCommercialLoan}
-              providentFundLoan={this.state.mProvidentFundLoan}
-              otherLoan={this.state.mOtherLoan}
-              onUpdateData={this.updateLoanCalcData}
-              ref={this.calcLoan} />
+            <CalcLoan initPage={this.state.mCurrPage} />
           </View>}
-        <Toolbar onItemChanged={this.onToolBarItemChanged} initPage={this.state.mCurrPage}
-          commercialLoan={this.state.mCommercialLoan}
-          providentFundLoan={this.state.mProvidentFundLoan}
-          otherLoan={this.state.mOtherLoan} />
+
+        <Toolbar onItemChanged={this.onToolBarItemChanged} />
       </View>
     )
   }

@@ -2,8 +2,11 @@ import Taro, { Component, Config } from '@tarojs/taro'
 import { View, Text, Image, Input, Video, Button, RadioGroup, Radio, Checkbox, CheckboxGroup, Picker } from '@tarojs/components'
 import './calc_loan.scss'
 
+import { connect } from '@tarojs/redux'
+import { setCommercialLoanTotal, setCommercialLoanMonthlyPayment, setProvidentFundLoanTotal, setProvidentFundLoanMonthlyPayment, setOtherLoanTotal, setOtherLoanMonthlyPayment, setAllLoanTotal, setAllLoanMonthlyPayment } from '../../actions/loan'
+
 import { Log } from '@util/log'
-import { Util } from '../../util/util'
+import { Util, LoanType } from '../../util/util'
 import { sCalcClientDecider } from '../index/cityclient/city_client_decider'
 // FIXIME
 // import TaroRegionPicker from '../../components/taro-region-picker/index'
@@ -16,12 +19,6 @@ import namedPng from '@images/index/1.jpeg'
 import namedVideo from '@res/video/1.mp4'
 
 let sCalcClient = null
-
-const LoanType = {
-  CommercialLoan: 0,
-  ProvidentFundLoan: 1,
-  OtherLoan: 2,
-}
 
 const RepaymentType = {
   CapitalAndInterest: 0,
@@ -43,6 +40,35 @@ const DefaultRateDiscountIdx = {
 // FIXME
 const BaseInterestRateCommercialLoan = 4.9
 const BaseInterestRateProvidentFundLoan = 3.25
+
+@connect(({ loan }) => ({
+  loan
+}), (dispatch) => ({
+  setCommercialLoanTotal (loan) {
+    dispatch(setCommercialLoanTotal(loan))
+  },
+  setCommercialLoanMonthlyPayment (loan) {
+    dispatch(setCommercialLoanMonthlyPayment(loan))
+  },
+  setProvidentFundLoanTotal (loan) {
+    dispatch(setProvidentFundLoanTotal(loan))
+  },
+  setProvidentFundLoanMonthlyPayment (loan) {
+    dispatch(setProvidentFundLoanMonthlyPayment(loan))
+  },
+  setOtherLoanTotal (loan) {
+    dispatch(setOtherLoanTotal(loan))
+  },
+  setOtherLoanMonthlyPayment (loan) {
+    dispatch(setOtherLoanMonthlyPayment(loan))
+  },
+  setAllLoanTotal (loan) {
+    dispatch(setAllLoanTotal(loan))
+  },
+  setAllLoanMonthlyPayment (loan) {
+    dispatch(setAllLoanMonthlyPayment(loan))
+  }
+}))
 
 export default class CalcLoan extends Component {
 
@@ -74,10 +100,6 @@ export default class CalcLoan extends Component {
       mIsShowingLoanViewProvidentFundLoan: false,
       mIsShowingLoanViewOtherLoan: false,
 
-      mTotalCommercialLoan: this.props.commercialLoan,
-      mTotalProvidentFundLoan: this.props.providentFundLoan,
-      mTotalOtherLoan: this.props.otherLoan,
-
       mDurationIdxCommercialLoan: 24,
       mDurationIdxProvidentFundLoan: 24,
       mDurationIdxOtherLoan: 24,
@@ -93,11 +115,6 @@ export default class CalcLoan extends Component {
       mRateDiscountIdxCommercialLoan: Number(DefaultRateDiscountIdx.CommercialLoan),
       mRateDiscountIdxProvidentFundLoan: Number(DefaultRateDiscountIdx.ProvidentFundLoan),
       mRateDiscountIdxOtherLoan: Number(DefaultRateDiscountIdx.OtherLoan),
-
-      mMonthlyRepaymentCommercialLoan: 0,
-      mMonthlyRepaymentProvidentFundLoan: 0,
-      mMonthlyRepaymentOtherLoan: 0,
-      mTotalMonthlyRepaymentAllLoan: 0,
 
       mTotalRepaymentCommercialLoan: 0,
       mTotalRepaymentProvidentFundLoan: 0,
@@ -150,18 +167,6 @@ export default class CalcLoan extends Component {
 
   componentWillReceiveProps(nextProps) {
     Log.log('componentWillReceiveProps--------: ')
-    if (nextProps.commercialLoan == this.state.mTotalCommercialLoan
-        && nextProps.providentFundLoan == this.state.mTotalProvidentFundLoan
-        && nextProps.otherLoan == this.state.mTotalOtherLoan) {
-      return
-    }
-    this.setState({
-      mTotalCommercialLoan: nextProps.commercialLoan,
-      mTotalProvidentFundLoan: nextProps.providentFundLoan,
-      mTotalOtherLoan: nextProps.otherLoan,
-    }, () => {
-      // this.updateAllLoanResult()
-    })
   }
 
   onShareAppMessage = (share) => {
@@ -172,11 +177,19 @@ export default class CalcLoan extends Component {
   }
 
   updateLoanTotalResult = () => {
+    Log.log('updateLoanTotalResult--------: '
+        + ', ' + this.props.loan.mCommercialLoanMonthlyPayment
+        + ', ' + this.props.loan.mProvidentFundLoanMonthlyPayment
+        + ', ' + this.props.loan.mOtherLoanMonthlyPayment)
+      this.props.setAllLoanMonthlyPayment(
+            this.props.loan.mCommercialLoanMonthlyPayment
+          + this.props.loan.mProvidentFundLoanMonthlyPayment
+          + this.props.loan.mOtherLoanMonthlyPayment)
+      this.props.setAllLoanTotal(
+            this.props.loan.mCommercialLoanTotal
+          + this.props.loan.mProvidentFundLoanTotal
+          + this.props.loan.mOtherLoanTotal)
       this.setState({
-        mTotalMonthlyRepaymentAllLoan:
-            this.state.mMonthlyRepaymentCommercialLoan
-          + this.state.mMonthlyRepaymentProvidentFundLoan
-          + this.state.mMonthlyRepaymentOtherLoan,
         mTotalRepaymentAllLoan:
             this.state.mTotalRepaymentCommercialLoan
           + this.state.mTotalRepaymentProvidentFundLoan
@@ -185,7 +198,7 @@ export default class CalcLoan extends Component {
             this.state.mTotalInterestCommercialLoan
           + this.state.mTotalInterestProvidentFundLoan
           + this.state.mTotalInterestOtherLoan,
-      }, () => this.updateParentViewData())
+      })
   }
 
   calcLoanResult = (loanType) => {
@@ -198,6 +211,7 @@ export default class CalcLoan extends Component {
     let monthlyPayment = this.calcMonthlyRepayment(
                             radioValuePaymentMethod, loan,
                             interestRate, loanDuration)
+
     let totalPayment = this.calcTotalRepayment(
                             radioValuePaymentMethod, loan,
                             interestRate, loanDuration,
@@ -211,38 +225,31 @@ export default class CalcLoan extends Component {
 
   updateLoanResult = (loanType) => {
     let result = this.calcLoanResult(loanType)
-
     if (LoanType.CommercialLoan == loanType) {
+      this.props.setCommercialLoanMonthlyPayment(
+          result.monthlyPayment)
       this.setState({
-        mMonthlyRepaymentCommercialLoan: result.monthlyPayment,
+        // FIXME, call updateLoanResult() continuely will lead
+        // to updateLoanTotalResult() Error because state
+        // did not change in time
         mTotalRepaymentCommercialLoan: result.totalPayment,
       }, this.updateLoanTotalResult())
     } else if (LoanType.ProvidentFundLoan == loanType) {
+      this.props.setProvidentFundLoanMonthlyPayment(
+          result.monthlyPayment)
       this.setState({
-        mMonthlyRepaymentProvidentFundLoan: result.monthlyPayment,
+      // FIXME, call updateLoanResult() continuely will lead
+      // to updateLoanTotalResult() Error because state
+      // did not change in time
         mTotalRepaymentProvidentFundLoan: result.totalPayment,
       }, this.updateLoanTotalResult())
     } else if (LoanType.OtherLoan == loanType) {
+      this.props.setOtherLoanMonthlyPayment(
+          result.monthlyPayment)
       this.setState({
-        mMonthlyRepaymentOtherLoan: result.monthlyPayment,
         mTotalRepaymentOtherLoan: result.totalPayment,
       }, this.updateLoanTotalResult())
     }
-  }
-
-  updateParentViewData = () => {
-    if (this.props.onUpdateData == undefined
-          && this.props.onUpdateData == null) {
-      return
-    }
-    this.props.onUpdateData({
-      totalCommercialLoan: this.state.mTotalCommercialLoan,
-      totalProvidentFundLoan: this.state.mTotalProvidentFundLoan,
-      totalOtherLoan: this.state.mTotalOtherLoan,
-      monthlyRepaymentCommercialLoan: this.state.mMonthlyRepaymentCommercialLoan,
-      monthlyRepaymentProvidentFundLoan: this.state.mMonthlyRepaymentProvidentFundLoan,
-      monthlyRepaymentOtherLoan: this.state.mMonthlyRepaymentOtherLoan,
-    })
   }
 
   updateAllLoanResult = () => {
@@ -278,27 +285,15 @@ export default class CalcLoan extends Component {
 
   onInputLoan = (loanType, e) => {
     try {
-      let totalLoan = Number(e.target.value)
-      Log.log('onInputLoan, totalLoan: '
-            + totalLoan + ', loanType: ' + loanType)
+      let loan = Number(e.target.value)
+      Log.log('onInputLoan, loan: '
+            + loan + ', loanType: ' + loanType)
       if (LoanType.CommercialLoan == loanType) {
-        this.setState({
-            mTotalCommercialLoan: totalLoan,
-        }, () => {
-            // this.updateLoanResult(loanType)
-        })
+        this.props.setCommercialLoanTotal(loan)
       } else if (LoanType.ProvidentFundLoan == loanType) {
-        this.setState({
-            mTotalProvidentFundLoan: totalLoan,
-        }, () => {
-            // this.updateLoanResult(loanType)
-        })
+        this.props.setProvidentFundLoanTotal(loan)
       } else if (LoanType.OtherLoan == loanType) {
-        this.setState({
-            mTotalOtherLoan: totalLoan,
-        }, () => {
-            // this.updateLoanResult(loanType)
-        })
+        this.props.setOtherLoanTotal(loan)
       }
     } catch(err) {
       Log.error("onInputLoan: ", err);
@@ -462,11 +457,11 @@ export default class CalcLoan extends Component {
   }
 
   clearData = (e) => {
-    this.setState({
-      mTotalCommercialLoan: 0,
-      mTotalProvidentFundLoan: 0,
-      mTotalOtherLoan: 0,
+    this.props.setCommercialLoanTotal(0)
+    this.props.setProvidentFundLoanTotal(0)
+    this.props.setOtherLoanTotal(0)
 
+    this.setState({
       // 25 yeas's index
       mDurationIdxCommercialLoan: 24,
       mDurationIdxProvidentFundLoan: 24,
@@ -484,16 +479,13 @@ export default class CalcLoan extends Component {
       mRateDiscountIdxProvidentFundLoan: Number(DefaultRateDiscountIdx.ProvidentFundLoan),
       mRateDiscountIdxOtherLoan: Number(DefaultRateDiscountIdx.OtherLoan),
 
-      mMonthlyRepaymentCommercialLoan: 0,
-      mMonthlyRepaymentProvidentFundLoan: 0,
-      mMonthlyRepaymentOtherLoan: 0,
-      mTotalMonthlyRepaymentAllLoan: 0,
-
+      // FIXME, TODO
       mTotalRepaymentCommercialLoan: 0,
       mTotalRepaymentProvidentFundLoan: 0,
       mTotalRepaymentOtherLoan: 0,
       mTotalRepaymentAllLoan: 0,
 
+      // FIXME, TODO
       mTotalInterestCommercialLoan: 0,
       mTotalInterestProvidentFundLoan: 0,
       mTotalInterestOtherLoan: 0,
@@ -549,23 +541,23 @@ export default class CalcLoan extends Component {
       return this.state.mHasClickedShowingLoanViewCommercialLoan
             ? this.state.mIsShowingLoanViewCommercialLoan
               : (this.state.mIsShowingLoanViewCommercialLoan
-                  || (this.state.mTotalCommercialLoan != undefined
-                      && this.state.mTotalCommercialLoan != null 
-                      && this.state.mTotalCommercialLoan != 0))
+                  || (this.props.loan.mCommercialLoanTotal != undefined
+                      && this.props.loan.mCommercialLoanTotal != null 
+                      && this.props.loan.mCommercialLoanTotal != 0))
     } else if (loanType == LoanType.ProvidentFundLoan) {
       return this.state.mHasClickedShowingLoanViewProvidentFundLoan
             ? this.state.mIsShowingLoanViewProvidentFundLoan
               : (this.state.mIsShowingLoanViewProvidentFundLoan
-                  || (this.state.mTotalProvidentFundLoan != undefined
-                      && this.state.mTotalProvidentFundLoan != null 
-                      && this.state.mTotalProvidentFundLoan != 0))
+                  || (this.props.loan.mProvidentFundLoanTotal != undefined
+                      && this.props.loan.mProvidentFundLoanTotal != null 
+                      && this.props.loan.mProvidentFundLoanTotal != 0))
     } else if (loanType == LoanType.OtherLoan) {
       return this.state.mHasClickedShowingLoanViewOtherLoan
             ? this.state.mIsShowingLoanViewOtherLoan
               : (this.state.mIsShowingLoanViewOtherLoan
-                  || (this.state.mTotalOtherLoan != undefined
-                      && this.state.mTotalOtherLoan != null 
-                      && this.state.mTotalOtherLoan != 0))
+                  || (this.props.loan.mOtherLoanTotal != undefined
+                      && this.props.loan.mOtherLoanTotal != null 
+                      && this.props.loan.mOtherLoanTotal != 0))
     } else {
       return true
     }
@@ -573,11 +565,11 @@ export default class CalcLoan extends Component {
 
   getLoan = (loanType) => {
     if (loanType == LoanType.CommercialLoan) {
-      return this.state.mTotalCommercialLoan
+      return this.props.loan.mCommercialLoanTotal
     } else if (loanType == LoanType.ProvidentFundLoan) {
-      return this.state.mTotalProvidentFundLoan
+      return this.props.loan.mProvidentFundLoanTotal
     } else if (loanType == LoanType.OtherLoan) {
-      return this.state.mTotalOtherLoan
+      return this.props.loan.mOtherLoanTotal
     }
   }
 
@@ -617,11 +609,11 @@ export default class CalcLoan extends Component {
   getMonthlyRepayment = (loanType) => {
     let loan = 0
     if (loanType == LoanType.CommercialLoan) {
-      loan = this.state.mMonthlyRepaymentCommercialLoan
+      loan = this.props.loan.mCommercialLoanMonthlyPayment
     } else if (loanType == LoanType.ProvidentFundLoan) {
-      loan = this.state.mMonthlyRepaymentProvidentFundLoan
+      loan = this.props.loan.mProvidentFundLoanMonthlyPayment
     } else if (loanType == LoanType.OtherLoan) {
-      loan = this.state.mMonthlyRepaymentOtherLoan
+      loan = this.props.loan.mOtherLoanMonthlyPayment
     }
     return loan * 10000
   }
@@ -629,11 +621,11 @@ export default class CalcLoan extends Component {
   getMonthlyIncreasement = (loanType) => {
     let loan = 0
     if (loanType == LoanType.CommercialLoan) {
-      loan = this.state.mTotalCommercialLoan * mRateCommercialLoan / (mDurationCommercialLoan * 1200)
+      loan = this.props.loan.mCommercialLoanTotal * mRateCommercialLoan / (mDurationCommercialLoan * 1200)
     } else if (loanType == LoanType.ProvidentFundLoan) {
-      loan = this.state.mTotalProvidentFundLoan * mRateProvidentFundLoan / (mDurationProvidentFundLoan * 1200)
+      loan = this.props.loan.mProvidentFundLoanTotal * mRateProvidentFundLoan / (mDurationProvidentFundLoan * 1200)
     } else if (loanType == LoanType.OtherLoan) {
-      loan = this.state.mTotalOtherLoan * mRateOtherLoan / (mDurationOtherLoan * 1200)
+      loan = this.props.loan.mOtherLoanTotal * mRateOtherLoan / (mDurationOtherLoan * 1200)
     }
     return loan * 10000
   }
@@ -769,6 +761,30 @@ export default class CalcLoan extends Component {
             </View>}
           </View>
         )})}
+        <View className='cl-input-item-container'>
+          <Text className='cl-input-title-bold'>总计</Text>
+        </View>
+        <View className='cl-input-item-container-bold'>
+          <Text className='cl-input-title-bold'>贷款总额</Text>
+          <Text className='cl-input-text-bold'>
+            {this.props.loan.mAllLoanTotal.toFixed(4)}
+          </Text>
+          <Text className='cl-input-title2-bold'>月还款总额</Text>
+          <Text className='cl-input-text-bold'>
+            {this.props.loan.mAllLoanMonthlyPayment.toFixed(4)}
+          </Text>
+        </View>
+
+        <View className='cl-input-item-container-bold'>
+          <Text className='cl-input-title-bold'>利息本金总额</Text>
+          <Text className='cl-input-text-bold'>
+            {this.state.mTotalRepaymentAllLoan.toFixed(4)}
+          </Text>
+          <Text className='cl-input-title2-bold'>利息总额</Text>
+          <Text className='cl-input-text-bold'>
+            {this.state.mTotalInterestAllLoan.toFixed(4)}
+          </Text>
+        </View>
 
         {this.state.mEditable ?
            (<View className='cl-button-container'>

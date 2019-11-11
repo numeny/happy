@@ -1,5 +1,11 @@
 import Taro from '@tarojs/taro';
 
+export const LoanType = {
+  CommercialLoan: 0,
+  ProvidentFundLoan: 1,
+  OtherLoan: 2,
+}
+
 export const Util = {
 
   appTitle: '茜茜猫首付计算神器',
