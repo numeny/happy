@@ -1108,10 +1108,11 @@ export default class Index extends Component {
 
         {this.state.mCurrPage == 1 &&
           <View className='idx-top-item-container'>
-            <CalcLoan initPage={this.state.mCurrPage} />
+            <CalcLoan />
           </View>}
 
-        <Toolbar onItemChanged={this.onToolBarItemChanged} />
+        <Toolbar onItemChanged={this.onToolBarItemChanged}
+            initPage={this.state.mCurrPage} />
       </View>
     )
   }
