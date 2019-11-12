@@ -12,7 +12,7 @@ $item-lr-padding: 15px;
 .cl-top-title-container {
   display: flex;
   flex-flow: row nowrap;
-  border-bottom: 5px solid $item-border-color-bold;
+  // border-bottom: 5px solid $item-border-color-bold;
   align-items: center;
   padding-bottom: 15px;
 }
@@ -26,7 +26,7 @@ $item-lr-padding: 15px;
 }
 
 .cl-item-title {
-  border-bottom: $item-bold-border solid $item-border-color;
+  border-top: $item-bold-border solid $item-border-color-bold;;
   padding: $item-top-bottom-padding $item-left-right-padding;
 }
 
@@ -36,7 +36,7 @@ $item-lr-padding: 15px;
   padding-right: 15px;
 }
 
-@mixin cl_input_item_container() {
+@mixin cl_input_item_container_no_border() {
   display: flex;
   flex-flow: colume nowrap;
   // border-bottom: 3px solid #8AC007;
@@ -45,18 +45,33 @@ $item-lr-padding: 15px;
 }
 
 .cl-input-item-container {
-  @include cl_input_item_container();
+  @include cl_input_item_container_no_border();
   border-bottom: $item-border solid $item-border-color;
 }
 
+.cl-input-item-container-top-bottom-border {
+  @include cl_input_item_container_no_border();
+  border-bottom: $item-border solid $item-border-color;
+  border-top: $item-border solid $item-border-color;
+}
+
+.cl-input-item-container-no-border {
+  @include cl_input_item_container_no_border();
+}
+
 .cl-input-item-container-bold {
-  @include cl_input_item_container();
+  @include cl_input_item_container_no_border();
   border-bottom: 5px solid $item-border-color-bold;
 }
 
 .cl-input-item-container-bold2 {
-  @include cl_input_item_container();
+  @include cl_input_item_container_no_border();
   border-bottom: 5px solid $item-border-color;
+}
+
+.cl-input-item-container-bold-top {
+  @include cl_input_item_container_no_border();
+  border-top: 5px solid $item-border-color-bold;
 }
 
 @mixin cl_input_title(){

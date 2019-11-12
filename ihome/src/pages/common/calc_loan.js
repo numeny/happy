@@ -281,6 +281,7 @@ export default class CalcLoan extends Component {
           // this.updateLoanResult(loanType)
       })
     }
+    this.clearResult()
   }
 
   onInputLoan = (loanType, e) => {
@@ -295,6 +296,7 @@ export default class CalcLoan extends Component {
       } else if (LoanType.OtherLoan == loanType) {
         this.props.setOtherLoanTotal(loan)
       }
+      this.clearResult()
     } catch(err) {
       Log.error("onInputLoan: ", err);
       Taro.showToast({title: "请输入正确的金额！"})
@@ -325,6 +327,7 @@ export default class CalcLoan extends Component {
             // this.updateLoanResult(loanType)
         })
       }
+      this.clearResult()
     } catch(err) {
       Log.error("onInputLoanRate: ", err);
       Taro.showToast({title: "请输入正确的金额！"})
@@ -353,6 +356,7 @@ export default class CalcLoan extends Component {
           // this.updateLoanResult(loanType)
       })
     }
+    this.clearResult()
   }
 
   onLoanRatePickerChanged = (loanType, e) => {
@@ -456,7 +460,27 @@ export default class CalcLoan extends Component {
     this.updateAllLoanResult()
   }
 
+  clearResult = () => {
+      this.props.setCommercialLoanMonthlyPayment(0)
+      this.props.setProvidentFundLoanMonthlyPayment(0)
+      this.props.setOtherLoanMonthlyPayment(0)
+      this.props.setAllLoanMonthlyPayment(0)
+
+      this.props.setAllLoanTotal(0)
+
+      this.setState({
+        mTotalRepaymentCommercialLoan: 0,
+        mTotalRepaymentProvidentFundLoan: 0,
+        mTotalRepaymentOtherLoan: 0,
+
+        mTotalRepaymentAllLoan: 0,
+        mTotalInterestAllLoan: 0,
+      })
+  }
+
   clearData = (e) => {
+    this.clearResult()
+
     this.props.setCommercialLoanTotal(0)
     this.props.setProvidentFundLoanTotal(0)
     this.props.setOtherLoanTotal(0)
@@ -480,6 +504,9 @@ export default class CalcLoan extends Component {
       mRateDiscountIdxOtherLoan: Number(DefaultRateDiscountIdx.OtherLoan),
 
       // FIXME, TODO
+      // FIXME, call updateLoanResult() continuely will lead
+      // to updateLoanTotalResult() Error because state
+      // did not change in time
       mTotalRepaymentCommercialLoan: 0,
       mTotalRepaymentProvidentFundLoan: 0,
       mTotalRepaymentOtherLoan: 0,
@@ -621,11 +648,17 @@ export default class CalcLoan extends Component {
   getMonthlyIncreasement = (loanType) => {
     let loan = 0
     if (loanType == LoanType.CommercialLoan) {
-      loan = this.props.loan.mCommercialLoanTotal * mRateCommercialLoan / (mDurationCommercialLoan * 1200)
+      loan = this.props.loan.mCommercialLoanTotal
+        * this.state.mRateCommercialLoan
+        / (this.state.mDurationCommercialLoan * 1200)
     } else if (loanType == LoanType.ProvidentFundLoan) {
-      loan = this.props.loan.mProvidentFundLoanTotal * mRateProvidentFundLoan / (mDurationProvidentFundLoan * 1200)
+      loan = this.props.loan.mProvidentFundLoanTotal
+        * this.state.mRateProvidentFundLoan
+        / (this.state.mDurationProvidentFundLoan * 1200)
     } else if (loanType == LoanType.OtherLoan) {
-      loan = this.props.loan.mOtherLoanTotal * mRateOtherLoan / (mDurationOtherLoan * 1200)
+      loan = this.props.loan.mOtherLoanTotal
+        * this.state.mRateOtherLoan
+        / (this.state.mDurationOtherLoan * 1200)
     }
     return loan * 10000
   }
@@ -698,7 +731,7 @@ export default class CalcLoan extends Component {
             {this.isShowingLoanView(loanType) &&
             <View>
             <RadioGroup>
-              <View className='cl-input-item-container'>
+              <View className='cl-input-item-container-top-bottom-border'>
                 <Text className='cl-radio-title'>还款方式：</Text>
                 {mPaymentMethodRadioList.map((item, i) => {
                   return (
@@ -728,7 +761,7 @@ export default class CalcLoan extends Component {
               </View>
             </View>
           
-            <View className='cl-input-item-container'>
+            <View className='cl-input-item-container-no-border'>
               <Text className='cl-input-title'>利率</Text>
               <Text className='cl-rate-discount-placehold'>
                 {this.getRateDiscountText(loanType)}
@@ -745,44 +778,45 @@ export default class CalcLoan extends Component {
                 </Picker>
               </View>
             </View>
-            <View className='cl-input-item-container-bold'>
-              <Text className='cl-input-title-bold'>
-                {this.state.mRadioValueCommercialLoanPaymentMethod == RepaymentType.CapitalAndInterest ? '每月还款(元)'
-                  : '首月还款(元)'}
-              </Text>
-              <Text className='cl-input-title-bold'>
-                {this.getMonthlyRepayment(loanType).toFixed(0)}
-              </Text>
-              <Text className='cl-input-title-bold'>
-                {(this.state.mRadioValueCommercialLoanPaymentMethod == RepaymentType.Capital) &&
-                  ('每月递增' + this.getMonthlyIncreasement(loanType).toFixed(0) + '(元)')}
-              </Text>
-            </View>
             </View>}
           </View>
         )})}
-        <View className='cl-input-item-container'>
-          <Text className='cl-input-title-bold'>总计</Text>
-        </View>
-        <View className='cl-input-item-container-bold'>
-          <Text className='cl-input-title-bold'>贷款总额</Text>
+        <View className='cl-input-item-container-bold-top'>
+          <Text className='cl-input-title-bold'>贷款总额（万元）</Text>
           <Text className='cl-input-text-bold'>
-            {this.props.loan.mAllLoanTotal.toFixed(4)}
-          </Text>
-          <Text className='cl-input-title2-bold'>月还款总额</Text>
-          <Text className='cl-input-text-bold'>
-            {this.props.loan.mAllLoanMonthlyPayment.toFixed(4)}
+            {this.props.loan.mAllLoanTotal.toFixed(2)}
           </Text>
         </View>
+        <View className='cl-input-item-container-bold-top'>
+          <Text className='cl-input-title-bold'>每月还款额（元）</Text>
+          <Text className='cl-input-text-bold'>
+            {(this.props.loan.mAllLoanMonthlyPayment * 10000).toFixed(0)}
+          </Text>
+        </View>
+        {this.state.mTitleArray.map((item0, loanType) => {
+          return (<View>
+            {(this.getMonthlyRepayment(loanType) == 0) ? (<View></View>) :
+              (<View className='cl-input-item-container'>
+                <Text className='cl-input-title'>{item0}</Text>
+                {(this.getRadioValuePaymentMethod(loanType) == RepaymentType.Capital) &&
+                <Text className='cl-rate-discount-placehold'>
+                  {'每月递增' + this.getMonthlyIncreasement(loanType).toFixed(0) + '(元)'}
+                </Text>}
+                <Text className='cl-input-text-bold'>
+                  {this.getMonthlyRepayment(loanType).toFixed(0)}
+                </Text>
+              </View>)}
+            </View>)
+        })}
 
-        <View className='cl-input-item-container-bold'>
+        <View className='cl-input-item-container-bold-top'>
           <Text className='cl-input-title-bold'>利息本金总额</Text>
           <Text className='cl-input-text-bold'>
-            {this.state.mTotalRepaymentAllLoan.toFixed(4)}
+            {this.state.mTotalRepaymentAllLoan.toFixed(2)}
           </Text>
           <Text className='cl-input-title2-bold'>利息总额</Text>
           <Text className='cl-input-text-bold'>
-            {this.state.mTotalInterestAllLoan.toFixed(4)}
+            {this.state.mTotalInterestAllLoan.toFixed(2)}
           </Text>
         </View>
 
