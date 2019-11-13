@@ -1,4 +1,5 @@
-import { SetCommercialLoanTotal, SetCommercialLoanMonthlyPayment, SetProvidentFundLoanTotal, SetProvidentFundLoanMonthlyPayment, SetOtherLoanTotal, SetOtherLoanMonthlyPayment, SetAllLoanTotal, SetAllLoanMonthlyPayment } from '../constants/loan'
+// import { SetLoanData, SetCommercialLoanTotal, SetCommercialLoanMonthlyPayment, SetProvidentFundLoanTotal, SetProvidentFundLoanMonthlyPayment, SetOtherLoanTotal, SetOtherLoanMonthlyPayment, SetAllLoanTotal, SetAllLoanMonthlyPayment } from '../constants/loan'
+// import { SetLoanData } from '../constants/loan'
 
 import { RepaymentType } from '../util/util'
 
@@ -25,17 +26,18 @@ const INITIAL_STATE = {
 }
 
 function getNewLoanData (state, action) {
-  state.mLoanData[action.type] = action.mValue
+  state.mLoanData[action.mField] = action.mValue
   return {
     ...state,
   }
 }
 
 export default function loan (state = INITIAL_STATE, action) {
+
   return getNewLoanData(state, action)
   /*
   switch (action.type) {
-    case 0:
+    case SetLoanData:
       return getNewLoanData(state, action)
 
     case SetCommercialLoanTotal:

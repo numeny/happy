@@ -13,7 +13,10 @@ import CalcLoan from '../common/calc_loan'
 
 import { connect } from '@tarojs/redux'
 import { add, minus, asyncAdd } from '../../actions/counter'
-import { setCommercialLoanTotal, setCommercialLoanMonthlyPayment, setProvidentFundLoanTotal, setProvidentFundLoanMonthlyPayment, setOtherLoanTotal, setOtherLoanMonthlyPayment, setAllLoanTotal, setAllLoanMonthlyPayment } from '../../actions/loan'
+
+// import { setCommercialLoanTotal, setCommercialLoanMonthlyPayment, setProvidentFundLoanTotal, setProvidentFundLoanMonthlyPayment, setOtherLoanTotal, setOtherLoanMonthlyPayment, setAllLoanTotal, setAllLoanMonthlyPayment } from '../../actions/loan'
+import { setLoanData } from '../../actions/loan'
+import { CommercialLoanTotal, CommercialLoanMonthlyPayment, ProvidentFundLoanTotal, ProvidentFundLoanMonthlyPayment, OtherLoanTotal, OtherLoanMonthlyPayment, AllLoanTotal, AllLoanMonthlyPayment, RadioValueCommercialLoanPaymentMethod, RadioValueProvidentFundLoanPaymentMethod, RadioValueOtherLoanPaymentMethod, DurationCommercialLoan, DurationProvidentFundLoan, DurationOtherLoan, RateCommercialLoan, RateProvidentFundLoan, RateOtherLoan, RateInputManualCommercialLoan, RateInputManualProvidentFundLoan, RateInputManualOtherLoan, RateDiscountIdxCommercialLoan, RateDiscountIdxProvidentFundLoan, RateDiscountIdxOtherLoan } from '../../constants/loan'
 
 import "../../../node_modules/taro-ui/dist/style/components/icon.scss";
 
@@ -25,6 +28,10 @@ let sCalcClient = null
 @connect(({ loan }) => ({
   loan
 }), (dispatch) => ({
+  setLoanData (field, loan) {
+    dispatch(setLoanData(field, loan))
+  },
+  /*
   setCommercialLoanTotal (loan) {
     dispatch(setCommercialLoanTotal(loan))
   },
@@ -49,6 +56,7 @@ let sCalcClient = null
   setAllLoanMonthlyPayment (loan) {
     dispatch(setAllLoanMonthlyPayment(loan))
   }
+  */
 }))
 
 @connect(({ counter }) => ({
@@ -172,13 +180,13 @@ export default class Index extends Component {
       ],
     }
 
-    this.props.setCommercialLoanTotal(
+    this.props.setLoanData(CommercialLoanTotal,
         Util.getNumber(this.$router.params.cl))
-    this.props.setProvidentFundLoanTotal(
+    this.props.setLoanData(ProvidentFundLoanTotal,
         Util.getNumber(this.$router.params.pfl))
-    this.props.setOtherLoanTotal(
+    this.props.setLoanData(OtherLoanTotal,
         Util.getNumber(this.$router.params.ol))
-    this.props.setAllLoanTotal(
+    this.props.setLoanData(AllLoanTotal,
         Util.getNumber(this.$router.params.tl))
 
     this.initCallLink()
@@ -224,7 +232,7 @@ export default class Index extends Component {
   updateFirstPayment = () => {
     this.setState({
         // mFirstPayment: this.state.mTotalPayment - this.state.mTotalLoan,
-        mFirstPayment: this.state.mTotalPayment - this.props.loan.mAllLoanTotal,
+        mFirstPayment: this.state.mTotalPayment - this.props.loan.mLoanData[AllLoanTotal],
     }, () => {
       if (this.updateFirstPayment.prototype.postCallback != null) {
         this.updateFirstPayment.prototype.postCallback()
@@ -245,15 +253,15 @@ export default class Index extends Component {
 
   updateTotalLoan = () => {
     Log.log("-------------updateTotalLoan-"
-        + ", " + this.props.loan.mCommercialLoanTotal
-        + ", " + this.props.loan.mProvidentFundLoanTotal
-        + ", " + this.props.loan.mOtherLoanTotal
+        + ", " + this.props.loan.mLoanData[CommercialLoanTotal]
+        + ", " + this.props.loan.mLoanData[ProvidentFundLoanTotal]
+        + ", " + this.props.loan.mLoanData[OtherLoanTotal]
         )
-    let totalLoan = this.props.loan.mCommercialLoanTotal
-          + this.props.loan.mProvidentFundLoanTotal
-          + this.props.loan.mOtherLoanTotal
+    let totalLoan = this.props.loan.mLoanData[CommercialLoanTotal]
+          + this.props.loan.mLoanData[ProvidentFundLoanTotal]
+          + this.props.loan.mLoanData[OtherLoanTotal]
 
-    this.props.setAllLoanTotal(totalLoan)
+    this.props.setLoanData(AllLoanTotal, totalLoan)
 
     /*
     this.setState({
@@ -625,11 +633,11 @@ export default class Index extends Component {
       Log.log('onInputLoan, loan: '
             + loan + ', loanType: ' + loanType)
       if (LoanType.CommercialLoan == loanType) {
-        this.props.setCommercialLoanTotal(loan)
+        this.props.setLoanData(CommercialLoanTotal, loan)
       } else if (LoanType.ProvidentFundLoan == loanType) {
-        this.props.setProvidentFundLoanTotal(loan)
+        this.props.setLoanData(ProvidentFundLoanTotal, loan)
       } else if (LoanType.OtherLoan == loanType) {
-        this.props.setOtherLoanTotal(loan)
+        this.props.setLoanData(OtherLoanTotal, loan)
       }
     } catch(err) {
       Log.error("onInputLoan: ", err);
@@ -1050,22 +1058,22 @@ export default class Index extends Component {
         <View className='idx-input-item-container'>
           <Text className='idx-input-title'>商贷</Text>
           <Input className='idx-input-text' type='digit' placeholder='万元'
-              disabled={!this.state.mEditable} value={this.props.loan.mCommercialLoanTotal} maxLength='10' onInput={this.onInputLoan.bind(this, LoanType.CommercialLoan)} />
+              disabled={!this.state.mEditable} value={this.props.loan.mLoanData[CommercialLoanTotal]} maxLength='10' onInput={this.onInputLoan.bind(this, LoanType.CommercialLoan)} />
           <Text className='idx-input-title2'>公积金贷款</Text>
           <Input className='idx-input-text' type='digit' placeholder='万元'
-              disabled={!this.state.mEditable} value={this.props.loan.mProvidentFundLoanTotal} maxLength='10' onInput={this.onInputLoan.bind(this, LoanType.ProvidentFundLoan)} />
+              disabled={!this.state.mEditable} value={this.props.loan.mLoanData[ProvidentFundLoanTotal]} maxLength='10' onInput={this.onInputLoan.bind(this, LoanType.ProvidentFundLoan)} />
         </View>
         <View className='idx-input-item-container-bold'>
           <Text className='idx-input-title'>其他贷款</Text>
           <Input className='idx-input-text' type='digit' placeholder='万元'
-              disabled={!this.state.mEditable} value={this.props.loan.mOtherLoanTotal} maxLength='10' onInput={this.onInputLoan.bind(this, LoanType.OtherLoan)} />
+              disabled={!this.state.mEditable} value={this.props.loan.mLoanData[OtherLoanTotal]} maxLength='10' onInput={this.onInputLoan.bind(this, LoanType.OtherLoan)} />
           <View className='idx-input-title2-bold'>总贷款<View className='at-icon at-icon-help' onClick={this.onClickOpenTipBoxIcon.bind(this, Util.mTipBoxMessages.TotalLoan)}></View></View>
-          <Text className='idx-input-text-bold'>{this.props.loan.mAllLoanTotal.toFixed(2)}</Text>
+          <Text className='idx-input-text-bold'>{this.props.loan.mLoanData[AllLoanTotal].toFixed(2)}</Text>
         </View>
 
         <View className='idx-input-item-container'>
           <View className='idx-input-title-bold'>总首付<View className='at-icon at-icon-help' onClick={this.onClickOpenTipBoxIcon.bind(this, Util.mTipBoxMessages.FirstPayment)}></View></View>
-          <Text className='idx-input-text-bold'>{(this.state.mTotalPayment - this.props.loan.mAllLoanTotal).toFixed(2)}</Text>
+          <Text className='idx-input-text-bold'>{(this.state.mTotalPayment - this.props.loan.mLoanData[AllLoanTotal]).toFixed(2)}</Text>
           <View className='idx-input-title2-bold'>总房款<View className='at-icon at-icon-help' onClick={this.onClickOpenTipBoxIcon.bind(this, Util.mTipBoxMessages.TotalPayment)}></View></View>
           <Text className='idx-input-text-bold'>{this.state.mTotalPayment.toFixed(2)}</Text>
         </View>
@@ -1081,7 +1089,7 @@ export default class Index extends Component {
             <View className='at-icon at-icon-help'
                 onClick={this.onClickOpenTipBoxIcon.bind(this, Util.mTipBoxMessages.TotalTaxAndFee)}></View>
           </View>
-          <Text className='idx-input-text-bold'>{(this.props.loan.mAllLoanMonthlyPayment * 10000).toFixed(0)}</Text>
+          <Text className='idx-input-text-bold'>{(this.props.loan.mLoanData[AllLoanMonthlyPayment] * 10000).toFixed(0)}</Text>
           <View className='idx-input-title2-bold'>平均单价<View className='at-icon at-icon-help' onClick={this.onClickOpenTipBoxIcon.bind(this, Util.mTipBoxMessages.AverageUnitPrice)}></View></View>
           <Text className='idx-input-text-bold'>{(this.state.mHouseArea != 0 ? (this.state.mTotalPayment/this.state.mHouseArea) : 0).toFixed(2)}</Text>
         </View>
