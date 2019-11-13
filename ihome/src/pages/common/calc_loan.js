@@ -6,7 +6,7 @@ import { connect } from '@tarojs/redux'
 import { setCommercialLoanTotal, setCommercialLoanMonthlyPayment, setProvidentFundLoanTotal, setProvidentFundLoanMonthlyPayment, setOtherLoanTotal, setOtherLoanMonthlyPayment, setAllLoanTotal, setAllLoanMonthlyPayment } from '../../actions/loan'
 
 import { Log } from '@util/log'
-import { Util, LoanType } from '../../util/util'
+import { Util, LoanType, RepaymentType } from '../../util/util'
 import { sCalcClientDecider } from '../index/cityclient/city_client_decider'
 // FIXIME
 // import TaroRegionPicker from '../../components/taro-region-picker/index'
@@ -17,13 +17,6 @@ import "../../../node_modules/taro-ui/dist/style/components/icon.scss";
 
 import namedPng from '@images/index/1.jpeg'
 import namedVideo from '@res/video/1.mp4'
-
-let sCalcClient = null
-
-const RepaymentType = {
-  CapitalAndInterest: 0,
-  Capital: 1,
-}
 
 const ClickShowingLoanView = {
   ClickShowingLoanViewFalse: false,
@@ -99,10 +92,6 @@ export default class CalcLoan extends Component {
       mIsShowingLoanViewCommercialLoan: false,
       mIsShowingLoanViewProvidentFundLoan: false,
       mIsShowingLoanViewOtherLoan: false,
-
-      mDurationIdxCommercialLoan: 24,
-      mDurationIdxProvidentFundLoan: 24,
-      mDurationIdxOtherLoan: 24,
 
       mDurationCommercialLoan: 25,
       mDurationProvidentFundLoan: 25,
@@ -365,21 +354,22 @@ export default class CalcLoan extends Component {
   onDurationChanged = (loanType, e) => {
     Log.log('picker发送选择改变，携带值为', e.detail.value)
     let durationIdx = Number(e.detail.value)
+    let duration = durationIdx + 1
     if (LoanType.CommercialLoan == loanType) {
       this.setState({
-          mDurationIdxCommercialLoan: durationIdx,
+          mDurationCommercialLoan: duration,
       }, () => {
           // this.updateLoanResult(loanType)
       })
     } else if (LoanType.ProvidentFundLoan == loanType) {
       this.setState({
-          mDurationIdxProvidentFundLoan: durationIdx,
+          mDurationProvidentFundLoan: duration,
       }, () => {
           // this.updateLoanResult(loanType)
       })
     } else if (LoanType.OtherLoan == loanType) {
       this.setState({
-          mDurationIdxOtherLoan: durationIdx,
+          mDurationOtherLoan: duration,
       }, () => {
           // this.updateLoanResult(loanType)
       })
@@ -514,11 +504,6 @@ export default class CalcLoan extends Component {
     this.props.setOtherLoanTotal(0)
 
     this.setState({
-      // 25 yeas's index
-      mDurationIdxCommercialLoan: 24,
-      mDurationIdxProvidentFundLoan: 24,
-      mDurationIdxOtherLoan: 24,
-
       mDurationCommercialLoan: 25,
       mDurationProvidentFundLoan: 25,
       mDurationOtherLoan: 25,
@@ -707,34 +692,21 @@ export default class CalcLoan extends Component {
   getLoanDuration = (loanType) => {
     let duration = 0
     if (loanType == LoanType.CommercialLoan) {
-      duration = this.state.mDurationIdxCommercialLoan
+      duration = this.state.mDurationCommercialLoan
     } else if (loanType == LoanType.ProvidentFundLoan) {
-      duration = this.state.mDurationIdxProvidentFundLoan
+      duration = this.state.mDurationProvidentFundLoan
     } else if (loanType == LoanType.OtherLoan) {
-      duration = this.state.mDurationIdxOtherLoan
+      duration = this.state.mDurationOtherLoan
     } else {
-      console.error('[Error] getLoanDurationIdx, no loanTyp!')
-      duration = 0
+      console.error('[Error] getLoanDuration, no loanType!')
+      duration = 25
     }
-    return duration + 1
-  }
-
-  getLoanDurationIdx = (loanType) => {
-    if (loanType == LoanType.CommercialLoan) {
-      return this.state.mDurationIdxCommercialLoan
-    } else if (loanType == LoanType.ProvidentFundLoan) {
-      return this.state.mDurationIdxProvidentFundLoan
-    } else if (loanType == LoanType.OtherLoan) {
-      return this.state.mDurationIdxOtherLoan
-    } else {
-      console.error('[Error] getLoanDurationIdx, no loanTyp!')
-      return 0
-    }
+    return duration
   }
 
   getLoanDurationText = (loanType) => {
     return this.state.mDurationSelector[
-            this.getLoanDurationIdx(loanType)]
+            this.getLoanDuration(loanType)-1]
   }
 
   render () {

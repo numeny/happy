@@ -6,6 +6,11 @@ export const LoanType = {
   OtherLoan: 2,
 }
 
+export const RepaymentType = {
+  CapitalAndInterest: 0,
+  Capital: 1,
+}
+
 export const Util = {
 
   appTitle: '茜茜猫首付计算神器',
