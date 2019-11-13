@@ -97,10 +97,6 @@ export default class Index extends Component {
         this.updateMortgageRegistrationFee,
         this.updateOtherFee,
 
-        this.updateCommercialLoan,
-        this.updateProvidentFundLoan,
-        this.updateOtherLoan,
-
         this.updateTotalLoan,
         this.updateTotalFee,
         this.updateTotalTax,
@@ -117,7 +113,7 @@ export default class Index extends Component {
 
       mFirstPayment: Util.getNumber(this.$router.params.fp),
       mTotalPayment: Util.getNumber(this.$router.params.tp),
-      mTotalLoan: Util.getNumber(this.$router.params.tl),
+      // mTotalLoan: Util.getNumber(this.$router.params.tl),
       mTotalFee: Util.getNumber(this.$router.params.tf),
       mTotalTax: Util.getNumber(this.$router.params.tt),
 
@@ -182,6 +178,8 @@ export default class Index extends Component {
         Util.getNumber(this.$router.params.pfl))
     this.props.setOtherLoanTotal(
         Util.getNumber(this.$router.params.ol))
+    this.props.setAllLoanTotal(
+        Util.getNumber(this.$router.params.tl))
 
     this.initCallLink()
 
@@ -225,7 +223,8 @@ export default class Index extends Component {
 
   updateFirstPayment = () => {
     this.setState({
-        mFirstPayment: this.state.mTotalPayment - this.state.mTotalLoan,
+        // mFirstPayment: this.state.mTotalPayment - this.state.mTotalLoan,
+        mFirstPayment: this.state.mTotalPayment - this.props.loan.mAllLoanTotal,
     }, () => {
       if (this.updateFirstPayment.prototype.postCallback != null) {
         this.updateFirstPayment.prototype.postCallback()
@@ -328,24 +327,6 @@ export default class Index extends Component {
     }
   }
 
-  updateCommercialLoan = () => {
-    if (this.updateCommercialLoan.prototype.postCallback != null) {
-      this.updateCommercialLoan.prototype.postCallback()
-    }
-  }
-
-  updateProvidentFundLoan = () => {
-    if (this.updateProvidentFundLoan.prototype.postCallback != null) {
-      this.updateProvidentFundLoan.prototype.postCallback()
-    }
-  }
-
-  updateOtherLoan = () => {
-    if (this.updateOtherLoan.prototype.postCallback != null) {
-      this.updateOtherLoan.prototype.postCallback()
-    }
-  }
-
   updateDeedTax = () => {
     if (this.state.mWillInputDeedTaxManual) {
       if (this.updateDeedTax.prototype.postCallback != null) {
@@ -435,7 +416,7 @@ export default class Index extends Component {
     this.setState({
       mFirstPayment: 0,
       mTotalPayment: 0,
-      mTotalLoan: 0,
+      // mTotalLoan: 0,
       mTotalFee: 0,
       mTotalTax: 0,
 
@@ -1084,7 +1065,7 @@ export default class Index extends Component {
 
         <View className='idx-input-item-container'>
           <View className='idx-input-title-bold'>总首付<View className='at-icon at-icon-help' onClick={this.onClickOpenTipBoxIcon.bind(this, Util.mTipBoxMessages.FirstPayment)}></View></View>
-          <Text className='idx-input-text-bold'>{this.state.mFirstPayment.toFixed(2)}</Text>
+          <Text className='idx-input-text-bold'>{(this.state.mTotalPayment - this.props.loan.mAllLoanTotal).toFixed(2)}</Text>
           <View className='idx-input-title2-bold'>总房款<View className='at-icon at-icon-help' onClick={this.onClickOpenTipBoxIcon.bind(this, Util.mTipBoxMessages.TotalPayment)}></View></View>
           <Text className='idx-input-text-bold'>{this.state.mTotalPayment.toFixed(2)}</Text>
         </View>

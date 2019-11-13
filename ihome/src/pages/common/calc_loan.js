@@ -165,8 +165,23 @@ export default class CalcLoan extends Component {
 
   componentWillMount () { }
 
+  isPropsChanged (nextProps) {
+    return this.props.loan.mCommercialLoanTotal != nextProps.loan.mCommercialLoanTotal
+        || this.props.loan.mCommercialLoanMonthlyPayment != nextProps.loan.mCommercialLoanMonthlyPayment
+        || this.props.loan.mProvidentFundLoanTotal != nextProps.loan.mProvidentFundLoanTotal
+        || this.props.loan.mProvidentFundLoanMonthlyPayment != nextProps.loan.mProvidentFundLoanMonthlyPayment
+        || this.props.loan.mOtherLoanTotal != nextProps.loan.mOtherLoanTotal
+        || this.props.loan.mOtherLoanMonthlyPayment != nextProps.loan.mOtherLoanMonthlyPayment
+  }
+
   componentWillReceiveProps(nextProps) {
-    Log.log('componentWillReceiveProps--------: ')
+    Log.log('componentWillReceiveProps--------: 1')
+    if (!this.isPropsChanged(nextProps)) {
+      return
+    }
+
+    Log.log('componentWillReceiveProps--------: 2')
+    this.updateLoanTotalResultForProps(nextProps)
   }
 
   onShareAppMessage = (share) => {
@@ -176,19 +191,22 @@ export default class CalcLoan extends Component {
     }
   }
 
-  updateLoanTotalResult = () => {
-    Log.log('updateLoanTotalResult--------: '
-        + ', ' + this.props.loan.mCommercialLoanMonthlyPayment
-        + ', ' + this.props.loan.mProvidentFundLoanMonthlyPayment
-        + ', ' + this.props.loan.mOtherLoanMonthlyPayment)
-      this.props.setAllLoanMonthlyPayment(
-            this.props.loan.mCommercialLoanMonthlyPayment
-          + this.props.loan.mProvidentFundLoanMonthlyPayment
-          + this.props.loan.mOtherLoanMonthlyPayment)
-      this.props.setAllLoanTotal(
-            this.props.loan.mCommercialLoanTotal
-          + this.props.loan.mProvidentFundLoanTotal
-          + this.props.loan.mOtherLoanTotal)
+  updateLoanTotalResultForProps = (nextProps) => {
+    Log.log('updateLoanTotalResultForProps--------: '
+        + ', ' + nextProps.loan.mCommercialLoanMonthlyPayment
+        + ', ' + nextProps.loan.mProvidentFundLoanMonthlyPayment
+        + ', ' + nextProps.loan.mOtherLoanMonthlyPayment)
+      nextProps.setAllLoanMonthlyPayment(
+            nextProps.loan.mCommercialLoanMonthlyPayment
+          + nextProps.loan.mProvidentFundLoanMonthlyPayment
+          + nextProps.loan.mOtherLoanMonthlyPayment)
+      nextProps.setAllLoanTotal(
+            nextProps.loan.mCommercialLoanTotal
+          + nextProps.loan.mProvidentFundLoanTotal
+          + nextProps.loan.mOtherLoanTotal)
+  }
+
+  updateLoanTotalResultForState = () => {
       this.setState({
         mTotalRepaymentAllLoan:
             this.state.mTotalRepaymentCommercialLoan
@@ -225,31 +243,41 @@ export default class CalcLoan extends Component {
 
   updateLoanResult = (loanType) => {
     let result = this.calcLoanResult(loanType)
+
+    Log.log('updateLoanResult--------: '
+        + ', loanType: ' + loanType
+        + ', monthlyPayment: ' + result.monthlyPayment
+        + ', totalPayment: ' + result.totalPayment)
     if (LoanType.CommercialLoan == loanType) {
       this.props.setCommercialLoanMonthlyPayment(
           result.monthlyPayment)
       this.setState({
         // FIXME, call updateLoanResult() continuely will lead
-        // to updateLoanTotalResult() Error because state
+        // to updateLoanTotalResultForState() Error because state
         // did not change in time
         mTotalRepaymentCommercialLoan: result.totalPayment,
-      }, this.updateLoanTotalResult())
+      }, this.updateLoanTotalResultForState())
     } else if (LoanType.ProvidentFundLoan == loanType) {
       this.props.setProvidentFundLoanMonthlyPayment(
           result.monthlyPayment)
       this.setState({
       // FIXME, call updateLoanResult() continuely will lead
-      // to updateLoanTotalResult() Error because state
+      // to updateLoanTotalResultForState() Error because state
       // did not change in time
         mTotalRepaymentProvidentFundLoan: result.totalPayment,
-      }, this.updateLoanTotalResult())
+      }, this.updateLoanTotalResultForState())
     } else if (LoanType.OtherLoan == loanType) {
       this.props.setOtherLoanMonthlyPayment(
           result.monthlyPayment)
       this.setState({
         mTotalRepaymentOtherLoan: result.totalPayment,
-      }, this.updateLoanTotalResult())
+      }, this.updateLoanTotalResultForState())
     }
+
+    Log.log('updateLoanResult--------: '
+        + ', ' + this.props.loan.mCommercialLoanMonthlyPayment
+        + ', ' + this.props.loan.mProvidentFundLoanMonthlyPayment
+        + ', ' + this.props.loan.mOtherLoanMonthlyPayment)
   }
 
   updateAllLoanResult = () => {
