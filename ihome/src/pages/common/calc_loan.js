@@ -101,6 +101,10 @@ export default class CalcLoan extends Component {
       mRateProvidentFundLoan: BaseInterestRateProvidentFundLoan,
       mRateOtherLoan: BaseInterestRateCommercialLoan,
 
+      mRateInputManualCommercialLoan: false,
+      mRateInputManualProvidentFundLoan: false,
+      mRateInputManualOtherLoan: false,
+
       mRateDiscountIdxCommercialLoan: Number(DefaultRateDiscountIdx.CommercialLoan),
       mRateDiscountIdxProvidentFundLoan: Number(DefaultRateDiscountIdx.ProvidentFundLoan),
       mRateDiscountIdxOtherLoan: Number(DefaultRateDiscountIdx.OtherLoan),
@@ -328,18 +332,21 @@ export default class CalcLoan extends Component {
       if (LoanType.CommercialLoan == loanType) {
         this.setState({
             mRateCommercialLoan: interestRate,
+            mRateInputManualCommercialLoan: true,
         }, () => {
             // this.updateLoanResult(loanType)
         })
       } else if (LoanType.ProvidentFundLoan == loanType) {
         this.setState({
             mRateProvidentFundLoan: interestRate,
+            mRateInputManualProvidentFundLoan: true,
         }, () => {
             // this.updateLoanResult(loanType)
         })
       } else if (LoanType.OtherLoan == loanType) {
         this.setState({
             mRateOtherLoan: interestRate,
+            mRateInputManualOtherLoan: true,
         }, () => {
             // this.updateLoanResult(loanType)
         })
@@ -386,6 +393,7 @@ export default class CalcLoan extends Component {
       interestRate = rateDiscount * BaseInterestRateCommercialLoan
       this.setState({
           mRateCommercialLoan: interestRate,
+          mRateInputManualCommercialLoan: false,
           mRateDiscountIdxCommercialLoan: index,
       }, () => {
           // this.updateLoanResult(loanType)
@@ -395,6 +403,7 @@ export default class CalcLoan extends Component {
       interestRate = rateDiscount * BaseInterestRateProvidentFundLoan
       this.setState({
           mRateProvidentFundLoan: interestRate,
+          mRateInputManualProvidentFundLoan: false,
           mRateDiscountIdxProvidentFundLoan: index,
       }, () => {
           // this.updateLoanResult(loanType)
@@ -404,6 +413,7 @@ export default class CalcLoan extends Component {
       interestRate = rateDiscount * BaseInterestRateCommercialLoan
       this.setState({
           mRateOtherLoan: interestRate,
+          mRateInputManualOtherLoan: false,
           mRateDiscountIdxOtherLoan: index,
       }, () => {
           // this.updateLoanResult(loanType)
@@ -511,6 +521,10 @@ export default class CalcLoan extends Component {
       mRateCommercialLoan: BaseInterestRateCommercialLoan,
       mRateProvidentFundLoan: BaseInterestRateProvidentFundLoan,
       mRateOtherLoan: BaseInterestRateCommercialLoan,
+
+      mRateInputManualCommercialLoan: false,
+      mRateInputManualProvidentFundLoan: false,
+      mRateInputManualOtherLoan: false,
 
       mRateDiscountIdxCommercialLoan: Number(DefaultRateDiscountIdx.CommercialLoan),
       mRateDiscountIdxProvidentFundLoan: Number(DefaultRateDiscountIdx.ProvidentFundLoan),
@@ -709,6 +723,20 @@ export default class CalcLoan extends Component {
             this.getLoanDuration(loanType)-1]
   }
 
+  getRateInputManual = (loanType) => {
+    let manual = false
+    if (loanType == LoanType.CommercialLoan) {
+      manual = this.state.mRateInputManualCommercialLoan
+    } else if (loanType == LoanType.ProvidentFundLoan) {
+      manual = this.state.mRateInputManualProvidentFundLoan
+    } else if (loanType == LoanType.OtherLoan) {
+      manual = this.state.mRateInputManualOtherLoan
+    } else {
+      console.error('[Error] getRateInputManual, no loanType!')
+    }
+    return manual
+  }
+
   render () {
     const {mPaymentMethodRadioList} = this.state
 
@@ -764,7 +792,7 @@ export default class CalcLoan extends Component {
             <View className='cl-input-item-container-no-border'>
               <Text className='cl-input-title'>利率</Text>
               <Text className='cl-rate-discount-placehold'>
-                {this.getRateDiscountText(loanType)}
+                {this.getRateInputManual(loanType) ? "" : this.getRateDiscountText(loanType)}
               </Text>
               <View className='cl-input-text-rate-container'>
                 <Input className='cl-input-text-rate' type='digit' placeholder='贷款利率' value={this.getInterestRate(loanType)}
