@@ -9,7 +9,7 @@ import { CommercialLoanTotal, CommercialLoanMonthlyPayment, ProvidentFundLoanTot
 
 
 import { Log } from '@util/log'
-import { Util, LoanType, RepaymentType } from '../../util/util'
+import { Util, LoanType, RepaymentType, BaseInterestRateCommercialLoan, BaseInterestRateProvidentFundLoan, DefaultRateDiscountIdx } from '../../util/util'
 import { sCalcClientDecider } from '../index/cityclient/city_client_decider'
 
 // import { LoanDataType } from '../../constants/loan'
@@ -29,16 +29,6 @@ const ClickShowingLoanView = {
   ClickShowingLoanViewTrue: true,
   NotClickShowingLoanView: 3,
 }
-
-const DefaultRateDiscountIdx = {
-  CommercialLoan: '3',
-  ProvidentFundLoan: '0',
-  OtherLoan: '3',
-}
-
-// FIXME
-const BaseInterestRateCommercialLoan = 4.9
-const BaseInterestRateProvidentFundLoan = 3.25
 
 @connect(({ loan }) => ({
   loan
@@ -104,6 +94,7 @@ export default class CalcLoan extends Component {
       mIsShowingLoanViewProvidentFundLoan: false,
       mIsShowingLoanViewOtherLoan: false,
 
+      /*
       mDurationCommercialLoan: 25,
       mDurationProvidentFundLoan: 25,
       mDurationOtherLoan: 25,
@@ -119,6 +110,7 @@ export default class CalcLoan extends Component {
       mRateDiscountIdxCommercialLoan: Number(DefaultRateDiscountIdx.CommercialLoan),
       mRateDiscountIdxProvidentFundLoan: Number(DefaultRateDiscountIdx.ProvidentFundLoan),
       mRateDiscountIdxOtherLoan: Number(DefaultRateDiscountIdx.OtherLoan),
+      */
 
       mTotalRepaymentCommercialLoan: 0,
       mTotalRepaymentProvidentFundLoan: 0,
@@ -130,9 +122,11 @@ export default class CalcLoan extends Component {
       mTotalInterestOtherLoan: 0,
       mTotalInterestAllLoan: 0,
 
+      /*
       mRadioValueCommercialLoanPaymentMethod: RepaymentType.CapitalAndInterest,
       mRadioValueProvidentFundLoanPaymentMethod: RepaymentType.CapitalAndInterest,
       mRadioValueOtherLoanPaymentMethod: RepaymentType.CapitalAndInterest,
+      */
 
       mPaymentMethodRadioList: [
         { value: 0, text: '等额本息', checked: true, },
@@ -176,6 +170,23 @@ export default class CalcLoan extends Component {
         || this.props.loan.mLoanData[ProvidentFundLoanMonthlyPayment] != nextProps.loan.mLoanData[ProvidentFundLoanMonthlyPayment]
         || this.props.loan.mLoanData[OtherLoanTotal] != nextProps.loan.mLoanData[OtherLoanTotal]
         || this.props.loan.mLoanData[OtherLoanMonthlyPayment] != nextProps.loan.mLoanData[OtherLoanMonthlyPayment]
+
+
+        || this.props.loan.mLoanData[RadioValueCommercialLoanPaymentMethod] != nextProps.loan.mLoanData[RadioValueCommercialLoanPaymentMethod]
+        || this.props.loan.mLoanData[RadioValueProvidentFundLoanPaymentMethod] != nextProps.loan.mLoanData[RadioValueProvidentFundLoanPaymentMethod]
+        || this.props.loan.mLoanData[RadioValueOtherLoanPaymentMethod] != nextProps.loan.mLoanData[RadioValueOtherLoanPaymentMethod]
+        || this.props.loan.mLoanData[DurationCommercialLoan] != nextProps.loan.mLoanData[DurationCommercialLoan]
+        || this.props.loan.mLoanData[DurationProvidentFundLoan] != nextProps.loan.mLoanData[DurationProvidentFundLoan]
+        || this.props.loan.mLoanData[DurationOtherLoan] != nextProps.loan.mLoanData[DurationOtherLoan]
+        || this.props.loan.mLoanData[RateCommercialLoan] != nextProps.loan.mLoanData[RateCommercialLoan]
+        || this.props.loan.mLoanData[RateProvidentFundLoan] != nextProps.loan.mLoanData[RateProvidentFundLoan]
+        || this.props.loan.mLoanData[RateOtherLoan] != nextProps.loan.mLoanData[RateOtherLoan]
+        || this.props.loan.mLoanData[RateInputManualCommercialLoan] != nextProps.loan.mLoanData[RateInputManualCommercialLoan]
+        || this.props.loan.mLoanData[RateInputManualProvidentFundLoan] != nextProps.loan.mLoanData[RateInputManualProvidentFundLoan]
+        || this.props.loan.mLoanData[RateInputManualOtherLoan] != nextProps.loan.mLoanData[RateInputManualOtherLoan]
+        || this.props.loan.mLoanData[RateDiscountIdxCommercialLoan] != nextProps.loan.mLoanData[RateDiscountIdxCommercialLoan]
+        || this.props.loan.mLoanData[RateDiscountIdxProvidentFundLoan] != nextProps.loan.mLoanData[RateDiscountIdxProvidentFundLoan]
+        || this.props.loan.mLoanData[RateDiscountIdxOtherLoan] != nextProps.loan.mLoanData[RateDiscountIdxOtherLoan]
   }
 
   componentWillReceiveProps(nextProps) {
@@ -185,6 +196,7 @@ export default class CalcLoan extends Component {
     }
 
     Log.log('componentWillReceiveProps--------: 2')
+    this.startCalc()
     this.updateLoanTotalResultForProps(nextProps)
   }
 
@@ -295,23 +307,32 @@ export default class CalcLoan extends Component {
     Log.log('onClickPaymentMethodRadio, value: '
         + value + ', loanType: ' + loanType)
     if (LoanType.CommercialLoan == loanType) {
+      /*
       this.setState({
           mRadioValueCommercialLoanPaymentMethod: value,
       }, () => {
           // this.updateLoanResult(loanType)
       })
+      */
+      this.props.setLoanData(RadioValueCommercialLoanPaymentMethod, value)
     } else if (LoanType.ProvidentFundLoan == loanType) {
+      /*
       this.setState({
           mRadioValueProvidentFundLoanPaymentMethod: value,
       }, () => {
           // this.updateLoanResult(loanType)
       })
+      */
+      this.props.setLoanData(RadioValueProvidentFundLoanPaymentMethod, value)
     } else if (LoanType.OtherLoan == loanType) {
+      /*
       this.setState({
           mRadioValueOtherLoanPaymentMethod: value,
       }, () => {
           // this.updateLoanResult(loanType)
       })
+      */
+      this.props.setLoanData(RadioValueOtherLoanPaymentMethod, value)
     }
     this.clearResult()
   }
@@ -343,26 +364,38 @@ export default class CalcLoan extends Component {
       Log.log('onInputLoanRate, interestRate: '
             + interestRate + ', loanType: ' + loanType)
       if (LoanType.CommercialLoan == loanType) {
+        /*
         this.setState({
             mRateCommercialLoan: interestRate,
             mRateInputManualCommercialLoan: true,
         }, () => {
             // this.updateLoanResult(loanType)
         })
+        */
+        this.props.setLoanData(RateCommercialLoan, interestRate)
+        this.props.setLoanData(RateInputManualCommercialLoan, true)
       } else if (LoanType.ProvidentFundLoan == loanType) {
+        /*
         this.setState({
             mRateProvidentFundLoan: interestRate,
             mRateInputManualProvidentFundLoan: true,
         }, () => {
             // this.updateLoanResult(loanType)
         })
+        */
+        this.props.setLoanData(RateProvidentFundLoan, interestRate)
+        this.props.setLoanData(RateInputManualProvidentFundLoan, true)
       } else if (LoanType.OtherLoan == loanType) {
+        /*
         this.setState({
             mRateOtherLoan: interestRate,
             mRateInputManualOtherLoan: true,
         }, () => {
             // this.updateLoanResult(loanType)
         })
+        */
+        this.props.setLoanData(RateOtherLoan, interestRate)
+        this.props.setLoanData(RateInputManualOtherLoan, true)
       }
       this.clearResult()
     } catch(err) {
@@ -376,23 +409,32 @@ export default class CalcLoan extends Component {
     let durationIdx = Number(e.detail.value)
     let duration = durationIdx + 1
     if (LoanType.CommercialLoan == loanType) {
+      /*
       this.setState({
           mDurationCommercialLoan: duration,
       }, () => {
           // this.updateLoanResult(loanType)
       })
+      */
+      this.props.setLoanData(DurationCommercialLoan, duration)
     } else if (LoanType.ProvidentFundLoan == loanType) {
+      /*
       this.setState({
           mDurationProvidentFundLoan: duration,
       }, () => {
           // this.updateLoanResult(loanType)
       })
+      */
+      this.props.setLoanData(DurationProvidentFundLoan, duration)
     } else if (LoanType.OtherLoan == loanType) {
+      /*
       this.setState({
           mDurationOtherLoan: duration,
       }, () => {
           // this.updateLoanResult(loanType)
       })
+      */
+      this.props.setLoanData(DurationOtherLoan, duration)
     }
     this.clearResult()
   }
@@ -404,6 +446,7 @@ export default class CalcLoan extends Component {
     if (LoanType.CommercialLoan == loanType) {
       rateDiscount = this.state.mCommercialLoanRateSelectorValueArray[index]
       interestRate = rateDiscount * BaseInterestRateCommercialLoan
+      /*
       this.setState({
           mRateCommercialLoan: interestRate,
           mRateInputManualCommercialLoan: false,
@@ -411,9 +454,14 @@ export default class CalcLoan extends Component {
       }, () => {
           // this.updateLoanResult(loanType)
       })
+      */
+      this.props.setLoanData(RateCommercialLoan, interestRate)
+      this.props.setLoanData(RateInputManualCommercialLoan, false)
+      this.props.setLoanData(RateDiscountIdxCommercialLoan, index)
     } else if (LoanType.ProvidentFundLoan == loanType) {
       rateDiscount = this.state.mProvidentFundLoanRateSelectorValueArray[index]
       interestRate = rateDiscount * BaseInterestRateProvidentFundLoan
+      /*
       this.setState({
           mRateProvidentFundLoan: interestRate,
           mRateInputManualProvidentFundLoan: false,
@@ -421,9 +469,14 @@ export default class CalcLoan extends Component {
       }, () => {
           // this.updateLoanResult(loanType)
       })
+      */
+      this.props.setLoanData(RateProvidentFundLoan, interestRate)
+      this.props.setLoanData(RateInputManualProvidentFundLoan, false)
+      this.props.setLoanData(RateDiscountIdxProvidentFundLoan, index)
     } else if (LoanType.OtherLoan == loanType) {
       rateDiscount = this.state.mCommercialLoanRateSelectorValueArray[index]
       interestRate = rateDiscount * BaseInterestRateCommercialLoan
+      /*
       this.setState({
           mRateOtherLoan: interestRate,
           mRateInputManualOtherLoan: false,
@@ -431,12 +484,17 @@ export default class CalcLoan extends Component {
       }, () => {
           // this.updateLoanResult(loanType)
       })
+      */
+      this.props.setLoanData(RateOtherLoan, interestRate)
+      this.props.setLoanData(RateInputManualOtherLoan, false)
+      this.props.setLoanData(RateDiscountIdxOtherLoan, index)
     } else {
       console.error('[Error] No this loan type!')
     }
     console.log('picker发送选择改变，携带值为' , e.detail.value
         + ', rateDiscount: ' + rateDiscount
         + ', interestRate: ' + interestRate)
+    this.startCalc()
   }
 
   // interestRate 是4.9%百分号表示的数值。
@@ -527,7 +585,34 @@ export default class CalcLoan extends Component {
     this.props.setLoanData(ProvidentFundLoanTotal, 0)
     this.props.setLoanData(OtherLoanTotal, 0)
 
+    this.props.setLoanData(DurationCommercialLoan, 25)
+    this.props.setLoanData(DurationProvidentFundLoan, 25)
+    this.props.setLoanData(DurationOtherLoan, 25)
+
+    this.props.setLoanData(RateCommercialLoan, BaseInterestRateCommercialLoan)
+    this.props.setLoanData(RateProvidentFundLoan, BaseInterestRateProvidentFundLoan)
+    this.props.setLoanData(RateOtherLoan, BaseInterestRateCommercialLoan)
+
+    this.props.setLoanData(RateInputManualCommercialLoan, false)
+    this.props.setLoanData(RateInputManualProvidentFundLoan, false)
+    this.props.setLoanData(RateInputManualOtherLoan, false)
+
+    this.props.setLoanData(RateDiscountIdxCommercialLoan,
+        Number(DefaultRateDiscountIdx.CommercialLoan))
+    this.props.setLoanData(RateDiscountIdxProvidentFundLoan,
+        Number(DefaultRateDiscountIdx.ProvidentFundLoan))
+    this.props.setLoanData(RateDiscountIdxOtherLoan,
+        Number(DefaultRateDiscountIdx.OtherLoan))
+
+    this.props.setLoanData(RadioValueCommercialLoanPaymentMethod,
+        RepaymentType.CapitalAndInterest)
+    this.props.setLoanData(RadioValueProvidentFundLoanPaymentMethod,
+        RepaymentType.CapitalAndInterest)
+    this.props.setLoanData(RadioValueOtherLoanPaymentMethod,
+        RepaymentType.CapitalAndInterest)
+
     this.setState({
+      /*
       mDurationCommercialLoan: 25,
       mDurationProvidentFundLoan: 25,
       mDurationOtherLoan: 25,
@@ -543,6 +628,7 @@ export default class CalcLoan extends Component {
       mRateDiscountIdxCommercialLoan: Number(DefaultRateDiscountIdx.CommercialLoan),
       mRateDiscountIdxProvidentFundLoan: Number(DefaultRateDiscountIdx.ProvidentFundLoan),
       mRateDiscountIdxOtherLoan: Number(DefaultRateDiscountIdx.OtherLoan),
+      */
 
       // FIXME, TODO
       // FIXME, call updateLoanResult() continuely will lead
@@ -559,9 +645,11 @@ export default class CalcLoan extends Component {
       mTotalInterestOtherLoan: 0,
       mTotalInterestAllLoan: 0,
 
+      /*
       mRadioValueCommercialLoanPaymentMethod: RepaymentType.CapitalAndInterest,
       mRadioValueProvidentFundLoanPaymentMethod: RepaymentType.CapitalAndInterest,
       mRadioValueOtherLoanPaymentMethod: RepaymentType.CapitalAndInterest,
+      */
     })
   }
 
@@ -643,24 +731,24 @@ export default class CalcLoan extends Component {
 
   getInterestRate = (loanType) => {
     if (loanType == LoanType.CommercialLoan) {
-      return this.state.mRateCommercialLoan
+      return this.props.loan.mLoanData[RateCommercialLoan]
     } else if (loanType == LoanType.ProvidentFundLoan) {
-      return this.state.mRateProvidentFundLoan
+      return this.props.loan.mLoanData[RateProvidentFundLoan]
     } else if (loanType == LoanType.OtherLoan) {
-      return this.state.mRateOtherLoan
+      return this.props.loan.mLoanData[RateOtherLoan]
     }
   }
 
   getRateDiscountText = (loanType) => {
     if (loanType == LoanType.CommercialLoan) {
       return this.state.mCommercialLoanRateSelector[
-              this.state.mRateDiscountIdxCommercialLoan]
+              this.props.loan.mLoanData[RateDiscountIdxCommercialLoan]]
     } else if (loanType == LoanType.ProvidentFundLoan) {
       return this.state.mProvidentFundLoanRateSelector[
-              this.state.mRateDiscountIdxProvidentFundLoan]
+              this.props.loan.mLoanData[RateDiscountIdxProvidentFundLoan]]
     } else if (loanType == LoanType.OtherLoan) {
       return this.state.mCommercialLoanRateSelector[
-              this.state.mRateDiscountIdxOtherLoan]
+              this.props.loan.mLoanData[RateDiscountIdxOtherLoan]]
     }
   }
 
@@ -690,27 +778,27 @@ export default class CalcLoan extends Component {
     let loan = 0
     if (loanType == LoanType.CommercialLoan) {
       loan = this.props.loan.mLoanData[CommercialLoanTotal]
-        * this.state.mRateCommercialLoan
-        / (this.state.mDurationCommercialLoan * 1200)
+        * this.props.loan.mLoanData[RateCommercialLoan]
+        / (this.props.loan.mLoanData[DurationCommercialLoan] * 1200)
     } else if (loanType == LoanType.ProvidentFundLoan) {
       loan = this.props.loan.mLoanData[ProvidentFundLoanTotal]
-        * this.state.mRateProvidentFundLoan
-        / (this.state.mDurationProvidentFundLoan * 1200)
+        * this.props.loan.mLoanData[RateProvidentFundLoan]
+        / (this.props.loan.mLoanData[DurationProvidentFundLoan] * 1200)
     } else if (loanType == LoanType.OtherLoan) {
       loan = this.props.loan.mLoanData[OtherLoanTotal]
-        * this.state.mRateOtherLoan
-        / (this.state.mDurationOtherLoan * 1200)
+        * this.props.loan.mLoanData[RateOtherLoan]
+        / (this.props.loan.mLoanData[DurationOtherLoan] * 1200)
     }
     return loan * 10000
   }
 
   getRadioValuePaymentMethod = (loanType) => {
     if (loanType == LoanType.CommercialLoan) {
-      return this.state.mRadioValueCommercialLoanPaymentMethod
+      return this.props.loan.mLoanData[RadioValueCommercialLoanPaymentMethod]
     } else if (loanType == LoanType.ProvidentFundLoan) {
-      return this.state.mRadioValueProvidentFundLoanPaymentMethod
+      return this.props.loan.mLoanData[RadioValueProvidentFundLoanPaymentMethod]
     } else if (loanType == LoanType.OtherLoan) {
-      return this.state.mRadioValueOtherLoanPaymentMethod
+      return this.props.loan.mLoanData[RadioValueOtherLoanPaymentMethod]
     } else {
       console.error('[Error] getRadioValuePaymentMethod, no loanTyp!')
       return 0
@@ -720,11 +808,11 @@ export default class CalcLoan extends Component {
   getLoanDuration = (loanType) => {
     let duration = 0
     if (loanType == LoanType.CommercialLoan) {
-      duration = this.state.mDurationCommercialLoan
+      duration = this.props.loan.mLoanData[DurationCommercialLoan]
     } else if (loanType == LoanType.ProvidentFundLoan) {
-      duration = this.state.mDurationProvidentFundLoan
+      duration = this.props.loan.mLoanData[DurationProvidentFundLoan]
     } else if (loanType == LoanType.OtherLoan) {
-      duration = this.state.mDurationOtherLoan
+      duration = this.props.loan.mLoanData[DurationOtherLoan]
     } else {
       console.error('[Error] getLoanDuration, no loanType!')
       duration = 25
@@ -740,11 +828,11 @@ export default class CalcLoan extends Component {
   getRateInputManual = (loanType) => {
     let manual = false
     if (loanType == LoanType.CommercialLoan) {
-      manual = this.state.mRateInputManualCommercialLoan
+      manual = this.props.loan.mLoanData[RateInputManualCommercialLoan]
     } else if (loanType == LoanType.ProvidentFundLoan) {
-      manual = this.state.mRateInputManualProvidentFundLoan
+      manual = this.props.loan.mLoanData[RateInputManualProvidentFundLoan]
     } else if (loanType == LoanType.OtherLoan) {
-      manual = this.state.mRateInputManualOtherLoan
+      manual = this.props.loan.mLoanData[RateInputManualOtherLoan]
     } else {
       console.error('[Error] getRateInputManual, no loanType!')
     }

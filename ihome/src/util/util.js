@@ -11,6 +11,15 @@ export const RepaymentType = {
   Capital: 1,
 }
 
+export const DefaultRateDiscountIdx = {
+  CommercialLoan: '3',
+  ProvidentFundLoan: '0',
+  OtherLoan: '3',
+}
+
+export const BaseInterestRateCommercialLoan = 4.9
+export const BaseInterestRateProvidentFundLoan = 3.25
+
 export const Util = {
 
   appTitle: '茜茜猫首付计算神器',
