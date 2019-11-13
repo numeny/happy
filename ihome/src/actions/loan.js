@@ -12,6 +12,13 @@ import {
   SetAllLoanMonthlyPayment,
 } from '../constants/loan'
 
+export const setLoanData = (type, loan) => {
+  return {
+    type: type,
+    mValue: loan,
+  }
+}
+
 export const setCommercialLoanTotal = (loan) => {
   return {
     type: SetCommercialLoanTotal,

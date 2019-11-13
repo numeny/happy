@@ -3,7 +3,7 @@ import { View, Text, Image, Input, Video, Button, RadioGroup, Radio, Checkbox, C
 import './calc_loan.scss'
 
 import { connect } from '@tarojs/redux'
-import { setCommercialLoanTotal, setCommercialLoanMonthlyPayment, setProvidentFundLoanTotal, setProvidentFundLoanMonthlyPayment, setOtherLoanTotal, setOtherLoanMonthlyPayment, setAllLoanTotal, setAllLoanMonthlyPayment } from '../../actions/loan'
+import { setLoanData, setCommercialLoanTotal, setCommercialLoanMonthlyPayment, setProvidentFundLoanTotal, setProvidentFundLoanMonthlyPayment, setOtherLoanTotal, setOtherLoanMonthlyPayment, setAllLoanTotal, setAllLoanMonthlyPayment } from '../../actions/loan'
 
 import { Log } from '@util/log'
 import { Util, LoanType, RepaymentType } from '../../util/util'
@@ -37,6 +37,9 @@ const BaseInterestRateProvidentFundLoan = 3.25
 @connect(({ loan }) => ({
   loan
 }), (dispatch) => ({
+  setLoanData (type, loan) {
+    dispatch(setLoanData(type, loan))
+  },
   setCommercialLoanTotal (loan) {
     dispatch(setCommercialLoanTotal(loan))
   },
@@ -485,7 +488,8 @@ export default class CalcLoan extends Component {
   }
 
   startCalc = (e) => {
-    this.updateAllLoanResult()
+    this.props.setLoanData(1, 100)
+    // this.updateAllLoanResult()
   }
 
   clearResult = () => {
@@ -845,6 +849,17 @@ export default class CalcLoan extends Component {
           <Text className='cl-input-title2-bold'>利息总额</Text>
           <Text className='cl-input-text-bold'>
             {this.state.mTotalInterestAllLoan.toFixed(2)}
+          </Text>
+        </View>
+
+        <View className='cl-input-item-container-bold-top'>
+          <Text className='cl-input-title-bold'>利息本金总额</Text>
+          <Text className='cl-input-text-bold'>
+            {this.props.loan.mLoanData[0]}
+          </Text>
+          <Text className='cl-input-title2-bold'>利息总额</Text>
+          <Text className='cl-input-text-bold'>
+            {this.props.loan.mLoanData[1]}
           </Text>
         </View>
 

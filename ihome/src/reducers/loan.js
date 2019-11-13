@@ -3,6 +3,14 @@ import { SetCommercialLoanTotal, SetCommercialLoanMonthlyPayment, SetProvidentFu
 import { RepaymentType } from '../util/util'
 
 const INITIAL_STATE = {
+  // refer to constants/loan.js : LoanDataType
+  mLoanData: [0, 0, 0, 0, 0, // 0-4
+              0, 0, 0, 0, 0, // 5-9
+              0, 0, 0, 0, 0, // 10-14
+              0, 0, false, false, false, // 15-19
+              0, 0, 0, // 20-24
+             ],
+
   mCommercialLoanTotal: 0,
   mCommercialLoanMonthlyPayment: 0,
 
@@ -14,14 +22,22 @@ const INITIAL_STATE = {
 
   mAllLoanTotal: 0,
   mAllLoanMonthlyPayment: 0,
+}
 
-  mRadioValueCommercialLoanPaymentMethod: RepaymentType.CapitalAndInterest,
-  mRadioValueProvidentFundLoanPaymentMethod: RepaymentType.CapitalAndInterest,
-  mRadioValueOtherLoanPaymentMethod: RepaymentType.CapitalAndInterest,
+function getNewLoanData (state, action) {
+  state.mLoanData[action.type] = action.mValue
+  return {
+    ...state,
+  }
 }
 
 export default function loan (state = INITIAL_STATE, action) {
+  return getNewLoanData(state, action)
+  /*
   switch (action.type) {
+    case 0:
+      return getNewLoanData(state, action)
+
     case SetCommercialLoanTotal:
       return {
         ...state,
@@ -64,4 +80,5 @@ export default function loan (state = INITIAL_STATE, action) {
     default:
       return state
   }
+  */
 }
