@@ -114,7 +114,7 @@ export default class Index extends Component {
       ],
 
       mEditable: true,
-      mCurrPage: 1,
+      mCurrPage: 0,
 
       mCurrProvince: (this.$router.params.currCity != null && this.$router.params.currCity != undefined) ? Util.getString(this.$router.params.currCity) : '北京市',
       mCurrCity: (this.$router.params.currCity != null && this.$router.params.currCity != undefined) ? Util.getString(this.$router.params.currCity) : '北京市',
@@ -860,14 +860,6 @@ export default class Index extends Component {
     Log.log(region);
   }
 
-  onToolBarItemChanged = (idx) => {
-    Log.log('onToolBarItemChanged, idx: ' + idx);
-    
-    this.setState({
-        mCurrPage: idx,
-    })
-  }
-
   render () {
     let classNameForInputDeedTaxManual = this.state.mWillInputDeedTaxManual ?
             'idx-input-text' : 'idx-input-text-disable'
@@ -1104,13 +1096,6 @@ export default class Index extends Component {
                   </View>)}
         </View>}
 
-        {this.state.mCurrPage == 1 &&
-          <View className='idx-top-item-container'>
-            <CalcLoan />
-          </View>}
-
-        <Toolbar onItemChanged={this.onToolBarItemChanged}
-            initPage={this.state.mCurrPage} />
       </View>
     )
   }

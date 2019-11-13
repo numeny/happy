@@ -29,12 +29,24 @@ class App extends Component {
       'pages/index/index',
       'pages/tipbox/tipbox',
       'pages/citylist/citylist',
+      'pages/common/calc_loan',
     ],
-    window: {
-      backgroundTextStyle: 'light',
-      navigationBarBackgroundColor: '#fff',
-      navigationBarTitleText: 'WeChat',
-      navigationBarTextStyle: 'black'
+    tabBar: {
+      color: "#666",
+      selectedColor: "#b4282d",
+      backgroundColor: "#fafafa",
+      borderStyle: 'black',
+      list: [{
+        pagePath: "pages/index/index",
+        iconPath: "./assets/tab-bar/home.png",
+        selectedIconPath: "./assets/tab-bar/home-active.png",
+        text: "首页"
+      }, {
+        pagePath: "pages/common/calc_loan",
+        iconPath: "./assets/tab-bar/cate.png",
+        selectedIconPath: "./assets/tab-bar/cate-active.png",
+        text: "分类"
+      }]
     }
   }
 
