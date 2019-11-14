@@ -12,11 +12,10 @@ import Toolbar from '../common/mytoolbar'
 import CalcLoan from '../common/calc_loan'
 
 import { connect } from '@tarojs/redux'
-import { add, minus, asyncAdd } from '../../actions/counter'
 
 // import { setCommercialLoanTotal, setCommercialLoanMonthlyPayment, setProvidentFundLoanTotal, setProvidentFundLoanMonthlyPayment, setOtherLoanTotal, setOtherLoanMonthlyPayment, setAllLoanTotal, setAllLoanMonthlyPayment } from '../../actions/loan'
-import { setLoanData } from '../../actions/loan'
-import { CommercialLoanTotal, CommercialLoanMonthlyPayment, ProvidentFundLoanTotal, ProvidentFundLoanMonthlyPayment, OtherLoanTotal, OtherLoanMonthlyPayment, AllLoanTotal, AllLoanMonthlyPayment, RadioValueCommercialLoanPaymentMethod, RadioValueProvidentFundLoanPaymentMethod, RadioValueOtherLoanPaymentMethod, DurationCommercialLoan, DurationProvidentFundLoan, DurationOtherLoan, RateCommercialLoan, RateProvidentFundLoan, RateOtherLoan, RateInputManualCommercialLoan, RateInputManualProvidentFundLoan, RateInputManualOtherLoan, RateDiscountIdxCommercialLoan, RateDiscountIdxProvidentFundLoan, RateDiscountIdxOtherLoan } from '../../constants/loan'
+import { setLoanData } from '../../redux/actions/loan'
+import { CommercialLoanTotal, CommercialLoanMonthlyPayment, ProvidentFundLoanTotal, ProvidentFundLoanMonthlyPayment, OtherLoanTotal, OtherLoanMonthlyPayment, AllLoanTotal, AllLoanMonthlyPayment, RadioValueCommercialLoanPaymentMethod, RadioValueProvidentFundLoanPaymentMethod, RadioValueOtherLoanPaymentMethod, DurationCommercialLoan, DurationProvidentFundLoan, DurationOtherLoan, RateCommercialLoan, RateProvidentFundLoan, RateOtherLoan, RateInputManualCommercialLoan, RateInputManualProvidentFundLoan, RateInputManualOtherLoan, RateDiscountIdxCommercialLoan, RateDiscountIdxProvidentFundLoan, RateDiscountIdxOtherLoan } from '../../redux/constants/loan'
 
 import "../../../node_modules/taro-ui/dist/style/components/icon.scss";
 
@@ -33,22 +32,7 @@ let sCalcClient = null
   },
 }))
 
-@connect(({ counter }) => ({
-  counter
-}), (dispatch) => ({
-  add () {
-    dispatch(add())
-  },
-  dec () {
-    dispatch(minus())
-  },
-  asyncAdd () {
-    dispatch(asyncAdd())
-  }
-}))
-
 export default class Index extends Component {
-
   /**
    * 指定config的类型声明为: Taro.Config
    *
@@ -88,7 +72,6 @@ export default class Index extends Component {
       ],
 
       mEditable: true,
-      mCurrPage: 0,
 
       mCurrProvince: (this.$router.params.currCity != null && this.$router.params.currCity != undefined) ? Util.getString(this.$router.params.currCity) : '北京市',
       mCurrCity: (this.$router.params.currCity != null && this.$router.params.currCity != undefined) ? Util.getString(this.$router.params.currCity) : '北京市',
@@ -847,7 +830,6 @@ export default class Index extends Component {
 
     return (
       <View className='idx-top-container'>
-        {this.state.mCurrPage == 0 &&
         <View className='idx-top-item-container'>
         <View className='idx-top-title-container'>
           <View className='idx-top-title-city' onClick={this.onSelectCity}>{this.state.mCurrCity}
@@ -1069,7 +1051,7 @@ export default class Index extends Component {
                     <Button className='idx-button-item' type='primary' onClick={this.recaculate}>重新计算</Button>
                     <Button className='idx-button-item' type='primary' open-type='share'>分享结果</Button>
                   </View>)}
-        </View>}
+        </View>
 
       </View>
     )

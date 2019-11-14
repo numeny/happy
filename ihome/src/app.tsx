@@ -1,7 +1,7 @@
 import Taro, { Component, Config } from '@tarojs/taro'
 import { Provider } from '@tarojs/redux'
 
-import configStore from './store'
+import configStore from './redux/store'
 
 import Index from './pages/index'
 
