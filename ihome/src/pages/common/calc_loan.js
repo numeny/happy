@@ -151,12 +151,15 @@ export default class CalcLoan extends Component {
   }
 
   componentWillReceiveProps(nextProps) {
-    Log.log('componentWillReceiveProps--------: 1')
+    Log.log('calc_loan, componentWillReceiveProps--------: 1,'
+        + this.props.loan.mLoanData[CommercialLoanTotal]
+        + ', ' + nextProps.loan.mLoanData[CommercialLoanTotal]
+        )
     if (!this.isPropsChanged(nextProps)) {
       return
     }
 
-    Log.log('componentWillReceiveProps--------: 2')
+    Log.log('calc_loan, componentWillReceiveProps--------: 2')
     this.startCalc()
     // this.updateLoanTotalResultForProps(nextProps)
   }
@@ -773,7 +776,7 @@ export default class CalcLoan extends Component {
                 <Text className='cl-input-title'>{item0}</Text>
                 {(this.getRadioValuePaymentMethod(loanType) == RepaymentType.Capital) &&
                 <Text className='cl-rate-discount-placehold'>
-                  {'每月递增' + this.getMonthlyIncreasement(loanType).toFixed(0) + '(元)'}
+                  {'每月递减' + this.getMonthlyIncreasement(loanType).toFixed(0) + '(元)'}
                 </Text>}
                 <Text className='cl-input-text-bold'>
                   {this.getMonthlyRepayment(loanType).toFixed(0)}

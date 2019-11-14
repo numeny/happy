@@ -31,32 +31,6 @@ let sCalcClient = null
   setLoanData (field, loan) {
     dispatch(setLoanData(field, loan))
   },
-  /*
-  setCommercialLoanTotal (loan) {
-    dispatch(setCommercialLoanTotal(loan))
-  },
-  setCommercialLoanMonthlyPayment (loan) {
-    dispatch(setCommercialLoanMonthlyPayment(loan))
-  },
-  setProvidentFundLoanTotal (loan) {
-    dispatch(setProvidentFundLoanTotal(loan))
-  },
-  setProvidentFundLoanMonthlyPayment (loan) {
-    dispatch(setProvidentFundLoanMonthlyPayment(loan))
-  },
-  setOtherLoanTotal (loan) {
-    dispatch(setOtherLoanTotal(loan))
-  },
-  setOtherLoanMonthlyPayment (loan) {
-    dispatch(setOtherLoanMonthlyPayment(loan))
-  },
-  setAllLoanTotal (loan) {
-    dispatch(setAllLoanTotal(loan))
-  },
-  setAllLoanMonthlyPayment (loan) {
-    dispatch(setAllLoanMonthlyPayment(loan))
-  }
-  */
 }))
 
 @connect(({ counter }) => ({
@@ -643,6 +617,7 @@ export default class Index extends Component {
       Log.error("onInputLoan: ", err);
       Taro.showToast({title: "请输入正确的金额！"})
     }
+    this.props.setLoanData(AllLoanMonthlyPayment, 0)
     this.updateAll()
   }
 
@@ -1079,11 +1054,11 @@ export default class Index extends Component {
         <View className='idx-input-item-container-bold'>
           <View className='idx-input-title-bold'>每月还款(元)
             <View className='at-icon at-icon-help'
-                onClick={this.onClickOpenTipBoxIcon.bind(this, Util.mTipBoxMessages.TotalTaxAndFee)}></View>
+                onClick={this.onClickOpenTipBoxIcon.bind(this, Util.mTipBoxMessages.AllLoanMonthlyPayment)}></View>
           </View>
           <Text className='idx-input-text-bold'>{(this.props.loan.mLoanData[AllLoanMonthlyPayment] * 10000).toFixed(0)}</Text>
-          <View className='idx-input-title2-bold'>平均单价<View className='at-icon at-icon-help' onClick={this.onClickOpenTipBoxIcon.bind(this, Util.mTipBoxMessages.AverageUnitPrice)}></View></View>
-          <Text className='idx-input-text-bold'>{(this.state.mHouseArea != 0 ? (this.state.mTotalPayment/this.state.mHouseArea) : 0).toFixed(2)}</Text>
+          <View className='idx-input-title2-bold'></View>
+          <Text className='idx-input-text-bold'></Text>
         </View>
         {this.state.mEditable ?
            (<View className='idx-button-container'>

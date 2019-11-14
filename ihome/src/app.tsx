@@ -40,12 +40,12 @@ class App extends Component {
         pagePath: "pages/index/index",
         iconPath: "./assets/tab-bar/home.png",
         selectedIconPath: "./assets/tab-bar/home-active.png",
-        text: "首页"
+        text: "计算首付"
       }, {
         pagePath: "pages/common/calc_loan",
         iconPath: "./assets/tab-bar/cate.png",
         selectedIconPath: "./assets/tab-bar/cate-active.png",
-        text: "分类"
+        text: "计算房贷"
       }]
     }
   }

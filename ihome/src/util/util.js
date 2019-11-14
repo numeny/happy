@@ -59,6 +59,7 @@ export const Util = {
     ValueAddedTax_Suzhou: 32,
     DeedTax_Chengdu: 33,
     ValueAddedTax_Chengdu: 34,
+    AllLoanMonthlyPayment: 35,
   },
 
   isInstanceOf: function(thisVar, varType) {
