@@ -44,6 +44,22 @@ export default class Index extends Component {
     navigationBarTitleText: '茜茜猫首付计算神器',
   }
 
+  getNumber (v, defValue) {
+    if (v != null) {
+      console.error('getNumber-1')
+      return Number(v)
+    }
+    console.error('getNumber-2')
+    if (defValue != null) {
+    console.error('getNumber-3')
+      return defValue
+    } else {
+    console.error('getNumber-4')
+      return v;
+    }
+    // return v != null ? Number(v) : ((defValue != null) ? defValue : 0)
+  }
+
   constructor(props) {
     super(props)
 
@@ -78,7 +94,6 @@ export default class Index extends Component {
 
       mFirstPayment: Util.getNumber(this.$router.params.fp),
       mTotalPayment: Util.getNumber(this.$router.params.tp),
-      // mTotalLoan: Util.getNumber(this.$router.params.tl),
       mTotalFee: Util.getNumber(this.$router.params.tf),
       mTotalTax: Util.getNumber(this.$router.params.tt),
 
@@ -103,10 +118,6 @@ export default class Index extends Component {
       mEvaluationFee: Util.getNumber(this.$router.params.ef),
       mMortgageRegistrationFee: Util.getNumber(this.$router.params.mrf),
       mOtherFee: Util.getNumber(this.$router.params.of),
-
-      mMonthlyRepaymentCommercialLoan: 0,
-      mMonthlyRepaymentProvidentFundLoan: 0,
-      mMonthlyRepaymentOtherLoan: 0,
 
       mFirstHouseRadioValue: Util.getNumber(this.$router.params.fhrv),
       mAboveTwoYearsRadioValue: Util.getNumber(this.$router.params.atyrv),
@@ -137,19 +148,44 @@ export default class Index extends Component {
       ],
     }
 
-    this.props.setLoanData(CommercialLoanTotal,
-        Util.getNumber(this.$router.params.cl))
-    this.props.setLoanData(ProvidentFundLoanTotal,
-        Util.getNumber(this.$router.params.pfl))
-    this.props.setLoanData(OtherLoanTotal,
-        Util.getNumber(this.$router.params.ol))
-    this.props.setLoanData(AllLoanTotal,
-        Util.getNumber(this.$router.params.tl))
-
     this.initCallLink()
 
     // FIXME, default CityClient
     sCalcClient = sCalcClientDecider.changeCityClient(this.state)
+
+    this.props.setLoanData(CommercialLoanTotal,
+        this.getNumber(this.$router.params.clt))
+    this.props.setLoanData(CommercialLoanMonthlyPayment,
+        Util.getNumber(this.$router.params.clmp))
+
+    this.props.setLoanData(ProvidentFundLoanTotal, Util.getNumber(this.$router.params.pflt))
+    this.props.setLoanData(ProvidentFundLoanMonthlyPayment, Util.getNumber(this.$router.params.pflmp))
+
+    this.props.setLoanData(OtherLoanTotal, Util.getNumber(this.$router.params.olt))
+    this.props.setLoanData(OtherLoanMonthlyPayment, Util.getNumber(this.$router.params.olmp))
+
+    this.props.setLoanData(AllLoanTotal, Util.getNumber(this.$router.params.alt))
+    this.props.setLoanData(AllLoanMonthlyPayment, Util.getNumber(this.$router.params.amp))
+
+    this.props.setLoanData(RadioValueCommercialLoanPaymentMethod, Util.getNumber(this.$router.params.rvclpm))
+    this.props.setLoanData(RadioValueProvidentFundLoanPaymentMethod, Util.getNumber(this.$router.params.rvpflpm))
+    this.props.setLoanData(RadioValueOtherLoanPaymentMethod, Util.getNumber(this.$router.params.rvolpm))
+
+    this.props.setLoanData(DurationCommercialLoan, Util.getNumber(this.$router.params.dcl))
+    this.props.setLoanData(DurationProvidentFundLoan, Util.getNumber(this.$router.params.dpf))
+    this.props.setLoanData(DurationOtherLoan, Util.getNumber(this.$router.params.dol))
+
+    this.props.setLoanData(RateCommercialLoan, Util.getNumber(this.$router.params.rcl))
+    this.props.setLoanData(RateProvidentFundLoan, Util.getNumber(this.$router.params.rpf))
+    this.props.setLoanData(RateOtherLoan, Util.getNumber(this.$router.params.rol))
+
+    this.props.setLoanData(RateInputManualCommercialLoan, Util.getNumber(this.$router.params.rimcl))
+    this.props.setLoanData(RateInputManualProvidentFundLoan, Util.getNumber(this.$router.params.rimpfl))
+    this.props.setLoanData(RateInputManualOtherLoan, Util.getNumber(this.$router.params.rimol))
+
+    this.props.setLoanData(RateDiscountIdxCommercialLoan, Util.getNumber(this.$router.params.rdicl))
+    this.props.setLoanData(RateDiscountIdxProvidentFundLoan, Util.getNumber(this.$router.params.rdipfl))
+    this.props.setLoanData(RateDiscountIdxOtherLoan, Util.getNumber(this.$router.params.rdiol))
   }
 
   componentWillMount () { }
@@ -188,7 +224,6 @@ export default class Index extends Component {
 
   updateFirstPayment = () => {
     this.setState({
-        // mFirstPayment: this.state.mTotalPayment - this.state.mTotalLoan,
         mFirstPayment: this.state.mTotalPayment - this.props.loan.mLoanData[AllLoanTotal],
     }, () => {
       if (this.updateFirstPayment.prototype.postCallback != null) {
@@ -220,16 +255,6 @@ export default class Index extends Component {
 
     this.props.setLoanData(AllLoanTotal, totalLoan)
 
-    /*
-    this.setState({
-        mTotalLoan: this.state.mCommercialLoan + this.state.mProvidentFundLoan
-                      + this.state.mOtherLoan,
-    }, () => {
-      if (this.updateTotalLoan.prototype.postCallback != null) {
-        this.updateTotalLoan.prototype.postCallback()
-      }
-    })
-    */
     if (this.updateTotalLoan.prototype.postCallback != null) {
       this.updateTotalLoan.prototype.postCallback()
     }
@@ -381,7 +406,6 @@ export default class Index extends Component {
     this.setState({
       mFirstPayment: 0,
       mTotalPayment: 0,
-      // mTotalLoan: 0,
       mTotalFee: 0,
       mTotalTax: 0,
 
@@ -762,7 +786,7 @@ export default class Index extends Component {
   }
 
   onShareAppMessage = (share) => {
-    let param = Util.getParamForGenerateReport(this.state);
+    let param = Util.getParamForGenerateReport(this.state, this.props.loan.mLoanData);
     /*
     if (DEBUG)
       Log.log('onShareAppMessage, param: ' + param);
@@ -944,7 +968,7 @@ export default class Index extends Component {
           <Text className='idx-input-title'></Text>
           <View className='idx-input-text'></View>
           <View className='idx-input-title-bold'>总费用<View className='at-icon at-icon-help' onClick={this.onClickOpenTipBoxIcon.bind(this, Util.mTipBoxMessages.TotalFee)}></View></View>
-          <Text className='idx-input-text-bold'>{this.state.mTotalFee.toFixed(2)}</Text>
+          <Text className='idx-input-text-bold'>{Util.getNumber2(this.state.mTotalFee).toFixed(2)}</Text>
         </View>
 
         <View className='idx-input-item-container'>
@@ -1001,7 +1025,7 @@ export default class Index extends Component {
           <Input className='idx-input-text' type='digit' placeholder='万元'
               disabled={!this.state.mEditable} value={this.state.mOtherTax} maxLength='10' onInput={this.onInputOtherTax} />
           <View className='idx-input-title2-bold'>总税款<View className='at-icon at-icon-help' onClick={this.onClickOpenTipBoxIcon.bind(this, Util.mTipBoxMessages.TotalTax)}></View></View>
-          <Text className='idx-input-text-bold'>{this.state.mTotalTax.toFixed(2)}</Text>
+          <Text className='idx-input-text-bold'>{Util.getNumber2(this.state.mTotalTax).toFixed(2)}</Text>
         </View>
 
         <View className='idx-input-item-container'>
@@ -1017,28 +1041,28 @@ export default class Index extends Component {
           <Input className='idx-input-text' type='digit' placeholder='万元'
               disabled={!this.state.mEditable} value={this.props.loan.mLoanData[OtherLoanTotal]} maxLength='10' onInput={this.onInputLoan.bind(this, LoanType.OtherLoan)} />
           <View className='idx-input-title2-bold'>总贷款<View className='at-icon at-icon-help' onClick={this.onClickOpenTipBoxIcon.bind(this, Util.mTipBoxMessages.TotalLoan)}></View></View>
-          <Text className='idx-input-text-bold'>{this.props.loan.mLoanData[AllLoanTotal].toFixed(2)}</Text>
+          <Text className='idx-input-text-bold'>{Util.getNumber2(this.props.loan.mLoanData[AllLoanTotal]).toFixed(2)}</Text>
         </View>
 
         <View className='idx-input-item-container'>
           <View className='idx-input-title-bold'>总首付<View className='at-icon at-icon-help' onClick={this.onClickOpenTipBoxIcon.bind(this, Util.mTipBoxMessages.FirstPayment)}></View></View>
-          <Text className='idx-input-text-bold'>{(this.state.mTotalPayment - this.props.loan.mLoanData[AllLoanTotal]).toFixed(2)}</Text>
+          <Text className='idx-input-text-bold'>{(Util.getNumber2(this.state.mTotalPayment) - Util.getNumber2(this.props.loan.mLoanData[AllLoanTotal])).toFixed(2)}</Text>
           <View className='idx-input-title2-bold'>总房款<View className='at-icon at-icon-help' onClick={this.onClickOpenTipBoxIcon.bind(this, Util.mTipBoxMessages.TotalPayment)}></View></View>
-          <Text className='idx-input-text-bold'>{this.state.mTotalPayment.toFixed(2)}</Text>
+          <Text className='idx-input-text-bold'>{Util.getNumber2(this.state.mTotalPayment).toFixed(2)}</Text>
         </View>
 
         <View className='idx-input-item-container-bold'>
           <View className='idx-input-title-bold'>税 + 费<View className='at-icon at-icon-help' onClick={this.onClickOpenTipBoxIcon.bind(this, Util.mTipBoxMessages.TotalTaxAndFee)}></View></View>
-          <Text className='idx-input-text-bold'>{(this.state.mTotalTax + this.state.mTotalFee).toFixed(2)}</Text>
+          <Text className='idx-input-text-bold'>{(Util.getNumber2(this.state.mTotalTax) + Util.getNumber2(this.state.mTotalFee)).toFixed(2)}</Text>
           <View className='idx-input-title2-bold'>平均单价<View className='at-icon at-icon-help' onClick={this.onClickOpenTipBoxIcon.bind(this, Util.mTipBoxMessages.AverageUnitPrice)}></View></View>
-          <Text className='idx-input-text-bold'>{(this.state.mHouseArea != 0 ? (this.state.mTotalPayment/this.state.mHouseArea) : 0).toFixed(2)}</Text>
+          <Text className='idx-input-text-bold'>{((Util.getNumber2(this.state.mHouseArea) != 0 ) ? (Util.getNumber2(this.state.mTotalPayment)/Util.getNumber2(this.state.mHouseArea)) : 0).toFixed(2)}</Text>
         </View>
         <View className='idx-input-item-container-bold'>
           <View className='idx-input-title-bold'>每月还款(元)
             <View className='at-icon at-icon-help'
                 onClick={this.onClickOpenTipBoxIcon.bind(this, Util.mTipBoxMessages.AllLoanMonthlyPayment)}></View>
           </View>
-          <Text className='idx-input-text-bold'>{(this.props.loan.mLoanData[AllLoanMonthlyPayment] * 10000).toFixed(0)}</Text>
+          <Text className='idx-input-text-bold'>{(Util.getNumber2(this.props.loan.mLoanData[AllLoanMonthlyPayment]) * 10000).toFixed(0)}</Text>
           <View className='idx-input-title2-bold'></View>
           <Text className='idx-input-text-bold'></Text>
         </View>

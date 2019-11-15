@@ -1,5 +1,6 @@
-export const SetLoanData = 'SetLoanData'
+export const SetHouseData = 'SetHouseData'
 
+/*
 export const CommercialLoanTotal = 0
 export const CommercialLoanMonthlyPayment = 1
 
@@ -33,3 +34,4 @@ export const RateDiscountIdxProvidentFundLoan = 21
 export const RateDiscountIdxOtherLoan = 22
 
 export const LoanDataTypeMax = 23
+*/

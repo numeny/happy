@@ -1,5 +1,7 @@
 import Taro from '@tarojs/taro';
 
+import { CommercialLoanTotal, CommercialLoanMonthlyPayment, ProvidentFundLoanTotal, ProvidentFundLoanMonthlyPayment, OtherLoanTotal, OtherLoanMonthlyPayment, AllLoanTotal, AllLoanMonthlyPayment, RadioValueCommercialLoanPaymentMethod, RadioValueProvidentFundLoanPaymentMethod, RadioValueOtherLoanPaymentMethod, DurationCommercialLoan, DurationProvidentFundLoan, DurationOtherLoan, RateCommercialLoan, RateProvidentFundLoan, RateOtherLoan, RateInputManualCommercialLoan, RateInputManualProvidentFundLoan, RateInputManualOtherLoan, RateDiscountIdxCommercialLoan, RateDiscountIdxProvidentFundLoan, RateDiscountIdxOtherLoan } from '../redux/constants/loan'
+
 export const LoanType = {
   CommercialLoan: 0,
   ProvidentFundLoan: 1,
@@ -110,8 +112,13 @@ export const Util = {
     // return 'weapp'
   },
 
+  // 默认为零
+  getNumber2: function(v) {
+    return Util.getNumber(v, 0)
+  },
+
   getNumber: function(v, defValue) {
-    return v != null ? Number(v) : ((defValue != null) ? defValue : 0)
+    return (v != null && Util.isNumber(v)) ? Number(v) : ((defValue != null) ? defValue : v)
   },
 
   getString: function(v, defValue) {
@@ -134,12 +141,11 @@ export const Util = {
     console.log(str);
   },
 
-  getParamForGenerateReport: function(state) {
+  getParamForGenerateReport: function(state, loan_data_array) {
     let param = 'currCity=' + state.mCurrCity
       + '&currProv=' + state.mCurrProvince
       + '&fp=' + state.mFirstPayment
       + '&tp=' + state.mTotalPayment
-      + '&tl=' + state.mTotalLoan
       + '&tf=' + state.mTotalFee
       + '&tt=' + state.mTotalTax
       + '&hn=' + state.mHouseName
@@ -157,9 +163,6 @@ export const Util = {
       + '&ef=' + state.mEvaluationFee
       + '&mrf=' + state.mMortgageRegistrationFee
       + '&of=' + state.mOtherFee
-      + '&cl=' + state.mCommercialLoan
-      + '&pfl=' + state.mProvidentFundLoan
-      + '&ol=' + state.mOtherLoan
       + '&fhrv=' + state.mFirstHouseRadioValue
       + '&atyrv=' + state.mAboveTwoYearsRadioValue
       + '&onhrv=' + state.mOnlyHouseRadioValue
@@ -168,6 +171,38 @@ export const Util = {
       + '&wipitm=' + state.mWillInputPersonalIncomeTaxManual
       + '&wivatm=' + state.mEditable
       + '&editable=' + state.mWillInputValueAddedTaxManual
+      + '&clt=' + loan_data_array[CommercialLoanTotal]
+      + '&clmp=' + loan_data_array[CommercialLoanMonthlyPayment]
+
+      + '&pflt=' + loan_data_array[ProvidentFundLoanTotal]
+      + '&pflmp=' + loan_data_array[ProvidentFundLoanMonthlyPayment]
+
+      + '&olt=' + loan_data_array[OtherLoanTotal]
+      + '&olmp=' + loan_data_array[OtherLoanMonthlyPayment]
+
+      + '&alt=' + loan_data_array[AllLoanTotal]
+      + '&amp=' + loan_data_array[AllLoanMonthlyPayment]
+
+      + '&rvclpm=' + loan_data_array[RadioValueCommercialLoanPaymentMethod]
+      + '&rvpflpm=' + loan_data_array[RadioValueProvidentFundLoanPaymentMethod]
+      + '&rvolpm=' + loan_data_array[RadioValueOtherLoanPaymentMethod]
+
+      + '&dcl=' + loan_data_array[DurationCommercialLoan]
+      + '&dpf=' + loan_data_array[DurationProvidentFundLoan]
+      + '&dol=' + loan_data_array[DurationOtherLoan]
+
+      + '&rcl=' + loan_data_array[RateCommercialLoan]
+      + '&rpf=' + loan_data_array[RateProvidentFundLoan]
+      + '&rol=' + loan_data_array[RateOtherLoan]
+
+      + '&rimcl=' + loan_data_array[RateInputManualCommercialLoan]
+      + '&rimpfl=' + loan_data_array[RateInputManualProvidentFundLoan]
+      + '&rimol=' + loan_data_array[RateInputManualOtherLoan]
+
+      + '&rdicl=' + loan_data_array[RateDiscountIdxCommercialLoan]
+      + '&rdipfl=' + loan_data_array[RateDiscountIdxProvidentFundLoan]
+      + '&rdiol=' + loan_data_array[RateDiscountIdxOtherLoan]
+
     return param
   },
 }

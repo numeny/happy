@@ -1,6 +1,7 @@
 import { combineReducers } from 'redux'
 import loan from './loan'
+import house from './house'
 
 export default combineReducers({
-  loan
+  house, loan
 })
