@@ -2,26 +2,6 @@ import Taro from '@tarojs/taro';
 
 import { CommercialLoanTotal, CommercialLoanMonthlyPayment, ProvidentFundLoanTotal, ProvidentFundLoanMonthlyPayment, OtherLoanTotal, OtherLoanMonthlyPayment, AllLoanTotal, AllLoanMonthlyPayment, RadioValueCommercialLoanPaymentMethod, RadioValueProvidentFundLoanPaymentMethod, RadioValueOtherLoanPaymentMethod, DurationCommercialLoan, DurationProvidentFundLoan, DurationOtherLoan, RateCommercialLoan, RateProvidentFundLoan, RateOtherLoan, RateInputManualCommercialLoan, RateInputManualProvidentFundLoan, RateInputManualOtherLoan, RateDiscountIdxCommercialLoan, RateDiscountIdxProvidentFundLoan, RateDiscountIdxOtherLoan } from '../redux/constants/loan'
 
-export const LoanType = {
-  CommercialLoan: 0,
-  ProvidentFundLoan: 1,
-  OtherLoan: 2,
-}
-
-export const RepaymentType = {
-  CapitalAndInterest: 0,
-  Capital: 1,
-}
-
-export const DefaultRateDiscountIdx = {
-  CommercialLoan: 3,
-  ProvidentFundLoan: 0,
-  OtherLoan: 3,
-}
-
-export const BaseInterestRateCommercialLoan = 4.9
-export const BaseInterestRateProvidentFundLoan = 3.25
-
 export const Util = {
 
   appTitle: '茜茜猫首付计算神器',

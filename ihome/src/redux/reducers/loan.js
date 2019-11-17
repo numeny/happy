@@ -1,4 +1,5 @@
-import { RepaymentType, BaseInterestRateCommercialLoan, BaseInterestRateProvidentFundLoan, DefaultRateDiscountIdx } from '../../util/util'
+import { RepaymentType } from '../../util/util'
+import { DefaultValue, DefaultRateDiscountIdx } from '../../constants/loan'
 
 import { SetLoanData } from '../constants/loan'
 
@@ -6,9 +7,9 @@ const INITIAL_STATE = {
   // refer to constants/loan.js : LoanDataType
   mLoanData: [0, 0, 0, 0, 0, // 0-4
               0, 0, 0, RepaymentType.CapitalAndInterest, RepaymentType.CapitalAndInterest, // 5-9
-              RepaymentType.CapitalAndInterest, 25, 25, 25, BaseInterestRateCommercialLoan, // 10-14
-              BaseInterestRateProvidentFundLoan, BaseInterestRateCommercialLoan, false, false, false, // 15-19
-              Number(DefaultRateDiscountIdx.CommercialLoan), Number(DefaultRateDiscountIdx.ProvidentFundLoan), Number(DefaultRateDiscountIdx.OtherLoan), // 20-24
+              RepaymentType.CapitalAndInterest, 25, 25, 25, DefaultValue.BaseInterestRateCommercialLoan, // 10-14
+              DefaultValue.BaseInterestRateProvidentFundLoan, DefaultValue.BaseInterestRateOtherLoan, false, false, false, // 15-19
+              DefaultRateDiscountIdx.CommercialLoan, DefaultRateDiscountIdx.ProvidentFundLoan, DefaultRateDiscountIdx.OtherLoan, // 20-24
              ],
 
   mCommercialLoanTotal: 0,

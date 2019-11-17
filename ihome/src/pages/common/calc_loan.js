@@ -6,11 +6,10 @@ import { connect } from '@tarojs/redux'
 // import { setLoanData, setCommercialLoanTotal, setCommercialLoanMonthlyPayment, setProvidentFundLoanTotal, setProvidentFundLoanMonthlyPayment, setOtherLoanTotal, setOtherLoanMonthlyPayment, setAllLoanTotal, setAllLoanMonthlyPayment } from '../../redux/actions/loan'
 import { setLoanData } from '../../redux/actions/loan'
 import { CommercialLoanTotal, CommercialLoanMonthlyPayment, ProvidentFundLoanTotal, ProvidentFundLoanMonthlyPayment, OtherLoanTotal, OtherLoanMonthlyPayment, AllLoanTotal, AllLoanMonthlyPayment, RadioValueCommercialLoanPaymentMethod, RadioValueProvidentFundLoanPaymentMethod, RadioValueOtherLoanPaymentMethod, DurationCommercialLoan, DurationProvidentFundLoan, DurationOtherLoan, RateCommercialLoan, RateProvidentFundLoan, RateOtherLoan, RateInputManualCommercialLoan, RateInputManualProvidentFundLoan, RateInputManualOtherLoan, RateDiscountIdxCommercialLoan, RateDiscountIdxProvidentFundLoan, RateDiscountIdxOtherLoan } from '../../redux/constants/loan'
-import { DefaultValue } from '../../constants/loan'
-
+import { DefaultValue, LoanType, RepaymentType } from '../../constants/loan'
 
 import { Log } from '@util/log'
-import { Util, LoanType, RepaymentType, BaseInterestRateCommercialLoan, BaseInterestRateProvidentFundLoan, DefaultRateDiscountIdx } from '../../util/util'
+import { Util, DefaultRateDiscountIdx } from '../../util/util'
 
 // FIXIME
 // import TaroRegionPicker from '../../components/taro-region-picker/index'
@@ -371,22 +370,22 @@ export default class CalcLoan extends Component {
   onLoanRatePickerChanged = (loanType, e) => {
     let index = Number(e.detail.value)
     let rateDiscount = 1.0 
-    let interestRate = BaseInterestRateCommercialLoan
+    let interestRate = DefaultValue.BaseInterestRateCommercialLoan
     if (LoanType.CommercialLoan == loanType) {
       rateDiscount = this.state.mCommercialLoanRateSelectorValueArray[index]
-      interestRate = rateDiscount * BaseInterestRateCommercialLoan
+      interestRate = rateDiscount * DefaultValue.BaseInterestRateCommercialLoan
       this.props.setLoanData(RateCommercialLoan, interestRate)
       this.props.setLoanData(RateInputManualCommercialLoan, false)
       this.props.setLoanData(RateDiscountIdxCommercialLoan, index)
     } else if (LoanType.ProvidentFundLoan == loanType) {
       rateDiscount = this.state.mProvidentFundLoanRateSelectorValueArray[index]
-      interestRate = rateDiscount * BaseInterestRateProvidentFundLoan
+      interestRate = rateDiscount * DefaultValue.BaseInterestRateProvidentFundLoan
       this.props.setLoanData(RateProvidentFundLoan, interestRate)
       this.props.setLoanData(RateInputManualProvidentFundLoan, false)
       this.props.setLoanData(RateDiscountIdxProvidentFundLoan, index)
     } else if (LoanType.OtherLoan == loanType) {
       rateDiscount = this.state.mCommercialLoanRateSelectorValueArray[index]
-      interestRate = rateDiscount * BaseInterestRateCommercialLoan
+      interestRate = rateDiscount * DefaultValue.BaseInterestRateOtherLoan
       this.props.setLoanData(RateOtherLoan, interestRate)
       this.props.setLoanData(RateInputManualOtherLoan, false)
       this.props.setLoanData(RateDiscountIdxOtherLoan, index)
@@ -502,9 +501,9 @@ export default class CalcLoan extends Component {
     this.props.setLoanData(DurationProvidentFundLoan, DefaultValue.LoanDuration)
     this.props.setLoanData(DurationOtherLoan, DefaultValue.LoanDuration)
 
-    this.props.setLoanData(RateCommercialLoan, BaseInterestRateCommercialLoan)
-    this.props.setLoanData(RateProvidentFundLoan, BaseInterestRateProvidentFundLoan)
-    this.props.setLoanData(RateOtherLoan, BaseInterestRateCommercialLoan)
+    this.props.setLoanData(RateCommercialLoan, DefaultValue.BaseInterestRateCommercialLoan)
+    this.props.setLoanData(RateProvidentFundLoan, DefaultValue.BaseInterestRateProvidentFundLoan)
+    this.props.setLoanData(RateOtherLoan, DefaultValue.BaseInterestRateOtherLoan)
 
     this.props.setLoanData(RateInputManualCommercialLoan, false)
     this.props.setLoanData(RateInputManualProvidentFundLoan, false)

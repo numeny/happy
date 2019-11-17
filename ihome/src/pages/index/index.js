@@ -3,7 +3,7 @@ import { View, Text, Image, Input, Video, Button, RadioGroup, Radio, Checkbox, C
 import './index.scss'
 
 import { Log } from '@util/log'
-import { Util, LoanType } from '../../util/util'
+import { Util } from '../../util/util'
 import { sCalcClientDecider } from './cityclient/city_client_decider'
 // FIXIME
 // import TaroRegionPicker from '../../components/taro-region-picker/index'
@@ -17,7 +17,7 @@ import { connect } from '@tarojs/redux'
 import { setLoanData } from '../../redux/actions/loan'
 import { CommercialLoanTotal, CommercialLoanMonthlyPayment, ProvidentFundLoanTotal, ProvidentFundLoanMonthlyPayment, OtherLoanTotal, OtherLoanMonthlyPayment, AllLoanTotal, AllLoanMonthlyPayment, RadioValueCommercialLoanPaymentMethod, RadioValueProvidentFundLoanPaymentMethod, RadioValueOtherLoanPaymentMethod, DurationCommercialLoan, DurationProvidentFundLoan, DurationOtherLoan, RateCommercialLoan, RateProvidentFundLoan, RateOtherLoan, RateInputManualCommercialLoan, RateInputManualProvidentFundLoan, RateInputManualOtherLoan, RateDiscountIdxCommercialLoan, RateDiscountIdxProvidentFundLoan, RateDiscountIdxOtherLoan } from '../../redux/constants/loan'
 
-import { DefaultValue, DefaultRateDiscountIdx } from '../../constants/loan'
+import { DefaultValue, DefaultRateDiscountIdx, LoanType } from '../../constants/loan'
 
 import "../../../node_modules/taro-ui/dist/style/components/icon.scss";
 
@@ -200,7 +200,7 @@ export default class Index extends Component {
           DefaultValue.BaseInterestRateProvidentFundLoan))
     this.props.setLoanData(RateOtherLoan,
         Util.getNumber3(this.$router.params.rol,
-          DefaultValue.BaseInterestRateCommercialLoan))
+          DefaultValue.BaseInterestRateOtherLoan))
 
     this.props.setLoanData(RateInputManualCommercialLoan,
         Util.getBoolean(this.$router.params.rimcl))
@@ -228,11 +228,6 @@ export default class Index extends Component {
       let nextFunc = this.state.callLinkForUpdateAll[idx+1]
       func.prototype.postCallback = nextFunc
     }
-    /*
-    this.updateDeedTax.prototype.postCallback = this.updatePersonalIncomeTax
-    this.updatePersonalIncomeTax.prototype.postCallback = this.updateValueAddedTax
-    this.updateValueAddedTax.prototype.postCallback = this.updateOtherTax
-    */
   }
 
   componentDidMount () { }
