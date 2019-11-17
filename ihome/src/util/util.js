@@ -116,16 +116,16 @@ export const Util = {
     return Util.getNumber3(v, 0)
   },
   getNumber3: function(v, defValue) {
-    return (v == undefined || v == 'undefined') ? defValue : Number(v)
+    return (v == undefined || v == 'undefined' || v == null || v == 'null' ) ? defValue : Number(v)
   },
 
   // <Input> 需要有placehold显示的输入框
   getNumber4: function(v) {
-    return (v == undefined || v == 'undefined') ? undefined : Number(v)
+    return (v == undefined || v == 'undefined' || v == null || v == 'null') ? undefined : Number(v)
   },
 
   getString: function(v, defValue) {
-    return (v != undefined && v != 'undefined' && v == 'null') ? String(v) : ((defValue != undefined) ? String(defValue) : '')
+    return (v != undefined && v != 'undefined' &&  v != null && v != 'null') ? String(v) : ((defValue != undefined) ? String(defValue) : '')
   },
 
   getBoolean: function(v, defValue) {
@@ -172,8 +172,8 @@ export const Util = {
       + '&orhrv=' + state.mOrdinaryHouseRadioValue
       + '&widtm=' + state.mWillInputDeedTaxManual
       + '&wipitm=' + state.mWillInputPersonalIncomeTaxManual
-      + '&wivatm=' + state.mEditable
-      + '&editable=' + state.mWillInputValueAddedTaxManual
+      + '&wivatm=' + state.mWillInputValueAddedTaxManual
+      + '&editable=' + state.mEditable
       + '&clt=' + loan_data_array[CommercialLoanTotal]
       + '&clmp=' + loan_data_array[CommercialLoanMonthlyPayment]
 

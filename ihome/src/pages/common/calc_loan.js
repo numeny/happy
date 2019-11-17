@@ -45,7 +45,7 @@ export default class CalcLoan extends Component {
    * 提示和声明 navigationBarTextStyle: 'black' | 'white' 类型冲突, 需要显示声明类型
    */
   config: Config = {
-    navigationBarTitleText: '茜茜猫首付计算神器',
+    navigationBarTitleText: '茜茜猫房贷计算',
   }
 
   constructor(props) {
@@ -493,9 +493,9 @@ export default class CalcLoan extends Component {
   clearData = (e) => {
     this.clearResult()
 
-    this.props.setLoanData(CommercialLoanTotal, undefined)
-    this.props.setLoanData(ProvidentFundLoanTotal, undefined)
-    this.props.setLoanData(OtherLoanTotal, undefined)
+    this.props.setLoanData(CommercialLoanTotal, null)
+    this.props.setLoanData(ProvidentFundLoanTotal, null)
+    this.props.setLoanData(OtherLoanTotal, null)
 
     this.props.setLoanData(DurationCommercialLoan, DefaultValue.LoanDuration)
     this.props.setLoanData(DurationProvidentFundLoan, DefaultValue.LoanDuration)
@@ -510,11 +510,11 @@ export default class CalcLoan extends Component {
     this.props.setLoanData(RateInputManualOtherLoan, false)
 
     this.props.setLoanData(RateDiscountIdxCommercialLoan,
-        Number(DefaultRateDiscountIdx.CommercialLoan))
+        DefaultRateDiscountIdx.CommercialLoan)
     this.props.setLoanData(RateDiscountIdxProvidentFundLoan,
-        Number(DefaultRateDiscountIdx.ProvidentFundLoan))
+        DefaultRateDiscountIdx.ProvidentFundLoan)
     this.props.setLoanData(RateDiscountIdxOtherLoan,
-        Number(DefaultRateDiscountIdx.OtherLoan))
+        DefaultRateDiscountIdx.OtherLoan)
 
     this.props.setLoanData(RadioValueCommercialLoanPaymentMethod,
         RepaymentType.CapitalAndInterest)
@@ -711,7 +711,7 @@ export default class CalcLoan extends Component {
       <View className='cl-top-container'>
         <View>
           <View className='cl-top-title-container'>
-            <View className='cl-top-title-unit'>计算单位：万元</View>
+            <View className='cl-top-title-unit'>计算单位（万元）</View>
           </View>
 
         {this.state.mTitleArray.map((item0, loanType) => {
@@ -803,17 +803,6 @@ export default class CalcLoan extends Component {
               </View>)}
             </View>)
         })}
-
-        <View className='cl-input-item-container-bold-top'>
-          <Text className='cl-input-title-bold'>利息本金总额</Text>
-          <Text className='cl-input-text-bold'>
-            {this.state.mTotalRepaymentAllLoan.toFixed(2)}
-          </Text>
-          <Text className='cl-input-title2-bold'>利息总额</Text>
-          <Text className='cl-input-text-bold'>
-            {this.state.mTotalInterestAllLoan.toFixed(2)}
-          </Text>
-        </View>
 
         {this.state.mEditable ?
            (<View className='cl-button-container'>

@@ -43,23 +43,7 @@ export default class Index extends Component {
    * 提示和声明 navigationBarTextStyle: 'black' | 'white' 类型冲突, 需要显示声明类型
    */
   config: Config = {
-    navigationBarTitleText: '茜茜猫首付计算神器',
-  }
-
-  getNumber (v, defValue) {
-    if (v != null) {
-      console.error('getNumber-1')
-      return Number(v)
-    }
-    console.error('getNumber-2')
-    if (defValue != null) {
-    console.error('getNumber-3')
-      return defValue
-    } else {
-    console.error('getNumber-4')
-      return v;
-    }
-    // return v != null ? Number(v) : ((defValue != null) ? defValue : 0)
+    navigationBarTitleText: '茜茜猫首付计算',
   }
 
   constructor(props) {
@@ -91,13 +75,13 @@ export default class Index extends Component {
 
       mEditable: true,
 
-      mCurrProvince: (this.$router.params.currCity != null && this.$router.params.currCity != undefined) ? Util.getString(this.$router.params.currCity) : '北京市',
-      mCurrCity: (this.$router.params.currCity != null && this.$router.params.currCity != undefined) ? Util.getString(this.$router.params.currCity) : '北京市',
+      mCurrProvince: Util.getString(this.$router.params.currProv, '北京市'),
+      mCurrCity: Util.getString(this.$router.params.currCity, '北京市'),
 
-      mFirstPayment: Util.getNumber(this.$router.params.fp),
-      mTotalPayment: Util.getNumber(this.$router.params.tp),
-      mTotalFee: Util.getNumber(this.$router.params.tf),
-      mTotalTax: Util.getNumber(this.$router.params.tt),
+      mFirstPayment: Util.getNumber3default0(this.$router.params.fp),
+      mTotalPayment: Util.getNumber3default0(this.$router.params.tp),
+      mTotalFee: Util.getNumber3default0(this.$router.params.tf),
+      mTotalTax: Util.getNumber3default0(this.$router.params.tt),
 
       // input
       mHouseName: Util.getString(this.$router.params.hn),
@@ -110,9 +94,9 @@ export default class Index extends Component {
 
       // Tax
       mDeedTax: Util.getBoolean(this.$router.params.widtm) ? Util.getNumber4(this.$router.params.dt) : Util.getNumber3default0(this.$router.params.dt),
-      mPersonalIncomeTax: Util.getBoolean(this.$router.params.widtm) ? Util.getNumber4(this.$router.params.pit) : Util.getNumber3default0(this.$router.params.pit),
-      mValueAddedTax: Util.getBoolean(this.$router.params.widtm) ? Util.getNumber4(this.$router.params.vat) : Util.getNumber3default0(this.$router.params.vat),
-      mOtherTax: Util.getBoolean(this.$router.params.widtm) ? Util.getNumber4(this.$router.params.ot) : Util.getNumber3default0(this.$router.params.ot),
+      mPersonalIncomeTax: Util.getBoolean(this.$router.params.wipitm) ? Util.getNumber4(this.$router.params.pit) : Util.getNumber3default0(this.$router.params.pit),
+      mValueAddedTax: Util.getBoolean(this.$router.params.wivatm) ? Util.getNumber4(this.$router.params.vat) : Util.getNumber3default0(this.$router.params.vat),
+      mOtherTax: Util.getNumber4(this.$router.params.ot),
 
       // Fee
       mAgencyFee: Util.getNumber4(this.$router.params.af),
@@ -123,7 +107,7 @@ export default class Index extends Component {
 
       mFirstHouseRadioValue: Util.getNumber3default0(this.$router.params.fhrv),
       mAboveTwoYearsRadioValue: Util.getNumber3default0(this.$router.params.atyrv),
-      mOnlyHouseRadioValue: Util.getBoolean(this.$router.params.onhrv, true),
+      mOnlyHouseRadioValue: Util.getBoolean(this.$router.params.ohrv, true),
       mOrdinaryHouseRadioValue: Util.getBoolean(this.$router.params.orhrv, true),
 
       mWillInputDeedTaxManual: Util.getBoolean(this.$router.params.widtm),
@@ -293,11 +277,11 @@ export default class Index extends Component {
   }
 
   updateTotalFee = () => {
-    let totalFee = (this.state.mAgencyFee
-        + this.state.mLoanServiceFee
-        + this.state.mEvaluationFee
-        + this.state.mMortgageRegistrationFee
-        + this.state.mOtherFee)
+    let totalFee = (Util.getNumber3default0(this.state.mAgencyFee)
+        + Util.getNumber3default0(this.state.mLoanServiceFee)
+        + Util.getNumber3default0(this.state.mEvaluationFee)
+        + Util.getNumber3default0(this.state.mMortgageRegistrationFee)
+        + Util.getNumber3default0(this.state.mOtherFee))
     this.setState({
         mTotalFee: totalFee,
     }, () => {
@@ -308,8 +292,11 @@ export default class Index extends Component {
   }
 
   updateTotalTax = () => {
-    const totalTax = (this.state.mDeedTax + this.state.mPersonalIncomeTax +
-                      + this.state.mValueAddedTax + this.state.mOtherTax)
+    const totalTax =
+      Util.getNumber3default0(this.state.mDeedTax)
+        + Util.getNumber3default0(this.state.mPersonalIncomeTax)
+        + Util.getNumber3default0(this.state.mValueAddedTax)
+        + Util.getNumber3default0(this.state.mOtherTax)
     this.setState({
         mTotalTax: totalTax,
     }, () => {
@@ -480,25 +467,25 @@ export default class Index extends Component {
 
       // input
       mHouseName: '',
-      mHouseArea: undefined,
+      mHouseArea: null,
 
-      mTotalPrice: undefined,
-      mOriginPrice: undefined,
-      mWebSignPrice: undefined,
-      mOriginTaxSum: undefined,
+      mTotalPrice: null,
+      mOriginPrice: null,
+      mWebSignPrice: null,
+      mOriginTaxSum: null,
 
       // Tax
-      mDeedTax: undefined,
-      mPersonalIncomeTax: undefined,
-      mValueAddedTax: undefined,
-      mOtherTax: undefined,
+      mDeedTax: null,
+      mPersonalIncomeTax: null,
+      mValueAddedTax: null,
+      mOtherTax: null,
 
       // Fee
-      mAgencyFee: undefined,
-      mLoanServiceFee: undefined,
-      mEvaluationFee: undefined,
-      mMortgageRegistrationFee: undefined,
-      mOtherFee: undefined,
+      mAgencyFee: null,
+      mLoanServiceFee: null,
+      mEvaluationFee: null,
+      mMortgageRegistrationFee: null,
+      mOtherFee: null,
 
       mFirstHouseRadioValue: 0,
       mAboveTwoYearsRadioValue: 0,
@@ -509,6 +496,12 @@ export default class Index extends Component {
       mWillInputPersonalIncomeTaxManual: false,
       mWillInputValueAddedTaxManual: false,
     })
+
+    this.props.setLoanData(CommercialLoanTotal, null)
+    this.props.setLoanData(ProvidentFundLoanTotal, null)
+    this.props.setLoanData(OtherLoanTotal, null)
+    this.props.setLoanData(AllLoanTotal, 0)
+    this.props.setLoanData(AllLoanMonthlyPayment, 0)
   }
 
   recaculate = (e) => {
@@ -855,18 +848,8 @@ export default class Index extends Component {
   }
 
   onShareAppMessage = (share) => {
-    let a = ', router.params.hn: ' + this.$router.params.hn
-    a += ', typeOf(router.params.hn): ' + Util.typeOf(this.$router.params.hn)
-    a += ', router.params.tpr: ' + this.$router.params.clmp
-    a += ', typeOf(router.params.tpr): ' + Util.typeOf(this.$router.params.tpr)
-    a += ', router.params.clmp: ' + this.$router.params.clmp
-    a += ', typeOf(router.params.clmp): ' + Util.typeOf(this.$router.params.clmp)
-    Log.log('onShareAppMessage: ' + a)
     let param = Util.getParamForGenerateReport(this.state, this.props.loan.mLoanData);
-    /*
-    if (DEBUG)
-      Log.log('onShareAppMessage, param: ' + param);
-    */
+    Log.log('onShareAppMessage, param: ' + param);
 
     return {
       title: Util.appTitle,
@@ -928,6 +911,11 @@ export default class Index extends Component {
     }
   }
 
+  // FIXME
+  getFee = (feeType) => {
+    return this.state.mAgencyFee
+  }
+
   render () {
     let classNameForInputDeedTaxManual = this.state.mWillInputDeedTaxManual ?
             'idx-input-text' : 'idx-input-text-disable'
@@ -945,7 +933,7 @@ export default class Index extends Component {
           <View className='idx-top-title-city' onClick={this.onSelectCity}>{this.state.mCurrCity}
           <View className='at-icon at-icon-map-pin' onClick={this.onSelectCity}></View>
           </View>
-          <View className='idx-top-title-unit'>计算单位：万元</View>
+          <View className='idx-top-title-unit'>计算单位（万元）</View>
         </View>
         <View className='idx-input-item-container'>
           <Text className='idx-input-title'>房屋名称</Text>
@@ -1054,7 +1042,7 @@ export default class Index extends Component {
           <Text className='idx-input-title'></Text>
           <View className='idx-input-text'></View>
           <View className='idx-input-title-bold'>总费用<View className='at-icon at-icon-help' onClick={this.onClickOpenTipBoxIcon.bind(this, Util.mTipBoxMessages.TotalFee)}></View></View>
-          <Text className='idx-input-text-bold'>{Util.getNumber2(this.state.mTotalFee).toFixed(2)}</Text>
+          <Text className='idx-input-text-bold'>{Util.getNumber3default0(this.state.mTotalFee).toFixed(2)}</Text>
         </View>
 
         <View className='idx-input-item-container'>
@@ -1111,44 +1099,44 @@ export default class Index extends Component {
           <Input className='idx-input-text' type='digit' placeholder='万元'
               disabled={!this.state.mEditable} value={this.state.mOtherTax} maxLength='10' onInput={this.onInputOtherTax} />
           <View className='idx-input-title2-bold'>总税款<View className='at-icon at-icon-help' onClick={this.onClickOpenTipBoxIcon.bind(this, Util.mTipBoxMessages.TotalTax)}></View></View>
-          <Text className='idx-input-text-bold'>{Util.getNumber2(this.state.mTotalTax).toFixed(2)}</Text>
+          <Text className='idx-input-text-bold'>{Util.getNumber3default0(this.state.mTotalTax).toFixed(2)}</Text>
         </View>
 
         <View className='idx-input-item-container'>
           <Text className='idx-input-title'>商贷</Text>
           <Input className='idx-input-text' type='digit' placeholder='万元'
-              disabled={!this.state.mEditable} value={this.getLoan(CommercialLoanTotal)} maxLength='10' onInput={this.onInputLoan.bind(this, LoanType.CommercialLoan)} />
+              disabled={!this.state.mEditable} value={this.getLoan(LoanType.CommercialLoan)} maxLength='10' onInput={this.onInputLoan.bind(this, LoanType.CommercialLoan)} />
           <Text className='idx-input-title2'>公积金贷款</Text>
           <Input className='idx-input-text' type='digit' placeholder='万元'
-              disabled={!this.state.mEditable} value={this.getLoan(ProvidentFundLoanTotal)} maxLength='10' onInput={this.onInputLoan.bind(this, LoanType.ProvidentFundLoan)} />
+              disabled={!this.state.mEditable} value={this.getLoan(LoanType.ProvidentFundLoan)} maxLength='10' onInput={this.onInputLoan.bind(this, LoanType.ProvidentFundLoan)} />
         </View>
         <View className='idx-input-item-container-bold'>
           <Text className='idx-input-title'>其他贷款</Text>
           <Input className='idx-input-text' type='digit' placeholder='万元'
-              disabled={!this.state.mEditable} value={this.getLoan(OtherLoanTotal)} maxLength='10' onInput={this.onInputLoan.bind(this, LoanType.OtherLoan)} />
+              disabled={!this.state.mEditable} value={this.getLoan(LoanType.OtherLoan)} maxLength='10' onInput={this.onInputLoan.bind(this, LoanType.OtherLoan)} />
           <View className='idx-input-title2-bold'>总贷款<View className='at-icon at-icon-help' onClick={this.onClickOpenTipBoxIcon.bind(this, Util.mTipBoxMessages.TotalLoan)}></View></View>
-          <Text className='idx-input-text-bold'>{Util.getNumber2(this.props.loan.mLoanData[AllLoanTotal]).toFixed(2)}</Text>
+          <Text className='idx-input-text-bold'>{Util.getNumber3default0(this.props.loan.mLoanData[AllLoanTotal]).toFixed(2)}</Text>
         </View>
 
         <View className='idx-input-item-container'>
           <View className='idx-input-title-bold'>总首付<View className='at-icon at-icon-help' onClick={this.onClickOpenTipBoxIcon.bind(this, Util.mTipBoxMessages.FirstPayment)}></View></View>
-          <Text className='idx-input-text-bold'>{(Util.getNumber2(this.state.mTotalPayment) - Util.getNumber2(this.props.loan.mLoanData[AllLoanTotal])).toFixed(2)}</Text>
+          <Text className='idx-input-text-bold'>{(Util.getNumber3default0(this.state.mTotalPayment) - Util.getNumber3default0(this.props.loan.mLoanData[AllLoanTotal])).toFixed(2)}</Text>
           <View className='idx-input-title2-bold'>总房款<View className='at-icon at-icon-help' onClick={this.onClickOpenTipBoxIcon.bind(this, Util.mTipBoxMessages.TotalPayment)}></View></View>
-          <Text className='idx-input-text-bold'>{Util.getNumber2(this.state.mTotalPayment).toFixed(2)}</Text>
+          <Text className='idx-input-text-bold'>{Util.getNumber3default0(this.state.mTotalPayment).toFixed(2)}</Text>
         </View>
 
         <View className='idx-input-item-container-bold'>
           <View className='idx-input-title-bold'>税 + 费<View className='at-icon at-icon-help' onClick={this.onClickOpenTipBoxIcon.bind(this, Util.mTipBoxMessages.TotalTaxAndFee)}></View></View>
-          <Text className='idx-input-text-bold'>{(Util.getNumber2(this.state.mTotalTax) + Util.getNumber2(this.state.mTotalFee)).toFixed(2)}</Text>
+          <Text className='idx-input-text-bold'>{(Util.getNumber3default0(this.state.mTotalTax) + Util.getNumber3default0(this.state.mTotalFee)).toFixed(2)}</Text>
           <View className='idx-input-title2-bold'>平均单价<View className='at-icon at-icon-help' onClick={this.onClickOpenTipBoxIcon.bind(this, Util.mTipBoxMessages.AverageUnitPrice)}></View></View>
-          <Text className='idx-input-text-bold'>{((Util.getNumber3default0(this.state.mHouseArea) != 0 ) ? (Util.getNumber2(this.state.mTotalPayment)/Util.getNumber3default0(this.state.mHouseArea)) : 0).toFixed(2)}</Text>
+          <Text className='idx-input-text-bold'>{((Util.getNumber3default0(this.state.mHouseArea) != 0 ) ? (Util.getNumber3default0(this.state.mTotalPayment)/Util.getNumber3default0(this.state.mHouseArea)) : 0).toFixed(2)}</Text>
         </View>
         <View className='idx-input-item-container-bold'>
           <View className='idx-input-title-bold'>每月还款(元)
             <View className='at-icon at-icon-help'
                 onClick={this.onClickOpenTipBoxIcon.bind(this, Util.mTipBoxMessages.AllLoanMonthlyPayment)}></View>
           </View>
-          <Text className='idx-input-text-bold'>{(Util.getNumber2(this.props.loan.mLoanData[AllLoanMonthlyPayment]) * 10000).toFixed(0)}</Text>
+          <Text className='idx-input-text-bold'>{(Util.getNumber3default0(this.props.loan.mLoanData[AllLoanMonthlyPayment]) * 10000).toFixed(0)}</Text>
           <View className='idx-input-title2-bold'></View>
           <Text className='idx-input-text-bold'></Text>
         </View>
