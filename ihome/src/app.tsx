@@ -43,8 +43,8 @@ class App extends Component {
         text: "计算首付"
       }, {
         pagePath: "pages/common/calc_loan",
-        iconPath: "./assets/tab-bar/cate.png",
-        selectedIconPath: "./assets/tab-bar/cate-active.png",
+        iconPath: "./assets/tab-bar/plus.png",
+        selectedIconPath: "./assets/tab-bar/plus-active.png",
         text: "计算房贷"
       }]
     }
