@@ -1,7 +1,7 @@
-import { RepaymentType } from '../../util/util'
 import { DefaultValue, DefaultRateDiscountIdx } from '../../constants/loan'
 
 import { SetLoanData } from '../constants/loan'
+import { RepaymentType } from '../../constants/loan.js'
 
 const INITIAL_STATE = {
   // refer to constants/loan.js : LoanDataType
