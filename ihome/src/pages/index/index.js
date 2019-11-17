@@ -911,11 +911,6 @@ export default class Index extends Component {
     }
   }
 
-  // FIXME
-  getFee = (feeType) => {
-    return this.state.mAgencyFee
-  }
-
   render () {
     let classNameForInputDeedTaxManual = this.state.mWillInputDeedTaxManual ?
             'idx-input-text' : 'idx-input-text-disable'
@@ -939,7 +934,7 @@ export default class Index extends Component {
           <Text className='idx-input-title'>房屋名称</Text>
           <Input className='idx-input-text' type='text' placeholder='名称'
               disabled={!this.state.mEditable} value={this.state.mHouseName} onInput={this.onInputHouseName} />
-          <Text className='idx-input-title2'>面积</Text>
+          <Text className='idx-input-title2'>面积(m2)</Text>
           <Input className='idx-input-text' type='digit' placeholder='m2'
               disabled={!this.state.mEditable} value={this.state.mHouseArea} maxLength='10' onInput={this.onInputHouseArea} />
         </View>

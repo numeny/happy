@@ -89,7 +89,8 @@ export default class CalcLoan extends Component {
       ],
       mCommercialLoanRateSelector: [
         '基准利率8.5折', '基准利率9折', '基准利率9.5折',
-        '基准利率(4.9%)', '基准利率1.05倍', '基准利率1.1倍',
+        '基准利率(' + DefaultValue.BaseInterestRateCommercialLoan + '%)', '基准利率1.05倍', '基准利率1.1倍',
+        '基准利率(%)', '基准利率1.05倍', '基准利率1.1倍',
         '基准利率1.15倍', '基准利率1.2倍', '基准利率1.25倍',
       ],
       mCommercialLoanRateSelectorValueArray: [
@@ -97,8 +98,20 @@ export default class CalcLoan extends Component {
         1.0, 1.05, 1.1,
         1.15, 1.2, 1.25,
       ],
+      mOtherLoanRateSelector: [
+        '基准利率8.5折', '基准利率9折', '基准利率9.5折',
+        '基准利率(' + DefaultValue.BaseInterestRateOtherLoan + '%)', '基准利率1.05倍', '基准利率1.1倍',
+        '基准利率(%)', '基准利率1.05倍', '基准利率1.1倍',
+        '基准利率1.15倍', '基准利率1.2倍', '基准利率1.25倍',
+      ],
+      mOtherLoanRateSelectorValueArray: [
+        0.85, 0.9, 0.95,
+        1.0, 1.05, 1.1,
+        1.15, 1.2, 1.25,
+      ],
       mProvidentFundLoanRateSelector: [
-        '基准利率(3.25%)', '基准利率1.05倍', '基准利率1.1倍',
+        '基准利率(' + DefaultValue.BaseInterestRateProvidentFundLoan + '%)', '基准利率1.05倍', '基准利率1.1倍',
+        '基准利率(%)', '基准利率1.05倍', '基准利率1.1倍',
         '基准利率1.15倍', '基准利率1.2倍', '基准利率1.25倍',
       ],
       mProvidentFundLoanRateSelectorValueArray: [
@@ -384,7 +397,7 @@ export default class CalcLoan extends Component {
       this.props.setLoanData(RateInputManualProvidentFundLoan, false)
       this.props.setLoanData(RateDiscountIdxProvidentFundLoan, index)
     } else if (LoanType.OtherLoan == loanType) {
-      rateDiscount = this.state.mCommercialLoanRateSelectorValueArray[index]
+      rateDiscount = this.state.mOtherLoanRateSelectorValueArray[index]
       interestRate = rateDiscount * DefaultValue.BaseInterestRateOtherLoan
       this.props.setLoanData(RateOtherLoan, interestRate)
       this.props.setLoanData(RateInputManualOtherLoan, false)
@@ -604,6 +617,16 @@ export default class CalcLoan extends Component {
     }
   }
 
+  getRateSelectorArray = (loanType) => {
+    if (loanType == LoanType.CommercialLoan) {
+      return this.state.mCommercialLoanRateSelector
+    } else if (loanType == LoanType.ProvidentFundLoan) {
+      return this.state.mProvidentFundLoanRateSelector
+    } else if (loanType == LoanType.OtherLoan) {
+      return this.state.mOtherLoanRateSelector
+    }
+  }
+
   getRateDiscountText = (loanType) => {
     if (loanType == LoanType.CommercialLoan) {
       return this.state.mCommercialLoanRateSelector[
@@ -612,7 +635,7 @@ export default class CalcLoan extends Component {
       return this.state.mProvidentFundLoanRateSelector[
               this.props.loan.mLoanData[RateDiscountIdxProvidentFundLoan]]
     } else if (loanType == LoanType.OtherLoan) {
-      return this.state.mCommercialLoanRateSelector[
+      return this.state.mOtherLoanRateSelector[
               this.props.loan.mLoanData[RateDiscountIdxOtherLoan]]
     }
   }
@@ -765,9 +788,7 @@ export default class CalcLoan extends Component {
                 <Input className='cl-input-text-rate' type='digit' placeholder='贷款利率' value={this.getInterestRate(loanType)}
                     disabled={!this.state.mEditable} maxLength='6' onInput={this.onInputLoanRate.bind(this, loanType)} />
                 <Picker mode='selector' value={this.getRateDiscountIdx(loanType)}
-                    range={(loanType == LoanType.ProvidentFundLoan) ?
-                        this.state.mProvidentFundLoanRateSelector
-                          : this.state.mCommercialLoanRateSelector}
+                    range={this.getRateSelectorArray(loanType)}
                     onChange={this.onLoanRatePickerChanged.bind(this, loanType)} className='cl-duration-picker'>
                   %<View className='at-icon at-icon-chevron-down'></View>
                 </Picker>
