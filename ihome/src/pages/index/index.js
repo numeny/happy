@@ -17,6 +17,8 @@ import { connect } from '@tarojs/redux'
 import { setLoanData } from '../../redux/actions/loan'
 import { CommercialLoanTotal, CommercialLoanMonthlyPayment, ProvidentFundLoanTotal, ProvidentFundLoanMonthlyPayment, OtherLoanTotal, OtherLoanMonthlyPayment, AllLoanTotal, AllLoanMonthlyPayment, RadioValueCommercialLoanPaymentMethod, RadioValueProvidentFundLoanPaymentMethod, RadioValueOtherLoanPaymentMethod, DurationCommercialLoan, DurationProvidentFundLoan, DurationOtherLoan, RateCommercialLoan, RateProvidentFundLoan, RateOtherLoan, RateInputManualCommercialLoan, RateInputManualProvidentFundLoan, RateInputManualOtherLoan, RateDiscountIdxCommercialLoan, RateDiscountIdxProvidentFundLoan, RateDiscountIdxOtherLoan } from '../../redux/constants/loan'
 
+import { DefaultValue, DefaultRateDiscountIdx } from '../../constants/loan'
+
 import "../../../node_modules/taro-ui/dist/style/components/icon.scss";
 
 import namedPng from '@images/index/1.jpeg'
@@ -99,28 +101,28 @@ export default class Index extends Component {
 
       // input
       mHouseName: Util.getString(this.$router.params.hn),
-      mHouseArea: Util.getNumber(this.$router.params.ha),
+      mHouseArea: Util.getNumber4(this.$router.params.ha),
 
-      mTotalPrice: Util.getNumber(this.$router.params.tpr),
-      mOriginPrice: Util.getNumber(this.$router.params.opr),
-      mWebSignPrice: Util.getNumber(this.$router.params.wspr),
-      mOriginTaxSum: Util.getNumber(this.$router.params.ots),
+      mTotalPrice: Util.getNumber4(this.$router.params.tpr),
+      mOriginPrice: Util.getNumber4(this.$router.params.opr),
+      mWebSignPrice: Util.getNumber4(this.$router.params.wspr),
+      mOriginTaxSum: Util.getNumber4(this.$router.params.ots),
 
       // Tax
-      mDeedTax: Util.getNumber(this.$router.params.dt),
-      mPersonalIncomeTax: Util.getNumber(this.$router.params.pit),
-      mValueAddedTax: Util.getNumber(this.$router.params.vat),
-      mOtherTax: Util.getNumber(this.$router.params.ot),
+      mDeedTax: Util.getBoolean(this.$router.params.widtm) ? Util.getNumber4(this.$router.params.dt) : Util.getNumber3default0(this.$router.params.dt),
+      mPersonalIncomeTax: Util.getBoolean(this.$router.params.widtm) ? Util.getNumber4(this.$router.params.pit) : Util.getNumber3default0(this.$router.params.pit),
+      mValueAddedTax: Util.getBoolean(this.$router.params.widtm) ? Util.getNumber4(this.$router.params.vat) : Util.getNumber3default0(this.$router.params.vat),
+      mOtherTax: Util.getBoolean(this.$router.params.widtm) ? Util.getNumber4(this.$router.params.ot) : Util.getNumber3default0(this.$router.params.ot),
 
       // Fee
-      mAgencyFee: Util.getNumber(this.$router.params.af),
-      mLoanServiceFee: Util.getNumber(this.$router.params.lsf),
-      mEvaluationFee: Util.getNumber(this.$router.params.ef),
-      mMortgageRegistrationFee: Util.getNumber(this.$router.params.mrf),
-      mOtherFee: Util.getNumber(this.$router.params.of),
+      mAgencyFee: Util.getNumber4(this.$router.params.af),
+      mLoanServiceFee: Util.getNumber4(this.$router.params.lsf),
+      mEvaluationFee: Util.getNumber4(this.$router.params.ef),
+      mMortgageRegistrationFee: Util.getNumber4(this.$router.params.mrf),
+      mOtherFee: Util.getNumber4(this.$router.params.of),
 
-      mFirstHouseRadioValue: Util.getNumber(this.$router.params.fhrv),
-      mAboveTwoYearsRadioValue: Util.getNumber(this.$router.params.atyrv),
+      mFirstHouseRadioValue: Util.getNumber3default0(this.$router.params.fhrv),
+      mAboveTwoYearsRadioValue: Util.getNumber3default0(this.$router.params.atyrv),
       mOnlyHouseRadioValue: Util.getBoolean(this.$router.params.onhrv, true),
       mOrdinaryHouseRadioValue: Util.getBoolean(this.$router.params.orhrv, true),
 
@@ -154,38 +156,68 @@ export default class Index extends Component {
     sCalcClient = sCalcClientDecider.changeCityClient(this.state)
 
     this.props.setLoanData(CommercialLoanTotal,
-        this.getNumber(this.$router.params.clt))
+        Util.getNumber4(this.$router.params.clt))
     this.props.setLoanData(CommercialLoanMonthlyPayment,
-        Util.getNumber(this.$router.params.clmp))
+        Util.getNumber3default0(this.$router.params.clmp))
 
-    this.props.setLoanData(ProvidentFundLoanTotal, Util.getNumber(this.$router.params.pflt))
-    this.props.setLoanData(ProvidentFundLoanMonthlyPayment, Util.getNumber(this.$router.params.pflmp))
+    this.props.setLoanData(ProvidentFundLoanTotal,
+        Util.getNumber4(this.$router.params.pflt))
+    this.props.setLoanData(ProvidentFundLoanMonthlyPayment,
+        Util.getNumber3default0(this.$router.params.pflmp))
 
-    this.props.setLoanData(OtherLoanTotal, Util.getNumber(this.$router.params.olt))
-    this.props.setLoanData(OtherLoanMonthlyPayment, Util.getNumber(this.$router.params.olmp))
+    this.props.setLoanData(OtherLoanTotal,
+        Util.getNumber4(this.$router.params.olt))
+    this.props.setLoanData(OtherLoanMonthlyPayment,
+        Util.getNumber3default0(this.$router.params.olmp))
 
-    this.props.setLoanData(AllLoanTotal, Util.getNumber(this.$router.params.alt))
-    this.props.setLoanData(AllLoanMonthlyPayment, Util.getNumber(this.$router.params.amp))
+    this.props.setLoanData(AllLoanTotal,
+        Util.getNumber3default0(this.$router.params.alt))
+    this.props.setLoanData(AllLoanMonthlyPayment,
+        Util.getNumber3default0(this.$router.params.amp))
 
-    this.props.setLoanData(RadioValueCommercialLoanPaymentMethod, Util.getNumber(this.$router.params.rvclpm))
-    this.props.setLoanData(RadioValueProvidentFundLoanPaymentMethod, Util.getNumber(this.$router.params.rvpflpm))
-    this.props.setLoanData(RadioValueOtherLoanPaymentMethod, Util.getNumber(this.$router.params.rvolpm))
+    this.props.setLoanData(RadioValueCommercialLoanPaymentMethod,
+        Util.getNumber3default0(this.$router.params.rvclpm))
+    this.props.setLoanData(RadioValueProvidentFundLoanPaymentMethod,
+        Util.getNumber3default0(this.$router.params.rvpflpm))
+    this.props.setLoanData(RadioValueOtherLoanPaymentMethod,
+        Util.getNumber3default0(this.$router.params.rvolpm))
 
-    this.props.setLoanData(DurationCommercialLoan, Util.getNumber(this.$router.params.dcl))
-    this.props.setLoanData(DurationProvidentFundLoan, Util.getNumber(this.$router.params.dpf))
-    this.props.setLoanData(DurationOtherLoan, Util.getNumber(this.$router.params.dol))
+    this.props.setLoanData(DurationCommercialLoan,
+        Util.getNumber3(this.$router.params.dcl,
+          DefaultValue.LoanDuration))
+    this.props.setLoanData(DurationProvidentFundLoan,
+        Util.getNumber3(this.$router.params.dpf,
+          DefaultValue.LoanDuration))
+    this.props.setLoanData(DurationOtherLoan,
+        Util.getNumber3(this.$router.params.dol,
+          DefaultValue.LoanDuration))
 
-    this.props.setLoanData(RateCommercialLoan, Util.getNumber(this.$router.params.rcl))
-    this.props.setLoanData(RateProvidentFundLoan, Util.getNumber(this.$router.params.rpf))
-    this.props.setLoanData(RateOtherLoan, Util.getNumber(this.$router.params.rol))
+    this.props.setLoanData(RateCommercialLoan,
+        Util.getNumber3(this.$router.params.rcl,
+          DefaultValue.BaseInterestRateCommercialLoan))
+    this.props.setLoanData(RateProvidentFundLoan,
+        Util.getNumber3(this.$router.params.rpf,
+          DefaultValue.BaseInterestRateProvidentFundLoan))
+    this.props.setLoanData(RateOtherLoan,
+        Util.getNumber3(this.$router.params.rol,
+          DefaultValue.BaseInterestRateCommercialLoan))
 
-    this.props.setLoanData(RateInputManualCommercialLoan, Util.getNumber(this.$router.params.rimcl))
-    this.props.setLoanData(RateInputManualProvidentFundLoan, Util.getNumber(this.$router.params.rimpfl))
-    this.props.setLoanData(RateInputManualOtherLoan, Util.getNumber(this.$router.params.rimol))
+    this.props.setLoanData(RateInputManualCommercialLoan,
+        Util.getBoolean(this.$router.params.rimcl))
+    this.props.setLoanData(RateInputManualProvidentFundLoan,
+        Util.getBoolean(this.$router.params.rimpfl))
+    this.props.setLoanData(RateInputManualOtherLoan,
+        Util.getBoolean(this.$router.params.rimol))
 
-    this.props.setLoanData(RateDiscountIdxCommercialLoan, Util.getNumber(this.$router.params.rdicl))
-    this.props.setLoanData(RateDiscountIdxProvidentFundLoan, Util.getNumber(this.$router.params.rdipfl))
-    this.props.setLoanData(RateDiscountIdxOtherLoan, Util.getNumber(this.$router.params.rdiol))
+    this.props.setLoanData(RateDiscountIdxCommercialLoan,
+        Util.getNumber3(this.$router.params.rdicl,
+          DefaultRateDiscountIdx.CommercialLoan))
+    this.props.setLoanData(RateDiscountIdxProvidentFundLoan,
+        Util.getNumber3(this.$router.params.rdipfl,
+          DefaultRateDiscountIdx.ProvidentFundLoan))
+    this.props.setLoanData(RateDiscountIdxOtherLoan,
+        Util.getNumber3(this.$router.params.rdiol,
+          DefaultRateDiscountIdx.OtherLoan))
   }
 
   componentWillMount () { }
@@ -214,9 +246,14 @@ export default class Index extends Component {
   updateTaxRate = () => {
   }
 
+  setClientState = () => {
+    let calculatableState = this.getCalcStateForTax();
+    sCalcClient.setClientState(calculatableState)
+  }
+
   updateAll = () => {
     // FIXME, set every time?
-    sCalcClient.setClientState(this.state)
+    this.setClientState()
     if (this.updateAll.prototype.postCallback != null) {
       this.updateAll.prototype.postCallback()
     }
@@ -234,7 +271,7 @@ export default class Index extends Component {
 
   updateTotalPayment = () => {
     this.setState({
-      mTotalPayment: this.state.mTotalPrice + this.state.mTotalFee
+      mTotalPayment: Util.getNumber3default0(this.state.mTotalPrice) + this.state.mTotalFee
                       + this.state.mTotalTax,
     }, () => {
       if (this.updateTotalPayment.prototype.postCallback != null) {
@@ -249,9 +286,9 @@ export default class Index extends Component {
         + ", " + this.props.loan.mLoanData[ProvidentFundLoanTotal]
         + ", " + this.props.loan.mLoanData[OtherLoanTotal]
         )
-    let totalLoan = this.props.loan.mLoanData[CommercialLoanTotal]
-          + this.props.loan.mLoanData[ProvidentFundLoanTotal]
-          + this.props.loan.mLoanData[OtherLoanTotal]
+    let totalLoan = Util.getNumber3default0(this.props.loan.mLoanData[CommercialLoanTotal])
+          + Util.getNumber3default0(this.props.loan.mLoanData[ProvidentFundLoanTotal])
+          + Util.getNumber3default0(this.props.loan.mLoanData[OtherLoanTotal])
 
     this.props.setLoanData(AllLoanTotal, totalLoan)
 
@@ -363,7 +400,7 @@ export default class Index extends Component {
         mValueAddedTax: Number(valueAddedTax.toFixed(4)),
     }, () => {
       // mValueAddedTax may influent the calc of other tax
-      sCalcClient.setClientState(this.state)
+      this.setClientState()
       if (this.updateValueAddedTax.prototype.postCallback != null) {
         this.updateValueAddedTax.prototype.postCallback()
       }
@@ -388,7 +425,7 @@ export default class Index extends Component {
       return
     }
     // let personalIncomeTax = (webSignPrice * 0.9 - originPrice) * 0.2
-    let webSignPrice = Math.max(this.state.mOriginPrice * 10 / 9,
+    let webSignPrice = Math.max(Util.getNumber3default0(this.state.mOriginPrice) * 10 / 9,
         this.state.mOriginTaxSum)
 
     this.onWebSignPriceChanged(webSignPrice)
@@ -402,6 +439,43 @@ export default class Index extends Component {
     )
   }
 
+  getCalcStateForTax = () => {
+    return {
+      // input
+      mHouseArea: Util.getNumber3default0(this.state.mHouseArea),
+
+      mTotalPrice: Util.getNumber3default0(this.state.mTotalPrice),
+      mOriginPrice: Util.getNumber3default0(this.state.mOriginPrice),
+      mWebSignPrice: Util.getNumber3default0(this.state.mWebSignPrice),
+      mOriginTaxSum: Util.getNumber3default0(this.state.mOriginTaxSum),
+
+      /*
+      // Tax
+      mDeedTax: undefined,
+      mPersonalIncomeTax: undefined,
+      mValueAddedTax: undefined,
+      mOtherTax: undefined,
+
+      // Fee
+      mAgencyFee: undefined,
+      mLoanServiceFee: undefined,
+      mEvaluationFee: undefined,
+      mMortgageRegistrationFee: undefined,
+      mOtherFee: undefined,
+      */
+      mValueAddedTax: this.state.mValueAddedTax,
+
+      mFirstHouseRadioValue: this.state.mFirstHouseRadioValue,
+      mAboveTwoYearsRadioValue: this.state.mAboveTwoYearsRadioValue,
+      mOnlyHouseRadioValue: this.state.mOnlyHouseRadioValue,
+      mOrdinaryHouseRadioValue: this.state.mOrdinaryHouseRadioValue,
+
+      mWillInputDeedTaxManual: this.state.mWillInputDeedTaxManual,
+      mWillInputPersonalIncomeTaxManual: this.state.mWillInputPersonalIncomeTaxManual,
+      mWillInputValueAddedTaxManual: this.state.mWillInputValueAddedTaxManual,
+    }
+  }
+
   clearData = (e) => {
     this.setState({
       mFirstPayment: 0,
@@ -411,25 +485,25 @@ export default class Index extends Component {
 
       // input
       mHouseName: '',
-      mHouseArea: 0,
+      mHouseArea: undefined,
 
-      mTotalPrice: 0,
-      mOriginPrice: 0,
-      mWebSignPrice: 0,
-      mOriginTaxSum: 0,
+      mTotalPrice: undefined,
+      mOriginPrice: undefined,
+      mWebSignPrice: undefined,
+      mOriginTaxSum: undefined,
 
       // Tax
-      mDeedTax: 0,
-      mPersonalIncomeTax: 0,
-      mValueAddedTax: 0,
-      mOtherTax: 0,
+      mDeedTax: undefined,
+      mPersonalIncomeTax: undefined,
+      mValueAddedTax: undefined,
+      mOtherTax: undefined,
 
       // Fee
-      mAgencyFee: 0,
-      mLoanServiceFee: 0,
-      mEvaluationFee: 0,
-      mMortgageRegistrationFee: 0,
-      mOtherFee: 0,
+      mAgencyFee: undefined,
+      mLoanServiceFee: undefined,
+      mEvaluationFee: undefined,
+      mMortgageRegistrationFee: undefined,
+      mOtherFee: undefined,
 
       mFirstHouseRadioValue: 0,
       mAboveTwoYearsRadioValue: 0,
@@ -786,6 +860,13 @@ export default class Index extends Component {
   }
 
   onShareAppMessage = (share) => {
+    let a = ', router.params.hn: ' + this.$router.params.hn
+    a += ', typeOf(router.params.hn): ' + Util.typeOf(this.$router.params.hn)
+    a += ', router.params.tpr: ' + this.$router.params.clmp
+    a += ', typeOf(router.params.tpr): ' + Util.typeOf(this.$router.params.tpr)
+    a += ', router.params.clmp: ' + this.$router.params.clmp
+    a += ', typeOf(router.params.clmp): ' + Util.typeOf(this.$router.params.clmp)
+    Log.log('onShareAppMessage: ' + a)
     let param = Util.getParamForGenerateReport(this.state, this.props.loan.mLoanData);
     /*
     if (DEBUG)
@@ -840,6 +921,16 @@ export default class Index extends Component {
   onGetRegion (region) {
     // 参数region为选择的省市区
     Log.log(region);
+  }
+
+  getLoan = (loanType) => {
+    if (loanType == LoanType.CommercialLoan) {
+      return this.props.loan.mLoanData[CommercialLoanTotal]
+    } else if (loanType == LoanType.ProvidentFundLoan) {
+      return this.props.loan.mLoanData[ProvidentFundLoanTotal]
+    } else if (loanType == LoanType.OtherLoan) {
+      return this.props.loan.mLoanData[OtherLoanTotal]
+    }
   }
 
   render () {
@@ -1031,15 +1122,15 @@ export default class Index extends Component {
         <View className='idx-input-item-container'>
           <Text className='idx-input-title'>商贷</Text>
           <Input className='idx-input-text' type='digit' placeholder='万元'
-              disabled={!this.state.mEditable} value={this.props.loan.mLoanData[CommercialLoanTotal]} maxLength='10' onInput={this.onInputLoan.bind(this, LoanType.CommercialLoan)} />
+              disabled={!this.state.mEditable} value={this.getLoan(CommercialLoanTotal)} maxLength='10' onInput={this.onInputLoan.bind(this, LoanType.CommercialLoan)} />
           <Text className='idx-input-title2'>公积金贷款</Text>
           <Input className='idx-input-text' type='digit' placeholder='万元'
-              disabled={!this.state.mEditable} value={this.props.loan.mLoanData[ProvidentFundLoanTotal]} maxLength='10' onInput={this.onInputLoan.bind(this, LoanType.ProvidentFundLoan)} />
+              disabled={!this.state.mEditable} value={this.getLoan(ProvidentFundLoanTotal)} maxLength='10' onInput={this.onInputLoan.bind(this, LoanType.ProvidentFundLoan)} />
         </View>
         <View className='idx-input-item-container-bold'>
           <Text className='idx-input-title'>其他贷款</Text>
           <Input className='idx-input-text' type='digit' placeholder='万元'
-              disabled={!this.state.mEditable} value={this.props.loan.mLoanData[OtherLoanTotal]} maxLength='10' onInput={this.onInputLoan.bind(this, LoanType.OtherLoan)} />
+              disabled={!this.state.mEditable} value={this.getLoan(OtherLoanTotal)} maxLength='10' onInput={this.onInputLoan.bind(this, LoanType.OtherLoan)} />
           <View className='idx-input-title2-bold'>总贷款<View className='at-icon at-icon-help' onClick={this.onClickOpenTipBoxIcon.bind(this, Util.mTipBoxMessages.TotalLoan)}></View></View>
           <Text className='idx-input-text-bold'>{Util.getNumber2(this.props.loan.mLoanData[AllLoanTotal]).toFixed(2)}</Text>
         </View>
@@ -1055,7 +1146,7 @@ export default class Index extends Component {
           <View className='idx-input-title-bold'>税 + 费<View className='at-icon at-icon-help' onClick={this.onClickOpenTipBoxIcon.bind(this, Util.mTipBoxMessages.TotalTaxAndFee)}></View></View>
           <Text className='idx-input-text-bold'>{(Util.getNumber2(this.state.mTotalTax) + Util.getNumber2(this.state.mTotalFee)).toFixed(2)}</Text>
           <View className='idx-input-title2-bold'>平均单价<View className='at-icon at-icon-help' onClick={this.onClickOpenTipBoxIcon.bind(this, Util.mTipBoxMessages.AverageUnitPrice)}></View></View>
-          <Text className='idx-input-text-bold'>{((Util.getNumber2(this.state.mHouseArea) != 0 ) ? (Util.getNumber2(this.state.mTotalPayment)/Util.getNumber2(this.state.mHouseArea)) : 0).toFixed(2)}</Text>
+          <Text className='idx-input-text-bold'>{((Util.getNumber3default0(this.state.mHouseArea) != 0 ) ? (Util.getNumber2(this.state.mTotalPayment)/Util.getNumber3default0(this.state.mHouseArea)) : 0).toFixed(2)}</Text>
         </View>
         <View className='idx-input-item-container-bold'>
           <View className='idx-input-title-bold'>每月还款(元)

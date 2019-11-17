@@ -65,6 +65,7 @@ export function CityClientBase(state) {
     const valueAddedTaxRate = 0.056 / 1.05
     let valueAddedTax = 0
 
+    Log.log("bdg-this.mState.mOriginPrice: " + this.mState.mOriginPrice)
     if (this.mState.mAboveTwoYearsRadioValue == 0) { // 所有的普通住宅和非普通住宅，只要不满两年
       valueAddedTax = this.mState.mWebSignPrice * valueAddedTaxRate
     } else if (!this.mState.mOrdinaryHouseRadioValue) {

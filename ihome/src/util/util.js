@@ -14,9 +14,9 @@ export const RepaymentType = {
 }
 
 export const DefaultRateDiscountIdx = {
-  CommercialLoan: '3',
-  ProvidentFundLoan: '0',
-  OtherLoan: '3',
+  CommercialLoan: 3,
+  ProvidentFundLoan: 0,
+  OtherLoan: 3,
 }
 
 export const BaseInterestRateCommercialLoan = 4.9
@@ -67,6 +67,10 @@ export const Util = {
   isInstanceOf: function(thisVar, varType) {
     return Object.prototype.toString.call(thisVar)
             === "[object " + varType + "]"
+  },
+
+  typeOf: function(thisVar) {
+    return Object.prototype.toString.call(thisVar)
   },
 
   isString: function(thisVar) {
@@ -121,8 +125,27 @@ export const Util = {
     return (v != null && Util.isNumber(v)) ? Number(v) : ((defValue != null) ? defValue : v)
   },
 
+
+
+  isNonZeroNumber: function(v) {
+    return v != undefined && v != null && v != 0
+      && Util.isNumber(v)
+  },
+
+  getNumber3default0: function(v) {
+    return Util.getNumber3(v, 0)
+  },
+  getNumber3: function(v, defValue) {
+    return (v == undefined || v == 'undefined') ? defValue : Number(v)
+  },
+
+  // <Input> 需要有placehold显示的输入框
+  getNumber4: function(v) {
+    return (v == undefined || v == 'undefined') ? undefined : Number(v)
+  },
+
   getString: function(v, defValue) {
-    return v != null ? String(v) : ((defValue != null) ? String(defValue) : '')
+    return (v != undefined && v != 'undefined' && v == 'null') ? String(v) : ((defValue != undefined) ? String(defValue) : '')
   },
 
   getBoolean: function(v, defValue) {
@@ -153,7 +176,7 @@ export const Util = {
       + '&tpr=' + state.mTotalPrice
       + '&opr=' + state.mOriginPrice
       + '&wspr=' + state.mWebSignPrice
-      + '&lgpr=' + state.mLowestGuidePrice
+      + '&ots=' + state.mOriginTaxSum
       + '&dt=' + state.mDeedTax
       + '&pit=' + state.mPersonalIncomeTax
       + '&vat=' + state.mValueAddedTax
