@@ -45,7 +45,7 @@ export default class CalcLoan extends Component {
    * 提示和声明 navigationBarTextStyle: 'black' | 'white' 类型冲突, 需要显示声明类型
    */
   config: Config = {
-    navigationBarTitleText: '茜茜猫房贷计算',
+    navigationBarTitleText: '房鱼房贷计算',
   }
 
   constructor(props) {
@@ -772,8 +772,9 @@ export default class CalcLoan extends Component {
               <View className='cl-input-text'>
                 <Picker mode='selector' range={this.state.mDurationSelector} value={DefaultValue.LoanDuration - 1}
                      onChange={this.onDurationChanged.bind(this, loanType)} className='cl-duration-picker'>
-                  {this.getLoanDurationText(loanType)}
-                  <View className='at-icon at-icon-chevron-down'></View>
+                  <View>{this.getLoanDurationText(loanType)}
+                     <View className='at-icon at-icon-chevron-down'></View>
+                  </View>
                 </Picker>
               </View>
             </View>
@@ -789,7 +790,9 @@ export default class CalcLoan extends Component {
                 <Picker mode='selector' value={this.getRateDiscountIdx(loanType)}
                     range={this.getRateSelectorArray(loanType)}
                     onChange={this.onLoanRatePickerChanged.bind(this, loanType)} className='cl-duration-picker'>
-                  %<View className='at-icon at-icon-chevron-down'></View>
+                  <View>%
+                    <View className='at-icon at-icon-chevron-down'></View>
+                  </View>
                 </Picker>
               </View>
             </View>

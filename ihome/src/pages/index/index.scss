@@ -88,11 +88,17 @@
   font-weight: bold;
 }
 
+.idx-input-title-hn {
+  @include idx_input_title();
+  flex: 4;
+}
+
 @mixin idx_input_text(){
   flex: 3;
   flex-wrap: nowrap;
   text-align: right;
   padding-right: $item-left-right-padding;
+  font-size: 30px;
 }
 
 .idx-input-text {
@@ -107,6 +113,11 @@
 .idx-input-text-disable {
   @include idx_input_text();
   background-color: $item-border-color;
+}
+
+.idx-input-text-hn {
+  @include idx_input_text();
+  flex: 5;
 }
 
 .idx-radio-title {

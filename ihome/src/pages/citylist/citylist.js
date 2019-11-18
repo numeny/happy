@@ -45,27 +45,6 @@ export default class Citylist extends Component {
     })
   }
 
-  /*
-  getGeolocationCity = (e) => {
-    CommonFunc.getCurrCity(true)
-      .then(res => {
-        if (res.data.province.length <= 0
-            || res.data.city.length <= 0) {
-          return Promise.reject(res)
-        }
-        Log.log("CommonFunc.getCurrCity, province: "
-            + res.data.province + ", city: " + res.data.city)
-        this.setState({
-            currProv: res.data.province,
-            currCity: res.data.city,
-        })
-        this.selectHotCity(res.data.province, res.data.city)
-      }).catch(error => {
-        Log.error(error)
-      })
-  }
-  */
-
   onButtonClicked = (idx, e) => {
     if (idx == 1) {
       // 取消

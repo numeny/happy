@@ -43,7 +43,7 @@ export default class Index extends Component {
    * 提示和声明 navigationBarTextStyle: 'black' | 'white' 类型冲突, 需要显示声明类型
    */
   config: Config = {
-    navigationBarTitleText: '茜茜猫首付计算',
+    navigationBarTitleText: '房鱼首付计算',
   }
 
   constructor(props) {
@@ -931,8 +931,8 @@ export default class Index extends Component {
           <View className='idx-top-title-unit'>计算单位（万元）</View>
         </View>
         <View className='idx-input-item-container'>
-          <Text className='idx-input-title'>房屋名称</Text>
-          <Input className='idx-input-text' type='text' placeholder='名称'
+          <Text className='idx-input-title-hn'>房屋名称</Text>
+          <Input className='idx-input-text-hn' type='text' placeholder='名称'
               disabled={!this.state.mEditable} value={this.state.mHouseName} onInput={this.onInputHouseName} />
           <Text className='idx-input-title2'>面积(m2)</Text>
           <Input className='idx-input-text' type='digit' placeholder='m2'
