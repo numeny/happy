@@ -6,10 +6,10 @@ import { connect } from '@tarojs/redux'
 // import { setLoanData, setCommercialLoanTotal, setCommercialLoanMonthlyPayment, setProvidentFundLoanTotal, setProvidentFundLoanMonthlyPayment, setOtherLoanTotal, setOtherLoanMonthlyPayment, setAllLoanTotal, setAllLoanMonthlyPayment } from '../../redux/actions/loan'
 import { setLoanData } from '../../redux/actions/loan'
 import { CommercialLoanTotal, CommercialLoanMonthlyPayment, ProvidentFundLoanTotal, ProvidentFundLoanMonthlyPayment, OtherLoanTotal, OtherLoanMonthlyPayment, AllLoanTotal, AllLoanMonthlyPayment, RadioValueCommercialLoanPaymentMethod, RadioValueProvidentFundLoanPaymentMethod, RadioValueOtherLoanPaymentMethod, DurationCommercialLoan, DurationProvidentFundLoan, DurationOtherLoan, RateCommercialLoan, RateProvidentFundLoan, RateOtherLoan, RateInputManualCommercialLoan, RateInputManualProvidentFundLoan, RateInputManualOtherLoan, RateDiscountIdxCommercialLoan, RateDiscountIdxProvidentFundLoan, RateDiscountIdxOtherLoan } from '../../redux/constants/loan'
-import { DefaultValue, LoanType, RepaymentType } from '../../constants/loan'
+import { DefaultValue, LoanType, RepaymentType, DefaultRateDiscountIdx } from '../../constants/loan'
 
 import { Log } from '@util/log'
-import { Util, DefaultRateDiscountIdx } from '../../util/util'
+import { Util } from '../../util/util'
 
 // FIXIME
 // import TaroRegionPicker from '../../components/taro-region-picker/index'
@@ -90,7 +90,6 @@ export default class CalcLoan extends Component {
       mCommercialLoanRateSelector: [
         '基准利率8.5折', '基准利率9折', '基准利率9.5折',
         '基准利率(' + DefaultValue.BaseInterestRateCommercialLoan + '%)', '基准利率1.05倍', '基准利率1.1倍',
-        '基准利率(%)', '基准利率1.05倍', '基准利率1.1倍',
         '基准利率1.15倍', '基准利率1.2倍', '基准利率1.25倍',
       ],
       mCommercialLoanRateSelectorValueArray: [
@@ -101,7 +100,6 @@ export default class CalcLoan extends Component {
       mOtherLoanRateSelector: [
         '基准利率8.5折', '基准利率9折', '基准利率9.5折',
         '基准利率(' + DefaultValue.BaseInterestRateOtherLoan + '%)', '基准利率1.05倍', '基准利率1.1倍',
-        '基准利率(%)', '基准利率1.05倍', '基准利率1.1倍',
         '基准利率1.15倍', '基准利率1.2倍', '基准利率1.25倍',
       ],
       mOtherLoanRateSelectorValueArray: [
@@ -111,7 +109,6 @@ export default class CalcLoan extends Component {
       ],
       mProvidentFundLoanRateSelector: [
         '基准利率(' + DefaultValue.BaseInterestRateProvidentFundLoan + '%)', '基准利率1.05倍', '基准利率1.1倍',
-        '基准利率(%)', '基准利率1.05倍', '基准利率1.1倍',
         '基准利率1.15倍', '基准利率1.2倍', '基准利率1.25倍',
       ],
       mProvidentFundLoanRateSelectorValueArray: [
@@ -193,13 +190,15 @@ export default class CalcLoan extends Component {
         + ', RateDiscountIdxProvidentFundLoan: ' + this.props.loan.mLoanData[RateDiscountIdxProvidentFundLoan]
         + ', RateDiscountIdxOtherLoan: ' + this.props.loan.mLoanData[RateDiscountIdxOtherLoan]
         )
+    /*
+    */
 
 
     if (!this.isPropsChanged(nextProps)) {
       return
     }
 
-    Log.log('calc_loan, componentWillReceiveProps--------: 2')
+    // Log.log('calc_loan, componentWillReceiveProps--------: 2')
     this.startCalc()
     // this.updateLoanTotalResultForProps(nextProps)
   }
@@ -703,7 +702,7 @@ export default class CalcLoan extends Component {
       duration = this.props.loan.mLoanData[DurationOtherLoan]
     } else {
       console.error('[Error] getLoanDuration, no loanType!')
-      duration = 25
+      duration = DefaultValue.LoanDuration
     }
     return duration
   }
@@ -771,7 +770,7 @@ export default class CalcLoan extends Component {
                   onInput={this.onInputLoan.bind(this, loanType)} />
               <Text className='cl-input-title2'>贷款年限</Text>
               <View className='cl-input-text'>
-                <Picker mode='selector' range={this.state.mDurationSelector} value='24'
+                <Picker mode='selector' range={this.state.mDurationSelector} value={DefaultValue.LoanDuration - 1}
                      onChange={this.onDurationChanged.bind(this, loanType)} className='cl-duration-picker'>
                   {this.getLoanDurationText(loanType)}
                   <View className='at-icon at-icon-chevron-down'></View>
