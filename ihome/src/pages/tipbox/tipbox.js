@@ -100,7 +100,7 @@ export default class Tipbox extends Component {
           // AverageUnitPrice
           10: {title: '关于平均单价',
               contents: [
-                '本计算器按以下公式计算平均单价：',
+                '本计算器按以下公式计算平均单价(元/m2)：',
                 '平均单价 = 总房款 ÷ 房屋面积',
                 '总房款 = 价格 + 总费用 + 总税款',
                 '总费用 = 中介费 + 贷款费用 + 评估费 + 其他费用',
