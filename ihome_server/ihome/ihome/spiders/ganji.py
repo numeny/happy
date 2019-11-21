@@ -2,7 +2,19 @@ import scrapy
 import logging
 import time
 
-logger = logging.getLogger('QuotesSpider')
+import signal
+
+def handler(signum, frame):
+    print "will exit!"
+    exit(0)
+
+signal.signal(signal.SIGINT, handler)
+
+logger = logging.getLogger('GanjiSpider')
+
+REQUEST_DURATION = 30
+IsDebugOneRecord = True
+SAVE_FILE_PATH = '/tmp/file/'
 
 class GanjiSpider(scrapy.Spider):
     name = "ganji"
@@ -10,6 +22,8 @@ class GanjiSpider(scrapy.Spider):
     headers = {
         "Referer": "http://bj.ganji.com/",
     }
+
+    mUrl = ''
 
     def start_requests(self):
         urls = [
@@ -20,61 +34,67 @@ class GanjiSpider(scrapy.Spider):
              # 'http://bj.ganji.com/ershoufang/40221271863197x.shtml?ding=https://short.58.com/zd_p/6bae7902-aeb8-47e4-97e1-021e4e74921b/?target=dc-16-xgk_psfegvimob_54337307698720q-feykn&end=end',
         ]
         for url in urls:
-            # time.sleep(30)
-            logger.warning('logger.warning, start_requests, start request url ');
-            logger.warning('start_requests, start request url %s' % url);
-            self.log('start_requests, start request url %s' % url)
+            # time.sleep(REQUEST_DURATION)
+            logger.debug('logger.debug, start_requests, start request url ');
+            logger.debug('start_requests, start request url %s' % url);
+            logger.debug('start_requests, start request url %s' % url)
             yield scrapy.Request(url=url, headers=self.headers,  callback=self.parseCityToZone)
 
     def parseCityToZone(self, response):
         '''
-        page = response.url.split("/")[-2]
-        filename = 'quotes-%s.html' % page
         '''
-        filename = '/tmp/city'
         new_urls = response.xpath('//dd/div/ul[@class="f-clear"]/li/a/@href').extract()
-        with open(filename, 'wb') as f:
+        with open(SAVE_FILE_PATH + 'city', 'a+') as f:
             idx = 0
-            for i in new_urls:
-                self.log('parseCityToZone, time.sleep(30)')
-                time.sleep(30)
-                j = i
-                if i.startswith('\/\/'):
-                    j = 'http' + i 
-                f.write(j)
-                logger.warning('parseCityToZone, start request url %s' % j);
-                f.write("\n")
+            for url in new_urls:
+                if url.startswith('//'):
+                    url = 'http:' + url
+                logger.debug('parseCityToZone-1, start request url %s' % url);
                 idx = idx + 1
-                if idx == 1:
-                    self.log('parseCityToZone, start request url %s' % j)
-                    yield scrapy.Request(url=j, headers=self.headers, callback=self.parseZonePage)
-        self.log('Saved file %s' % filename)
+                # first record is itself
+                if not IsDebugOneRecord and idx != 1 or IsDebugOneRecord and idx == 2:
+                # if idx == 2:
+                    f.write(url)
+                    f.write("\n")
+                    logger.debug('parseCityToZone-2, time.sleep(30) , start %d request url %s' % (idx, url))
+                    time.sleep(REQUEST_DURATION)
+                    yield scrapy.Request(url=url, headers=self.headers, callback=self.parseZonePage)
 
     def parseZonePage(self, response):
-        filename = '/tmp/zone'
         new_urls = response.xpath('//dl/dd[@class="dd-item title"]/a/@href').extract()
-        with open(filename, 'wb') as f:
+        with open(SAVE_FILE_PATH + 'zone', 'a+') as f:
             idx = 0
-            for i in new_urls:
-                time.sleep(30)
-                if i.startswith('\/\/'):
-                    i = 'http' + i 
-                f.write(i)
-                f.write("\n")
+            for url in new_urls:
+                if url.startswith('//'):
+                    url = 'http:' + url
                 idx = idx + 1
-                if idx == 1:
-                    self.log('parseZonePage, time.sleep(30)')
-                    self.log('parseZonePage, start request url %s' % i)
-                    yield scrapy.Request(url=i, headers=self.headers, callback=self.parseHouseDetailPage)
-        self.log('Saved file %s' % filename)
+                logger.debug('parseZonePage-1, start %d request url %s' % (idx, url))
+                if not IsDebugOneRecord or IsDebugOneRecord and (idx == 1 or idx == 2):
+                    f.write(url)
+                    f.write("\n")
+                    logger.debug('parseZonePage-2, time.sleep(30) , start %d request url %s' % (idx, url))
+                    time.sleep(REQUEST_DURATION)
+                    yield scrapy.Request(url=url, headers=self.headers, callback=self.parseHouseDetailPage)
+
+        next_page_urls = response.xpath('//div[@class="f-page"]/div/div/a[@class="next"]/@href').extract()
+        with open(SAVE_FILE_PATH + 'next_page', 'a+') as f:
+            for url in next_page_urls:
+                if url.startswith('//'):
+                    url = 'http:' + url
+                logger.debug('parseCityToZone-1-next-page, start request url %s' % url);
+                idx = idx + 1
+                if not IsDebugOneRecord or IsDebugOneRecord and idx == 1:
+                    f.write(url)
+                    f.write("\n")
+                    logger.debug('parseCityToZone-2-next-page, time.sleep(30) , start %d request url %s' % (idx, url))
+                    time.sleep(REQUEST_DURATION)
+                    yield scrapy.Request(url=url, headers=self.headers, callback=self.parseZonePage)
 
     def parseHouseDetailPage(self, response):
-        filename = '/tmp/house'
         phones = response.xpath('//div/div[@class="phone"]/a/text()').extract()
-        with open(filename, 'wb') as f:
-            for i in phones:
+        with open(SAVE_FILE_PATH + 'house', 'a+') as f:
+            for phone in phones:
                 # time.sleep(30)
-                f.write(i)
+                f.write(phone)
                 f.write("\n")
-                self.log('parseHouseDetailPage, parsed phone: %s' % i)
-        self.log('Saved file %s' % filename)
+                logger.debug('parseHouseDetailPage, parsed phone: %s' % phone)
