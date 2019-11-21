@@ -92,9 +92,15 @@ class GanjiSpider(scrapy.Spider):
 
     def parseHouseDetailPage(self, response):
         phones = response.xpath('//div/div[@class="phone"]/a/text()').extract()
+        name = response.xpath('//div[@class="card-user"]/div/div/div[@class="name"]/a/text()').extract()
+        company = response.xpath('//div[@class="user-info-top"]/div[@class="user_other"]/span[@class="company"]/text()').extract()
         with open(SAVE_FILE_PATH + 'house', 'a+') as f:
             for phone in phones:
                 # time.sleep(30)
+                f.write(name)
+                f.write("\n")
                 f.write(phone)
+                f.write("\n")
+                f.write(company)
                 f.write("\n")
                 logger.debug('parseHouseDetailPage, parsed phone: %s' % phone)
