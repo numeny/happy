@@ -404,9 +404,6 @@ export default class CalcLoan extends Component {
     } else {
       console.error('[Error] No this loan type!')
     }
-    console.log('picker发送选择改变，携带值为' , e.detail.value
-        + ', rateDiscount: ' + rateDiscount
-        + ', interestRate: ' + interestRate)
     this.startCalc()
   }
 

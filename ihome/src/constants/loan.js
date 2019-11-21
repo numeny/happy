@@ -3,9 +3,9 @@ import Taro from '@tarojs/taro';
 export const DefaultValue = {
   LoanDuration: 20,
 
-  BaseInterestRateCommercialLoan: 4.85,
+  BaseInterestRateCommercialLoan: 4.8,
   BaseInterestRateProvidentFundLoan: 3.25,
-  BaseInterestRateOtherLoan: 4.9,
+  BaseInterestRateOtherLoan: 4.8,
 }
 
 export const DefaultRateDiscountIdx = {

@@ -7,9 +7,6 @@ export function CityClient(state) {
 
   CityClient.prototype.setClientState = function(state) {
     this.mState = state
-    console.error('CityClient.prototype.setClientState: '
-        + state + ", this.mState: " + this.mState
-        );
   }
 
   CityClient.prototype.getDeedTaxHelpIndex = function() {
