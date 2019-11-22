@@ -19,7 +19,7 @@ NEWSPIDER_MODULE = 'ihome.spiders'
 #USER_AGENT = 'ihome (+http://www.yourdomain.com)'
 
 # Obey robots.txt rules
-ROBOTSTXT_OBEY = True
+ROBOTSTXT_OBEY = False
 
 # LOG_LEVEL = 'WARNING'
 LOG_LEVEL = 'DEBUG'
