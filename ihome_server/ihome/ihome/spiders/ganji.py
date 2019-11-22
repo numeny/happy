@@ -1,6 +1,7 @@
 import scrapy
 import logging
 import time
+import json
 
 import signal
 
@@ -13,7 +14,10 @@ signal.signal(signal.SIGINT, handler)
 logger = logging.getLogger('GanjiSpider')
 
 REQUEST_DURATION = 30
-IsDebugOneRecord = True
+# avoid two request sent simutaniously in parseCityToZone and parseZonePage
+REQUEST_DURATION_1 = 39
+REQUEST_DURATION_2 = 59
+IsDebugOneRecord = False
 SAVE_FILE_PATH = '/tmp/file/'
 
 class GanjiSpider(scrapy.Spider):
@@ -57,7 +61,7 @@ class GanjiSpider(scrapy.Spider):
                     f.write(url)
                     f.write("\n")
                     logger.debug('parseCityToZone-2, time.sleep(30) , start %d request url %s' % (idx, url))
-                    time.sleep(REQUEST_DURATION)
+                    time.sleep(REQUEST_DURATION_1)
                     yield scrapy.Request(url=url, headers=self.headers, callback=self.parseZonePage)
 
     def parseZonePage(self, response):
@@ -73,7 +77,7 @@ class GanjiSpider(scrapy.Spider):
                     f.write(url)
                     f.write("\n")
                     logger.debug('parseZonePage-2, time.sleep(30) , start %d request url %s' % (idx, url))
-                    time.sleep(REQUEST_DURATION)
+                    time.sleep(REQUEST_DURATION_2)
                     yield scrapy.Request(url=url, headers=self.headers, callback=self.parseHouseDetailPage)
 
         next_page_urls = response.xpath('//div[@class="f-page"]/div/div/a[@class="next"]/@href').extract()
@@ -87,7 +91,7 @@ class GanjiSpider(scrapy.Spider):
                     f.write(url)
                     f.write("\n")
                     logger.debug('parseCityToZone-2-next-page, time.sleep(30) , start %d request url %s' % (idx, url))
-                    time.sleep(REQUEST_DURATION)
+                    time.sleep(REQUEST_DURATION_2)
                     yield scrapy.Request(url=url, headers=self.headers, callback=self.parseZonePage)
 
     def parseHouseDetailPage(self, response):
@@ -96,11 +100,13 @@ class GanjiSpider(scrapy.Spider):
         company = response.xpath('//div[@class="user-info-top"]/div[@class="user_other"]/span[@class="company"]/text()').extract()
         with open(SAVE_FILE_PATH + 'house', 'a+') as f:
             for phone in phones:
+                data = {}
+                data['phone'] = phone
+                data['name'] = name
+                data['company'] = company
                 # time.sleep(30)
-                f.write(name)
+                data_str = json.dumps(data)
+                logger.debug('parseHouseDetailPage, parsed phone: %s' % data_str)
+                f.write(data_str)
                 f.write("\n")
-                f.write(phone)
-                f.write("\n")
-                f.write(company)
-                f.write("\n")
-                logger.debug('parseHouseDetailPage, parsed phone: %s' % phone)
+                f.flush()
