@@ -11,43 +11,38 @@ def handler(signum, frame):
 
 signal.signal(signal.SIGINT, handler)
 
-logger = logging.getLogger('GanjiSpider')
+logger = logging.getLogger('FangtianxiaSpider')
 
 REQUEST_DURATION = 30
 # avoid two request sent simutaniously in parseCityToZone and parseZonePage
 REQUEST_DURATION_1 = 39
-REQUEST_DURATION_2 = 59
-IsDebugOneRecord = False
+REQUEST_DURATION_2 = 5
+IsDebugOneRecord = True
 SAVE_FILE_PATH = '/tmp/file/'
 
-class GanjiSpider(scrapy.Spider):
-    name = "ganji"
+class FangtianxiaSpider(scrapy.Spider):
+    name = "fang"
 
     headers = {
-        "Referer": "http://bj.ganji.com/",
+        "Referer": "https://m.fang.com/esf/bj/",
     }
 
     mUrl = ''
 
     def start_requests(self):
         urls = [
-             # 'http://bj.ganji.com/ershoufang/40064971033632x.shtml?ding=https://short.58.com/zd_p/ff55cdd7-9aa4-44a9-8b23-9f1e0b96b84f/?target=dc-16-xgk_psfegvimob_54495207488983q-feykn&end=end',
-             # 'http://bj.ganji.com/changping/ershoufang/',
-             'http://bj.ganji.com/ershoufang/',
-             # 'http://bj.ganji.com/chaoyang/ershoufang/',
-             # 'http://bj.ganji.com/ershoufang/40221271863197x.shtml?ding=https://short.58.com/zd_p/6bae7902-aeb8-47e4-97e1-021e4e74921b/?target=dc-16-xgk_psfegvimob_54337307698720q-feykn&end=end',
+            # 'https://m.fang.com/esf/bj/FAGT_440511869.html?listtype=1&listsub=2',
+            'https://m.fang.com/esf/bj_12/?purpose=%E4%BD%8F%E5%AE%85',
         ]
         for url in urls:
             # time.sleep(REQUEST_DURATION)
             logger.debug('logger.debug, start_requests, start request url ');
-            logger.debug('start_requests, start request url %s' % url);
             logger.debug('start_requests, start request url %s' % url)
-            yield scrapy.Request(url=url, headers=self.headers,  callback=self.parseCityToZone)
+            yield scrapy.Request(url=url, headers=self.headers,  callback=self.parseZonePage)
 
+    '''
     def parseCityToZone(self, response):
-        '''
-        '''
-        new_urls = response.xpath('//dd/div/ul[@class="f-clear"]/li/a/@href').extract()
+        logger.debug('parseCityToZone-2, time.sleep(30) , start request phone %s' % (phone))
         with open(SAVE_FILE_PATH + 'city', 'a+') as f:
             idx = 0
             for url in new_urls:
@@ -63,9 +58,10 @@ class GanjiSpider(scrapy.Spider):
                     logger.debug('parseCityToZone-2, time.sleep(30) , start %d request url %s' % (idx, url))
                     time.sleep(REQUEST_DURATION_1)
                     yield scrapy.Request(url=url, headers=self.headers, callback=self.parseZonePage)
+    '''
 
     def parseZonePage(self, response):
-        new_urls = response.xpath('//dl/dd[@class="dd-item title"]/a/@href').extract()
+        new_urls = response.xpath('//ul[@id="content"]/li/a[@class="listtype"]/@href').extract()
         with open(SAVE_FILE_PATH + 'zone', 'a+') as f:
             idx = 0
             for url in new_urls:
@@ -80,6 +76,7 @@ class GanjiSpider(scrapy.Spider):
                     time.sleep(REQUEST_DURATION_2)
                     yield scrapy.Request(url=url, headers=self.headers, callback=self.parseHouseDetailPage)
 
+        '''
         next_page_urls = response.xpath('//div[@class="f-page"]/div/div/a[@class="next"]/@href').extract()
         with open(SAVE_FILE_PATH + 'next_page', 'a+') as f:
             for url in next_page_urls:
@@ -93,14 +90,20 @@ class GanjiSpider(scrapy.Spider):
                     logger.debug('parseCityToZone-2-next-page, time.sleep(30) , start %d request url %s' % (idx, url))
                     time.sleep(REQUEST_DURATION_2)
                     yield scrapy.Request(url=url, headers=self.headers, callback=self.parseZonePage)
+        '''
 
     def parseHouseDetailPage(self, response):
-        phones = response.xpath('//div/div[@class="phone"]/a/text()').extract()
-        name = response.xpath('//div[@class="card-user"]/div/div/div[@class="name"]/a/text()').extract()
-        company = response.xpath('//div[@class="user-info-top"]/div[@class="user_other"]/span[@class="company"]/text()').extract()
+        phones = response.xpath('//div[@class="floatTel"]/dl/dd/a/@href').extract()
+        name = response.xpath('//div[@class="floatTel"]/dl/dt/p[@class="p1"]/text()').extract()
+        company = response.xpath('//div[@class="floatTel"]/dl/dt/p[@class="p2"]/text()').extract()
         with open(SAVE_FILE_PATH + 'house', 'a+') as f:
             for phone in phones:
+                if phone.startswith('javascript'):
+                    continue
                 data = {}
+                tel_prefix = 'tel:'
+                if phone.startswith(tel_prefix):
+                    phone = phone[len(tel_prefix) : (len(phone) - 1)]
                 data['phone'] = phone
                 data['name'] = name
                 data['company'] = company
