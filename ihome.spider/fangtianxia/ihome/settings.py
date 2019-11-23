@@ -19,12 +19,10 @@ NEWSPIDER_MODULE = 'ihome.spiders'
 #USER_AGENT = 'ihome (+http://www.yourdomain.com)'
 
 # Obey robots.txt rules
-ROBOTSTXT_OBEY = True
+ROBOTSTXT_OBEY = False
 
 # LOG_LEVEL = 'WARNING'
 LOG_LEVEL = 'DEBUG'
-
-USER_AGENT = 'Mozilla/5.0 (Linux;) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/65.0.3325.181 Mobile Safari/537.36'
 
 # Configure maximum concurrent requests performed by Scrapy (default: 16)
 #CONCURRENT_REQUESTS = 32
