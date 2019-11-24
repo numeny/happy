@@ -5,11 +5,16 @@
 # See documentation in:
 # https://doc.scrapy.org/en/latest/topics/spider-middleware.html
 
-from scrapy import signals
-from selenium import webdriver
+import logging
+import re
+import selenium
 import time
-from scrapy.http.response.html import HtmlResponse
 
+from scrapy import signals
+from scrapy.http.response.html import HtmlResponse
+from selenium import webdriver
+
+logger = logging.getLogger('IhomeDownloaderMiddleware')
 
 class IhomeSpiderMiddleware(object):
     # Not all methods need to be defined. If a method is not defined,
@@ -94,13 +99,13 @@ class IhomeDownloaderMiddleware(object):
         # chrome_options.add_argument("--headless")
         # 执行js滚动浏览器窗口到底部
         self.driver.execute_script(js)
-        time.sleep(3)
+        time.sleep(2)
       
     def closeDownloadAppWindow(self):
         try:
             tags_btn = self.driver.find_element_by_xpath("//div[@class='main']/div/div/p[@class='goOn']")
             tags_btn.click()
-            time.sleep(3)
+            # time.sleep(1)
         except:
             pass
 
@@ -108,17 +113,46 @@ class IhomeDownloaderMiddleware(object):
         try:
             tags_btn = self.driver.find_element_by_xpath("//div[@class='main']/div[@id='drag']/span")
             tags_btn.click()
-            time.sleep(3)
+            time.sleep(2)
+            logger.debug('bdg, clickLoadMoreView ! OK');
         except:
+            logger.debug('bdg, clickLoadMoreView ! No Element');
             pass
 
+    def hasLoadMoreView(self):
+        logger.debug('bdg, hasLoadMoreView start');
+        try:
+            tags_btn = self.driver.find_element_by_xpath("//div[@class='main']/div[@id='drag' and @style='display: none;']/span")
+        except selenium.common.exceptions.NoSuchElementException:
+            try:
+                tags_btn = self.driver.find_element_by_xpath("//div[@class='main']/div[@id='drag']/span")
+            except selenium.common.exceptions.NoSuchElementException:
+                logger.debug('bdg, hasLoadMoreView-1 False');
+                return False
+            except Exception:
+                logger.debug('bdg, hasLoadMoreView-2 False');
+                return False
+            if tags_btn != None:
+                logger.debug('bdg, hasLoadMoreView-9 True');
+                return True
+            else:
+                logger.debug('bdg, hasLoadMoreView-4 False');
+                return False
+        else:
+            logger.debug('bdg, hasLoadMoreView-3 False');
+            return False
+
     def loadAllData(self):
+        logger.debug('bdg, loadAllData start');
         self.closeDownloadAppWindow()
         self.clickLoadMoreView()
         self.closeDownloadAppWindow()
-        for idx in range(1, 5):
+        for idx in range(1, 100):
+            logger.debug('bdg, loadAllData, scroll idx %s' % idx);
             self.scrollToBottom()
             self.closeDownloadAppWindow()
+            if not self.hasLoadMoreView():
+                break
         '''
         '''
 
@@ -132,9 +166,12 @@ class IhomeDownloaderMiddleware(object):
         # - or return a Request object
         # - or raise IgnoreRequest: process_exception() methods of
         #   installed downloader middleware will be called
-        self.driver.get(request.url)
-        time.sleep(5)
 
+        # 'd1c2652' in 'https://m.fang.com/agent/bj/d1c2652/'
+        logger.debug('bdg, start_requests, start request url %s' % request.url);
+        if re.search(r'd[0-9]+c[0-9]+', request.url) == None:
+            return None
+        logger.debug('bdg, start_requests, start request continuely url %s' % request.url);
         self.driver.get(request.url)
         time.sleep(3)
 

@@ -58,9 +58,9 @@ DOWNLOAD_DELAY = 2
 
 # Enable or disable downloader middlewares
 # See https://doc.scrapy.org/en/latest/topics/downloader-middleware.html
-#DOWNLOADER_MIDDLEWARES = {
-#    'ihome.middlewares.IhomeDownloaderMiddleware': 543,
-#}
+DOWNLOADER_MIDDLEWARES = {
+    'ihome.middlewares.IhomeDownloaderMiddleware': 543,
+}
 
 # Enable or disable extensions
 # See https://doc.scrapy.org/en/latest/topics/extensions.html
