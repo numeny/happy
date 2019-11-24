@@ -1,12 +1,13 @@
 import json
 
-SAVE_FILE_PATH='/Users/macs/tmp/file/'
-FILE_NAME='agents.1'
+SAVE_FILE_PATH='./'
+FILE_NAME='agents_bj'
 
 class DataHandler():
     def __init__(self):
         self.phones_seen = set()
         self.handledData = []
+        self.handlAllData()
 
     def handlAllData(self):
         allData = []
@@ -18,8 +19,9 @@ class DataHandler():
                 rec_dict = json.loads(line)
                 if 'phone' in rec_dict:
                     if rec_dict['phone'] in self.phones_seen:
-                        print('[Warning] Drop line [%d], phone: %s' % (idx, rec_dict['phone']))
-                        print(rec_dict)
+                        # print('[Warning] Drop line [%d], phone: %s' % (idx, rec_dict['phone']))
+                        # print(rec_dict)
+                        pass
                     else:
                         self.phones_seen.add(rec_dict['phone'])
                         self.handledData.append(rec_dict)
@@ -55,7 +57,6 @@ class DataHandler():
                 print('[Error]line %d has no key of "phone"!' % idx)
 
 handler = DataHandler()
-handler.handlAllData()
 # handler.printAllPhones()
-handler.printAllHandledData(True)
-# handler.printAllHandledData2('朝阳')
+# handler.printAllHandledData(True)
+handler.printAllHandledData2('海淀')
