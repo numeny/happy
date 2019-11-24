@@ -4,7 +4,7 @@ import { CommercialLoanTotal, CommercialLoanMonthlyPayment, ProvidentFundLoanTot
 
 export const Util = {
 
-  appTitle: '茜茜猫首付计算神器',
+  appTitle: '房鱼首付计算器',
 
   mTipBoxMessages : {
     DeedTax: 1,
