@@ -21,8 +21,7 @@ import { DefaultValue, DefaultRateDiscountIdx, LoanType } from '../../constants/
 
 import "../../../node_modules/taro-ui/dist/style/components/icon.scss";
 
-import namedPng from '@images/index/1.jpeg'
-import namedVideo from '@res/video/1.mp4'
+import namedPng from '../../assets/help/shared.png'
 
 let sCalcClient = null
 
@@ -923,6 +922,14 @@ export default class Index extends Component {
 
     return (
       <View className='idx-top-container'>
+      <View className='idx-help-mask-container'>
+        <Image src={namedPng} className='idx-help-img' />
+        <View className='idx-help-view-button-container'>
+           <Button className='idx-button-item' type='primary' >清空数据</Button>
+           <Button className='idx-button-item' type='primary'>分享结果</Button>
+         </View>
+      </View>
+      <View className='idx-top-container'>
         <View className='idx-top-item-container'>
         <View className='idx-top-title-container'>
           <View className='idx-top-title-city' onClick={this.onSelectCity}>{this.state.mCurrCity}
@@ -1145,6 +1152,7 @@ export default class Index extends Component {
                   </View>)}
         </View>
 
+      </View>
       </View>
     )
   }
