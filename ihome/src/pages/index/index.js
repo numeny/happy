@@ -21,7 +21,8 @@ import { DefaultValue, DefaultRateDiscountIdx, LoanType } from '../../constants/
 
 import "../../../node_modules/taro-ui/dist/style/components/icon.scss";
 
-import namedPng from '../../assets/help/shared.png'
+import ImgShared from '../../assets/help/shared.png'
+import ImgArrow from '../../assets/help/arrow.png'
 
 let sCalcClient = null
 
@@ -73,6 +74,7 @@ export default class Index extends Component {
       ],
 
       mEditable: true,
+      mShowHelpMaskView: false,
 
       mCurrProvince: Util.getString(this.$router.params.currProv, '北京市'),
       mCurrCity: Util.getString(this.$router.params.currCity, '北京市'),
@@ -201,6 +203,21 @@ export default class Index extends Component {
     this.props.setLoanData(RateDiscountIdxOtherLoan,
         Util.getNumber3(this.$router.params.rdiol,
           DefaultRateDiscountIdx.OtherLoan))
+
+    Taro.getStorage({ key: 'hasShownHelpMaskView' })
+        .then(res => {
+          Log.log(res.data)
+          if (res.data) {
+            return
+          }
+          this.setState({
+            mShowHelpMaskView: true,
+          })
+        }).catch(error => {
+          this.setState({
+            mShowHelpMaskView: true,
+          })
+        })
   }
 
   componentWillMount () { }
@@ -895,6 +912,14 @@ export default class Index extends Component {
     this.updateAll();
   }
 
+  onCloseHelpMaskView = (e) => {
+    Taro.setStorage({ key: 'hasShownHelpMaskView', data: true })
+      .then(res => Log.log(res))
+    this.setState({
+      mShowHelpMaskView: false,
+    })
+  }
+
   onGetRegion (region) {
     // 参数region为选择的省市区
     Log.log(region);
@@ -922,14 +947,19 @@ export default class Index extends Component {
 
     return (
       <View className='idx-top-container'>
-      <View className='idx-help-mask-container'>
-        <Image src={namedPng} className='idx-help-img' />
-        <View className='idx-help-view-button-container'>
-           <Button className='idx-button-item' type='primary' >清空数据</Button>
-           <Button className='idx-button-item' type='primary'>分享结果</Button>
-         </View>
-      </View>
-      <View className='idx-top-container'>
+        {this.state.mShowHelpMaskView &&
+          <View className='idx-help-mask-container'>
+            <View className='at-icon at-icon-close idx-mask-icon-close'
+              onClick={this.onCloseHelpMaskView}>
+            </View>
+            <Image src={ImgShared} className='idx-mask-img-text' />
+            <Image src={ImgArrow} className='idx-mask-arrow' />
+            <View className='idx-mask-view-button-container'>
+               <Button className='idx-button-item' type='primary' >清空数据</Button>
+               <Button className='idx-button-item' type='primary' open-type='share'>分享结果</Button>
+            </View>
+          </View>}
+      <View>
         <View className='idx-top-item-container'>
         <View className='idx-top-title-container'>
           <View className='idx-top-title-city' onClick={this.onSelectCity}>{this.state.mCurrCity}

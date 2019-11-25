@@ -153,24 +153,28 @@
   top: 0px;
   left: 0px;
   z-index: 99;
+  text-align: center;
 }
 
-.idx-help-view-button-container {
+.idx-mask-icon-close {
+  z-index: 99;
+  padding: 70px;
+  color: #FFF;
+  margin-left: 580px;
+}
+
+.idx-mask-img-text {
+  height: 200px;
+}
+
+.idx-mask-arrow {
+  width: 200px;
+  height: 200px;
+}
+
+.idx-mask-view-button-container {
   display: flex;
   flex-flow: row nowrap;
   align-items: center;
-  width: 100%;
-  height: 100%;
-  bottom: 90px;
-  left: 0px;
-  margin: $top-view-margin;
-}
-
-.idx-help-img {
-  top: 100px;
-  left: 0px;
-  width: 100%;
-  height: 200px;
-  text-align: center;
-  margin: $top-view-margin;
+  margin: 100px $top-view-margin;
 }

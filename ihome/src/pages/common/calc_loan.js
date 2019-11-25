@@ -827,7 +827,6 @@ export default class CalcLoan extends Component {
         {this.state.mEditable ?
            (<View className='cl-button-container'>
               <Button className='cl-button-item' type='primary' onClick={this.clearData}>清空数据</Button>
-              <Button className='cl-button-item' type='primary' onClick={this.startCalc}>开始计算</Button>
             </View>)
               : (<View className='cl-button-container'>
                     <Button className='cl-button-item' type='primary' onClick={this.recaculate}>重新计算</Button>
