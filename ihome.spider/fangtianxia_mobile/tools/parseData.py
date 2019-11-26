@@ -57,7 +57,7 @@ class DataHandler():
         for idx, line in enumerate(self.handledData):
             if 'phone' in line:
                 if phone_only:
-                    print(line['phone'])
+                    print(line['phone'].encode('utf8'))
                 else:
                     print(line)
             else:
