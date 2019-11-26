@@ -51,15 +51,16 @@ export default class PageFooter extends Component {
           </Text>
         )}
         </View>)
-
-    return (
-      <View className='pagefooter-top-view'>
+    /*
         {this.state.stateShowAboutMenu && menuViews}
-        <View className='copyright-container'>
-          Copyright@老玩童 All Rights Reserved
-        </View>
         <View className='copyright-container' onClick={this.onTest}>
           京ICP备xxxxxxxxx号 京公网安备xxxxxxxxxx号
+        </View>
+     */
+    return (
+      <View className='pagefooter-top-view'>
+        <View className='copyright-container'>
+          Copyright@老玩童 All Rights Reserved
         </View>
       </View>
     )

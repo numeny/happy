@@ -3,10 +3,7 @@ import Taro, { Component } from '@tarojs/taro'
 import { WebView } from '@tarojs/components'
 
 export default class MywebView extends Component {
-  componentWillMount () {
-    // FIXME
-    Taro.showToast({title: "componentWillMount: " + this.$router.params.url})
-  }
+  componentWillMount () {}
   render () {
     return (
       <WebView src={this.$router.params.url} />

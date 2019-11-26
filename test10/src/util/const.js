@@ -7,6 +7,7 @@ const DEF_AVATAR = "/avatar.png"
 const DEF_LOGO = "/logo.png"
 
 // FIXME
+// image server should not the same with data server
 export const IMG_SERVER_HOST = HOST
 
 export const IMGS_ROOT_PATH = IMG_SERVER_HOST + IMAGES_PATH + '/'
