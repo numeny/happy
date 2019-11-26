@@ -51,6 +51,7 @@ class FangPeopleSpider(scrapy.Spider):
         if not os.path.exists(SAVE_FILE_PATH):
             os.makedirs(SAVE_FILE_PATH)
 
+        self.city_file = open(SAVE_FILE_PATH + 'cities', 'a+');
         self.zone_file = open(SAVE_FILE_PATH + 'zones', 'a+');
         self.agent_file = open(SAVE_FILE_PATH + 'agents', 'a+');
 
@@ -90,6 +91,15 @@ class FangPeopleSpider(scrapy.Spider):
             if len(city) == 0 or len(city_code) == 0:
                 continue
             logger.debug('parseCities-1, city: %s, %s' % (city, city_code))
+
+            data = {}
+            data['city'] = city.encode('utf8')
+            data['city_code'] = city_code.encode('utf8')
+            data_str = json.dumps(data)
+            self.city_file.write(data_str.encode('utf8'))
+            self.city_file.write("\n")
+            self.city_file.flush()
+
             if not IsDebugOneRecord or IsDebugOneRecord and (idx == 0):
                 sleepRandom()
                 yield scrapy.Request(url=self.mAgentBaseUrl + city_code, headers=self.headers,  callback=self.parseCityToZone, meta={'city': city, 'city_code': city_code})

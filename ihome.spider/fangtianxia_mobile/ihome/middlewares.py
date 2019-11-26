@@ -170,10 +170,10 @@ class IhomeDownloaderMiddleware(object):
         #   installed downloader middleware will be called
 
         # 'd1c2652' in 'https://m.fang.com/agent/bj/d1c2652/'
-        logger.debug('bdg, start_requests, start request url %s' % request.url);
+        logger.debug('bdg, process_request, start request url %s' % request.url);
         if re.search(r'd[0-9]+c[0-9]+', request.url) == None:
             return None
-        logger.debug('bdg, start_requests, start request continuely url %s' % request.url);
+        logger.debug('bdg, process_request, start request continuely url %s' % request.url);
         self.driver.get(request.url)
         time.sleep(3)
 
