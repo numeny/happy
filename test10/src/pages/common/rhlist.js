@@ -10,15 +10,11 @@ import { SERVER_HOST, IMGS_ROOT_PATH, DEFAULT_IMG } from '@util/const'
 import { CommonFunc } from '@util/common_func'
 import { ErrorCode_NotLogin } from '@util/error_code'
 import { Util } from '../../util/util'
+import { RHLIST_TYPE_NONE, RHLIST_TYPE_CLASSIFY, RHLIST_TYPE_SEARCH, RHLIST_TYPE_FAVORIT } from '../../util/const_internal'
 import FavIcon from '../common/favicon'
 
 import { connect } from '@tarojs/redux'
 import { update, addFavList, delFavList } from '../../actions/counter'
-
-export const RHLIST_TYPE_NONE = -1
-export const RHLIST_TYPE_CLASSIFY = 0
-export const RHLIST_TYPE_SEARCH = 1
-export const RHLIST_TYPE_FAVORIT = 2
 
 @connect((state) => {
   return { prop_counter: state.counter }

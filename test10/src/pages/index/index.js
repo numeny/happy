@@ -15,7 +15,7 @@ import { CommonFunc } from '../../util/common_func'
 import { Util } from '../../util/util'
 
 import PageFooter from '../common/pagefooter'
-import { RHLIST_TYPE_CLASSIFY } from '../common/rhlist'
+import { RHLIST_TYPE_CLASSIFY } from '../../util/const_internal'
 import Rhlist from '../common/rhlist'
 
 import { connect } from '@tarojs/redux'

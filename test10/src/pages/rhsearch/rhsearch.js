@@ -8,7 +8,7 @@ import './rhsearch.scss'
 
 import FixedTitle from '../common/fixedtitle'
 import PageFooter from '../common/pagefooter'
-import { RHLIST_TYPE_SEARCH } from '../common/rhlist'
+import { RHLIST_TYPE_SEARCH } from '../../util/const_internal'
 import Rhlist from '../common/rhlist'
 import { CommonFunc } from '../../util/common_func'
 import { Util } from '../../util/util'

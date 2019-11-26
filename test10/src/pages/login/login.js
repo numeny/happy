@@ -12,7 +12,7 @@ import { Util } from '@util/util'
 import './login.scss'
 import FixedTitle from '../common/fixedtitle'
 import PageFooter from '../common/pagefooter'
-import { RHLIST_TYPE_FAVORIT } from '../common/rhlist'
+import { RHLIST_TYPE_FAVORIT } from '../../util/const_internal'
 import Rhlist from '../common/rhlist'
 
 import namedVideo from '@res/video/1.mp4'
