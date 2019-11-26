@@ -75,7 +75,9 @@ class IhomeDownloaderMiddleware(object):
         # option.add_argument('--user-data-dir=/Users/macs/tmp/Default')
         option.add_argument('--user-agent=iphone')
         self.driver = webdriver.Chrome(chrome_options=option,
-            executable_path='/Users/macs/tools/chromedriver/chromedriver')
+            executable_path='/home/bdg/ssd/dl/chromium/taro/chromium_68/happy/ihome.spider/fangtianxia_mobile/tools/chromedriver_linux64/chromedriver')
+            # mac os
+            # executable_path='/Users/macs/tools/chromedriver/chromedriver')
         
 
     @classmethod
