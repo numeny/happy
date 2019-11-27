@@ -11,7 +11,7 @@ sys.path.append("../")
 
 class Log:
     # DEBUG = settings.DEBUG
-    DEBUG = True
+    DEBUG = False
     sStartRecordTime = datetime.utcnow()
     PERFORMANCE_TEST_CAL_FROM_START = True
 
