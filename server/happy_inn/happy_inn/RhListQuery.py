@@ -94,7 +94,7 @@ class RhListQuery:
                 continue
 
         record_num = len(records)
-        page_num = record_num / RH_NUM_PER_PAGE
+        page_num = int(record_num / RH_NUM_PER_PAGE)
         if record_num % RH_NUM_PER_PAGE > 0:
             page_num = page_num + 1
 
@@ -134,7 +134,8 @@ class RhListQuery:
         record_num = records.count()
         # record_num = 100
         Log.m(LOGTAG, 'showRhList, get_rh_list_filter, 3-1')
-        page_num = record_num / RH_NUM_PER_PAGE
+        page_num = int(record_num / RH_NUM_PER_PAGE)
+
         if record_num % RH_NUM_PER_PAGE > 0:
             page_num = page_num + 1
         Log.m(LOGTAG, 'showRhList, get_rh_list_filter, 3-2')
