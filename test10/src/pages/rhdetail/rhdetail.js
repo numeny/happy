@@ -327,7 +327,13 @@ export default class Rhdetail extends Component {
     }
     let content_info = []
     for (var idx = 0; idx < this.state.showAll.length; idx++) {
-      content_info[idx] = this.state.showAll[idx] ? 'content-info' : 'content-info-1'
+      // content_info[idx] = this.state.showAll[idx] ? 'content-info' : 'content-info-1'
+      /*
+          <View onClick={this.loadAll.bind(this, 0)} className="load-more">
+            {this.state.showAll[0] ? '收起内容':'查看全部'}
+          </View>
+      */
+      content_info[idx] = 'content-info'
     }
 
     return (
@@ -372,13 +378,6 @@ export default class Rhdetail extends Component {
             基本信息
           </View>
           <View className='brief-info-content'>
-            {this.state.rhRecord.ylw_id != "" &&
-            <View className="show-part-text">
-              ylw_id: {this.state.rhRecord.ylw_id}
-            </View>}
-            <View className="show-part-text">
-              id: {this.state.rhRecord.id}
-            </View>
             {this.state.rhRecord.location_id != "" &&
             <View className="show-part-text">
               位置： {this.state.rhRecord.location_id}
@@ -457,57 +456,36 @@ export default class Rhdetail extends Component {
         <View>
           <View className="content-title">特殊服务</View>
           <View className={content_info[0]}>{special_services_handled}</View>
-          <View onClick={this.loadAll.bind(this, 0)} className="load-more">
-            {this.state.showAll[0] ? '收起内容':'查看全部'}
-          </View>
         </View>}
         {this.state.rhRecordHandled.inst_intro_handled.length > 0 &&
         <View>
           <View className="content-title">机构介绍</View>
           <View className={content_info[1]}>{inst_intro_handled}</View>
-          <View onClick={this.loadAll.bind(this, 1)} className="load-more">
-            {this.state.showAll[1] ? '收起内容':'查看全部'}
-          </View>
         </View>}
         {this.state.rhRecordHandled.inst_charge_handled.length > 0 &&
         <View>
           <View className="content-title">收费详情</View>
           <View className={content_info[2]}>{inst_charge_handled}</View>
-          <View onClick={this.loadAll.bind(this, 2)} className="load-more">
-            {this.state.showAll[2] ? '收起内容':'查看全部'}
-          </View>
         </View>}
         {this.state.rhRecordHandled.facilities_handled.length > 0 &&
         <View>
           <View className="content-title">环境设施</View>
           <View className={content_info[3]}>{facilities_handled}</View>
-          <View onClick={this.loadAll.bind(this, 3)} className="load-more">
-            {this.state.showAll[3] ? '收起内容':'查看全部'}
-          </View>
         </View>}
         {this.state.rhRecordHandled.service_content_handled.length > 0 &&
         <View>
           <View className="content-title">服务内容</View>
           <View className={content_info[4]}>{service_content_handled}</View>
-          <View onClick={this.loadAll.bind(this, 4)} className="load-more">
-            {this.state.showAll[4] ? '收起内容':'查看全部'}
-          </View>
         </View>}
         {this.state.rhRecordHandled.inst_notes_handled.length > 0 &&
         <View>
           <View className="content-title">入住须知</View>
           <View className={content_info[5]}>{inst_notes_handled}</View>
-          <View onClick={this.loadAll.bind(this, 5)} className="load-more">
-            {this.state.showAll[5] ? '收起内容':'查看全部'}
-          </View>
         </View>}
         {this.state.rhRecordHandled.transportation_handled.length > 0 &&
         <View>
           <View className="content-title">交通信息</View>
           <View className={content_info[6]}>{transportation_handled}</View>
-          <View onClick={this.loadAll.bind(this, 6)} className="load-more">
-            {this.state.showAll[6] ? '收起内容':'查看全部'}
-          </View>
         </View>}
         {this.state.rhRecordHandled.images_handled.length > 0 &&
         <View>
