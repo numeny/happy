@@ -2,6 +2,8 @@
 import json
 import sys
 import urllib
+import urllib.request
+import urllib.error
 
 from django.contrib.auth import authenticate
 from django.http import HttpResponse
