@@ -3,7 +3,7 @@
 import json
 
 SAVE_FILE_PATH='./'
-FILE_NAME='agents'
+FILE_NAME='agents_bj'
 
 class DataHandler():
     def __init__(self):
@@ -45,12 +45,22 @@ class DataHandler():
 
     def printAllHandledData2(self, zone):
         print('Zone: %s\n' % zone)
+        i = 0
+        str_line = ''
         for idx, line in enumerate(self.handledData):
             if 'phone' in line:
-                if 'zone' in line and line['zone'] == zone:
-                    print(line['phone'])
+                if 'zone' in line and line['zone'].encode('utf8') == zone:
+                    str_line = str_line + line['phone'].encode('utf8') + ', '
+                    i = i + 1
+                    if i % 10 == 0:
+                        print('%d' % (i/10))
+                        print(str_line)
+                        str_line = ''
             else:
                 print('[Error]line %d has no key of "phone"!' % idx)
+        if i % 10 != 0:
+            print('%d' % (i/10+1))
+            print(str_line)
 
     def printAllHandledData(self, phone_only):
         print('All zone data: phone_only %d \n' % phone_only)
@@ -65,5 +75,5 @@ class DataHandler():
 
 handler = DataHandler()
 # handler.printAllPhones()
-handler.printAllHandledData(True)
-# handler.printAllHandledData2(u'海淀')
+# handler.printAllHandledData(True)
+handler.printAllHandledData2('海淀')

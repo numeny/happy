@@ -102,6 +102,11 @@ export default class Rhlist extends Component {
       } else {
         rhList = this.state.rhList.concat(res.data.records)
       }
+      console.error('requestData: requestRhList: '
+          + ', currPage: ' + res.data.currPage
+          + ', pageNum: ' + res.data.pageNum
+          + ', isOnEnd: ' + (res.data.currPage >= res.data.pageNum)
+          )
       // Taro.showToast({title: res.data.records[0].title_image})
       this.setState({
         rhList: rhList,

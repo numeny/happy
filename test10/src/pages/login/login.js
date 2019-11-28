@@ -203,6 +203,13 @@ export default class Login extends Component {
   onChangePassword = (e) => {
   }
 
+  /*
+          <View onClick={this.onLoginWithPhone} className='login-input-submit'>手机号登录</View>
+          <View onGetPhoneNumber={this.onGetPhoneNumber}
+              className='login-input-submit'>
+            获取手机号
+          </View>
+     */
   render () {
     return (
       <View className="login-top-view">
@@ -217,14 +224,8 @@ export default class Login extends Component {
               className='login-input-submit'>
             微信登录
           </Button>
-          <View onClick={this.onLoginWithPhone} className='login-input-submit'>手机号登录</View>
-          <View onGetPhoneNumber={this.onGetPhoneNumber}
-              className='login-input-submit'>
-            获取手机号
-          </View>
         </View>}
  
-
       {!this.state.isLogin && this.state.loginType == LOGIN_TYPE_PHONE &&
         <View>
           <View className='login-input-container'>
