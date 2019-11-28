@@ -1,6 +1,7 @@
 import Taro from '@tarojs/taro';
 
-const HOST = "http://192.144.213.106"
+// const HOST = "http://192.144.213.106"
+const HOST = "https://www.yiyangjia.net/"
 const SERVER_PORT = ""
 const IMAGES_PATH = "/images"
 const DEF_AVATAR = "/avatar.png"
